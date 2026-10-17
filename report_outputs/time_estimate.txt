@@ -1,0 +1,8 @@
+nvidia-smi: GeForce MX350, 2048 MiB, 452.56
+TensorFlow GPUs: none -> CPU
+XGBoost: no usable CUDA device (driver 452.56 / MX350 too old for the CUDA-12 build) -> CPU; LightGBM pip build is CPU-only
+CNN_BiGRU_Att: 1.26 s/epoch
+CNN_BiLSTM_Att: 1.04 s/epoch
+Fusion: 7.65 s/epoch
+Transformer: 4.34 s/epoch
+estimated deep hours (60 epochs avg, 11 runs x 2 labels): 5.2; with corrections up to +2.6; trees/Optuna ~2-4 h

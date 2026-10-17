@@ -1,0 +1,3 @@
+,pred_Normal,pred_Anomaly
+true_Normal,10,6
+true_Anomaly,0,327

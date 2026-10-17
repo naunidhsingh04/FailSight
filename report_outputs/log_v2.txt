@@ -1,0 +1,898 @@
+16:53:24 ======================================================================
+16:53:24 full_pipeline start Sat Oct 17 16:53:24 2026 stages [0] labels ['label_binary', 'label_level']
+16:53:24 NOTE: sequences are indexed by their last window, so validation sequences overlap training windows within the same block; folds are group-aware (block_id) but CV scores can still be optimistic; the TEST score is the main result; each class comes from a few scenario runs.
+16:53:24 NOTE: spec conflict resolved in favour of the EPOCH POLICY: deep early stopping patience 12 (not 5), ReduceLROnPlateau patience 4.
+16:53:24 data: 3196 windows, train 2549, test 647 (test untouched until stage 9); model inputs 128; groups api/log/metric (7, 3, 114); context slots padded 1889
+16:53:24 ======================================================================
+16:53:24 STAGE 0: environment, GPU check, 3-epoch timing of every deep model
+16:53:25 nvidia-smi: GeForce MX350, 2048 MiB, 452.56
+16:53:25 TensorFlow GPUs: none (TensorFlow >= 2.11 has no native-Windows GPU support) -> CPU
+16:53:25 WARNING UserWarning: [16:53:25] WARNING: C:\actions-runner\_work\xgboost\xgboost\src\context.cc:53: No visible GPU is found, setting device to CPU. (training.py:200)
+16:53:25 WARNING UserWarning: [16:53:25] WARNING: C:\actions-runner\_work\xgboost\xgboost\src\context.cc:207: Device is changed from GPU to CPU as we couldn't find any available GPU on the system. (training.py:200)
+16:53:25 XGBoost CUDA works
+16:53:25 timing data: SMOTE train (4280, 6, 128), val (249, 6, 128)
+16:53:35   CNN_BiGRU_Att: 1.26 s/epoch (87874 params)
+16:53:43   CNN_BiLSTM_Att: 1.04 s/epoch (104002 params)
+16:54:17   Fusion: 7.65 s/epoch (70434 params)
+16:54:50   Transformer: 4.34 s/epoch (79874 params)
+16:54:50 ESTIMATE deep models: 5.2 h for 10 folds + final x 2 label versions at 60 epochs/run on average; + up to 2.6 h if every deep model needs the correction retrain (upper bound)
+16:54:50 ESTIMATE trees/Optuna/baselines: roughly 2-4 h (not timed yet)
+16:54:50 ESTIMATE TOTAL ~ 8.2 - 11.9 hours. Continuing without waiting (policy: no shortening of epochs/folds/SMOTE).
+16:54:50 STAGE 0 finished in 1.4 min
+16:55:27 ======================================================================
+16:55:27 full_pipeline start Sat Oct 17 16:55:27 2026 stages [1, 2, 3] labels ['label_binary', 'label_level']
+16:55:27 NOTE: sequences are indexed by their last window, so validation sequences overlap training windows within the same block; folds are group-aware (block_id) but CV scores can still be optimistic; the TEST score is the main result; each class comes from a few scenario runs.
+16:55:27 NOTE: spec conflict resolved in favour of the EPOCH POLICY: deep early stopping patience 12 (not 5), ReduceLROnPlateau patience 4.
+16:55:28 data: 3196 windows, train 2549, test 647 (test untouched until stage 9); model inputs 128; groups api/log/metric (7, 3, 114); context slots padded 1889
+16:55:28 ======================================================================
+16:55:28 STAGE 1: baselines, run-aware 10-fold CV (folds from fold_assignment.csv), variants cw / smote
+16:55:35 [1 baselines] 1/20 done: label_binary LR cw: val BA 0.827, macro-F1 0.764 in 7s | stage elapsed 0.1 min | ETA this stage ~2.2 min
+16:55:39 [1 baselines] 2/20 done: label_binary LR smote: val BA 0.832, macro-F1 0.783 in 4s | stage elapsed 0.2 min | ETA this stage ~1.7 min
+16:55:53 [1 baselines] 3/20 done: label_binary RF cw: val BA 0.805, macro-F1 0.831 in 14s | stage elapsed 0.4 min | ETA this stage ~2.4 min
+16:56:04 [1 baselines] 4/20 done: label_binary RF smote: val BA 0.834, macro-F1 0.853 in 11s | stage elapsed 0.6 min | ETA this stage ~2.4 min
+16:56:12 [1 baselines] 5/20 done: label_binary ET cw: val BA 0.802, macro-F1 0.830 in 8s | stage elapsed 0.7 min | ETA this stage ~2.2 min
+16:56:20 [1 baselines] 6/20 done: label_binary ET smote: val BA 0.818, macro-F1 0.837 in 9s | stage elapsed 0.9 min | ETA this stage ~2.0 min
+16:56:24 [1 baselines] 7/20 done: label_binary XGB cw: val BA 0.834, macro-F1 0.831 in 4s | stage elapsed 0.9 min | ETA this stage ~1.7 min
+16:56:31 [1 baselines] 8/20 done: label_binary XGB smote: val BA 0.836, macro-F1 0.847 in 6s | stage elapsed 1.0 min | ETA this stage ~1.6 min
+16:56:35 [1 baselines] 9/20 done: label_binary LGBM cw: val BA 0.840, macro-F1 0.865 in 4s | stage elapsed 1.1 min | ETA this stage ~1.4 min
+16:56:41 [1 baselines] 10/20 done: label_binary LGBM smote: val BA 0.844, macro-F1 0.856 in 6s | stage elapsed 1.2 min | ETA this stage ~1.2 min
+16:56:45 [1 baselines] 11/20 done: label_level LR cw: val BA 0.791, macro-F1 0.777 in 4s | stage elapsed 1.3 min | ETA this stage ~1.1 min
+16:56:50 [1 baselines] 12/20 done: label_level LR smote: val BA 0.800, macro-F1 0.788 in 5s | stage elapsed 1.4 min | ETA this stage ~0.9 min
+16:57:05 [1 baselines] 13/20 done: label_level RF cw: val BA 0.829, macro-F1 0.834 in 15s | stage elapsed 1.6 min | ETA this stage ~0.9 min
+16:57:18 [1 baselines] 14/20 done: label_level RF smote: val BA 0.826, macro-F1 0.829 in 13s | stage elapsed 1.8 min | ETA this stage ~0.8 min
+16:57:27 [1 baselines] 15/20 done: label_level ET cw: val BA 0.814, macro-F1 0.818 in 10s | stage elapsed 2.0 min | ETA this stage ~0.7 min
+16:57:37 [1 baselines] 16/20 done: label_level ET smote: val BA 0.812, macro-F1 0.811 in 10s | stage elapsed 2.2 min | ETA this stage ~0.5 min
+16:58:05 [1 baselines] 17/20 done: label_level XGB cw: val BA 0.864, macro-F1 0.864 in 28s | stage elapsed 2.6 min | ETA this stage ~0.5 min
+16:58:36 [1 baselines] 18/20 done: label_level XGB smote: val BA 0.868, macro-F1 0.868 in 31s | stage elapsed 3.1 min | ETA this stage ~0.3 min
+16:58:58 [1 baselines] 19/20 done: label_level LGBM cw: val BA 0.859, macro-F1 0.863 in 22s | stage elapsed 3.5 min | ETA this stage ~0.2 min
+16:59:32 [1 baselines] 20/20 done: label_level LGBM smote: val BA 0.859, macro-F1 0.861 in 34s | stage elapsed 4.1 min | ETA this stage ~0.0 min
+16:59:35 [label_binary] mean validation BA over the 5 baselines: class-weight 0.8218 vs SMOTE 0.8326 -> deep models use 'smote'
+16:59:35     LR: better variant smote (val BA 0.8320)
+16:59:35     RF: better variant smote (val BA 0.8337)
+16:59:35     ET: better variant smote (val BA 0.8181)
+16:59:35     XGB: better variant smote (val BA 0.8358)
+16:59:35     LGBM: better variant smote (val BA 0.8435)
+16:59:39 [label_level] mean validation BA over the 5 baselines: class-weight 0.8315 vs SMOTE 0.8329 -> deep models use 'smote'
+16:59:39     LR: better variant smote (val BA 0.7998)
+16:59:39     RF: better variant cw (val BA 0.8295)
+16:59:39     ET: better variant cw (val BA 0.8138)
+16:59:39     XGB: better variant smote (val BA 0.8679)
+16:59:39     LGBM: better variant cw (val BA 0.8589)
+17:06:40 ======================================================================
+17:06:40 full_pipeline start Sat Oct 17 17:06:40 2026 stages [1, 2, 3] labels ['label_binary', 'label_level']
+17:06:40 NOTE: sequences are indexed by their last window, so validation sequences overlap training windows within the same block; folds are group-aware (block_id) but CV scores can still be optimistic; the TEST score is the main result; each class comes from a few scenario runs.
+17:06:40 NOTE: spec conflict resolved in favour of the EPOCH POLICY: deep early stopping patience 12 (not 5), ReduceLROnPlateau patience 4.
+17:06:40 data: 3196 windows, train 2549, test 647 (test untouched until stage 9); model inputs 128; groups api/log/metric (7, 3, 114); context slots padded 1889
+17:06:40 ======================================================================
+17:06:40 STAGE 1: baselines, run-aware 10-fold CV (folds from fold_assignment.csv), variants cw / smote
+17:06:40 [1 baselines] 1/20 skipped (already done): label_binary LR cw
+17:06:40 [1 baselines] 2/20 skipped (already done): label_binary LR smote
+17:06:40 [1 baselines] 3/20 skipped (already done): label_binary RF cw
+17:06:40 [1 baselines] 4/20 skipped (already done): label_binary RF smote
+17:06:40 [1 baselines] 5/20 skipped (already done): label_binary ET cw
+17:06:40 [1 baselines] 6/20 skipped (already done): label_binary ET smote
+17:06:40 [1 baselines] 7/20 skipped (already done): label_binary XGB cw
+17:06:40 [1 baselines] 8/20 skipped (already done): label_binary XGB smote
+17:06:40 [1 baselines] 9/20 skipped (already done): label_binary LGBM cw
+17:06:40 [1 baselines] 10/20 skipped (already done): label_binary LGBM smote
+17:06:40 [1 baselines] 11/20 skipped (already done): label_level LR cw
+17:06:40 [1 baselines] 12/20 skipped (already done): label_level LR smote
+17:06:40 [1 baselines] 13/20 skipped (already done): label_level RF cw
+17:06:40 [1 baselines] 14/20 skipped (already done): label_level RF smote
+17:06:40 [1 baselines] 15/20 skipped (already done): label_level ET cw
+17:06:40 [1 baselines] 16/20 skipped (already done): label_level ET smote
+17:06:40 [1 baselines] 17/20 skipped (already done): label_level XGB cw
+17:06:40 [1 baselines] 18/20 skipped (already done): label_level XGB smote
+17:06:40 [1 baselines] 19/20 skipped (already done): label_level LGBM cw
+17:06:40 [1 baselines] 20/20 skipped (already done): label_level LGBM smote
+17:06:42 [label_binary] mean validation BA over the 5 baselines: class-weight 0.8218 vs SMOTE 0.8326 -> deep models use 'smote'
+17:06:42     LR: better variant smote (val BA 0.8320)
+17:06:42     RF: better variant smote (val BA 0.8337)
+17:06:42     ET: better variant smote (val BA 0.8181)
+17:06:42     XGB: better variant smote (val BA 0.8358)
+17:06:42     LGBM: better variant smote (val BA 0.8435)
+17:06:45 [label_level] mean validation BA over the 5 baselines: class-weight 0.8315 vs SMOTE 0.8329 -> deep models use 'smote'
+17:06:45     LR: better variant smote (val BA 0.7998)
+17:06:45     RF: better variant cw (val BA 0.8295)
+17:06:45     ET: better variant cw (val BA 0.8138)
+17:06:45     XGB: better variant smote (val BA 0.8679)
+17:06:45     LGBM: better variant cw (val BA 0.8589)
+17:06:45 saved report_outputs/baseline_cv.csv
+17:06:45 STAGE 1 finished in 0.1 min
+17:06:45 ======================================================================
+17:06:45 STAGE 2: Optuna (40 trials/model) for the top-3 tree models, objective = mean validation balanced accuracy, same folds
+17:06:48 [label_binary] tree ranking by validation BA: LGBM 0.8435, XGB 0.8358, RF 0.8337, ET 0.8181 -> tuning ['LGBM', 'XGB', 'RF']
+17:07:08     [label_binary] LGBM trial 1/40: val BA 0.8331 (best 0.8331) {'n_estimators': 250, 'num_leaves': 123, 'max_depth': 10, 'learning_rate': 0.07661100707771368, 'min_child_samples': 13, 'subsample': 0.5779972601681014, 'colsample_bytree': 0.4348501673009197, 'reg_lambda': 3.9676050770529883}
+17:07:17     [label_binary] LGBM trial 2/40: val BA 0.8371 (best 0.8371) {'n_estimators': 350, 'num_leaves': 93, 'max_depth': 3, 'learning_rate': 0.2708160864249968, 'min_child_samples': 51, 'subsample': 0.6061695553391381, 'colsample_bytree': 0.5090949803242604, 'reg_lambda': 0.03549878832196503}
+17:07:26     [label_binary] LGBM trial 3/40: val BA 0.8352 (best 0.8371) {'n_estimators': 200, 'num_leaves': 71, 'max_depth': 7, 'learning_rate': 0.02692655251486473, 'min_child_samples': 39, 'subsample': 0.569746930326021, 'colsample_bytree': 0.5752867891211308, 'reg_lambda': 0.1256277350380703}
+17:07:37     [label_binary] LGBM trial 4/40: val BA 0.8560 (best 0.8560) {'n_estimators': 300, 'num_leaves': 103, 'max_depth': 4, 'learning_rate': 0.05748924681991978, 'min_child_samples': 38, 'subsample': 0.5232252063599989, 'colsample_bytree': 0.764526911140863, 'reg_lambda': 0.03247673570627449}
+17:07:46     [label_binary] LGBM trial 5/40: val BA 0.8360 (best 0.8560) {'n_estimators': 100, 'num_leaves': 122, 'max_depth': 12, 'learning_rate': 0.1563510870813346, 'min_child_samples': 22, 'subsample': 0.5488360570031919, 'colsample_bytree': 0.8105398159072941, 'reg_lambda': 0.2091498132903561}
+17:07:51     [label_binary] LGBM trial 6/40: val BA 0.8323 (best 0.8560) {'n_estimators': 150, 'num_leaves': 67, 'max_depth': 3, 'learning_rate': 0.22038218939289875, 'min_child_samples': 19, 'subsample': 0.831261142176991, 'colsample_bytree': 0.5870266456536466, 'reg_lambda': 0.3632486956676606}
+17:08:11     [label_binary] LGBM trial 7/40: val BA 0.8387 (best 0.8560) {'n_estimators': 300, 'num_leaves': 30, 'max_depth': 12, 'learning_rate': 0.13962563737015762, 'min_child_samples': 57, 'subsample': 0.9474136752138245, 'colsample_bytree': 0.7587399872866512, 'reg_lambda': 5.829384542994738}
+17:08:15     [label_binary] LGBM trial 8/40: val BA 0.8264 (best 0.8560) {'n_estimators': 100, 'num_leaves': 31, 'max_depth': 3, 'learning_rate': 0.03023795012558475, 'min_child_samples': 26, 'subsample': 0.6356745158869479, 'colsample_bytree': 0.8972425054911576, 'reg_lambda': 0.11756010900231852}
+17:08:26     [label_binary] LGBM trial 9/40: val BA 0.8567 (best 0.8567) {'n_estimators': 200, 'num_leaves': 73, 'max_depth': 4, 'learning_rate': 0.1530883741573138, 'min_child_samples': 9, 'subsample': 0.9934434683002586, 'colsample_bytree': 0.8633468615779945, 'reg_lambda': 0.039459088111000004}
+17:08:34     [label_binary] LGBM trial 10/40: val BA 0.8423 (best 0.8567) {'n_estimators': 100, 'num_leaves': 106, 'max_depth': 10, 'learning_rate': 0.11935262708510537, 'min_child_samples': 48, 'subsample': 0.5370223258670452, 'colsample_bytree': 0.6150794371265635, 'reg_lambda': 0.022264204303769682}
+17:08:48     [label_binary] LGBM trial 11/40: val BA 0.8371 (best 0.8567) {'n_estimators': 400, 'num_leaves': 46, 'max_depth': 3, 'learning_rate': 0.07588808124902474, 'min_child_samples': 30, 'subsample': 0.9572708204047887, 'colsample_bytree': 0.7061740376261652, 'reg_lambda': 0.012903351823930188}
+17:08:59     [label_binary] LGBM trial 12/40: val BA 0.8437 (best 0.8567) {'n_estimators': 250, 'num_leaves': 86, 'max_depth': 5, 'learning_rate': 0.1497283686971602, 'min_child_samples': 36, 'subsample': 0.9106613925226434, 'colsample_bytree': 0.7669375345899755, 'reg_lambda': 0.04913502105916544}
+17:09:09     [label_binary] LGBM trial 13/40: val BA 0.8521 (best 0.8567) {'n_estimators': 300, 'num_leaves': 123, 'max_depth': 3, 'learning_rate': 0.0896972085843134, 'min_child_samples': 53, 'subsample': 0.6603761036719746, 'colsample_bytree': 0.7439257428659783, 'reg_lambda': 0.026960143176220065}
+17:09:18     [label_binary] LGBM trial 14/40: val BA 0.8583 (best 0.8583) {'n_estimators': 200, 'num_leaves': 92, 'max_depth': 4, 'learning_rate': 0.05334582802635879, 'min_child_samples': 16, 'subsample': 0.5157070190180464, 'colsample_bytree': 0.854832756509439, 'reg_lambda': 0.01696958714348816}
+17:09:27     [label_binary] LGBM trial 15/40: val BA 0.8489 (best 0.8583) {'n_estimators': 250, 'num_leaves': 50, 'max_depth': 3, 'learning_rate': 0.1203552753975347, 'min_child_samples': 10, 'subsample': 0.7713627400018652, 'colsample_bytree': 0.8981398485545692, 'reg_lambda': 0.013969950578774726}
+17:09:38     [label_binary] LGBM trial 16/40: val BA 0.8385 (best 0.8583) {'n_estimators': 200, 'num_leaves': 79, 'max_depth': 6, 'learning_rate': 0.06694213992559765, 'min_child_samples': 7, 'subsample': 0.5041877064112116, 'colsample_bytree': 0.8488028351313123, 'reg_lambda': 0.05172002989325573}
+17:09:44     [label_binary] LGBM trial 17/40: val BA 0.8510 (best 0.8583) {'n_estimators': 150, 'num_leaves': 37, 'max_depth': 4, 'learning_rate': 0.16567708939519915, 'min_child_samples': 17, 'subsample': 0.920291952863203, 'colsample_bytree': 0.9468475717163923, 'reg_lambda': 0.04392059624863645}
+17:09:53     [label_binary] LGBM trial 18/40: val BA 0.8510 (best 0.8583) {'n_estimators': 250, 'num_leaves': 109, 'max_depth': 4, 'learning_rate': 0.07558926058821502, 'min_child_samples': 26, 'subsample': 0.5520411498599662, 'colsample_bytree': 0.9499783679452651, 'reg_lambda': 0.014488907810529014}
+17:10:01     [label_binary] LGBM trial 19/40: val BA 0.8554 (best 0.8583) {'n_estimators': 150, 'num_leaves': 90, 'max_depth': 4, 'learning_rate': 0.0610573103578998, 'min_child_samples': 5, 'subsample': 0.8356190292745214, 'colsample_bytree': 0.9891224294723789, 'reg_lambda': 0.038226842659556}
+17:10:08     [label_binary] LGBM trial 20/40: val BA 0.8435 (best 0.8583) {'n_estimators': 250, 'num_leaves': 71, 'max_depth': 3, 'learning_rate': 0.1712731398127476, 'min_child_samples': 7, 'subsample': 0.5608932696924067, 'colsample_bytree': 0.8029701778750817, 'reg_lambda': 0.048104117414306036}
+17:10:14     [label_binary] LGBM trial 21/40: val BA 0.8448 (best 0.8583) {'n_estimators': 150, 'num_leaves': 87, 'max_depth': 3, 'learning_rate': 0.06573855102889295, 'min_child_samples': 19, 'subsample': 0.7436085745409049, 'colsample_bytree': 0.8480409187779178, 'reg_lambda': 0.04004663375511964}
+17:10:24     [label_binary] LGBM trial 22/40: val BA 0.8583 (best 0.8583) {'n_estimators': 250, 'num_leaves': 112, 'max_depth': 4, 'learning_rate': 0.03465640310094438, 'min_child_samples': 24, 'subsample': 0.6439717197173594, 'colsample_bytree': 0.9078327475208411, 'reg_lambda': 0.017073951175757038}
+17:10:34     [label_binary] LGBM trial 23/40: val BA 0.8314 (best 0.8583) {'n_estimators': 200, 'num_leaves': 106, 'max_depth': 4, 'learning_rate': 0.016393487043473237, 'min_child_samples': 22, 'subsample': 0.611107897668839, 'colsample_bytree': 0.8113050842049375, 'reg_lambda': 0.010191774809940794}
+17:10:42     [label_binary] LGBM trial 24/40: val BA 0.8412 (best 0.8583) {'n_estimators': 200, 'num_leaves': 115, 'max_depth': 3, 'learning_rate': 0.08192084931345296, 'min_child_samples': 22, 'subsample': 0.782738489200056, 'colsample_bytree': 0.9423923919182822, 'reg_lambda': 0.015171985884860744}
+17:10:48     [label_binary] LGBM trial 25/40: val BA 0.8358 (best 0.8583) {'n_estimators': 200, 'num_leaves': 85, 'max_depth': 3, 'learning_rate': 0.030529806533125342, 'min_child_samples': 12, 'subsample': 0.5003539943767243, 'colsample_bytree': 0.7679077309635436, 'reg_lambda': 0.021127162936962294}
+17:11:00     [label_binary] LGBM trial 26/40: val BA 0.8573 (best 0.8583) {'n_estimators': 200, 'num_leaves': 123, 'max_depth': 6, 'learning_rate': 0.028981468152628493, 'min_child_samples': 18, 'subsample': 0.5975805246767222, 'colsample_bytree': 0.9544436505226854, 'reg_lambda': 0.017089937876700143}
+17:11:09     [label_binary] LGBM trial 27/40: val BA 0.8377 (best 0.8583) {'n_estimators': 150, 'num_leaves': 108, 'max_depth': 6, 'learning_rate': 0.04393550732258142, 'min_child_samples': 24, 'subsample': 0.5738470011991101, 'colsample_bytree': 0.9487104018831, 'reg_lambda': 0.011004113202817163}
+17:11:17     [label_binary] LGBM trial 28/40: val BA 0.8558 (best 0.8583) {'n_estimators': 200, 'num_leaves': 81, 'max_depth': 4, 'learning_rate': 0.04293351653783247, 'min_child_samples': 14, 'subsample': 0.6026693581288417, 'colsample_bytree': 0.8675743356413546, 'reg_lambda': 0.014545404408443265}
+17:11:27     [label_binary] LGBM trial 29/40: val BA 0.8604 (best 0.8604) {'n_estimators': 250, 'num_leaves': 100, 'max_depth': 4, 'learning_rate': 0.019131790072063153, 'min_child_samples': 20, 'subsample': 0.6483688592456873, 'colsample_bytree': 0.9969873399144811, 'reg_lambda': 0.05146908458796291}
+17:11:43     [label_binary] LGBM trial 30/40: val BA 0.8558 (best 0.8604) {'n_estimators': 300, 'num_leaves': 112, 'max_depth': 5, 'learning_rate': 0.026073954630321215, 'min_child_samples': 8, 'subsample': 0.5527865067005551, 'colsample_bytree': 0.9760786135623376, 'reg_lambda': 0.02210184178963527}
+17:11:48     [label_binary] LGBM trial 31/40: val BA 0.8454 (best 0.8604) {'n_estimators': 150, 'num_leaves': 117, 'max_depth': 3, 'learning_rate': 0.054471259033006446, 'min_child_samples': 21, 'subsample': 0.5347346835331813, 'colsample_bytree': 0.9162586664978697, 'reg_lambda': 0.0627304958853848}
+17:11:57     [label_binary] LGBM trial 32/40: val BA 0.8579 (best 0.8604) {'n_estimators': 200, 'num_leaves': 109, 'max_depth': 4, 'learning_rate': 0.04155271402699568, 'min_child_samples': 23, 'subsample': 0.7253614383236844, 'colsample_bytree': 0.9814168848915935, 'reg_lambda': 0.03874273348686184}
+17:12:09     [label_binary] LGBM trial 33/40: val BA 0.8587 (best 0.8604) {'n_estimators': 250, 'num_leaves': 104, 'max_depth': 4, 'learning_rate': 0.04444375498962172, 'min_child_samples': 20, 'subsample': 0.8100175187649479, 'colsample_bytree': 0.8573452801358425, 'reg_lambda': 0.02455443533604576}
+17:12:24     [label_binary] LGBM trial 34/40: val BA 0.8633 (best 0.8633) {'n_estimators': 250, 'num_leaves': 87, 'max_depth': 4, 'learning_rate': 0.028986918341519338, 'min_child_samples': 26, 'subsample': 0.5562553422943203, 'colsample_bytree': 0.9462179651189174, 'reg_lambda': 0.12739422255834376}
+17:12:39     [label_binary] LGBM trial 35/40: val BA 0.8558 (best 0.8633) {'n_estimators': 250, 'num_leaves': 120, 'max_depth': 4, 'learning_rate': 0.02098576340883357, 'min_child_samples': 16, 'subsample': 0.6639393948154837, 'colsample_bytree': 0.8779294521849162, 'reg_lambda': 0.06476069645676875}
+17:12:54     [label_binary] LGBM trial 36/40: val BA 0.8316 (best 0.8633) {'n_estimators': 250, 'num_leaves': 86, 'max_depth': 4, 'learning_rate': 0.014508960576350326, 'min_child_samples': 21, 'subsample': 0.6344346620254305, 'colsample_bytree': 0.9581386824019841, 'reg_lambda': 0.1584351649273037}
+17:13:05     [label_binary] LGBM trial 37/40: val BA 0.8377 (best 0.8633) {'n_estimators': 250, 'num_leaves': 94, 'max_depth': 3, 'learning_rate': 0.022493445651460057, 'min_child_samples': 21, 'subsample': 0.5398010840292908, 'colsample_bytree': 0.9119150889112818, 'reg_lambda': 0.06421390209217852}
+17:13:19     [label_binary] LGBM trial 38/40: val BA 0.8381 (best 0.8633) {'n_estimators': 300, 'num_leaves': 125, 'max_depth': 3, 'learning_rate': 0.03954626733645131, 'min_child_samples': 19, 'subsample': 0.5913202715677554, 'colsample_bytree': 0.8205799644559617, 'reg_lambda': 0.06467231971547088}
+17:13:32     [label_binary] LGBM trial 39/40: val BA 0.8533 (best 0.8633) {'n_estimators': 200, 'num_leaves': 97, 'max_depth': 4, 'learning_rate': 0.026563102483996195, 'min_child_samples': 8, 'subsample': 0.6037699140154007, 'colsample_bytree': 0.9806993251831922, 'reg_lambda': 0.04629474940162176}
+17:13:49     [label_binary] LGBM trial 40/40: val BA 0.8458 (best 0.8633) {'n_estimators': 300, 'num_leaves': 102, 'max_depth': 4, 'learning_rate': 0.0414224750399013, 'min_child_samples': 24, 'subsample': 0.7245794115238201, 'colsample_bytree': 0.851830186210648, 'reg_lambda': 0.017253198909874142}
+17:14:03 [2 optuna] 1/6 done: label_binary LGBM_tuned: val BA 0.8633 (default 0.8435) in 435s | stage elapsed 7.3 min | ETA this stage ~36.3 min
+17:14:22     [label_binary] XGB trial 1/40: val BA 0.8229 (best 0.8229) {'n_estimators': 250, 'max_depth': 10, 'learning_rate': 0.1205712628744377, 'subsample': 0.7993292420985183, 'colsample_bytree': 0.4936111842654619, 'min_child_weight': 4, 'reg_lambda': 0.014936568554617643}
+17:14:42     [label_binary] XGB trial 2/40: val BA 0.8376 (best 0.8376) {'n_estimators': 450, 'max_depth': 7, 'learning_rate': 0.11114989443094977, 'subsample': 0.5102922471479012, 'colsample_bytree': 0.9819459112971965, 'min_child_weight': 17, 'reg_lambda': 0.04335281794951567}
+17:14:52     [label_binary] XGB trial 3/40: val BA 0.8529 (best 0.8529) {'n_estimators': 150, 'max_depth': 3, 'learning_rate': 0.028145092716060652, 'subsample': 0.762378215816119, 'colsample_bytree': 0.6591670111852694, 'min_child_weight': 6, 'reg_lambda': 0.6847920095574779}
+17:15:04     [label_binary] XGB trial 4/40: val BA 0.8623 (best 0.8623) {'n_estimators': 150, 'max_depth': 4, 'learning_rate': 0.03476649150592621, 'subsample': 0.728034992108518, 'colsample_bytree': 0.8711055768358081, 'min_child_weight': 4, 'reg_lambda': 0.34890188454913873}
+17:15:18     [label_binary] XGB trial 5/40: val BA 0.8339 (best 0.8623) {'n_estimators': 350, 'max_depth': 2, 'learning_rate': 0.07896186801026692, 'subsample': 0.5852620618436457, 'colsample_bytree': 0.43903095579116774, 'min_child_weight': 19, 'reg_lambda': 7.886714129990489}
+17:15:52     [label_binary] XGB trial 6/40: val BA 0.8604 (best 0.8623) {'n_estimators': 450, 'max_depth': 4, 'learning_rate': 0.013940346079873234, 'subsample': 0.8421165132560784, 'colsample_bytree': 0.6640914962437607, 'min_child_weight': 3, 'reg_lambda': 0.3058656666978526}
+17:16:05     [label_binary] XGB trial 7/40: val BA 0.8243 (best 0.8623) {'n_estimators': 100, 'max_depth': 10, 'learning_rate': 0.024112898115291985, 'subsample': 0.831261142176991, 'colsample_bytree': 0.5870266456536466, 'min_child_weight': 11, 'reg_lambda': 0.43664735929796333}
+17:16:17     [label_binary] XGB trial 8/40: val BA 0.8300 (best 0.8623) {'n_estimators': 150, 'max_depth': 10, 'learning_rate': 0.13962563737015762, 'subsample': 0.9697494707820946, 'colsample_bytree': 0.9368964102565893, 'min_child_weight': 12, 'reg_lambda': 5.829384542994738}
+17:16:24     [label_binary] XGB trial 9/40: val BA 0.8229 (best 0.8623) {'n_estimators': 100, 'max_depth': 3, 'learning_rate': 0.011662890273931383, 'subsample': 0.6626651653816322, 'colsample_bytree': 0.6332063738136893, 'min_child_weight': 6, 'reg_lambda': 3.063462210622083}
+17:16:42     [label_binary] XGB trial 10/40: val BA 0.8602 (best 0.8623) {'n_estimators': 250, 'max_depth': 4, 'learning_rate': 0.06333268775321843, 'subsample': 0.5704621124873813, 'colsample_bytree': 0.8813181884524238, 'min_child_weight': 2, 'reg_lambda': 9.133995846860973}
+17:17:11     [label_binary] XGB trial 11/40: val BA 0.8483 (best 0.8623) {'n_estimators': 300, 'max_depth': 7, 'learning_rate': 0.020008460158053645, 'subsample': 0.6955339099662495, 'colsample_bytree': 0.967081926538232, 'min_child_weight': 6, 'reg_lambda': 0.29486835243100296}
+17:17:42     [label_binary] XGB trial 12/40: val BA 0.8585 (best 0.8623) {'n_estimators': 450, 'max_depth': 5, 'learning_rate': 0.06005556643552445, 'subsample': 0.8145098285852661, 'colsample_bytree': 0.7444353697500389, 'min_child_weight': 1, 'reg_lambda': 0.27613534845925913}
+17:18:00     [label_binary] XGB trial 13/40: val BA 0.8368 (best 0.8623) {'n_estimators': 400, 'max_depth': 2, 'learning_rate': 0.032459285922605795, 'subsample': 0.6999870153059906, 'colsample_bytree': 0.740925168246213, 'min_child_weight': 8, 'reg_lambda': 0.37441275204867847}
+17:18:35     [label_binary] XGB trial 14/40: val BA 0.8235 (best 0.8623) {'n_estimators': 350, 'max_depth': 5, 'learning_rate': 0.010586288957024672, 'subsample': 0.9533071420631899, 'colsample_bytree': 0.49219165817032173, 'min_child_weight': 2, 'reg_lambda': 0.41866608117943993}
+17:18:46     [label_binary] XGB trial 15/40: val BA 0.8361 (best 0.8623) {'n_estimators': 150, 'max_depth': 3, 'learning_rate': 0.02093904523265503, 'subsample': 0.7614019684432419, 'colsample_bytree': 0.971333494671317, 'min_child_weight': 1, 'reg_lambda': 0.1250511452827641}
+17:19:25     [label_binary] XGB trial 16/40: val BA 0.8554 (best 0.8623) {'n_estimators': 500, 'max_depth': 5, 'learning_rate': 0.013132239479147555, 'subsample': 0.9319201404885433, 'colsample_bytree': 0.573843588037988, 'min_child_weight': 4, 'reg_lambda': 0.08904345767588229}
+17:19:41     [label_binary] XGB trial 17/40: val BA 0.8520 (best 0.8623) {'n_estimators': 250, 'max_depth': 3, 'learning_rate': 0.013931854085141996, 'subsample': 0.8687114592280283, 'colsample_bytree': 0.7132841280725603, 'min_child_weight': 5, 'reg_lambda': 2.2848894588172026}
+17:19:59     [label_binary] XGB trial 18/40: val BA 0.8635 (best 0.8635) {'n_estimators': 200, 'max_depth': 4, 'learning_rate': 0.025668714996799444, 'subsample': 0.8544918010410026, 'colsample_bytree': 0.9804618900792359, 'min_child_weight': 8, 'reg_lambda': 0.6475538293374384}
+17:20:08     [label_binary] XGB trial 19/40: val BA 0.8637 (best 0.8637) {'n_estimators': 150, 'max_depth': 5, 'learning_rate': 0.027970301785127105, 'subsample': 0.5865018635980814, 'colsample_bytree': 0.8486218097344516, 'min_child_weight': 4, 'reg_lambda': 0.42260045441494315}
+17:20:18     [label_binary] XGB trial 20/40: val BA 0.8370 (best 0.8637) {'n_estimators': 150, 'max_depth': 4, 'learning_rate': 0.012818730433030882, 'subsample': 0.8786547068402522, 'colsample_bytree': 0.9552259571333852, 'min_child_weight': 10, 'reg_lambda': 0.3882361174424763}
+17:20:23     [label_binary] XGB trial 21/40: val BA 0.8439 (best 0.8637) {'n_estimators': 200, 'max_depth': 2, 'learning_rate': 0.05055449265395389, 'subsample': 0.8734590544299202, 'colsample_bytree': 0.9310362141645331, 'min_child_weight': 7, 'reg_lambda': 0.3499201001914707}
+17:20:30     [label_binary] XGB trial 22/40: val BA 0.8460 (best 0.8637) {'n_estimators': 100, 'max_depth': 5, 'learning_rate': 0.02228079399372609, 'subsample': 0.5554769521618801, 'colsample_bytree': 0.9245544980378656, 'min_child_weight': 3, 'reg_lambda': 0.6577519958024327}
+17:20:38     [label_binary] XGB trial 23/40: val BA 0.8693 (best 0.8693) {'n_estimators': 150, 'max_depth': 5, 'learning_rate': 0.026107534800717622, 'subsample': 0.7752355587491198, 'colsample_bytree': 0.7961268680220585, 'min_child_weight': 5, 'reg_lambda': 0.645896056204826}
+17:20:49     [label_binary] XGB trial 24/40: val BA 0.8487 (best 0.8693) {'n_estimators': 150, 'max_depth': 7, 'learning_rate': 0.025507431350345687, 'subsample': 0.7167940165359952, 'colsample_bytree': 0.7847137731217018, 'min_child_weight': 8, 'reg_lambda': 0.688987441844391}
+17:20:56     [label_binary] XGB trial 25/40: val BA 0.8514 (best 0.8693) {'n_estimators': 150, 'max_depth': 4, 'learning_rate': 0.036746189526232396, 'subsample': 0.9707709563900249, 'colsample_bytree': 0.8304316321601257, 'min_child_weight': 5, 'reg_lambda': 0.25058944571546043}
+17:21:07     [label_binary] XGB trial 26/40: val BA 0.8420 (best 0.8693) {'n_estimators': 200, 'max_depth': 5, 'learning_rate': 0.012861333161454032, 'subsample': 0.7867662362033803, 'colsample_bytree': 0.854676199448233, 'min_child_weight': 8, 'reg_lambda': 1.127448958874728}
+17:21:12     [label_binary] XGB trial 27/40: val BA 0.8504 (best 0.8693) {'n_estimators': 100, 'max_depth': 4, 'learning_rate': 0.030600354594300386, 'subsample': 0.6260222063996215, 'colsample_bytree': 0.7251700937733494, 'min_child_weight': 4, 'reg_lambda': 0.28604001230573906}
+17:21:19     [label_binary] XGB trial 28/40: val BA 0.8568 (best 0.8693) {'n_estimators': 150, 'max_depth': 4, 'learning_rate': 0.05155507892536045, 'subsample': 0.7872117243401753, 'colsample_bytree': 0.8450111799155718, 'min_child_weight': 8, 'reg_lambda': 1.0953808482571208}
+17:21:27     [label_binary] XGB trial 29/40: val BA 0.8474 (best 0.8693) {'n_estimators': 200, 'max_depth': 3, 'learning_rate': 0.026604415129540163, 'subsample': 0.940171352455012, 'colsample_bytree': 0.9187472935204344, 'min_child_weight': 10, 'reg_lambda': 2.3530365762616654}
+17:21:39     [label_binary] XGB trial 30/40: val BA 0.8746 (best 0.8746) {'n_estimators': 200, 'max_depth': 5, 'learning_rate': 0.02044036737838384, 'subsample': 0.7966042028944471, 'colsample_bytree': 0.9087637142080883, 'min_child_weight': 6, 'reg_lambda': 0.5400448105796786}
+17:21:47     [label_binary] XGB trial 31/40: val BA 0.8331 (best 0.8746) {'n_estimators': 100, 'max_depth': 5, 'learning_rate': 0.019340358422987976, 'subsample': 0.6717885333688569, 'colsample_bytree': 0.8287731672259593, 'min_child_weight': 1, 'reg_lambda': 0.4543991623774466}
+17:21:57     [label_binary] XGB trial 32/40: val BA 0.8737 (best 0.8746) {'n_estimators': 200, 'max_depth': 4, 'learning_rate': 0.017955532842586327, 'subsample': 0.8137215377158658, 'colsample_bytree': 0.9936897770456596, 'min_child_weight': 7, 'reg_lambda': 0.6721088384918589}
+17:22:07     [label_binary] XGB trial 33/40: val BA 0.8635 (best 0.8746) {'n_estimators': 200, 'max_depth': 4, 'learning_rate': 0.022164059577945927, 'subsample': 0.8937257694699138, 'colsample_bytree': 0.809272619873072, 'min_child_weight': 7, 'reg_lambda': 0.47728281166761927}
+17:22:20     [label_binary] XGB trial 34/40: val BA 0.8725 (best 0.8746) {'n_estimators': 250, 'max_depth': 4, 'learning_rate': 0.016834407084328023, 'subsample': 0.751969703971224, 'colsample_bytree': 0.9740919375496639, 'min_child_weight': 7, 'reg_lambda': 1.4656909260344315}
+17:22:32     [label_binary] XGB trial 35/40: val BA 0.8456 (best 0.8746) {'n_estimators': 200, 'max_depth': 5, 'learning_rate': 0.012636204199736212, 'subsample': 0.8902769695631089, 'colsample_bytree': 0.9611623163128503, 'min_child_weight': 6, 'reg_lambda': 1.1756942328179116}
+17:22:43     [label_binary] XGB trial 36/40: val BA 0.8391 (best 0.8746) {'n_estimators': 200, 'max_depth': 6, 'learning_rate': 0.031347703723770506, 'subsample': 0.7546858284228216, 'colsample_bytree': 0.9155081530106352, 'min_child_weight': 7, 'reg_lambda': 0.9811100205412968}
+17:22:53     [label_binary] XGB trial 37/40: val BA 0.8420 (best 0.8746) {'n_estimators': 150, 'max_depth': 5, 'learning_rate': 0.017794539115715758, 'subsample': 0.7271192573942382, 'colsample_bytree': 0.9797721236647288, 'min_child_weight': 9, 'reg_lambda': 0.40860199005381503}
+17:23:05     [label_binary] XGB trial 38/40: val BA 0.8593 (best 0.8746) {'n_estimators': 250, 'max_depth': 4, 'learning_rate': 0.019246148437507066, 'subsample': 0.7588977464829181, 'colsample_bytree': 0.9919099889406394, 'min_child_weight': 4, 'reg_lambda': 0.6655948149825442}
+17:23:15     [label_binary] XGB trial 39/40: val BA 0.8347 (best 0.8746) {'n_estimators': 150, 'max_depth': 5, 'learning_rate': 0.01399348141850065, 'subsample': 0.7120180160466334, 'colsample_bytree': 0.964913553950018, 'min_child_weight': 9, 'reg_lambda': 1.1707149105719112}
+17:23:25     [label_binary] XGB trial 40/40: val BA 0.8310 (best 0.8746) {'n_estimators': 200, 'max_depth': 4, 'learning_rate': 0.012309942901022171, 'subsample': 0.8359767707593032, 'colsample_bytree': 0.9010743326387023, 'min_child_weight': 3, 'reg_lambda': 0.8157093217289169}
+17:23:38 [2 optuna] 2/6 done: label_binary XGB_tuned: val BA 0.8746 (default 0.8358) in 575s | stage elapsed 16.9 min | ETA this stage ~33.7 min
+17:23:56     [label_binary] RF trial 1/40: val BA 0.8191 (best 0.8191) {'n_estimators': 250, 'max_depth': 39, 'min_samples_leaf': 15, 'max_features': 'sqrt'}
+17:24:34     [label_binary] RF trial 2/40: val BA 0.8168 (best 0.8191) {'n_estimators': 450, 'max_depth': 25, 'min_samples_leaf': 15, 'max_features': 'log2'}
+17:24:59     [label_binary] RF trial 3/40: val BA 0.8387 (best 0.8387) {'n_estimators': 150, 'max_depth': 9, 'min_samples_leaf': 7, 'max_features': 0.5}
+17:25:09     [label_binary] RF trial 4/40: val BA 0.8225 (best 0.8387) {'n_estimators': 150, 'max_depth': 14, 'min_samples_leaf': 8, 'max_features': 'log2'}
+17:25:48     [label_binary] RF trial 5/40: val BA 0.8628 (best 0.8628) {'n_estimators': 350, 'max_depth': 4, 'min_samples_leaf': 13, 'max_features': 0.5}
+17:26:18     [label_binary] RF trial 6/40: val BA 0.8327 (best 0.8628) {'n_estimators': 450, 'max_depth': 14, 'min_samples_leaf': 2, 'max_features': 'sqrt'}
+17:26:26     [label_binary] RF trial 7/40: val BA 0.8181 (best 0.8628) {'n_estimators': 100, 'max_depth': 37, 'min_samples_leaf': 6, 'max_features': 'sqrt'}
+17:26:36     [label_binary] RF trial 8/40: val BA 0.8283 (best 0.8628) {'n_estimators': 150, 'max_depth': 39, 'min_samples_leaf': 16, 'max_features': 'sqrt'}
+17:26:52     [label_binary] RF trial 9/40: val BA 0.8339 (best 0.8628) {'n_estimators': 100, 'max_depth': 10, 'min_samples_leaf': 1, 'max_features': 0.5}
+17:27:28     [label_binary] RF trial 10/40: val BA 0.8371 (best 0.8628) {'n_estimators': 250, 'max_depth': 13, 'min_samples_leaf': 11, 'max_features': 0.5}
+17:28:03     [label_binary] RF trial 11/40: val BA 0.8447 (best 0.8628) {'n_estimators': 300, 'max_depth': 4, 'min_samples_leaf': 8, 'max_features': 0.5}
+17:28:59     [label_binary] RF trial 12/40: val BA 0.8369 (best 0.8628) {'n_estimators': 450, 'max_depth': 3, 'min_samples_leaf': 11, 'max_features': 0.5}
+17:29:54     [label_binary] RF trial 13/40: val BA 0.8428 (best 0.8628) {'n_estimators': 300, 'max_depth': 4, 'min_samples_leaf': 2, 'max_features': 0.5}
+17:30:52     [label_binary] RF trial 14/40: val BA 0.8499 (best 0.8628) {'n_estimators': 300, 'max_depth': 7, 'min_samples_leaf': 19, 'max_features': 0.5}
+17:31:35     [label_binary] RF trial 15/40: val BA 0.8632 (best 0.8632) {'n_estimators': 200, 'max_depth': 4, 'min_samples_leaf': 16, 'max_features': 0.5}
+17:31:47     [label_binary] RF trial 16/40: val BA 0.8271 (best 0.8632) {'n_estimators': 100, 'max_depth': 14, 'min_samples_leaf': 14, 'max_features': 'log2'}
+17:32:50     [label_binary] RF trial 17/40: val BA 0.8495 (best 0.8632) {'n_estimators': 300, 'max_depth': 22, 'min_samples_leaf': 18, 'max_features': 0.5}
+17:33:20     [label_binary] RF trial 18/40: val BA 0.8468 (best 0.8632) {'n_estimators': 150, 'max_depth': 6, 'min_samples_leaf': 19, 'max_features': 0.5}
+17:35:05     [label_binary] RF trial 19/40: val BA 0.8400 (best 0.8632) {'n_estimators': 500, 'max_depth': 11, 'min_samples_leaf': 11, 'max_features': 0.5}
+17:36:22     [label_binary] RF trial 20/40: val BA 0.8377 (best 0.8632) {'n_estimators': 350, 'max_depth': 18, 'min_samples_leaf': 10, 'max_features': 0.5}
+17:36:40     [label_binary] RF trial 21/40: val BA 0.8636 (best 0.8636) {'n_estimators': 100, 'max_depth': 4, 'min_samples_leaf': 12, 'max_features': 0.5}
+17:37:10     [label_binary] RF trial 22/40: val BA 0.8566 (best 0.8636) {'n_estimators': 150, 'max_depth': 5, 'min_samples_leaf': 14, 'max_features': 0.5}
+17:37:31     [label_binary] RF trial 23/40: val BA 0.8570 (best 0.8636) {'n_estimators': 100, 'max_depth': 5, 'min_samples_leaf': 9, 'max_features': 0.5}
+17:37:58     [label_binary] RF trial 24/40: val BA 0.8131 (best 0.8636) {'n_estimators': 250, 'max_depth': 9, 'min_samples_leaf': 16, 'max_features': 'log2'}
+17:38:32     [label_binary] RF trial 25/40: val BA 0.8477 (best 0.8636) {'n_estimators': 150, 'max_depth': 12, 'min_samples_leaf': 17, 'max_features': 0.5}
+17:39:51     [label_binary] RF trial 26/40: val BA 0.8636 (best 0.8636) {'n_estimators': 450, 'max_depth': 4, 'min_samples_leaf': 16, 'max_features': 0.5}
+17:41:27     [label_binary] RF trial 27/40: val BA 0.8481 (best 0.8636) {'n_estimators': 450, 'max_depth': 15, 'min_samples_leaf': 19, 'max_features': 0.5}
+17:42:39     [label_binary] RF trial 28/40: val BA 0.8508 (best 0.8636) {'n_estimators': 400, 'max_depth': 10, 'min_samples_leaf': 15, 'max_features': 0.5}
+17:43:01     [label_binary] RF trial 29/40: val BA 0.8567 (best 0.8636) {'n_estimators': 200, 'max_depth': 3, 'min_samples_leaf': 17, 'max_features': 0.5}
+17:43:17     [label_binary] RF trial 30/40: val BA 0.8521 (best 0.8636) {'n_estimators': 100, 'max_depth': 10, 'min_samples_leaf': 13, 'max_features': 0.5}
+17:44:15     [label_binary] RF trial 31/40: val BA 0.8630 (best 0.8636) {'n_estimators': 500, 'max_depth': 4, 'min_samples_leaf': 18, 'max_features': 0.5}
+17:44:42     [label_binary] RF trial 32/40: val BA 0.8018 (best 0.8636) {'n_estimators': 500, 'max_depth': 3, 'min_samples_leaf': 19, 'max_features': 'sqrt'}
+17:45:33     [label_binary] RF trial 33/40: val BA 0.8687 (best 0.8687) {'n_estimators': 450, 'max_depth': 5, 'min_samples_leaf': 17, 'max_features': 0.5}
+17:46:30     [label_binary] RF trial 34/40: val BA 0.8504 (best 0.8687) {'n_estimators': 450, 'max_depth': 6, 'min_samples_leaf': 16, 'max_features': 0.5}
+17:47:21     [label_binary] RF trial 35/40: val BA 0.8396 (best 0.8687) {'n_estimators': 500, 'max_depth': 9, 'min_samples_leaf': 17, 'max_features': 0.3}
+17:47:51     [label_binary] RF trial 36/40: val BA 0.8547 (best 0.8687) {'n_estimators': 200, 'max_depth': 5, 'min_samples_leaf': 11, 'max_features': 0.5}
+17:49:08     [label_binary] RF trial 37/40: val BA 0.8622 (best 0.8687) {'n_estimators': 450, 'max_depth': 4, 'min_samples_leaf': 20, 'max_features': 0.5}
+17:50:50     [label_binary] RF trial 38/40: val BA 0.8701 (best 0.8701) {'n_estimators': 500, 'max_depth': 5, 'min_samples_leaf': 13, 'max_features': 0.5}
+17:52:36     [label_binary] RF trial 39/40: val BA 0.8502 (best 0.8701) {'n_estimators': 500, 'max_depth': 13, 'min_samples_leaf': 17, 'max_features': 0.5}
+17:53:25     [label_binary] RF trial 40/40: val BA 0.8053 (best 0.8701) {'n_estimators': 500, 'max_depth': 4, 'min_samples_leaf': 14, 'max_features': 'sqrt'}
+17:54:56 [2 optuna] 3/6 done: label_binary RF_tuned: val BA 0.8701 (default 0.8337) in 1878s | stage elapsed 48.2 min | ETA this stage ~48.1 min
+17:55:03 [label_level] tree ranking by validation BA: XGB 0.8679, LGBM 0.8589, RF 0.8295, ET 0.8138 -> tuning ['XGB', 'LGBM', 'RF']
+17:56:16     [label_level] XGB trial 1/40: val BA 0.8563 (best 0.8563) {'n_estimators': 250, 'max_depth': 10, 'learning_rate': 0.1205712628744377, 'subsample': 0.7993292420985183, 'colsample_bytree': 0.4936111842654619, 'min_child_weight': 4, 'reg_lambda': 0.014936568554617643}
+17:57:49     [label_level] XGB trial 2/40: val BA 0.8316 (best 0.8563) {'n_estimators': 450, 'max_depth': 7, 'learning_rate': 0.11114989443094977, 'subsample': 0.5102922471479012, 'colsample_bytree': 0.9819459112971965, 'min_child_weight': 17, 'reg_lambda': 0.04335281794951567}
+17:58:28     [label_level] XGB trial 3/40: val BA 0.8217 (best 0.8563) {'n_estimators': 150, 'max_depth': 3, 'learning_rate': 0.028145092716060652, 'subsample': 0.762378215816119, 'colsample_bytree': 0.6591670111852694, 'min_child_weight': 6, 'reg_lambda': 0.6847920095574779}
+17:59:18     [label_level] XGB trial 4/40: val BA 0.8434 (best 0.8563) {'n_estimators': 150, 'max_depth': 4, 'learning_rate': 0.03476649150592621, 'subsample': 0.728034992108518, 'colsample_bytree': 0.8711055768358081, 'min_child_weight': 4, 'reg_lambda': 0.34890188454913873}
+18:00:09     [label_level] XGB trial 5/40: val BA 0.8273 (best 0.8563) {'n_estimators': 350, 'max_depth': 2, 'learning_rate': 0.07896186801026692, 'subsample': 0.5852620618436457, 'colsample_bytree': 0.43903095579116774, 'min_child_weight': 19, 'reg_lambda': 7.886714129990489}
+18:02:10     [label_level] XGB trial 6/40: val BA 0.8528 (best 0.8563) {'n_estimators': 450, 'max_depth': 4, 'learning_rate': 0.013940346079873234, 'subsample': 0.8421165132560784, 'colsample_bytree': 0.6640914962437607, 'min_child_weight': 3, 'reg_lambda': 0.3058656666978526}
+18:02:53     [label_level] XGB trial 7/40: val BA 0.8510 (best 0.8563) {'n_estimators': 100, 'max_depth': 10, 'learning_rate': 0.024112898115291985, 'subsample': 0.831261142176991, 'colsample_bytree': 0.5870266456536466, 'min_child_weight': 11, 'reg_lambda': 0.43664735929796333}
+18:03:37     [label_level] XGB trial 8/40: val BA 0.8466 (best 0.8563) {'n_estimators': 150, 'max_depth': 10, 'learning_rate': 0.13962563737015762, 'subsample': 0.9697494707820946, 'colsample_bytree': 0.9368964102565893, 'min_child_weight': 12, 'reg_lambda': 5.829384542994738}
+18:03:58     [label_level] XGB trial 9/40: val BA 0.7809 (best 0.8563) {'n_estimators': 100, 'max_depth': 3, 'learning_rate': 0.011662890273931383, 'subsample': 0.6626651653816322, 'colsample_bytree': 0.6332063738136893, 'min_child_weight': 6, 'reg_lambda': 3.063462210622083}
+18:05:02     [label_level] XGB trial 10/40: val BA 0.8513 (best 0.8563) {'n_estimators': 250, 'max_depth': 4, 'learning_rate': 0.06333268775321843, 'subsample': 0.5704621124873813, 'colsample_bytree': 0.8813181884524238, 'min_child_weight': 2, 'reg_lambda': 9.133995846860973}
+18:05:58     [label_level] XGB trial 11/40: val BA 0.8600 (best 0.8600) {'n_estimators': 200, 'max_depth': 9, 'learning_rate': 0.24736207508839628, 'subsample': 0.7698791998339104, 'colsample_bytree': 0.7196396566289425, 'min_child_weight': 1, 'reg_lambda': 0.013599964901573483}
+18:06:50     [label_level] XGB trial 12/40: val BA 0.8593 (best 0.8600) {'n_estimators': 200, 'max_depth': 8, 'learning_rate': 0.17266636610057867, 'subsample': 0.8709443639849752, 'colsample_bytree': 0.5582241153567589, 'min_child_weight': 4, 'reg_lambda': 0.011921906409372695}
+18:08:03     [label_level] XGB trial 13/40: val BA 0.8583 (best 0.8600) {'n_estimators': 300, 'max_depth': 10, 'learning_rate': 0.27162788734746646, 'subsample': 0.8714130484439886, 'colsample_bytree': 0.7069430106359728, 'min_child_weight': 3, 'reg_lambda': 0.047165580100783824}
+18:08:33     [label_level] XGB trial 14/40: val BA 0.8499 (best 0.8600) {'n_estimators': 100, 'max_depth': 6, 'learning_rate': 0.13313445304752583, 'subsample': 0.8814613167525054, 'colsample_bytree': 0.5920694989071307, 'min_child_weight': 9, 'reg_lambda': 0.016056265285329815}
+18:09:37     [label_level] XGB trial 15/40: val BA 0.8522 (best 0.8600) {'n_estimators': 250, 'max_depth': 8, 'learning_rate': 0.1751736301984195, 'subsample': 0.6524168956854866, 'colsample_bytree': 0.878284036337539, 'min_child_weight': 5, 'reg_lambda': 0.01530742550755287}
+18:10:09     [label_level] XGB trial 16/40: val BA 0.8626 (best 0.8626) {'n_estimators': 150, 'max_depth': 4, 'learning_rate': 0.2890595317226263, 'subsample': 0.7868087316244665, 'colsample_bytree': 0.6956126780108999, 'min_child_weight': 2, 'reg_lambda': 0.013792167484427685}
+18:11:21     [label_level] XGB trial 17/40: val BA 0.8631 (best 0.8631) {'n_estimators': 200, 'max_depth': 7, 'learning_rate': 0.15014213280000882, 'subsample': 0.7980219381837255, 'colsample_bytree': 0.7661449578273378, 'min_child_weight': 1, 'reg_lambda': 0.07462490740959239}
+18:12:29     [label_level] XGB trial 18/40: val BA 0.8582 (best 0.8631) {'n_estimators': 250, 'max_depth': 4, 'learning_rate': 0.25248739790837893, 'subsample': 0.7139931688889388, 'colsample_bytree': 0.9417469643076326, 'min_child_weight': 1, 'reg_lambda': 0.010667238033545657}
+18:13:14     [label_level] XGB trial 19/40: val BA 0.8497 (best 0.8631) {'n_estimators': 200, 'max_depth': 3, 'learning_rate': 0.2959836481904002, 'subsample': 0.7635679405495457, 'colsample_bytree': 0.6425185594080685, 'min_child_weight': 6, 'reg_lambda': 0.023883240832108785}
+18:14:05     [label_level] XGB trial 20/40: val BA 0.8602 (best 0.8631) {'n_estimators': 150, 'max_depth': 4, 'learning_rate': 0.11172810363252278, 'subsample': 0.7375433897161068, 'colsample_bytree': 0.9511288962526055, 'min_child_weight': 1, 'reg_lambda': 0.08056789653026779}
+18:15:15     [label_level] XGB trial 21/40: val BA 0.8618 (best 0.8631) {'n_estimators': 250, 'max_depth': 5, 'learning_rate': 0.2630758098038387, 'subsample': 0.8833403802268168, 'colsample_bytree': 0.6468373482357799, 'min_child_weight': 1, 'reg_lambda': 0.10434228003432391}
+18:16:24     [label_level] XGB trial 22/40: val BA 0.8579 (best 0.8631) {'n_estimators': 250, 'max_depth': 7, 'learning_rate': 0.26012140428676006, 'subsample': 0.8717194009058405, 'colsample_bytree': 0.76148497886969, 'min_child_weight': 4, 'reg_lambda': 0.11738411490452502}
+18:17:14     [label_level] XGB trial 23/40: val BA 0.8620 (best 0.8631) {'n_estimators': 150, 'max_depth': 5, 'learning_rate': 0.18409665405081632, 'subsample': 0.6823458876883212, 'colsample_bytree': 0.6715698572081253, 'min_child_weight': 1, 'reg_lambda': 0.0271318732060023}
+18:18:37     [label_level] XGB trial 24/40: val BA 0.8615 (best 0.8631) {'n_estimators': 200, 'max_depth': 7, 'learning_rate': 0.10751542747221751, 'subsample': 0.665745550486649, 'colsample_bytree': 0.7070527206222503, 'min_child_weight': 1, 'reg_lambda': 0.06995980978435161}
+18:19:35     [label_level] XGB trial 25/40: val BA 0.8608 (best 0.8631) {'n_estimators': 150, 'max_depth': 5, 'learning_rate': 0.17648931253447922, 'subsample': 0.6715607354458109, 'colsample_bytree': 0.823308597125606, 'min_child_weight': 4, 'reg_lambda': 0.030657215900355757}
+18:20:42     [label_level] XGB trial 26/40: val BA 0.8626 (best 0.8631) {'n_estimators': 200, 'max_depth': 4, 'learning_rate': 0.25716711199280895, 'subsample': 0.8394777098680001, 'colsample_bytree': 0.7981189801496316, 'min_child_weight': 2, 'reg_lambda': 0.024223972805674926}
+18:21:47     [label_level] XGB trial 27/40: val BA 0.8598 (best 0.8631) {'n_estimators': 200, 'max_depth': 4, 'learning_rate': 0.23126507374836694, 'subsample': 0.8792691928257172, 'colsample_bytree': 0.854631256633087, 'min_child_weight': 4, 'reg_lambda': 0.01982113687875032}
+18:23:25     [label_level] XGB trial 28/40: val BA 0.8628 (best 0.8631) {'n_estimators': 300, 'max_depth': 5, 'learning_rate': 0.18827753549936166, 'subsample': 0.793710039815478, 'colsample_bytree': 0.8343017221780645, 'min_child_weight': 2, 'reg_lambda': 0.023570918332066256}
+18:24:34     [label_level] XGB trial 29/40: val BA 0.8681 (best 0.8681) {'n_estimators': 250, 'max_depth': 4, 'learning_rate': 0.1196509274489522, 'subsample': 0.8568172878856186, 'colsample_bytree': 0.7799583929379188, 'min_child_weight': 1, 'reg_lambda': 0.11345342180600514}
+18:25:48     [label_level] XGB trial 30/40: val BA 0.8662 (best 0.8681) {'n_estimators': 250, 'max_depth': 4, 'learning_rate': 0.07673131088192903, 'subsample': 0.9330095708232995, 'colsample_bytree': 0.8278374759271699, 'min_child_weight': 2, 'reg_lambda': 0.05253432627593644}
+18:27:01     [label_level] XGB trial 31/40: val BA 0.8662 (best 0.8681) {'n_estimators': 250, 'max_depth': 4, 'learning_rate': 0.11651781436597873, 'subsample': 0.8215579841587431, 'colsample_bytree': 0.8273438897407409, 'min_child_weight': 3, 'reg_lambda': 0.10276196189436904}
+18:28:08     [label_level] XGB trial 32/40: val BA 0.8663 (best 0.8681) {'n_estimators': 250, 'max_depth': 4, 'learning_rate': 0.08873310265735124, 'subsample': 0.9177363601743883, 'colsample_bytree': 0.7579331077806861, 'min_child_weight': 1, 'reg_lambda': 0.035467221370807725}
+18:29:12     [label_level] XGB trial 33/40: val BA 0.8618 (best 0.8681) {'n_estimators': 250, 'max_depth': 4, 'learning_rate': 0.07393533291409748, 'subsample': 0.7966953607301848, 'colsample_bytree': 0.7413854689944371, 'min_child_weight': 2, 'reg_lambda': 0.03614591670900256}
+18:30:30     [label_level] XGB trial 34/40: val BA 0.8624 (best 0.8681) {'n_estimators': 300, 'max_depth': 4, 'learning_rate': 0.07156120274486995, 'subsample': 0.845997339947171, 'colsample_bytree': 0.8413724138096611, 'min_child_weight': 3, 'reg_lambda': 0.09006858018063843}
+18:31:25     [label_level] XGB trial 35/40: val BA 0.8597 (best 0.8681) {'n_estimators': 250, 'max_depth': 3, 'learning_rate': 0.07220184112785451, 'subsample': 0.9201070847189821, 'colsample_bytree': 0.8860691286759648, 'min_child_weight': 3, 'reg_lambda': 0.05269741586963993}
+18:32:38     [label_level] XGB trial 36/40: val BA 0.8629 (best 0.8681) {'n_estimators': 250, 'max_depth': 4, 'learning_rate': 0.1370714903998495, 'subsample': 0.7983244674297827, 'colsample_bytree': 0.8590124030941125, 'min_child_weight': 1, 'reg_lambda': 0.08617106370470104}
+18:33:56     [label_level] XGB trial 37/40: val BA 0.8630 (best 0.8681) {'n_estimators': 200, 'max_depth': 4, 'learning_rate': 0.07151460575877229, 'subsample': 0.8160129517326242, 'colsample_bytree': 0.7930306076166769, 'min_child_weight': 1, 'reg_lambda': 0.19988125241736265}
+18:34:52     [label_level] XGB trial 38/40: val BA 0.8638 (best 0.8681) {'n_estimators': 250, 'max_depth': 3, 'learning_rate': 0.14063058298976303, 'subsample': 0.8875737865133547, 'colsample_bytree': 0.7865093006781003, 'min_child_weight': 1, 'reg_lambda': 0.021946429656813548}
+18:35:28     [label_level] XGB trial 39/40: val BA 0.8632 (best 0.8681) {'n_estimators': 200, 'max_depth': 4, 'learning_rate': 0.11318727376782146, 'subsample': 0.9850613562178301, 'colsample_bytree': 0.7107791006271302, 'min_child_weight': 5, 'reg_lambda': 0.03668604749992411}
+18:36:09     [label_level] XGB trial 40/40: val BA 0.8756 (best 0.8756) {'n_estimators': 200, 'max_depth': 5, 'learning_rate': 0.09024645691533577, 'subsample': 0.9716481760510551, 'colsample_bytree': 0.8599738277295738, 'min_child_weight': 1, 'reg_lambda': 0.03267956808339119}
+18:36:52 [2 optuna] 4/6 done: label_level XGB_tuned: val BA 0.8756 (default 0.8679) in 2508s | stage elapsed 90.1 min | ETA this stage ~45.0 min
+18:37:27     [label_level] LGBM trial 1/40: val BA 0.8501 (best 0.8501) {'n_estimators': 250, 'num_leaves': 123, 'max_depth': 10, 'learning_rate': 0.07661100707771368, 'min_child_samples': 13, 'subsample': 0.5779972601681014, 'colsample_bytree': 0.4348501673009197, 'reg_lambda': 3.9676050770529883}
+18:37:48     [label_level] LGBM trial 2/40: val BA 0.8490 (best 0.8501) {'n_estimators': 350, 'num_leaves': 93, 'max_depth': 3, 'learning_rate': 0.2708160864249968, 'min_child_samples': 51, 'subsample': 0.6061695553391381, 'colsample_bytree': 0.5090949803242604, 'reg_lambda': 0.03549878832196503}
+18:38:11     [label_level] LGBM trial 3/40: val BA 0.8478 (best 0.8501) {'n_estimators': 200, 'num_leaves': 71, 'max_depth': 7, 'learning_rate': 0.02692655251486473, 'min_child_samples': 39, 'subsample': 0.569746930326021, 'colsample_bytree': 0.5752867891211308, 'reg_lambda': 0.1256277350380703}
+18:38:35     [label_level] LGBM trial 4/40: val BA 0.8497 (best 0.8501) {'n_estimators': 300, 'num_leaves': 103, 'max_depth': 4, 'learning_rate': 0.05748924681991978, 'min_child_samples': 38, 'subsample': 0.5232252063599989, 'colsample_bytree': 0.764526911140863, 'reg_lambda': 0.03247673570627449}
+18:38:52     [label_level] LGBM trial 5/40: val BA 0.8587 (best 0.8587) {'n_estimators': 100, 'num_leaves': 122, 'max_depth': 12, 'learning_rate': 0.1563510870813346, 'min_child_samples': 22, 'subsample': 0.5488360570031919, 'colsample_bytree': 0.8105398159072941, 'reg_lambda': 0.2091498132903561}
+18:38:59     [label_level] LGBM trial 6/40: val BA 0.8646 (best 0.8646) {'n_estimators': 150, 'num_leaves': 67, 'max_depth': 3, 'learning_rate': 0.22038218939289875, 'min_child_samples': 19, 'subsample': 0.831261142176991, 'colsample_bytree': 0.5870266456536466, 'reg_lambda': 0.3632486956676606}
+18:39:29     [label_level] LGBM trial 7/40: val BA 0.8568 (best 0.8646) {'n_estimators': 300, 'num_leaves': 30, 'max_depth': 12, 'learning_rate': 0.13962563737015762, 'min_child_samples': 57, 'subsample': 0.9474136752138245, 'colsample_bytree': 0.7587399872866512, 'reg_lambda': 5.829384542994738}
+18:39:34     [label_level] LGBM trial 8/40: val BA 0.8327 (best 0.8646) {'n_estimators': 100, 'num_leaves': 31, 'max_depth': 3, 'learning_rate': 0.03023795012558475, 'min_child_samples': 26, 'subsample': 0.6356745158869479, 'colsample_bytree': 0.8972425054911576, 'reg_lambda': 0.11756010900231852}
+18:39:47     [label_level] LGBM trial 9/40: val BA 0.8681 (best 0.8681) {'n_estimators': 200, 'num_leaves': 73, 'max_depth': 4, 'learning_rate': 0.1530883741573138, 'min_child_samples': 9, 'subsample': 0.9934434683002586, 'colsample_bytree': 0.8633468615779945, 'reg_lambda': 0.039459088111000004}
+18:39:56     [label_level] LGBM trial 10/40: val BA 0.8538 (best 0.8681) {'n_estimators': 100, 'num_leaves': 106, 'max_depth': 10, 'learning_rate': 0.11935262708510537, 'min_child_samples': 48, 'subsample': 0.5370223258670452, 'colsample_bytree': 0.6150794371265635, 'reg_lambda': 0.022264204303769682}
+18:40:13     [label_level] LGBM trial 11/40: val BA 0.8664 (best 0.8681) {'n_estimators': 400, 'num_leaves': 46, 'max_depth': 3, 'learning_rate': 0.07588808124902474, 'min_child_samples': 30, 'subsample': 0.9572708204047887, 'colsample_bytree': 0.7061740376261652, 'reg_lambda': 0.012903351823930188}
+18:40:30     [label_level] LGBM trial 12/40: val BA 0.8666 (best 0.8681) {'n_estimators': 300, 'num_leaves': 104, 'max_depth': 3, 'learning_rate': 0.13080145550421465, 'min_child_samples': 6, 'subsample': 0.9607037271307761, 'colsample_bytree': 0.8313831180043392, 'reg_lambda': 0.010512701173841935}
+18:40:36     [label_level] LGBM trial 13/40: val BA 0.8588 (best 0.8681) {'n_estimators': 100, 'num_leaves': 65, 'max_depth': 3, 'learning_rate': 0.13609677034500559, 'min_child_samples': 7, 'subsample': 0.887466085058775, 'colsample_bytree': 0.9351809141366326, 'reg_lambda': 0.0936920995623908}
+18:40:53     [label_level] LGBM trial 14/40: val BA 0.8692 (best 0.8692) {'n_estimators': 250, 'num_leaves': 124, 'max_depth': 5, 'learning_rate': 0.09197060563259499, 'min_child_samples': 10, 'subsample': 0.9258177703877664, 'colsample_bytree': 0.7694784118231485, 'reg_lambda': 0.06251484266048588}
+18:41:10     [label_level] LGBM trial 15/40: val BA 0.8677 (best 0.8692) {'n_estimators': 300, 'num_leaves': 106, 'max_depth': 4, 'learning_rate': 0.21540570340791315, 'min_child_samples': 18, 'subsample': 0.8981207292498301, 'colsample_bytree': 0.7761703983796816, 'reg_lambda': 0.06969633209012856}
+18:41:27     [label_level] LGBM trial 16/40: val BA 0.8646 (best 0.8692) {'n_estimators': 150, 'num_leaves': 37, 'max_depth': 5, 'learning_rate': 0.13602228315543455, 'min_child_samples': 18, 'subsample': 0.8802901804162574, 'colsample_bytree': 0.6768924290243756, 'reg_lambda': 0.05377800759809204}
+18:41:47     [label_level] LGBM trial 17/40: val BA 0.8654 (best 0.8692) {'n_estimators': 250, 'num_leaves': 86, 'max_depth': 3, 'learning_rate': 0.24764475798060076, 'min_child_samples': 34, 'subsample': 0.9533143812474832, 'colsample_bytree': 0.8996902835029142, 'reg_lambda': 0.13359763728202043}
+18:42:22     [label_level] LGBM trial 18/40: val BA 0.8704 (best 0.8704) {'n_estimators': 250, 'num_leaves': 118, 'max_depth': 5, 'learning_rate': 0.059347255771437936, 'min_child_samples': 22, 'subsample': 0.9991611431254359, 'colsample_bytree': 0.8448799783285499, 'reg_lambda': 0.06344804090029496}
+18:43:23     [label_level] LGBM trial 19/40: val BA 0.8681 (best 0.8704) {'n_estimators': 300, 'num_leaves': 117, 'max_depth': 7, 'learning_rate': 0.07418713339753952, 'min_child_samples': 29, 'subsample': 0.9271434667126102, 'colsample_bytree': 0.8128729294226434, 'reg_lambda': 0.052717363298593965}
+18:43:55     [label_level] LGBM trial 20/40: val BA 0.8624 (best 0.8704) {'n_estimators': 250, 'num_leaves': 128, 'max_depth': 4, 'learning_rate': 0.024664569246042687, 'min_child_samples': 24, 'subsample': 0.8823003647304883, 'colsample_bytree': 0.8907409213630249, 'reg_lambda': 0.0955795168773837}
+18:44:10     [label_level] LGBM trial 21/40: val BA 0.8578 (best 0.8704) {'n_estimators': 150, 'num_leaves': 116, 'max_depth': 3, 'learning_rate': 0.05344871393462593, 'min_child_samples': 20, 'subsample': 0.8622577537277301, 'colsample_bytree': 0.7802503647918986, 'reg_lambda': 0.052440210272362384}
+18:44:55     [label_level] LGBM trial 22/40: val BA 0.8669 (best 0.8704) {'n_estimators': 300, 'num_leaves': 104, 'max_depth': 5, 'learning_rate': 0.07099101560464627, 'min_child_samples': 24, 'subsample': 0.9216569529275475, 'colsample_bytree': 0.9832777221701418, 'reg_lambda': 0.05226712290705665}
+18:45:14     [label_level] LGBM trial 23/40: val BA 0.8722 (best 0.8722) {'n_estimators': 200, 'num_leaves': 51, 'max_depth': 4, 'learning_rate': 0.1671271006785356, 'min_child_samples': 10, 'subsample': 0.9947378995560974, 'colsample_bytree': 0.8880371648341935, 'reg_lambda': 0.021973769270374106}
+18:45:27     [label_level] LGBM trial 24/40: val BA 0.8678 (best 0.8722) {'n_estimators': 150, 'num_leaves': 88, 'max_depth': 3, 'learning_rate': 0.24837093473375832, 'min_child_samples': 13, 'subsample': 0.9489954507936155, 'colsample_bytree': 0.9340861452057493, 'reg_lambda': 0.016199182621287427}
+18:45:42     [label_level] LGBM trial 25/40: val BA 0.8648 (best 0.8722) {'n_estimators': 150, 'num_leaves': 121, 'max_depth': 4, 'learning_rate': 0.07976832246985861, 'min_child_samples': 24, 'subsample': 0.940966967501498, 'colsample_bytree': 0.8600287731116696, 'reg_lambda': 0.01958603714065808}
+18:46:15     [label_level] LGBM trial 26/40: val BA 0.8693 (best 0.8722) {'n_estimators': 250, 'num_leaves': 128, 'max_depth': 6, 'learning_rate': 0.152330596412258, 'min_child_samples': 9, 'subsample': 0.9988929294853977, 'colsample_bytree': 0.8700862376400819, 'reg_lambda': 0.01109304725151657}
+18:46:47     [label_level] LGBM trial 27/40: val BA 0.8715 (best 0.8722) {'n_estimators': 250, 'num_leaves': 115, 'max_depth': 6, 'learning_rate': 0.14405289826283382, 'min_child_samples': 14, 'subsample': 0.9999440734561769, 'colsample_bytree': 0.8679064118102834, 'reg_lambda': 0.01629213988200299}
+18:47:17     [label_level] LGBM trial 28/40: val BA 0.8641 (best 0.8722) {'n_estimators': 200, 'num_leaves': 97, 'max_depth': 6, 'learning_rate': 0.135571594637201, 'min_child_samples': 23, 'subsample': 0.8775115696968074, 'colsample_bytree': 0.9154842016755315, 'reg_lambda': 0.012398445412296573}
+18:47:46     [label_level] LGBM trial 29/40: val BA 0.8667 (best 0.8722) {'n_estimators': 200, 'num_leaves': 68, 'max_depth': 6, 'learning_rate': 0.12573791100881596, 'min_child_samples': 10, 'subsample': 0.9182415147675222, 'colsample_bytree': 0.7798459078098957, 'reg_lambda': 0.020634244197154327}
+18:48:04     [label_level] LGBM trial 30/40: val BA 0.8702 (best 0.8722) {'n_estimators': 150, 'num_leaves': 52, 'max_depth': 5, 'learning_rate': 0.1183447120271943, 'min_child_samples': 16, 'subsample': 0.9502678163901652, 'colsample_bytree': 0.8756715656254274, 'reg_lambda': 0.011798218679241062}
+18:48:37     [label_level] LGBM trial 31/40: val BA 0.8661 (best 0.8722) {'n_estimators': 250, 'num_leaves': 107, 'max_depth': 5, 'learning_rate': 0.059296836478209825, 'min_child_samples': 10, 'subsample': 0.9468563412499845, 'colsample_bytree': 0.8586849593594934, 'reg_lambda': 0.05750992342119287}
+18:50:24     [label_level] LGBM trial 32/40: val BA 0.8657 (best 0.8722) {'n_estimators': 250, 'num_leaves': 74, 'max_depth': 4, 'learning_rate': 0.18142922554462587, 'min_child_samples': 19, 'subsample': 0.9925508320620773, 'colsample_bytree': 0.9570657132061158, 'reg_lambda': 0.037669080417002954}
+18:50:37     [label_level] LGBM trial 33/40: val BA 0.8651 (best 0.8722) {'n_estimators': 200, 'num_leaves': 43, 'max_depth': 3, 'learning_rate': 0.11224443844232068, 'min_child_samples': 15, 'subsample': 0.9394318373267185, 'colsample_bytree': 0.7812078132973133, 'reg_lambda': 0.02225738607602626}
+18:50:46     [label_level] LGBM trial 34/40: val BA 0.8699 (best 0.8722) {'n_estimators': 100, 'num_leaves': 64, 'max_depth': 5, 'learning_rate': 0.09004972773882908, 'min_child_samples': 12, 'subsample': 0.9850483223580049, 'colsample_bytree': 0.9091434701141647, 'reg_lambda': 0.01630092933577239}
+18:50:56     [label_level] LGBM trial 35/40: val BA 0.8742 (best 0.8742) {'n_estimators': 200, 'num_leaves': 128, 'max_depth': 5, 'learning_rate': 0.13101738267286098, 'min_child_samples': 27, 'subsample': 0.9860437613585132, 'colsample_bytree': 0.8374181531829404, 'reg_lambda': 0.0574575143650848}
+18:51:09     [label_level] LGBM trial 36/40: val BA 0.8704 (best 0.8742) {'n_estimators': 300, 'num_leaves': 105, 'max_depth': 5, 'learning_rate': 0.10391229220288578, 'min_child_samples': 19, 'subsample': 0.9830437703238994, 'colsample_bytree': 0.8836099309105079, 'reg_lambda': 0.02834272981678564}
+18:51:18     [label_level] LGBM trial 37/40: val BA 0.8734 (best 0.8742) {'n_estimators': 250, 'num_leaves': 114, 'max_depth': 4, 'learning_rate': 0.05894171032992065, 'min_child_samples': 27, 'subsample': 0.9996024961540994, 'colsample_bytree': 0.9167164401791428, 'reg_lambda': 0.04435484735363962}
+18:51:45     [label_level] LGBM trial 38/40: val BA 0.8701 (best 0.8742) {'n_estimators': 350, 'num_leaves': 121, 'max_depth': 7, 'learning_rate': 0.08452947463571134, 'min_child_samples': 11, 'subsample': 0.9867445233478233, 'colsample_bytree': 0.8763270753336451, 'reg_lambda': 0.026961843480909523}
+18:51:55     [label_level] LGBM trial 39/40: val BA 0.8701 (best 0.8742) {'n_estimators': 150, 'num_leaves': 102, 'max_depth': 5, 'learning_rate': 0.29081534202531717, 'min_child_samples': 18, 'subsample': 0.9843960802152724, 'colsample_bytree': 0.8707048846876748, 'reg_lambda': 0.03785592075236663}
+18:52:05     [label_level] LGBM trial 40/40: val BA 0.8733 (best 0.8742) {'n_estimators': 250, 'num_leaves': 50, 'max_depth': 4, 'learning_rate': 0.1731137866545372, 'min_child_samples': 13, 'subsample': 0.9792249112490714, 'colsample_bytree': 0.8367897838865487, 'reg_lambda': 0.01898570342341884}
+18:52:14 [2 optuna] 5/6 done: label_level LGBM_tuned: val BA 0.8742 (default 0.8589) in 922s | stage elapsed 105.5 min | ETA this stage ~21.1 min
+18:52:26     [label_level] RF trial 1/40: val BA 0.7893 (best 0.7893) {'n_estimators': 250, 'max_depth': 39, 'min_samples_leaf': 15, 'max_features': 'sqrt'}
+18:52:45     [label_level] RF trial 2/40: val BA 0.7703 (best 0.7893) {'n_estimators': 450, 'max_depth': 25, 'min_samples_leaf': 15, 'max_features': 'log2'}
+18:52:56     [label_level] RF trial 3/40: val BA 0.8147 (best 0.8147) {'n_estimators': 150, 'max_depth': 9, 'min_samples_leaf': 7, 'max_features': 0.5}
+18:53:02     [label_level] RF trial 4/40: val BA 0.7886 (best 0.8147) {'n_estimators': 150, 'max_depth': 14, 'min_samples_leaf': 8, 'max_features': 'log2'}
+18:53:21     [label_level] RF trial 5/40: val BA 0.6789 (best 0.8147) {'n_estimators': 350, 'max_depth': 4, 'min_samples_leaf': 13, 'max_features': 0.5}
+18:53:42     [label_level] RF trial 6/40: val BA 0.8121 (best 0.8147) {'n_estimators': 450, 'max_depth': 14, 'min_samples_leaf': 2, 'max_features': 'sqrt'}
+18:53:47     [label_level] RF trial 7/40: val BA 0.8082 (best 0.8147) {'n_estimators': 100, 'max_depth': 37, 'min_samples_leaf': 6, 'max_features': 'sqrt'}
+18:53:54     [label_level] RF trial 8/40: val BA 0.7847 (best 0.8147) {'n_estimators': 150, 'max_depth': 39, 'min_samples_leaf': 16, 'max_features': 'sqrt'}
+18:54:02     [label_level] RF trial 9/40: val BA 0.8321 (best 0.8321) {'n_estimators': 100, 'max_depth': 10, 'min_samples_leaf': 1, 'max_features': 0.5}
+18:54:21     [label_level] RF trial 10/40: val BA 0.8366 (best 0.8366) {'n_estimators': 250, 'max_depth': 13, 'min_samples_leaf': 11, 'max_features': 0.5}
+18:54:40     [label_level] RF trial 11/40: val BA 0.8427 (best 0.8427) {'n_estimators': 300, 'max_depth': 21, 'min_samples_leaf': 1, 'max_features': 0.3}
+18:55:00     [label_level] RF trial 12/40: val BA 0.8419 (best 0.8427) {'n_estimators': 300, 'max_depth': 15, 'min_samples_leaf': 1, 'max_features': 0.3}
+18:55:24     [label_level] RF trial 13/40: val BA 0.8344 (best 0.8427) {'n_estimators': 300, 'max_depth': 22, 'min_samples_leaf': 5, 'max_features': 0.3}
+18:55:43     [label_level] RF trial 14/40: val BA 0.7404 (best 0.8427) {'n_estimators': 300, 'max_depth': 6, 'min_samples_leaf': 1, 'max_features': 0.3}
+18:56:18     [label_level] RF trial 15/40: val BA 0.8417 (best 0.8427) {'n_estimators': 500, 'max_depth': 24, 'min_samples_leaf': 1, 'max_features': 0.3}
+18:56:32     [label_level] RF trial 16/40: val BA 0.8304 (best 0.8427) {'n_estimators': 300, 'max_depth': 23, 'min_samples_leaf': 1, 'max_features': 'sqrt'}
+18:56:59     [label_level] RF trial 17/40: val BA 0.8432 (best 0.8432) {'n_estimators': 350, 'max_depth': 18, 'min_samples_leaf': 4, 'max_features': 0.5}
+18:57:36     [label_level] RF trial 18/40: val BA 0.8455 (best 0.8455) {'n_estimators': 450, 'max_depth': 30, 'min_samples_leaf': 3, 'max_features': 0.5}
+18:58:07     [label_level] RF trial 19/40: val BA 0.8458 (best 0.8458) {'n_estimators': 400, 'max_depth': 36, 'min_samples_leaf': 5, 'max_features': 0.5}
+18:58:42     [label_level] RF trial 20/40: val BA 0.8455 (best 0.8458) {'n_estimators': 450, 'max_depth': 37, 'min_samples_leaf': 3, 'max_features': 0.5}
+18:59:16     [label_level] RF trial 21/40: val BA 0.8454 (best 0.8458) {'n_estimators': 450, 'max_depth': 24, 'min_samples_leaf': 7, 'max_features': 0.5}
+18:59:56     [label_level] RF trial 22/40: val BA 0.8458 (best 0.8458) {'n_estimators': 500, 'max_depth': 34, 'min_samples_leaf': 3, 'max_features': 0.5}
+19:00:28     [label_level] RF trial 23/40: val BA 0.8498 (best 0.8498) {'n_estimators': 400, 'max_depth': 31, 'min_samples_leaf': 1, 'max_features': 0.5}
+19:01:06     [label_level] RF trial 24/40: val BA 0.8447 (best 0.8498) {'n_estimators': 500, 'max_depth': 37, 'min_samples_leaf': 7, 'max_features': 0.5}
+19:01:33     [label_level] RF trial 25/40: val BA 0.8407 (best 0.8498) {'n_estimators': 350, 'max_depth': 36, 'min_samples_leaf': 6, 'max_features': 0.5}
+19:01:56     [label_level] RF trial 26/40: val BA 0.8372 (best 0.8498) {'n_estimators': 300, 'max_depth': 33, 'min_samples_leaf': 10, 'max_features': 0.5}
+19:02:24     [label_level] RF trial 27/40: val BA 0.8485 (best 0.8498) {'n_estimators': 350, 'max_depth': 33, 'min_samples_leaf': 1, 'max_features': 0.5}
+19:02:45     [label_level] RF trial 28/40: val BA 0.8508 (best 0.8508) {'n_estimators': 250, 'max_depth': 35, 'min_samples_leaf': 1, 'max_features': 0.5}
+19:02:59     [label_level] RF trial 29/40: val BA 0.8295 (best 0.8508) {'n_estimators': 300, 'max_depth': 32, 'min_samples_leaf': 1, 'max_features': 'sqrt'}
+19:03:15     [label_level] RF trial 30/40: val BA 0.8492 (best 0.8508) {'n_estimators': 200, 'max_depth': 25, 'min_samples_leaf': 2, 'max_features': 0.5}
+19:03:24     [label_level] RF trial 31/40: val BA 0.8462 (best 0.8508) {'n_estimators': 100, 'max_depth': 27, 'min_samples_leaf': 4, 'max_features': 0.5}
+19:03:52     [label_level] RF trial 32/40: val BA 0.8485 (best 0.8508) {'n_estimators': 350, 'max_depth': 32, 'min_samples_leaf': 1, 'max_features': 0.5}
+19:04:05     [label_level] RF trial 33/40: val BA 0.8519 (best 0.8519) {'n_estimators': 150, 'max_depth': 34, 'min_samples_leaf': 1, 'max_features': 0.5}
+19:04:26     [label_level] RF trial 34/40: val BA 0.8508 (best 0.8519) {'n_estimators': 250, 'max_depth': 30, 'min_samples_leaf': 1, 'max_features': 0.5}
+19:04:42     [label_level] RF trial 35/40: val BA 0.8445 (best 0.8519) {'n_estimators': 200, 'max_depth': 38, 'min_samples_leaf': 4, 'max_features': 0.5}
+19:04:59     [label_level] RF trial 36/40: val BA 0.8502 (best 0.8519) {'n_estimators': 200, 'max_depth': 35, 'min_samples_leaf': 1, 'max_features': 0.5}
+19:05:10     [label_level] RF trial 37/40: val BA 0.8298 (best 0.8519) {'n_estimators': 250, 'max_depth': 37, 'min_samples_leaf': 1, 'max_features': 'sqrt'}
+19:05:31     [label_level] RF trial 38/40: val BA 0.8508 (best 0.8519) {'n_estimators': 250, 'max_depth': 34, 'min_samples_leaf': 1, 'max_features': 0.5}
+19:05:43     [label_level] RF trial 39/40: val BA 0.8519 (best 0.8519) {'n_estimators': 150, 'max_depth': 40, 'min_samples_leaf': 1, 'max_features': 0.5}
+19:05:56     [label_level] RF trial 40/40: val BA 0.8519 (best 0.8519) {'n_estimators': 150, 'max_depth': 29, 'min_samples_leaf': 1, 'max_features': 0.5}
+19:06:09 [2 optuna] 6/6 done: label_level RF_tuned: val BA 0.8519 (default 0.8295) in 835s | stage elapsed 119.4 min | ETA this stage ~0.0 min
+19:06:09 saved report_outputs/best_params.json, optuna_trials.csv
+19:06:09 STAGE 2 finished in 119.4 min
+19:06:09 ======================================================================
+19:06:09 STAGE 3: deep models, 10-fold, max 150 epochs, EarlyStopping patience 12, ReduceLROnPlateau patience 4
+19:06:18 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:06:26     [label_binary] CNN_BiGRU_Att/orig fold 1: 22 epochs run (best 10), 13s, 0.59s/epoch, val BA 0.975
+19:06:32 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:06:39     [label_binary] CNN_BiGRU_Att/orig fold 2: 20 epochs run (best 8), 12s, 0.59s/epoch, val BA 0.483
+19:06:45 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:06:53     [label_binary] CNN_BiGRU_Att/orig fold 3: 22 epochs run (best 10), 12s, 0.56s/epoch, val BA 0.823
+19:06:59 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:07:08     [label_binary] CNN_BiGRU_Att/orig fold 4: 24 epochs run (best 12), 13s, 0.56s/epoch, val BA 0.987
+19:07:13 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:07:21     [label_binary] CNN_BiGRU_Att/orig fold 5: 22 epochs run (best 10), 12s, 0.54s/epoch, val BA 0.883
+19:07:27 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:08:15     [label_binary] CNN_BiGRU_Att/orig fold 6: 150 epochs run (best 149), 53s, 0.35s/epoch, val BA 1.000  ** not converged (hit 150 epochs) **
+19:08:21 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:08:28     [label_binary] CNN_BiGRU_Att/orig fold 7: 21 epochs run (best 9), 11s, 0.54s/epoch, val BA 0.991
+19:08:34 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:08:40     [label_binary] CNN_BiGRU_Att/orig fold 8: 17 epochs run (best 5), 11s, 0.63s/epoch, val BA 0.721
+19:08:46 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:08:53     [label_binary] CNN_BiGRU_Att/orig fold 9: 18 epochs run (best 6), 11s, 0.61s/epoch, val BA 0.750
+19:08:58 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:09:06     [label_binary] CNN_BiGRU_Att/orig fold 10: 21 epochs run (best 9), 11s, 0.54s/epoch, val BA 0.800
+19:09:06 [label_binary] CNN_BiGRU_Att: epochs per fold [22, 20, 22, 24, 22, 150, 21, 17, 18, 21]; folds hitting 150: 1 (not converged)
+19:09:06 [3 deep] 1/8 done: label_binary CNN_BiGRU_Att: val BA 0.8414 in 177s | stage elapsed 2.9 min | ETA this stage ~20.6 min
+19:09:11 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:09:21     [label_binary] CNN_BiLSTM_Att/orig fold 1: 29 epochs run (best 17), 14s, 0.48s/epoch, val BA 0.990
+19:09:26 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:09:33     [label_binary] CNN_BiLSTM_Att/orig fold 2: 19 epochs run (best 7), 11s, 0.56s/epoch, val BA 0.483
+19:09:38 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:09:46     [label_binary] CNN_BiLSTM_Att/orig fold 3: 23 epochs run (best 11), 12s, 0.51s/epoch, val BA 0.741
+19:09:52 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:10:00     [label_binary] CNN_BiLSTM_Att/orig fold 4: 23 epochs run (best 11), 12s, 0.53s/epoch, val BA 0.992
+19:10:06 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:10:14     [label_binary] CNN_BiLSTM_Att/orig fold 5: 24 epochs run (best 12), 12s, 0.51s/epoch, val BA 0.885
+19:10:19 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:10:33     [label_binary] CNN_BiLSTM_Att/orig fold 6: 40 epochs run (best 28), 17s, 0.43s/epoch, val BA 1.000
+19:10:38 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:10:47     [label_binary] CNN_BiLSTM_Att/orig fold 7: 26 epochs run (best 14), 13s, 0.49s/epoch, val BA 0.950
+19:10:52 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:11:00     [label_binary] CNN_BiLSTM_Att/orig fold 8: 22 epochs run (best 10), 12s, 0.53s/epoch, val BA 0.735
+19:11:06 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:11:12     [label_binary] CNN_BiLSTM_Att/orig fold 9: 19 epochs run (best 7), 11s, 0.56s/epoch, val BA 0.775
+19:11:18 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:11:27     [label_binary] CNN_BiLSTM_Att/orig fold 10: 26 epochs run (best 14), 13s, 0.50s/epoch, val BA 0.775
+19:11:27 [label_binary] CNN_BiLSTM_Att: epochs per fold [29, 19, 23, 23, 24, 40, 26, 22, 19, 26]; folds hitting 150: 0 
+19:11:27 [3 deep] 2/8 done: label_binary CNN_BiLSTM_Att: val BA 0.8326 in 141s | stage elapsed 5.3 min | ETA this stage ~15.9 min
+19:11:40 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:11:49     [label_binary] Fusion/orig fold 1: 20 epochs run (best 8), 19s, 0.93s/epoch, val BA 0.979
+19:12:01 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:12:11     [label_binary] Fusion/orig fold 2: 20 epochs run (best 8), 19s, 0.96s/epoch, val BA 0.502
+19:12:24 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:12:34     [label_binary] Fusion/orig fold 3: 20 epochs run (best 8), 19s, 0.96s/epoch, val BA 0.766
+19:12:46 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:12:59     [label_binary] Fusion/orig fold 4: 24 epochs run (best 12), 22s, 0.92s/epoch, val BA 0.983
+19:13:12 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:13:25     [label_binary] Fusion/orig fold 5: 24 epochs run (best 12), 22s, 0.94s/epoch, val BA 0.820
+19:13:39 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:14:39     [label_binary] Fusion/orig fold 6: 120 epochs run (best 108), 71s, 0.59s/epoch, val BA 1.000
+19:14:53 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:15:09     [label_binary] Fusion/orig fold 7: 29 epochs run (best 17), 26s, 0.88s/epoch, val BA 0.994
+19:15:24 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:15:42     [label_binary] Fusion/orig fold 8: 23 epochs run (best 11), 29s, 1.24s/epoch, val BA 0.789
+19:15:58 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:16:09     [label_binary] Fusion/orig fold 9: 19 epochs run (best 7), 23s, 1.21s/epoch, val BA 0.750
+19:16:23 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:16:37     [label_binary] Fusion/orig fold 10: 25 epochs run (best 13), 24s, 0.97s/epoch, val BA 0.773
+19:16:37 [label_binary] Fusion: epochs per fold [20, 20, 20, 24, 24, 120, 29, 23, 19, 25]; folds hitting 150: 0 
+19:16:37 [3 deep] 3/8 done: label_binary Fusion: val BA 0.8357 in 310s | stage elapsed 10.5 min | ETA this stage ~17.4 min
+19:16:46 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:16:56     [label_binary] Transformer/orig fold 1: 17 epochs run (best 5), 16s, 0.96s/epoch, val BA 0.990
+19:17:04 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:17:12     [label_binary] Transformer/orig fold 2: 13 epochs run (best 1), 14s, 1.05s/epoch, val BA 0.415
+19:17:20 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:17:28     [label_binary] Transformer/orig fold 3: 14 epochs run (best 2), 14s, 1.01s/epoch, val BA 0.989
+19:17:37 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:17:45     [label_binary] Transformer/orig fold 4: 15 epochs run (best 3), 15s, 0.97s/epoch, val BA 0.983
+19:17:53 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:18:02     [label_binary] Transformer/orig fold 5: 14 epochs run (best 2), 14s, 1.01s/epoch, val BA 0.885
+19:18:10 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:18:24     [label_binary] Transformer/orig fold 6: 24 epochs run (best 12), 20s, 0.81s/epoch, val BA 1.000
+19:18:32 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:18:45     [label_binary] Transformer/orig fold 7: 22 epochs run (best 10), 19s, 0.85s/epoch, val BA 0.996
+19:18:53 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:19:01     [label_binary] Transformer/orig fold 8: 14 epochs run (best 2), 14s, 1.01s/epoch, val BA 0.725
+19:19:09 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:19:18     [label_binary] Transformer/orig fold 9: 14 epochs run (best 2), 14s, 1.02s/epoch, val BA 0.775
+19:19:27 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:19:42     [label_binary] Transformer/orig fold 10: 26 epochs run (best 14), 21s, 0.81s/epoch, val BA 0.846
+19:19:42 [label_binary] Transformer: epochs per fold [17, 13, 14, 15, 14, 24, 22, 14, 14, 26]; folds hitting 150: 0 
+19:19:42 [3 deep] 4/8 done: label_binary Transformer: val BA 0.8604 in 185s | stage elapsed 13.5 min | ETA this stage ~13.5 min
+19:19:49 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:20:02     [label_level] CNN_BiGRU_Att/orig fold 1: 31 epochs run (best 19), 17s, 0.54s/epoch, val BA 0.893
+19:20:10 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:20:20     [label_level] CNN_BiGRU_Att/orig fold 2: 24 epochs run (best 12), 15s, 0.62s/epoch, val BA 0.721
+19:20:26 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:20:35     [label_level] CNN_BiGRU_Att/orig fold 3: 30 epochs run (best 18), 13s, 0.42s/epoch, val BA 0.823
+19:20:42 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:20:50     [label_level] CNN_BiGRU_Att/orig fold 4: 29 epochs run (best 17), 12s, 0.43s/epoch, val BA 0.834
+19:20:57 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:21:06     [label_level] CNN_BiGRU_Att/orig fold 5: 33 epochs run (best 21), 13s, 0.41s/epoch, val BA 0.870
+19:21:13 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:21:21     [label_level] CNN_BiGRU_Att/orig fold 6: 28 epochs run (best 16), 12s, 0.44s/epoch, val BA 0.943
+19:21:28 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:21:36     [label_level] CNN_BiGRU_Att/orig fold 7: 28 epochs run (best 16), 12s, 0.43s/epoch, val BA 0.881
+19:21:43 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:21:53     [label_level] CNN_BiGRU_Att/orig fold 8: 36 epochs run (best 24), 14s, 0.40s/epoch, val BA 0.831
+19:22:00 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:22:09     [label_level] CNN_BiGRU_Att/orig fold 9: 31 epochs run (best 19), 13s, 0.42s/epoch, val BA 0.819
+19:22:16 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:22:24     [label_level] CNN_BiGRU_Att/orig fold 10: 26 epochs run (best 14), 12s, 0.46s/epoch, val BA 0.728
+19:22:24 [label_level] CNN_BiGRU_Att: epochs per fold [31, 24, 30, 29, 33, 28, 28, 36, 31, 26]; folds hitting 150: 0 
+19:22:24 [3 deep] 5/8 done: label_level CNN_BiGRU_Att: val BA 0.8343 in 162s | stage elapsed 16.3 min | ETA this stage ~9.8 min
+19:22:31 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:22:41     [label_level] CNN_BiLSTM_Att/orig fold 1: 35 epochs run (best 23), 14s, 0.39s/epoch, val BA 0.920
+19:22:47 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:22:56     [label_level] CNN_BiLSTM_Att/orig fold 2: 29 epochs run (best 17), 12s, 0.43s/epoch, val BA 0.671
+19:23:03 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:23:11     [label_level] CNN_BiLSTM_Att/orig fold 3: 27 epochs run (best 15), 12s, 0.44s/epoch, val BA 0.782
+19:23:17 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:23:26     [label_level] CNN_BiLSTM_Att/orig fold 4: 30 epochs run (best 18), 13s, 0.43s/epoch, val BA 0.832
+19:23:33 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:23:44     [label_level] CNN_BiLSTM_Att/orig fold 5: 33 epochs run (best 21), 15s, 0.44s/epoch, val BA 0.855
+19:23:51 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:24:02     [label_level] CNN_BiLSTM_Att/orig fold 6: 33 epochs run (best 21), 15s, 0.45s/epoch, val BA 0.950
+19:24:09 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:24:22     [label_level] CNN_BiLSTM_Att/orig fold 7: 40 epochs run (best 28), 18s, 0.44s/epoch, val BA 0.928
+19:24:29 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:24:42     [label_level] CNN_BiLSTM_Att/orig fold 8: 34 epochs run (best 22), 16s, 0.48s/epoch, val BA 0.821
+19:24:49 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:25:00     [label_level] CNN_BiLSTM_Att/orig fold 9: 31 epochs run (best 19), 16s, 0.50s/epoch, val BA 0.791
+19:25:07 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:25:18     [label_level] CNN_BiLSTM_Att/orig fold 10: 29 epochs run (best 17), 15s, 0.53s/epoch, val BA 0.773
+19:25:19 [label_level] CNN_BiLSTM_Att: epochs per fold [35, 29, 27, 30, 33, 33, 40, 34, 31, 29]; folds hitting 150: 0 
+19:25:19 [3 deep] 6/8 done: label_level CNN_BiLSTM_Att: val BA 0.8322 in 175s | stage elapsed 19.2 min | ETA this stage ~6.4 min
+19:25:33 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:25:57     [label_level] Fusion/orig fold 1: 33 epochs run (best 21), 33s, 1.01s/epoch, val BA 0.880
+19:26:12 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:26:34     [label_level] Fusion/orig fold 2: 31 epochs run (best 19), 33s, 1.07s/epoch, val BA 0.677
+19:26:50 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:27:11     [label_level] Fusion/orig fold 3: 28 epochs run (best 16), 31s, 1.11s/epoch, val BA 0.776
+19:27:26 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:27:57     [label_level] Fusion/orig fold 4: 40 epochs run (best 28), 42s, 1.04s/epoch, val BA 0.873
+19:28:13 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:28:42     [label_level] Fusion/orig fold 5: 33 epochs run (best 21), 39s, 1.19s/epoch, val BA 0.834
+19:29:00 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:29:28     [label_level] Fusion/orig fold 6: 36 epochs run (best 24), 40s, 1.11s/epoch, val BA 0.936
+19:29:45 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:30:21     [label_level] Fusion/orig fold 7: 44 epochs run (best 32), 47s, 1.06s/epoch, val BA 0.944
+19:30:37 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:31:21     [label_level] Fusion/orig fold 8: 50 epochs run (best 38), 54s, 1.09s/epoch, val BA 0.874
+19:31:39 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:32:04     [label_level] Fusion/orig fold 9: 29 epochs run (best 17), 37s, 1.27s/epoch, val BA 0.757
+19:32:21 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:32:52     [label_level] Fusion/orig fold 10: 37 epochs run (best 25), 41s, 1.12s/epoch, val BA 0.797
+19:32:52 [label_level] Fusion: epochs per fold [33, 31, 28, 40, 33, 36, 44, 50, 29, 37]; folds hitting 150: 0 
+19:32:52 [3 deep] 7/8 done: label_level Fusion: val BA 0.8348 in 453s | stage elapsed 26.7 min | ETA this stage ~3.8 min
+19:33:04 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:33:18     [label_level] Transformer/orig fold 1: 26 epochs run (best 14), 21s, 0.82s/epoch, val BA 0.900
+19:33:29 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:33:37     [label_level] Transformer/orig fold 2: 16 epochs run (best 4), 15s, 0.93s/epoch, val BA 0.565
+19:33:47 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:33:59     [label_level] Transformer/orig fold 3: 22 epochs run (best 10), 17s, 0.78s/epoch, val BA 0.840
+19:34:08 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:34:22     [label_level] Transformer/orig fold 4: 25 epochs run (best 13), 19s, 0.78s/epoch, val BA 0.851
+19:34:32 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:34:49     [label_level] Transformer/orig fold 5: 32 epochs run (best 20), 23s, 0.71s/epoch, val BA 0.868
+19:34:59 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:35:13     [label_level] Transformer/orig fold 6: 27 epochs run (best 15), 19s, 0.72s/epoch, val BA 0.919
+19:35:22 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:35:35     [label_level] Transformer/orig fold 7: 27 epochs run (best 15), 19s, 0.71s/epoch, val BA 0.907
+19:35:45 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:36:02     [label_level] Transformer/orig fold 8: 35 epochs run (best 23), 23s, 0.65s/epoch, val BA 0.821
+19:36:12 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:36:25     [label_level] Transformer/orig fold 9: 27 epochs run (best 15), 19s, 0.70s/epoch, val BA 0.786
+19:36:36 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:36:45     [label_level] Transformer/orig fold 10: 18 epochs run (best 6), 15s, 0.83s/epoch, val BA 0.608
+19:36:45 [label_level] Transformer: epochs per fold [26, 16, 22, 25, 32, 27, 27, 35, 27, 18]; folds hitting 150: 0 
+19:36:45 [3 deep] 8/8 done: label_level Transformer: val BA 0.8065 in 233s | stage elapsed 30.6 min | ETA this stage ~0.0 min
+19:36:45 STAGE 3 finished in 30.6 min
+19:37:19 ======================================================================
+19:37:19 full_pipeline start Sat Oct 17 19:37:19 2026 stages [4, 5, 6, 7, 8, 9, 10] labels ['label_binary', 'label_level']
+19:37:19 NOTE: sequences are indexed by their last window, so validation sequences overlap training windows within the same block; folds are group-aware (block_id) but CV scores can still be optimistic; the TEST score is the main result; each class comes from a few scenario runs.
+19:37:19 NOTE: spec conflict resolved in favour of the EPOCH POLICY: deep early stopping patience 12 (not 5), ReduceLROnPlateau patience 4.
+19:37:20 data: 3196 windows, train 2549, test 647 (test untouched until stage 9); model inputs 128; groups api/log/metric (7, 3, 114); context slots padded 1889
+19:37:20 ======================================================================
+19:37:20 STAGE 4: XGBoost heads on the deep embeddings, stacking (shallow meta-learner on OOF probabilities), soft voting
+19:37:42 [4 heads+ensembles] 1/12 done: label_binary CNN_BiGRU_Att_XGBhead: val BA 0.8314 (own output layer 0.8414) in 22s | stage elapsed 0.4 min | ETA this stage ~4.1 min
+19:37:57 [4 heads+ensembles] 2/12 done: label_binary CNN_BiLSTM_Att_XGBhead: val BA 0.8297 (own output layer 0.8326) in 15s | stage elapsed 0.6 min | ETA this stage ~3.1 min
+19:38:27 [4 heads+ensembles] 3/12 done: label_binary Fusion_XGBhead: val BA 0.8303 (own output layer 0.8357) in 30s | stage elapsed 1.1 min | ETA this stage ~3.4 min
+19:38:46 [4 heads+ensembles] 4/12 done: label_binary Transformer_XGBhead: val BA 0.8370 (own output layer 0.8604) in 19s | stage elapsed 1.4 min | ETA this stage ~2.9 min
+19:38:47 [4 heads+ensembles] 5/12 done: label_binary Stacking ['LGBM_tuned', 'XGB_tuned', 'RF_tuned', 'Transformer', 'CNN_BiGRU_Att', 'Fusion']: val BA 0.8355 in 0s | stage elapsed 1.5 min | ETA this stage ~2.0 min
+19:38:47 [4 heads+ensembles] 6/12 done: label_binary SoftVote ['CNN_BiGRU_Att', 'CNN_BiLSTM_Att', 'Fusion', 'Transformer']: val BA 0.8441 in 0s | stage elapsed 1.5 min | ETA this stage ~1.5 min
+19:39:15 [4 heads+ensembles] 7/12 done: label_level CNN_BiGRU_Att_XGBhead: val BA 0.8344 (own output layer 0.8343) in 27s | stage elapsed 1.9 min | ETA this stage ~1.4 min
+19:39:41 [4 heads+ensembles] 8/12 done: label_level CNN_BiLSTM_Att_XGBhead: val BA 0.8258 (own output layer 0.8322) in 26s | stage elapsed 2.3 min | ETA this stage ~1.2 min
+19:40:22 [4 heads+ensembles] 9/12 done: label_level Fusion_XGBhead: val BA 0.8264 (own output layer 0.8348) in 41s | stage elapsed 3.0 min | ETA this stage ~1.0 min
+19:40:51 [4 heads+ensembles] 10/12 done: label_level Transformer_XGBhead: val BA 0.8181 (own output layer 0.8065) in 29s | stage elapsed 3.5 min | ETA this stage ~0.7 min
+19:40:53 [4 heads+ensembles] 11/12 done: label_level Stacking ['XGB_tuned', 'LGBM_tuned', 'RF_tuned', 'Fusion', 'CNN_BiGRU_Att', 'CNN_BiLSTM_Att']: val BA 0.8832 in 1s | stage elapsed 3.5 min | ETA this stage ~0.3 min
+19:40:53 [4 heads+ensembles] 12/12 done: label_level SoftVote ['CNN_BiGRU_Att', 'CNN_BiLSTM_Att', 'Fusion', 'Transformer']: val BA 0.8490 in 0s | stage elapsed 3.6 min | ETA this stage ~0.0 min
+19:40:53 STAGE 4 finished in 3.6 min
+19:40:53 ======================================================================
+19:40:53 STAGE 5: decision thresholds / class weights from out-of-fold predictions
+19:41:05 saved thresholds.json (before correction); computed on out-of-fold predictions only
+19:41:05   [label_binary] Normal recall >= 0.70 reachable for 18/18 models (unreachable -> best balanced accuracy, flagged)
+19:41:05   [label_level] Normal recall >= 0.70 reachable for 18/18 models (unreachable -> best balanced accuracy, flagged)
+19:41:05 STAGE 5 finished in 0.2 min
+19:41:05 ======================================================================
+19:41:05 STAGE 6: over/under-fitting diagnosis (gap > 0.10 overfit; validation macro-F1 < 0.60 underfit)
+19:41:12 [label_binary] overfit: ['LR', 'RF', 'ET', 'XGB', 'LGBM', 'LGBM_tuned', 'XGB_tuned', 'RF_tuned', 'CNN_BiGRU_Att', 'CNN_BiLSTM_Att', 'Fusion', 'CNN_BiGRU_Att_XGBhead', 'CNN_BiLSTM_Att_XGBhead', 'Fusion_XGBhead', 'Transformer_XGBhead', 'SoftVote'] | underfit: []
+19:41:12 [label_level] overfit: ['LR', 'RF', 'ET', 'XGB', 'LGBM', 'XGB_tuned', 'LGBM_tuned', 'RF_tuned', 'CNN_BiGRU_Att', 'CNN_BiLSTM_Att', 'Fusion', 'Transformer', 'CNN_BiGRU_Att_XGBhead', 'CNN_BiLSTM_Att_XGBhead', 'Fusion_XGBhead', 'Transformer_XGBhead', 'SoftVote'] | underfit: []
+19:41:12 STAGE 6 finished in 0.1 min
+19:41:12 ======================================================================
+19:41:12 STAGE 7: correction of every model diagnosed as overfit (stronger regularisation, validated on the same folds)
+19:41:16 [label_binary] diagnosed overfit before correction: ['LR', 'RF', 'ET', 'XGB', 'LGBM', 'LGBM_tuned', 'XGB_tuned', 'RF_tuned', 'CNN_BiGRU_Att', 'CNN_BiLSTM_Att', 'Fusion', 'CNN_BiGRU_Att_XGBhead', 'CNN_BiLSTM_Att_XGBhead', 'Fusion_XGBhead', 'Transformer_XGBhead', 'SoftVote']
+19:41:17     [label_binary] LR: val BA 0.8320 -> 0.8308, gap 0.149 -> 0.107, ADOPTED (1s)
+19:41:26     [label_binary] RF: val BA 0.8337 -> 0.8241, gap 0.147 -> 0.155, not adopted (9s)
+19:41:34     [label_binary] ET: val BA 0.8181 -> 0.8241, gap 0.163 -> 0.142, ADOPTED (8s)
+19:41:41     [label_binary] XGB: val BA 0.8358 -> 0.8342, gap 0.149 -> 0.134, ADOPTED (7s)
+19:41:41 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:41 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:42 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:42 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:42 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:43 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:43 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:44 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:44 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:44 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:45     [label_binary] LGBM: val BA 0.8435 -> 0.8364, gap 0.144 -> 0.143, ADOPTED (4s)
+19:41:45 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:46 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:46 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:47 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:47 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:47 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:48 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:48 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:49 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:49 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:41:50     [label_binary] LGBM_tuned: val BA 0.8633 -> 0.8454, gap 0.125 -> 0.130, not adopted (5s)
+19:41:55     [label_binary] XGB_tuned: val BA 0.8746 -> 0.8424, gap 0.128 -> 0.114, not adopted (6s)
+19:42:18     [label_binary] RF_tuned: val BA 0.8701 -> 0.8538, gap 0.121 -> 0.078, not adopted (23s)
+19:42:24 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:42:32     [label_binary] CNN_BiGRU_Att/corr fold 1: 20 epochs run (best 15), 13s, 0.63s/epoch, val BA 0.975  ** not converged (hit 20 epochs) **
+19:42:38 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:42:44     [label_binary] CNN_BiGRU_Att/corr fold 2: 17 epochs run (best 5), 11s, 0.63s/epoch, val BA 0.490
+19:42:50 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:42:57     [label_binary] CNN_BiGRU_Att/corr fold 3: 20 epochs run (best 10), 12s, 0.60s/epoch, val BA 0.771  ** not converged (hit 20 epochs) **
+19:43:03 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:43:10     [label_binary] CNN_BiGRU_Att/corr fold 4: 20 epochs run (best 9), 12s, 0.58s/epoch, val BA 0.973  ** not converged (hit 20 epochs) **
+19:43:16 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:43:23     [label_binary] CNN_BiGRU_Att/corr fold 5: 20 epochs run (best 8), 11s, 0.56s/epoch, val BA 0.845  ** not converged (hit 20 epochs) **
+19:43:29 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:43:36     [label_binary] CNN_BiGRU_Att/corr fold 6: 20 epochs run (best 19), 11s, 0.57s/epoch, val BA 1.000  ** not converged (hit 20 epochs) **
+19:43:42 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:43:48     [label_binary] CNN_BiGRU_Att/corr fold 7: 20 epochs run (best 17), 11s, 0.56s/epoch, val BA 0.996  ** not converged (hit 20 epochs) **
+19:43:54 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:44:00     [label_binary] CNN_BiGRU_Att/corr fold 8: 18 epochs run (best 6), 10s, 0.56s/epoch, val BA 0.742
+19:44:06 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:44:13     [label_binary] CNN_BiGRU_Att/corr fold 9: 20 epochs run (best 9), 11s, 0.56s/epoch, val BA 0.750  ** not converged (hit 20 epochs) **
+19:44:19 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:44:25     [label_binary] CNN_BiGRU_Att/corr fold 10: 20 epochs run (best 9), 11s, 0.56s/epoch, val BA 0.775  ** not converged (hit 20 epochs) **
+19:44:25     [label_binary] CNN_BiGRU_Att: val BA 0.8414 -> 0.8316, gap 0.157 -> 0.160, not adopted (127s)
+19:44:31 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:44:37     [label_binary] CNN_BiLSTM_Att/corr fold 1: 20 epochs run (best 13), 10s, 0.50s/epoch, val BA 0.981  ** not converged (hit 20 epochs) **
+19:44:42 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:44:48     [label_binary] CNN_BiLSTM_Att/corr fold 2: 20 epochs run (best 9), 10s, 0.50s/epoch, val BA 0.483  ** not converged (hit 20 epochs) **
+19:44:54 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:45:00     [label_binary] CNN_BiLSTM_Att/corr fold 3: 20 epochs run (best 11), 10s, 0.50s/epoch, val BA 0.766  ** not converged (hit 20 epochs) **
+19:45:05 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:45:11     [label_binary] CNN_BiLSTM_Att/corr fold 4: 20 epochs run (best 10), 10s, 0.51s/epoch, val BA 0.981  ** not converged (hit 20 epochs) **
+19:45:17 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:45:22     [label_binary] CNN_BiLSTM_Att/corr fold 5: 20 epochs run (best 12), 10s, 0.48s/epoch, val BA 0.831  ** not converged (hit 20 epochs) **
+19:45:28 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:45:33     [label_binary] CNN_BiLSTM_Att/corr fold 6: 20 epochs run (best 19), 10s, 0.48s/epoch, val BA 1.000  ** not converged (hit 20 epochs) **
+19:45:39 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:45:45     [label_binary] CNN_BiLSTM_Att/corr fold 7: 20 epochs run (best 13), 10s, 0.49s/epoch, val BA 1.000  ** not converged (hit 20 epochs) **
+19:45:50 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:45:56     [label_binary] CNN_BiLSTM_Att/corr fold 8: 20 epochs run (best 13), 10s, 0.50s/epoch, val BA 0.737  ** not converged (hit 20 epochs) **
+19:46:02 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:46:07     [label_binary] CNN_BiLSTM_Att/corr fold 9: 20 epochs run (best 10), 10s, 0.49s/epoch, val BA 0.773  ** not converged (hit 20 epochs) **
+19:46:13 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:46:19     [label_binary] CNN_BiLSTM_Att/corr fold 10: 20 epochs run (best 10), 10s, 0.49s/epoch, val BA 0.792  ** not converged (hit 20 epochs) **
+19:46:19     [label_binary] CNN_BiLSTM_Att: val BA 0.8326 -> 0.8345, gap 0.152 -> 0.152, ADOPTED (114s)
+19:46:32 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:46:42     [label_binary] Fusion/corr fold 1: 20 epochs run (best 10), 20s, 0.99s/epoch, val BA 0.973  ** not converged (hit 20 epochs) **
+19:46:55 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:47:05     [label_binary] Fusion/corr fold 2: 20 epochs run (best 9), 20s, 1.01s/epoch, val BA 0.467  ** not converged (hit 20 epochs) **
+19:47:18 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:47:29     [label_binary] Fusion/corr fold 3: 20 epochs run (best 12), 21s, 1.05s/epoch, val BA 0.837  ** not converged (hit 20 epochs) **
+19:47:42 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:47:55     [label_binary] Fusion/corr fold 4: 20 epochs run (best 12), 22s, 1.11s/epoch, val BA 0.979  ** not converged (hit 20 epochs) **
+19:48:08 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:48:21     [label_binary] Fusion/corr fold 5: 20 epochs run (best 14), 22s, 1.12s/epoch, val BA 0.874  ** not converged (hit 20 epochs) **
+19:48:34 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:48:47     [label_binary] Fusion/corr fold 6: 20 epochs run (best 20), 23s, 1.13s/epoch, val BA 1.000  ** not converged (hit 20 epochs) **
+19:49:00 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:49:16     [label_binary] Fusion/corr fold 7: 20 epochs run (best 20), 26s, 1.28s/epoch, val BA 1.000  ** not converged (hit 20 epochs) **
+19:49:30 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:49:43     [label_binary] Fusion/corr fold 8: 19 epochs run (best 7), 23s, 1.21s/epoch, val BA 0.760
+19:49:57 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:50:10     [label_binary] Fusion/corr fold 9: 19 epochs run (best 7), 23s, 1.22s/epoch, val BA 0.750
+19:50:24 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:50:36     [label_binary] Fusion/corr fold 10: 20 epochs run (best 15), 23s, 1.14s/epoch, val BA 0.810  ** not converged (hit 20 epochs) **
+19:50:37     [label_binary] Fusion: val BA 0.8357 -> 0.8451, gap 0.145 -> 0.144, ADOPTED (257s)
+19:50:51     [label_binary] CNN_BiGRU_Att_XGBhead: XGB head on the corrected deep embedding / regularised head (depth 3, 150 rounds, subsample 0.7, min_child_weight 5, lambda 5): corr val BA 0.8424 gap 0.173 -> adopted corr (15s)
+19:51:19     [label_binary] CNN_BiLSTM_Att_XGBhead: XGB head on the corrected deep embedding / regularised head (depth 3, 150 rounds, subsample 0.7, min_child_weight 5, lambda 5): orig val BA 0.8350 gap 0.160, corr val BA 0.8389 gap 0.159 -> adopted corr (27s)
+19:52:19     [label_binary] Fusion_XGBhead: XGB head on the corrected deep embedding / regularised head (depth 3, 150 rounds, subsample 0.7, min_child_weight 5, lambda 5): orig val BA 0.8328 gap 0.172, corr val BA 0.8326 gap 0.166 -> adopted corr (60s)
+19:52:35     [label_binary] Transformer_XGBhead: XGB head on the corrected deep embedding / regularised head (depth 3, 150 rounds, subsample 0.7, min_child_weight 5, lambda 5): corr val BA 0.8418 gap 0.151 -> adopted corr (16s)
+19:52:36     [label_binary] Stacking: val BA 0.8355 -> 0.8428, kept original (0s)
+19:52:37     [label_binary] SoftVote: val BA 0.8441 -> 0.8489, ADOPTED (0s)
+19:52:41 [label_level] diagnosed overfit before correction: ['LR', 'RF', 'ET', 'XGB', 'LGBM', 'XGB_tuned', 'LGBM_tuned', 'RF_tuned', 'CNN_BiGRU_Att', 'CNN_BiLSTM_Att', 'Fusion', 'Transformer', 'CNN_BiGRU_Att_XGBhead', 'CNN_BiLSTM_Att_XGBhead', 'Fusion_XGBhead', 'Transformer_XGBhead', 'SoftVote']
+19:52:43     [label_level] LR: val BA 0.7998 -> 0.7396, gap 0.153 -> 0.146, not adopted (2s)
+19:52:55     [label_level] RF: val BA 0.8295 -> 0.7950, gap 0.166 -> 0.170, not adopted (12s)
+19:53:06     [label_level] ET: val BA 0.8138 -> 0.7445, gap 0.182 -> 0.206, not adopted (12s)
+19:53:46     [label_level] XGB: val BA 0.8679 -> 0.8397, gap 0.132 -> 0.147, not adopted (40s)
+19:53:47 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:53:48 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:53:49 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:53:50 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:53:52 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:53:53 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:53:54 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:53:55 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:53:57 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:53:58 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:54:00     [label_level] LGBM: val BA 0.8589 -> 0.8423, gap 0.137 -> 0.148, not adopted (13s)
+19:54:21     [label_level] XGB_tuned: val BA 0.8756 -> 0.8341, gap 0.123 -> 0.141, not adopted (21s)
+19:54:21 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:54:22 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:54:23 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:54:25 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:54:26 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:54:27 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:54:29 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:54:30 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:54:31 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:54:32 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+19:54:33     [label_level] LGBM_tuned: val BA 0.8742 -> 0.8357, gap 0.123 -> 0.154, not adopted (13s)
+19:54:44     [label_level] RF_tuned: val BA 0.8519 -> 0.8374, gap 0.154 -> 0.149, not adopted (11s)
+19:54:53 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:55:02     [label_level] CNN_BiGRU_Att/corr fold 1: 20 epochs run (best 20), 14s, 0.68s/epoch, val BA 0.846  ** not converged (hit 20 epochs) **
+19:55:09 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:55:18     [label_level] CNN_BiGRU_Att/corr fold 2: 20 epochs run (best 15), 13s, 0.66s/epoch, val BA 0.641  ** not converged (hit 20 epochs) **
+19:55:25 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:55:33     [label_level] CNN_BiGRU_Att/corr fold 3: 20 epochs run (best 19), 13s, 0.66s/epoch, val BA 0.813  ** not converged (hit 20 epochs) **
+19:55:40 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:55:49     [label_level] CNN_BiGRU_Att/corr fold 4: 20 epochs run (best 19), 13s, 0.65s/epoch, val BA 0.859  ** not converged (hit 20 epochs) **
+19:55:56 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:56:04     [label_level] CNN_BiGRU_Att/corr fold 5: 20 epochs run (best 20), 13s, 0.64s/epoch, val BA 0.816  ** not converged (hit 20 epochs) **
+19:56:11 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:56:20     [label_level] CNN_BiGRU_Att/corr fold 6: 20 epochs run (best 18), 13s, 0.64s/epoch, val BA 0.923  ** not converged (hit 20 epochs) **
+19:56:27 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:56:35     [label_level] CNN_BiGRU_Att/corr fold 7: 20 epochs run (best 16), 13s, 0.65s/epoch, val BA 0.925  ** not converged (hit 20 epochs) **
+19:56:42 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:56:50     [label_level] CNN_BiGRU_Att/corr fold 8: 20 epochs run (best 19), 13s, 0.64s/epoch, val BA 0.795  ** not converged (hit 20 epochs) **
+19:56:57 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:57:05     [label_level] CNN_BiGRU_Att/corr fold 9: 20 epochs run (best 19), 13s, 0.63s/epoch, val BA 0.790  ** not converged (hit 20 epochs) **
+19:57:12 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:57:20     [label_level] CNN_BiGRU_Att/corr fold 10: 20 epochs run (best 17), 12s, 0.61s/epoch, val BA 0.706  ** not converged (hit 20 epochs) **
+19:57:20     [label_level] CNN_BiGRU_Att: val BA 0.8343 -> 0.8113, gap 0.159 -> 0.168, not adopted (156s)
+19:57:27 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:57:34     [label_level] CNN_BiLSTM_Att/corr fold 1: 20 epochs run (best 20), 11s, 0.56s/epoch, val BA 0.870  ** not converged (hit 20 epochs) **
+19:57:41 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:57:48     [label_level] CNN_BiLSTM_Att/corr fold 2: 20 epochs run (best 17), 11s, 0.55s/epoch, val BA 0.650  ** not converged (hit 20 epochs) **
+19:57:54 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:58:01     [label_level] CNN_BiLSTM_Att/corr fold 3: 20 epochs run (best 18), 11s, 0.54s/epoch, val BA 0.806  ** not converged (hit 20 epochs) **
+19:58:08 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:58:14     [label_level] CNN_BiLSTM_Att/corr fold 4: 20 epochs run (best 19), 11s, 0.53s/epoch, val BA 0.797  ** not converged (hit 20 epochs) **
+19:58:21 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:58:29     [label_level] CNN_BiLSTM_Att/corr fold 5: 20 epochs run (best 20), 12s, 0.58s/epoch, val BA 0.808  ** not converged (hit 20 epochs) **
+19:58:35 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:58:42     [label_level] CNN_BiLSTM_Att/corr fold 6: 20 epochs run (best 20), 11s, 0.55s/epoch, val BA 0.936  ** not converged (hit 20 epochs) **
+19:58:49 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:58:55     [label_level] CNN_BiLSTM_Att/corr fold 7: 20 epochs run (best 20), 10s, 0.52s/epoch, val BA 0.893  ** not converged (hit 20 epochs) **
+19:59:02 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:59:08     [label_level] CNN_BiLSTM_Att/corr fold 8: 20 epochs run (best 19), 10s, 0.52s/epoch, val BA 0.828  ** not converged (hit 20 epochs) **
+19:59:15 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:59:21     [label_level] CNN_BiLSTM_Att/corr fold 9: 20 epochs run (best 18), 10s, 0.50s/epoch, val BA 0.787  ** not converged (hit 20 epochs) **
+19:59:27 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:59:33     [label_level] CNN_BiLSTM_Att/corr fold 10: 20 epochs run (best 20), 10s, 0.50s/epoch, val BA 0.713  ** not converged (hit 20 epochs) **
+19:59:34     [label_level] CNN_BiLSTM_Att: val BA 0.8322 -> 0.8088, gap 0.168 -> 0.184, not adopted (133s)
+19:59:48 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+19:59:59     [label_level] Fusion/corr fold 1: 22 epochs run (best 20), 21s, 0.94s/epoch, val BA 0.830  ** not converged (hit 22 epochs) **
+20:00:13 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:00:24     [label_level] Fusion/corr fold 2: 22 epochs run (best 18), 21s, 0.94s/epoch, val BA 0.627  ** not converged (hit 22 epochs) **
+20:00:38 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:00:49     [label_level] Fusion/corr fold 3: 22 epochs run (best 17), 21s, 0.94s/epoch, val BA 0.817  ** not converged (hit 22 epochs) **
+20:01:03 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:01:14     [label_level] Fusion/corr fold 4: 22 epochs run (best 17), 21s, 0.94s/epoch, val BA 0.699  ** not converged (hit 22 epochs) **
+20:01:28 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:01:39     [label_level] Fusion/corr fold 5: 22 epochs run (best 21), 21s, 0.94s/epoch, val BA 0.807  ** not converged (hit 22 epochs) **
+20:01:54 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:02:04     [label_level] Fusion/corr fold 6: 22 epochs run (best 21), 21s, 0.94s/epoch, val BA 0.929  ** not converged (hit 22 epochs) **
+20:02:19 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:02:30     [label_level] Fusion/corr fold 7: 22 epochs run (best 22), 21s, 0.95s/epoch, val BA 0.934  ** not converged (hit 22 epochs) **
+20:02:45 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:02:56     [label_level] Fusion/corr fold 8: 22 epochs run (best 22), 21s, 0.94s/epoch, val BA 0.784  ** not converged (hit 22 epochs) **
+20:03:10 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:03:21     [label_level] Fusion/corr fold 9: 22 epochs run (best 22), 21s, 0.95s/epoch, val BA 0.788  ** not converged (hit 22 epochs) **
+20:03:36 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:03:47     [label_level] Fusion/corr fold 10: 22 epochs run (best 22), 21s, 0.96s/epoch, val BA 0.737  ** not converged (hit 22 epochs) **
+20:03:47     [label_level] Fusion: val BA 0.8348 -> 0.7952, gap 0.159 -> 0.174, not adopted (254s)
+20:03:57 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:04:06     [label_level] Transformer/corr fold 1: 20 epochs run (best 11), 15s, 0.77s/epoch, val BA 0.742  ** not converged (hit 20 epochs) **
+20:04:16 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:04:25     [label_level] Transformer/corr fold 2: 17 epochs run (best 5), 15s, 0.89s/epoch, val BA 0.605
+20:04:36 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:04:44     [label_level] Transformer/corr fold 3: 20 epochs run (best 20), 15s, 0.76s/epoch, val BA 0.857  ** not converged (hit 20 epochs) **
+20:04:55 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:05:04     [label_level] Transformer/corr fold 4: 20 epochs run (best 19), 16s, 0.80s/epoch, val BA 0.814  ** not converged (hit 20 epochs) **
+20:05:14 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:05:22     [label_level] Transformer/corr fold 5: 20 epochs run (best 20), 15s, 0.75s/epoch, val BA 0.849  ** not converged (hit 20 epochs) **
+20:05:32 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:05:43     [label_level] Transformer/corr fold 6: 20 epochs run (best 17), 17s, 0.87s/epoch, val BA 0.913  ** not converged (hit 20 epochs) **
+20:05:53 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:06:02     [label_level] Transformer/corr fold 7: 20 epochs run (best 18), 15s, 0.75s/epoch, val BA 0.882  ** not converged (hit 20 epochs) **
+20:06:12 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:06:20     [label_level] Transformer/corr fold 8: 20 epochs run (best 19), 15s, 0.74s/epoch, val BA 0.775  ** not converged (hit 20 epochs) **
+20:06:31 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:06:40     [label_level] Transformer/corr fold 9: 20 epochs run (best 11), 16s, 0.79s/epoch, val BA 0.809  ** not converged (hit 20 epochs) **
+20:06:51 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:06:59     [label_level] Transformer/corr fold 10: 18 epochs run (best 6), 14s, 0.79s/epoch, val BA 0.583
+20:06:59     [label_level] Transformer: val BA 0.8065 -> 0.7829, gap 0.165 -> 0.165, not adopted (192s)
+20:07:22     [label_level] CNN_BiGRU_Att_XGBhead: XGB head on the corrected deep embedding / regularised head (depth 3, 150 rounds, subsample 0.7, min_child_weight 5, lambda 5): corr val BA 0.8256 gap 0.177 -> kept original (22s)
+20:07:42     [label_level] CNN_BiLSTM_Att_XGBhead: XGB head on the corrected deep embedding / regularised head (depth 3, 150 rounds, subsample 0.7, min_child_weight 5, lambda 5): corr val BA 0.8242 gap 0.178 -> kept original (20s)
+20:08:18     [label_level] Fusion_XGBhead: XGB head on the corrected deep embedding / regularised head (depth 3, 150 rounds, subsample 0.7, min_child_weight 5, lambda 5): corr val BA 0.8317 gap 0.170 -> adopted corr (36s)
+20:08:40     [label_level] Transformer_XGBhead: XGB head on the corrected deep embedding / regularised head (depth 3, 150 rounds, subsample 0.7, min_child_weight 5, lambda 5): corr val BA 0.8182 gap 0.189 -> adopted corr (22s)
+20:14:55 ======================================================================
+20:14:55 full_pipeline start Sat Oct 17 20:14:55 2026 stages [7, 8, 9, 10] labels ['label_binary', 'label_level']
+20:14:55 NOTE: sequences are indexed by their last window, so validation sequences overlap training windows within the same block; folds are group-aware (block_id) but CV scores can still be optimistic; the TEST score is the main result; each class comes from a few scenario runs.
+20:14:55 NOTE: spec conflict resolved in favour of the EPOCH POLICY: deep early stopping patience 12 (not 5), ReduceLROnPlateau patience 4.
+20:14:56 data: 3196 windows, train 2549, test 647 (test untouched until stage 9); model inputs 128; groups api/log/metric (7, 3, 114); context slots padded 1889
+20:14:56 ======================================================================
+20:14:56 STAGE 7: correction of every model diagnosed as overfit (stronger regularisation, validated on the same folds)
+20:14:59 [label_binary] diagnosed overfit before correction: ['LR', 'RF', 'ET', 'XGB', 'LGBM', 'LGBM_tuned', 'XGB_tuned', 'RF_tuned', 'CNN_BiGRU_Att', 'CNN_BiLSTM_Att', 'Fusion', 'CNN_BiGRU_Att_XGBhead', 'CNN_BiLSTM_Att_XGBhead', 'Fusion_XGBhead', 'Transformer_XGBhead', 'SoftVote']
+20:15:04 [label_level] diagnosed overfit before correction: ['LR', 'RF', 'ET', 'XGB', 'LGBM', 'XGB_tuned', 'LGBM_tuned', 'RF_tuned', 'CNN_BiGRU_Att', 'CNN_BiLSTM_Att', 'Fusion', 'Transformer', 'CNN_BiGRU_Att_XGBhead', 'CNN_BiLSTM_Att_XGBhead', 'Fusion_XGBhead', 'Transformer_XGBhead', 'SoftVote']
+20:15:05     [label_level] SoftVote: diagnosed overfit but nothing to rebuild (soft voting has no tunable setting; members unchanged) -> kept
+20:15:05 saved before_after_correction.csv (33 corrected models)
+20:15:16 saved thresholds.json (after correction (final)); computed on out-of-fold predictions only
+20:15:16   [label_binary] Normal recall >= 0.70 reachable for 18/18 models (unreachable -> best balanced accuracy, flagged)
+20:15:16   [label_level] Normal recall >= 0.70 reachable for 18/18 models (unreachable -> best balanced accuracy, flagged)
+20:15:16 STAGE 7 finished in 0.3 min
+20:15:16 ======================================================================
+20:15:16 STAGE 8: final fit of every model on the full 80% training part (corrected settings, SMOTE/weights on this part only)
+20:15:16 [8 final fit] 1/36 done: label_binary LR in 0s | stage elapsed 0.0 min | ETA this stage ~0.1 min
+20:15:17 [8 final fit] 2/36 done: label_binary RF in 1s | stage elapsed 0.0 min | ETA this stage ~0.3 min
+20:15:18 [8 final fit] 3/36 done: label_binary ET in 1s | stage elapsed 0.0 min | ETA this stage ~0.4 min
+20:15:19 [8 final fit] 4/36 done: label_binary XGB in 1s | stage elapsed 0.0 min | ETA this stage ~0.4 min
+20:15:19 WARNING LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead. (sklearn.py:1106)
+20:15:19 [8 final fit] 5/36 done: label_binary LGBM in 0s | stage elapsed 0.1 min | ETA this stage ~0.3 min
+20:15:20 [8 final fit] 6/36 done: label_binary LGBM_tuned in 0s | stage elapsed 0.1 min | ETA this stage ~0.3 min
+20:15:20 [8 final fit] 7/36 done: label_binary XGB_tuned in 1s | stage elapsed 0.1 min | ETA this stage ~0.3 min
+20:15:23 [8 final fit] 8/36 done: label_binary RF_tuned in 3s | stage elapsed 0.1 min | ETA this stage ~0.4 min
+20:15:30 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:15:38 [8 final fit] 9/36 done: label_binary CNN_BiGRU_Att in 14s | stage elapsed 0.4 min | ETA this stage ~1.1 min
+20:15:42 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:15:45 [8 final fit] 10/36 done: label_binary CNN_BiLSTM_Att in 7s | stage elapsed 0.5 min | ETA this stage ~1.3 min
+20:15:56 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:16:01 [8 final fit] 11/36 done: label_binary Fusion in 16s | stage elapsed 0.8 min | ETA this stage ~1.7 min
+20:16:08 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:16:10 [8 final fit] 12/36 done: label_binary Transformer in 9s | stage elapsed 0.9 min | ETA this stage ~1.8 min
+20:16:12 [8 final fit] 13/36 done: label_binary CNN_BiGRU_Att_XGBhead in 1s | stage elapsed 0.9 min | ETA this stage ~1.6 min
+20:16:13 [8 final fit] 14/36 done: label_binary CNN_BiLSTM_Att_XGBhead in 1s | stage elapsed 1.0 min | ETA this stage ~1.5 min
+20:16:16 [8 final fit] 15/36 done: label_binary Fusion_XGBhead in 3s | stage elapsed 1.0 min | ETA this stage ~1.4 min
+20:16:17 [8 final fit] 16/36 done: label_binary Transformer_XGBhead in 1s | stage elapsed 1.0 min | ETA this stage ~1.3 min
+20:16:17 [8 final fit] 17/36 done: label_binary Stacking in 0s | stage elapsed 1.0 min | ETA this stage ~1.1 min
+20:16:17 [8 final fit] 18/36 done: label_binary SoftVote in 0s | stage elapsed 1.0 min | ETA this stage ~1.0 min
+20:16:18 [8 final fit] 19/36 done: label_level LR in 0s | stage elapsed 1.0 min | ETA this stage ~0.9 min
+20:16:19 [8 final fit] 20/36 done: label_level RF in 1s | stage elapsed 1.1 min | ETA this stage ~0.8 min
+20:16:20 [8 final fit] 21/36 done: label_level ET in 1s | stage elapsed 1.1 min | ETA this stage ~0.8 min
+20:16:23 [8 final fit] 22/36 done: label_level XGB in 3s | stage elapsed 1.1 min | ETA this stage ~0.7 min
+20:16:26 [8 final fit] 23/36 done: label_level LGBM in 3s | stage elapsed 1.2 min | ETA this stage ~0.7 min
+20:16:28 [8 final fit] 24/36 done: label_level XGB_tuned in 2s | stage elapsed 1.2 min | ETA this stage ~0.6 min
+20:16:29 [8 final fit] 25/36 done: label_level LGBM_tuned in 1s | stage elapsed 1.2 min | ETA this stage ~0.5 min
+20:16:30 [8 final fit] 26/36 done: label_level RF_tuned in 1s | stage elapsed 1.2 min | ETA this stage ~0.5 min
+20:16:35 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:16:41 [8 final fit] 27/36 done: label_level CNN_BiGRU_Att in 10s | stage elapsed 1.4 min | ETA this stage ~0.5 min
+20:16:45 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:16:50 [8 final fit] 28/36 done: label_level CNN_BiLSTM_Att in 10s | stage elapsed 1.6 min | ETA this stage ~0.4 min
+20:17:01 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:17:10 [8 final fit] 29/36 done: label_level Fusion in 19s | stage elapsed 1.9 min | ETA this stage ~0.5 min
+20:17:16 WARNING DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword (core.py:172)
+20:17:22 [8 final fit] 30/36 done: label_level Transformer in 12s | stage elapsed 2.1 min | ETA this stage ~0.4 min
+20:17:24 [8 final fit] 31/36 done: label_level CNN_BiGRU_Att_XGBhead in 3s | stage elapsed 2.1 min | ETA this stage ~0.3 min
+20:17:27 [8 final fit] 32/36 done: label_level CNN_BiLSTM_Att_XGBhead in 3s | stage elapsed 2.2 min | ETA this stage ~0.3 min
+20:17:30 [8 final fit] 33/36 done: label_level Fusion_XGBhead in 3s | stage elapsed 2.2 min | ETA this stage ~0.2 min
+20:17:32 [8 final fit] 34/36 done: label_level Transformer_XGBhead in 2s | stage elapsed 2.3 min | ETA this stage ~0.1 min
+20:17:32 [8 final fit] 35/36 done: label_level Stacking in 0s | stage elapsed 2.3 min | ETA this stage ~0.1 min
+20:17:32 [8 final fit] 36/36 done: label_level SoftVote in 0s | stage elapsed 2.3 min | ETA this stage ~0.0 min
+20:17:32 STAGE 8 finished in 2.3 min
+20:17:32 ======================================================================
+20:17:32 STAGE 9: ONE evaluation of every final model on the untouched 20% test set (test is read here for the first time)
+20:19:48 saved test_metrics.csv (216 rows: model x label x scope ALL/SN/TT x variant official / tuned_threshold) and figures
+20:19:48 STAGE 9 finished in 2.3 min
+20:19:48 ======================================================================
+20:19:48 STAGE 10: cv_scores, underfit_overfit (final), training_time, model_architectures, oof_predictions.parquet, leaderboard
+20:20:04 
+LEADERBOARD label_binary (final models, untouched test set, sorted by balanced accuracy)
+                        test_bal_acc  test_macro_f1  test_normal_recall  test_normal_precision  test_roc_auc  test_pr_auc  cv_val_bal_acc  cv_val_macro_f1
+model                                                                                                                                                     
+XGB                            0.774          0.819               0.556                  0.800         0.760        0.976           0.834            0.851
+Stacking                       0.760          0.741               0.556                  0.476         0.894        0.993           0.836            0.793
+LGBM_tuned                     0.744          0.785               0.500                  0.720         0.773        0.975           0.863            0.870
+XGB_tuned                      0.742          0.770               0.500                  0.643         0.905        0.994           0.875            0.851
+RF_tuned                       0.740          0.761               0.500                  0.600         0.885        0.992           0.870            0.832
+LR                             0.705          0.663               0.472                  0.309         0.885        0.992           0.831            0.763
+LGBM                           0.677          0.734               0.361                  0.765         0.833        0.987           0.836            0.853
+CNN_BiLSTM_Att                 0.675          0.637               0.417                  0.268         0.847        0.989           0.835            0.824
+Fusion_XGBhead                 0.625          0.641               0.278                  0.370         0.784        0.979           0.833            0.828
+RF                             0.623          0.675               0.250                  0.750         0.788        0.974           0.834            0.853
+ET                             0.622          0.630               0.278                  0.323         0.681        0.953           0.824            0.814
+Fusion                         0.618          0.620               0.278                  0.286         0.854        0.990           0.845            0.821
+SoftVote                       0.616          0.613               0.278                  0.263         0.871        0.992           0.849            0.836
+CNN_BiLSTM_Att_XGBhead         0.615          0.642               0.250                  0.429         0.669        0.960           0.839            0.837
+Transformer_XGBhead            0.611          0.627               0.250                  0.346         0.790        0.981           0.842            0.840
+CNN_BiGRU_Att                  0.607          0.591               0.278                  0.204         0.841        0.989           0.841            0.828
+CNN_BiGRU_Att_XGBhead          0.597          0.613               0.222                  0.320         0.692        0.966           0.842            0.825
+Transformer                    0.588          0.588               0.222                  0.222         0.919        0.995           0.860            0.846
+20:20:04   with tuned decision rule (thresholds from OOF): best test BA 0.771 (XGB), Normal recall of that model 0.611
+20:20:04 
+LEADERBOARD label_level (final models, untouched test set, sorted by balanced accuracy)
+                        test_bal_acc  test_macro_f1  test_normal_recall  test_normal_precision  test_roc_auc  test_pr_auc  cv_val_bal_acc  cv_val_macro_f1
+model                                                                                                                                                     
+Stacking                       0.890          0.882               0.722                  0.605         0.990        0.938           0.883            0.877
+LGBM_tuned                     0.889          0.909               0.500                  1.000         0.977        0.940           0.874            0.876
+XGB                            0.887          0.903               0.556                  0.870         0.980        0.939           0.868            0.868
+LGBM                           0.884          0.901               0.500                  0.900         0.986        0.946           0.859            0.863
+XGB_tuned                      0.882          0.898               0.556                  0.870         0.981        0.935           0.876            0.877
+RF                             0.846          0.863               0.500                  0.857         0.952        0.892           0.829            0.834
+RF_tuned                       0.836          0.846               0.500                  0.667         0.965        0.906           0.852            0.845
+Fusion_XGBhead                 0.771          0.767               0.528                  0.463         0.946        0.815           0.832            0.829
+Fusion                         0.771          0.761               0.556                  0.426         0.949        0.774           0.835            0.830
+ET                             0.755          0.765               0.333                  0.545         0.940        0.852           0.814            0.818
+LR                             0.744          0.738               0.528                  0.413         0.950        0.790           0.800            0.788
+CNN_BiLSTM_Att                 0.743          0.738               0.417                  0.326         0.947        0.790           0.832            0.826
+SoftVote                       0.741          0.737               0.417                  0.357         0.964        0.835           0.849            0.846
+CNN_BiLSTM_Att_XGBhead         0.736          0.742               0.278                  0.435         0.935        0.797           0.826            0.825
+Transformer_XGBhead            0.733          0.729               0.472                  0.386         0.944        0.805           0.818            0.810
+CNN_BiGRU_Att                  0.732          0.726               0.444                  0.356         0.948        0.803           0.834            0.829
+CNN_BiGRU_Att_XGBhead          0.731          0.734               0.389                  0.452         0.942        0.796           0.834            0.832
+Transformer                    0.728          0.726               0.444                  0.410         0.952        0.804           0.807            0.801
+20:20:04   with tuned decision rule (thresholds from OOF): best test BA 0.895 (LGBM), Normal recall of that model 0.556
+20:20:04 
+FILES WRITTEN to report_outputs: baseline_cv.csv, before_after_correction.csv, best_params.json, cv_scores.csv, deep_epochs_per_fold.csv, environment_v2.txt, fold_assignment.csv, leaderboard_label_binary.csv, leaderboard_label_level.csv, leakage_checks.csv, model_architectures.csv, oof_predictions.parquet, optuna_trials.csv, preprocess_log.txt, split_ids.csv, test_metrics.csv, thresholds.json, time_estimate.txt, training_time.csv, underfit_overfit.csv, figures/cm_label_binary_CNN_BiGRU_Att.png, figures/cm_label_binary_CNN_BiGRU_Att_XGBhead.png, figures/cm_label_binary_CNN_BiLSTM_Att.png, figures/cm_label_binary_CNN_BiLSTM_Att_XGBhead.png, figures/cm_label_binary_ET.png, figures/ (cm_*.png/csv, roc_pr_*.png)
+20:20:04 STAGE 10 finished in 0.3 min
