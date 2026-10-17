@@ -1,0 +1,28 @@
+windows: 3196 (SN 1678, TT 1518), feature columns 155, runs 26, blocks 328
+split regenerated with split_blocks.block_split (seed 42); identical to existing combined split: True (differing rows: 0)
+split_ids.csv: train 2549, test 647; per system:
+split   test  train  train_pct
+system                        
+SN       343   1335      79.56
+TT       304   1214      79.97
+preprocessor fitted on 2549 train rows; raw features 155; log1p on 41; dropped constant 31; absent in SN 99, in TT 48; output width 128
+counter features (*_total) in windows: 42; min value 0.0 (rates already, no second conversion)
+  was_missing_api: share of windows =1  SN/train: 0.944, SN/test: 0.956, TT/train: 0.000, TT/test: 0.000
+  was_missing_logs: share of windows =1  SN/train: 0.000, SN/test: 0.000, TT/train: 0.000, TT/test: 0.000
+  was_missing_metrics: share of windows =1  SN/train: 0.046, SN/test: 0.035, TT/train: 0.026, TT/test: 0.007
+FOLD GROUPS: runs per class in train {'Code': 6, 'Database': 6, 'Normal': 2, 'Performance': 6, 'Service': 6} -> fewer than 10 for some class -> fallback groups = block_id (blocks per class {'Code': 61, 'Database': 60, 'Normal': 17, 'Performance': 61, 'Service': 63})
+rows per fold (validation) by class:
+label_level  Code  Database  Normal  Performance  Service  total
+fold                                                            
+1              59        60      10           60       60    249
+2              61        60      10           60       60    251
+3              60        55      20           60       60    255
+4              60        54      20           60       65    259
+5              60        56      20           58       60    254
+6              60        60      10           58       60    248
+7              60        56      20           57       60    253
+8              60        57      20           62       60    259
+9              60        60      20           56       64    260
+10             57        60      20           60       64    261
+blocks per fold: {1: 25, 2: 26, 3: 26, 4: 27, 5: 26, 6: 25, 7: 26, 8: 27, 9: 27, 10: 27} | same block in >1 fold: 0
+saved: C:\Users\Lenovo\Documents\AI PROJECT\code\processed\preprocessor.joblib C:\Users\Lenovo\Documents\AI PROJECT\code\processed\feature_names.json C:\Users\Lenovo\Documents\AI PROJECT\code\report_outputs\split_ids.csv C:\Users\Lenovo\Documents\AI PROJECT\code\report_outputs\fold_assignment.csv
