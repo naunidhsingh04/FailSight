@@ -1,0 +1,8 @@
+label_version,class,train_raw,train_smote,train_adasyn
+binary,Normal,170,2379,2355.0
+binary,Anomaly,2379,2379,2379.0
+level,Normal,170,613,
+level,Performance,591,613,
+level,Service,613,613,
+level,Database,578,613,
+level,Code,597,613,

@@ -1,0 +1,14 @@
+system,scenario,windows,blocks,train_blocks,test_blocks,train,test,train_pct,api_windows_train,api_windows_test
+SN,Code_Stop_MediaService,159,16,12,4,119,40,74.8,7,0
+SN,Code_Stop_TextService,127,13,10,3,97,30,76.4,7,0
+SN,Code_Stop_UserService,127,13,11,2,110,17,86.6,0,7
+SN,DB_Redis_CacheLimit_HomeTimeline,126,13,11,2,106,20,84.1,6,1
+SN,DB_Redis_CacheLimit_SocialGraph,127,13,9,4,87,40,68.5,7,0
+SN,DB_Redis_CacheLimit_UserTimeline,126,13,11,2,106,20,84.1,7,0
+SN,Normal_Baseline,126,13,11,2,110,16,87.3,0,7
+SN,Perf_CPU_Contention,128,13,10,3,98,30,76.6,7,0
+SN,Perf_Disk_IO_Stress,126,13,11,2,106,20,84.1,6,0
+SN,Perf_Network_Loss,126,13,11,2,106,20,84.1,7,0
+SN,Svc_Kill_Media,127,13,10,3,97,30,76.4,7,0
+SN,Svc_Kill_SocialGraph,127,13,10,3,97,30,76.4,7,0
+SN,Svc_Kill_UserTimeline,126,13,10,3,96,30,76.2,7,0

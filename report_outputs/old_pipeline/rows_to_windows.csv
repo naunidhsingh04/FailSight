@@ -1,0 +1,7 @@
+system,datatype,raw_rows_in_files,rows_with_timestamp,rows_in_at_least_one_window,rows_not_in_any_window,rows_without_timestamp,windows_built,windows_containing_rows
+SN,api,1950,1950,1950,0,0,1678,90.0
+SN,metrics,145555,145555,145555,0,0,1678,
+SN,logs,3958493,3955693,3955693,0,2800,1678,
+TT,api,98073,98073,98073,0,0,1518,334.0
+TT,metrics,4019540,4019540,4019540,0,0,1518,
+TT,logs,444560,430300,430300,0,14260,1518,

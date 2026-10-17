@@ -1,0 +1,15 @@
+system,label_version,class,train,test,train_pct,test_pct
+SN,binary,Normal,110,16,8.24,4.66
+SN,binary,Anomaly,1225,327,91.76,95.34
+SN,level,Normal,110,16,8.24,4.66
+SN,level,Performance,310,70,23.22,20.41
+SN,level,Service,290,90,21.72,26.24
+SN,level,Database,299,80,22.4,23.32
+SN,level,Code,326,87,24.42,25.36
+TT,binary,Normal,60,20,4.94,6.58
+TT,binary,Anomaly,1154,284,95.06,93.42
+TT,level,Normal,60,20,4.94,6.58
+TT,level,Performance,281,60,23.15,19.74
+TT,level,Service,323,70,26.61,23.03
+TT,level,Database,279,74,22.98,24.34
+TT,level,Code,271,80,22.32,26.32

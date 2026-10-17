@@ -1,0 +1,12 @@
+label_version,fold,reason
+level,1,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+level,2,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+level,3,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+level,4,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+level,5,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+level,6,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+level,7,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+level,8,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+level,9,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+level,10,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+level,final,adasyn: ValueError: No samples will be generated with the provided ratio settings.

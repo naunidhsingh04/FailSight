@@ -1,0 +1,15 @@
+system,label_version,class,train_raw,train_smote,train_adasyn
+SN,binary,Normal,110,1225,1226.0
+SN,binary,Anomaly,1225,1225,1225.0
+SN,level,Normal,110,326,
+SN,level,Performance,310,326,
+SN,level,Service,290,326,
+SN,level,Database,299,326,
+SN,level,Code,326,326,
+TT,binary,Normal,60,1154,1160.0
+TT,binary,Anomaly,1154,1154,1154.0
+TT,level,Normal,60,323,
+TT,level,Performance,281,323,
+TT,level,Service,323,323,
+TT,level,Database,279,323,
+TT,level,Code,271,323,

@@ -1,0 +1,14 @@
+system,scenario,windows,blocks,train_blocks,test_blocks,train,test,train_pct,api_windows_train,api_windows_test
+TT,Lv_C_exception_injection,127,13,9,4,87,40,68.5,29,0
+TT,Lv_C_security_check,114,12,10,2,94,20,82.5,14,10
+TT,Lv_C_travel_detail_failure,110,11,9,2,90,20,81.8,10,14
+TT,Lv_D_CONNECTION_POOL_exhaustion,115,12,10,2,95,20,82.6,15,9
+TT,Lv_D_TRANSACTION_timeout,114,12,10,2,94,20,82.5,24,0
+TT,Lv_D_cachelimit,124,13,9,4,90,34,72.6,20,4
+TT,Lv_P_CPU_preserve,147,15,13,2,127,20,86.4,15,10
+TT,Lv_P_DISKIO_preserve,96,10,8,2,76,20,79.2,16,8
+TT,Lv_P_NETLOSS_preserve,98,10,8,2,78,20,79.6,18,6
+TT,Lv_S_DNSFAIL_preserve_no_order,96,10,8,2,76,20,79.2,24,0
+TT,Lv_S_HTTPABORT_preserve,199,20,17,3,169,30,84.9,41,0
+TT,Lv_S_KILLPOD_preserve,98,10,8,2,78,20,79.6,18,5
+TT,Normal_case,80,8,6,2,60,20,75.0,24,0

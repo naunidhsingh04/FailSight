@@ -1,0 +1,22 @@
+system,label_version,fold,reason
+SN,level,1,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,2,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,3,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,4,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,5,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,6,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,7,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,8,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,9,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,final,adasyn: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,1,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,2,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,3,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,4,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,5,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,6,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,7,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,8,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,9,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,10,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,final,adasyn: ValueError: No samples will be generated with the provided ratio settings.

@@ -1,0 +1,141 @@
+system,label_version,fold,class,train_before,train_after_smote,train_after_adasyn,validation,adasyn_status
+SN,binary,1,Normal,99,1102,1100.0,11,ok
+SN,binary,1,Anomaly,1102,1102,1102.0,123,ok
+SN,binary,2,Normal,99,1102,1102.0,11,ok
+SN,binary,2,Anomaly,1102,1102,1102.0,123,ok
+SN,binary,3,Normal,99,1102,1100.0,11,ok
+SN,binary,3,Anomaly,1102,1102,1102.0,123,ok
+SN,binary,4,Normal,99,1102,1102.0,11,ok
+SN,binary,4,Anomaly,1102,1102,1102.0,123,ok
+SN,binary,5,Normal,99,1102,1102.0,11,ok
+SN,binary,5,Anomaly,1102,1102,1102.0,123,ok
+SN,binary,6,Normal,99,1103,1102.0,11,ok
+SN,binary,6,Anomaly,1103,1103,1103.0,122,ok
+SN,binary,7,Normal,99,1103,1102.0,11,ok
+SN,binary,7,Anomaly,1103,1103,1103.0,122,ok
+SN,binary,8,Normal,99,1103,1103.0,11,ok
+SN,binary,8,Anomaly,1103,1103,1103.0,122,ok
+SN,binary,9,Normal,99,1103,1107.0,11,ok
+SN,binary,9,Anomaly,1103,1103,1103.0,122,ok
+SN,binary,10,Normal,99,1103,1106.0,11,ok
+SN,binary,10,Anomaly,1103,1103,1103.0,122,ok
+SN,level,1,Normal,99,293,,11,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,1,Performance,279,293,,31,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,1,Service,261,293,,29,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,1,Database,269,293,,30,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,1,Code,293,293,,33,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,2,Normal,99,293,,11,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,2,Performance,279,293,,31,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,2,Service,261,293,,29,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,2,Database,269,293,,30,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,2,Code,293,293,,33,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,3,Normal,99,293,,11,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,3,Performance,279,293,,31,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,3,Service,261,293,,29,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,3,Database,269,293,,30,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,3,Code,293,293,,33,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,4,Normal,99,293,,11,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,4,Performance,279,293,,31,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,4,Service,261,293,,29,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,4,Database,269,293,,30,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,4,Code,293,293,,33,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,5,Normal,99,293,,11,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,5,Performance,279,293,,31,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,5,Service,261,293,,29,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,5,Database,269,293,,30,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,5,Code,293,293,,33,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,6,Normal,99,293,,11,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,6,Performance,279,293,,31,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,6,Service,261,293,,29,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,6,Database,270,293,,29,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,6,Code,293,293,,33,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,7,Normal,99,294,,11,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,7,Performance,279,294,,31,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,7,Service,261,294,,29,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,7,Database,269,294,,30,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,7,Code,294,294,,32,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,8,Normal,99,294,,11,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,8,Performance,279,294,,31,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,8,Service,261,294,,29,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,8,Database,269,294,,30,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,8,Code,294,294,,32,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,9,Normal,99,294,,11,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,9,Performance,279,294,,31,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,9,Service,261,294,,29,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,9,Database,269,294,,30,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,9,Code,294,294,,32,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+SN,level,10,Normal,99,294,290.0,11,ok
+SN,level,10,Performance,279,294,289.0,31,ok
+SN,level,10,Service,261,294,295.0,29,ok
+SN,level,10,Database,269,294,291.0,30,ok
+SN,level,10,Code,294,294,294.0,32,ok
+TT,binary,1,Normal,54,1038,1052.0,6,ok
+TT,binary,1,Anomaly,1038,1038,1038.0,116,ok
+TT,binary,2,Normal,54,1038,1055.0,6,ok
+TT,binary,2,Anomaly,1038,1038,1038.0,116,ok
+TT,binary,3,Normal,54,1038,1059.0,6,ok
+TT,binary,3,Anomaly,1038,1038,1038.0,116,ok
+TT,binary,4,Normal,54,1038,1052.0,6,ok
+TT,binary,4,Anomaly,1038,1038,1038.0,116,ok
+TT,binary,5,Normal,54,1039,1056.0,6,ok
+TT,binary,5,Anomaly,1039,1039,1039.0,115,ok
+TT,binary,6,Normal,54,1039,1051.0,6,ok
+TT,binary,6,Anomaly,1039,1039,1039.0,115,ok
+TT,binary,7,Normal,54,1039,1059.0,6,ok
+TT,binary,7,Anomaly,1039,1039,1039.0,115,ok
+TT,binary,8,Normal,54,1039,1059.0,6,ok
+TT,binary,8,Anomaly,1039,1039,1039.0,115,ok
+TT,binary,9,Normal,54,1039,1051.0,6,ok
+TT,binary,9,Anomaly,1039,1039,1039.0,115,ok
+TT,binary,10,Normal,54,1039,1018.0,6,ok
+TT,binary,10,Anomaly,1039,1039,1039.0,115,ok
+TT,level,1,Normal,54,291,,6,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,1,Performance,252,291,,29,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,1,Service,291,291,,32,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,1,Database,252,291,,27,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,1,Code,243,291,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,2,Normal,54,290,,6,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,2,Performance,253,290,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,2,Service,290,290,,33,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,2,Database,251,290,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,2,Code,244,290,,27,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,3,Normal,54,290,,6,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,3,Performance,253,290,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,3,Service,290,290,,33,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,3,Database,251,290,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,3,Code,244,290,,27,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,4,Normal,54,290,,6,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,4,Performance,253,290,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,4,Service,290,290,,33,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,4,Database,251,290,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,4,Code,244,290,,27,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,5,Normal,54,291,,6,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,5,Performance,253,291,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,5,Service,291,291,,32,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,5,Database,251,291,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,5,Code,244,291,,27,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,6,Normal,54,291,,6,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,6,Performance,253,291,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,6,Service,291,291,,32,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,6,Database,251,291,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,6,Code,244,291,,27,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,7,Normal,54,291,,6,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,7,Performance,253,291,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,7,Service,291,291,,32,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,7,Database,251,291,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,7,Code,244,291,,27,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,8,Normal,54,291,,6,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,8,Performance,253,291,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,8,Service,291,291,,32,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,8,Database,251,291,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,8,Code,244,291,,27,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,9,Normal,54,291,,6,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,9,Performance,253,291,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,9,Service,291,291,,32,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,9,Database,251,291,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,9,Code,244,291,,27,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,10,Normal,54,291,,6,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,10,Performance,253,291,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,10,Service,291,291,,32,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,10,Database,251,291,,28,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+TT,level,10,Code,244,291,,27,FAILED: ValueError: No samples will be generated with the provided ratio settings.
