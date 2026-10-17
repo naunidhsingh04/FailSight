@@ -18,6 +18,7 @@ with zipfile.ZipFile(zp, "w", zipfile.ZIP_DEFLATED) as z:
 print("zip", zp, round(zp.stat().st_size / 1e6, 2), "MB,", len(files), "files")
 for p in sorted(files): print("  ", p.relative_to(OUT))
 t = pd.read_csv(OUT / "test_metrics.csv")
+t = t[t.variant == "official"]  # no_overlap rows are in the same CSV
 cols = ["accuracy", "balanced_accuracy", "macro_f1", "normal_recall", "roc_auc", "pr_auc"]
 pd.set_option("display.width", 250)
 for l in ("label_binary", "label_level"):

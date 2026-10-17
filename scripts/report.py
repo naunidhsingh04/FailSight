@@ -59,11 +59,31 @@ def test_table(D, st):
         for sc in SC:
             m = mk[sc]
             rows.append(dict(model=n, label_version=l, scope=sc, **full_metrics(D.yte[l][m], s["test_proba"][m], CLASS_NAMES[l])))
+    for r in rows:
+        r["variant"] = "official"
+    # robustness variant: final models refitted without the train windows that overlap in time with a test window (see
+    # robustness_no_overlap.py); same test rows, same metrics code
+    for (l, n) in st:
+        p = STATE / f"noov__{l}__{n}.pkl"
+        if not p.exists():
+            continue
+        with open(p, "rb") as fh:
+            v = pickle.load(fh)
+        for sc in SC:
+            m = mk[sc]
+            rows.append(dict(model=n, label_version=l, scope=sc, variant="no_overlap",
+                             **full_metrics(D.yte[l][m], v["test_proba"][m], CLASS_NAMES[l])))
     t = pd.DataFrame(rows)
     t["_o"] = t.model.map({n: i for i, n in enumerate(ORDER)})
-    t = t.sort_values(["label_version", "scope", "_o"], kind="stable").drop(columns="_o")
+    t["_v"] = (t.variant != "official").astype(int)
+    t = t.sort_values(["label_version", "scope", "_o", "_v"], kind="stable").drop(columns=["_o", "_v"])
+    t = t[["model", "label_version", "scope", "variant"] + [c for c in t.columns if c not in ("model", "label_version", "scope", "variant")]]
     t.to_csv(OUT / "test_metrics.csv", index=False)
     return t
+
+
+def official(tt):
+    return tt[tt.variant == "official"]
 
 
 def overfit_table(D, st, cv):
@@ -267,7 +287,7 @@ def environment(D):
 def main(D):
     st = load_all()
     log(f"report: {len(st)} model/label states found")
-    cv = cv_tables(D, st); tt = test_table(D, st); over = overfit_table(D, st, cv)
+    cv = cv_tables(D, st); tt_all = test_table(D, st); tt = official(tt_all); over = overfit_table(D, st, cv)
     ablation(D, st, cv, tt); per_scenario(D, st); arch_time(st); environment(D)
     cm_plots(D, st); curve_plots(D, st); bar_plots(tt); loss_plots(st); fold_graph()
     res = {"split": {"train": int(len(D.train_pos)), "test": int(len(D.test_pos))},
