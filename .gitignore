@@ -1,0 +1,14 @@
+inputs/
+outputs/
+processed/*.joblib
+processed/*.parquet
+models/
+*.parquet
+*.joblib
+*.keras
+__pycache__/
+node_modules/
+.venv/
+.env
+AnoMod/
+LO2/
