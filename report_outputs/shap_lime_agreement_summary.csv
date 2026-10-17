@@ -1,0 +1,12 @@
+label_version,model,window_set,outcome,n_windows,mean_shared_top5,share_with_ge3_shared,share_with_ge1_shared,mean_jaccard,share_top1_shap_in_lime_top5
+label_binary,XGB,5 correct + 5 wrong,all,10,2.8,0.7,1.0,0.3988095238095238,
+label_binary,XGB,5 correct + 5 wrong,correct,5,2.8,0.8,1.0,0.3928571428571429,
+label_binary,XGB,5 correct + 5 wrong,wrong,5,2.8,0.6,1.0,0.40476190476190477,
+label_binary,XGB,60 random,all,60,2.6,0.5833333333333334,1.0,0.3581349206349206,
+label_binary,XGB,60 random,correct,60,2.6,0.5833333333333334,1.0,0.3581349206349206,
+label_level,LGBM_tuned,5 correct + 5 wrong,all,10,2.9,0.8,1.0,0.41666666666666663,
+label_level,LGBM_tuned,5 correct + 5 wrong,correct,5,3.2,1.0,1.0,0.47619047619047616,
+label_level,LGBM_tuned,5 correct + 5 wrong,wrong,5,2.6,0.6,1.0,0.35714285714285715,
+label_level,LGBM_tuned,60 random,all,60,2.8333333333333335,0.7,1.0,0.41997354497354494,
+label_level,LGBM_tuned,60 random,correct,58,2.8620689655172415,0.7241379310344828,1.0,0.4258347016967706,
+label_level,LGBM_tuned,60 random,wrong,2,2.0,0.0,1.0,0.25,

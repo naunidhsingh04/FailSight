@@ -1,0 +1,37 @@
+label_version,model,breakdown,value,n_misclassified_normal,share_of_misclassified
+label_binary,XGB,predicted_class,Anomaly,16,1.0
+label_binary,XGB,system,TT,10,0.625
+label_binary,XGB,system,SN,6,0.375
+label_binary,XGB,run,TT|Normal_case,10,0.625
+label_binary,XGB,run,SN|Normal_Baseline,6,0.375
+label_binary,XGB,nearest_train_scenario_k5,SN|Perf_Network_Loss,4,0.25
+label_binary,XGB,nearest_train_scenario_k5,TT|Lv_D_cachelimit,4,0.25
+label_binary,XGB,nearest_train_scenario_k5,TT|Lv_P_DISKIO_preserve,3,0.1875
+label_binary,XGB,nearest_train_scenario_k5,TT|Lv_P_NETLOSS_preserve,2,0.125
+label_binary,XGB,nearest_train_scenario_k5,SN|Svc_Kill_Media,1,0.0625
+label_binary,XGB,nearest_train_scenario_k5,SN|DB_Redis_CacheLimit_HomeTimeline,1,0.0625
+label_binary,XGB,nearest_train_scenario_k5,TT|Lv_D_CONNECTION_POOL_exhaustion,1,0.0625
+label_binary,XGB,position,inside a test block,14,0.875
+label_binary,XGB,position,adjacent to a train window (20 s overlap),2,0.125
+label_binary,XGB,counts,normal_test_windows,36,
+label_binary,XGB,counts,misclassified,16,
+label_level,LGBM_tuned,predicted_class,Performance,9,0.5
+label_level,LGBM_tuned,predicted_class,Database,6,0.3333333333333333
+label_level,LGBM_tuned,predicted_class,Service,3,0.16666666666666666
+label_level,LGBM_tuned,system,TT,10,0.5555555555555556
+label_level,LGBM_tuned,system,SN,8,0.4444444444444444
+label_level,LGBM_tuned,run,TT|Normal_case,10,0.5555555555555556
+label_level,LGBM_tuned,run,SN|Normal_Baseline,8,0.4444444444444444
+label_level,LGBM_tuned,nearest_train_scenario_k5,SN|Perf_Network_Loss,4,0.2222222222222222
+label_level,LGBM_tuned,nearest_train_scenario_k5,TT|Lv_D_cachelimit,4,0.2222222222222222
+label_level,LGBM_tuned,nearest_train_scenario_k5,TT|Lv_P_DISKIO_preserve,3,0.16666666666666666
+label_level,LGBM_tuned,nearest_train_scenario_k5,TT|Lv_P_NETLOSS_preserve,2,0.1111111111111111
+label_level,LGBM_tuned,nearest_train_scenario_k5,SN|Svc_Kill_UserTimeline,1,0.05555555555555555
+label_level,LGBM_tuned,nearest_train_scenario_k5,SN|Code_Stop_MediaService,1,0.05555555555555555
+label_level,LGBM_tuned,nearest_train_scenario_k5,SN|Svc_Kill_Media,1,0.05555555555555555
+label_level,LGBM_tuned,nearest_train_scenario_k5,SN|DB_Redis_CacheLimit_HomeTimeline,1,0.05555555555555555
+label_level,LGBM_tuned,nearest_train_scenario_k5,TT|Lv_D_CONNECTION_POOL_exhaustion,1,0.05555555555555555
+label_level,LGBM_tuned,position,inside a test block,16,0.8888888888888888
+label_level,LGBM_tuned,position,adjacent to a train window (20 s overlap),2,0.1111111111111111
+label_level,LGBM_tuned,counts,normal_test_windows,36,
+label_level,LGBM_tuned,counts,misclassified,18,

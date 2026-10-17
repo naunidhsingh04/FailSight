@@ -1,0 +1,54 @@
+20:54:18 ============================================================
+20:54:18 step3_eval start Sat Oct 17 20:54:18 2026 parts ['bootstrap', 'calibration']
+20:54:18 ============================================================
+20:54:18 BOOTSTRAP: 1000 block resamples of the test windows (seed 42); same resamples for every model
+20:54:18   scope ALL: 647 test windows in 66 blocks
+20:54:22 ============================================================
+20:54:22 step3_eval start Sat Oct 17 20:54:22 2026 parts ['explain', 'errors']
+20:54:23 ============================================================
+20:54:23 EXPLAINABILITY: SHAP (TreeExplainer) and LIME on the best single (non-ensemble, non-deep) model per label
+20:54:23 [label_binary] explained model: XGB (test balanced accuracy 0.7737; best among the tree/linear baselines, chosen on the test set)
+20:54:46   [label_binary] SHAP/LIME done for XGB
+20:54:46 [label_level] explained model: LGBM_tuned (test balanced accuracy 0.8886; best among the tree/linear baselines, chosen on the test set)
+20:55:12   [label_level] SHAP/LIME done for LGBM_tuned
+20:55:12 saved shap_global_*.csv, shap_group_share_*.csv, shap_lime_local_windows.csv, shap_lime_agreement_windows.csv, shap_lime_agreement_summary.csv and PNGs
+20:55:12 part explain finished in 0.8 min
+20:55:12 ============================================================
+20:55:12 ERROR ANALYSIS: Normal test windows that the best model misclassifies
+20:55:12 [label_binary] XGB: 36 Normal test windows, 16 misclassified (44.4%), 20 correct
+20:55:13 [label_level] LGBM_tuned: 36 Normal test windows, 18 misclassified (50.0%), 18 correct
+20:55:14 saved error_normal_*.csv
+20:55:14 part errors finished in 0.0 min
+20:57:10   scope SN: 343 test windows in 35 blocks
+20:59:37   scope TT: 304 test windows in 31 blocks
+21:02:05 saved test_bootstrap_ci.csv, test_per_class.csv (per-system scopes SN/TT and per-class recall/precision/F1 with bootstrap CI for recall)
+21:02:05   best model label_binary: XGB (test balanced accuracy 0.7737; chosen on the test set itself, so the comparison favours it)
+21:02:05   best model label_level: Stacking (test balanced accuracy 0.8898; chosen on the test set itself, so the comparison favours it)
+21:02:06 saved paired_bootstrap.csv
+21:02:06 part bootstrap finished in 7.8 min
+21:02:06 ============================================================
+21:02:06 CALIBRATION: temperature scaling and isotonic regression fitted on OUT-OF-FOLD predictions only, evaluated on the test set
+21:02:07 saved calibration.csv and calibration_reliability_*.png
+21:02:07 part calibration finished in 0.0 min
+21:04:44 ============================================================
+21:04:44 step3_eval start Sat Oct 17 21:04:44 2026 parts ['summary']
+21:04:44 ============================================================
+21:04:44 SUMMARY: results_summary.md (numbers read from the CSVs written above)
+21:04:44 saved results_summary.md
+21:04:44 part summary finished in 0.0 min
+21:05:03 ============================================================
+21:05:03 step3_eval start Sat Oct 17 21:05:03 2026 parts ['bootstrap', 'summary']
+21:05:03 ============================================================
+21:05:03 BOOTSTRAP: 1000 resamples of the test windows by block, stratified by run (seed 42); same resamples for every model
+21:05:04   scope ALL: 647 test windows in 66 blocks
+21:07:30   scope SN: 343 test windows in 35 blocks
+21:10:47   scope TT: 304 test windows in 31 blocks
+21:14:55 saved test_bootstrap_ci.csv, test_per_class.csv (per-system scopes SN/TT and per-class recall/precision/F1 with bootstrap CI for recall)
+21:14:56   best model label_binary: XGB (test balanced accuracy 0.7737; chosen on the test set itself, so the comparison favours it)
+21:14:56   best model label_level: Stacking (test balanced accuracy 0.8898; chosen on the test set itself, so the comparison favours it)
+21:14:56 saved paired_bootstrap.csv
+21:14:56 part bootstrap finished in 9.9 min
+21:14:56 ============================================================
+21:14:56 SUMMARY: results_summary.md (numbers read from the CSVs written above)
+21:14:56 saved results_summary.md
+21:14:56 part summary finished in 0.0 min
