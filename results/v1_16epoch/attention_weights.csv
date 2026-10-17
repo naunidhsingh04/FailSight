@@ -1,0 +1,13 @@
+label_version,model,window_id,run,system,true,pred,w_t-5,w_t-4,w_t-3,w_t-2,w_t-1,w_t-0
+label_binary,Fusion,SN|Normal_Baseline|110,Normal_Baseline,SN,Normal,Normal,0.28293228,0.22057533,0.16022268,0.12544127,0.105506115,0.105322406
+label_binary,Fusion,SN|Svc_Kill_Media|20,Svc_Kill_Media,SN,Anomaly,Anomaly,0.13658027,0.16707906,0.17388347,0.17353511,0.17141913,0.17750305
+label_binary,Fusion,TT|Lv_C_exception_injection|10,Lv_C_exception_injection,TT,Anomaly,Anomaly,0.053659845,0.12016381,0.16077846,0.19160904,0.22484046,0.2489483
+label_binary,CNN_BiGRU_Att,SN|Normal_Baseline|110,Normal_Baseline,SN,Normal,Normal,0.22597577,0.21546508,0.18493631,0.15584175,0.13108161,0.086699486
+label_binary,CNN_BiGRU_Att,SN|Svc_Kill_Media|20,Svc_Kill_Media,SN,Anomaly,Anomaly,0.20702046,0.19419608,0.18533628,0.17015699,0.14834964,0.09494056
+label_binary,CNN_BiGRU_Att,TT|Lv_C_exception_injection|10,Lv_C_exception_injection,TT,Anomaly,Anomaly,0.22067544,0.16610295,0.17127602,0.16506414,0.15268576,0.12419566
+label_level,Fusion,SN|Normal_Baseline|110,Normal_Baseline,SN,Normal,Normal,0.08455596,0.121045455,0.16030438,0.19436897,0.21385935,0.2258659
+label_level,Fusion,SN|Svc_Kill_Media|20,Svc_Kill_Media,SN,Service,Service,0.16554691,0.17227244,0.16375417,0.15897742,0.15899992,0.18044914
+label_level,Fusion,TT|Lv_C_exception_injection|10,Lv_C_exception_injection,TT,Code,Database,0.13863987,0.12742054,0.13439013,0.1487644,0.18214278,0.26864222
+label_level,CNN_BiGRU_Att,SN|Normal_Baseline|110,Normal_Baseline,SN,Normal,Normal,0.15847276,0.1739653,0.18258996,0.18619463,0.18138197,0.11739534
+label_level,CNN_BiGRU_Att,SN|Svc_Kill_Media|20,Svc_Kill_Media,SN,Service,Service,0.16212489,0.16546203,0.16738403,0.16977714,0.17339124,0.16186063
+label_level,CNN_BiGRU_Att,TT|Lv_C_exception_injection|10,Lv_C_exception_injection,TT,Code,Database,0.1467985,0.153745,0.15797812,0.16221844,0.1676479,0.21161205

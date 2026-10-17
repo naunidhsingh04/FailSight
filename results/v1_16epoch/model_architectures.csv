@@ -1,0 +1,17 @@
+model,label_version,config,units,dropout,layers,parameters,size_mb,note
+CNN_BiGRU_Att,label_binary,A,64.0,0.3,10,93250,0.373,
+CNN_BiLSTM_Att,label_binary,B,128.0,0.4,10,349570,1.398,
+Fusion,label_binary,B,128.0,0.4,22,219714,0.879,
+Transformer,label_binary,A,64.0,0.3,25,81666,0.327,
+Fusion_XGBhead,label_binary,B,128.0,0.4,22,219714,0.879,deep part shared with base model; + XGBoost 300 rounds depth 6 lr 0.1 on 64-d embedding
+CNN_BiGRU_Att_XGBhead,label_binary,A,64.0,0.3,10,93250,0.373,deep part shared with base model; + XGBoost 300 rounds depth 6 lr 0.1 on 64-d embedding
+Stacking,label_binary,-,,,0,0,0.0,"XGBoost meta-learner (200 rounds, depth 3) on OOF probs of CNN_BiGRU_Att, Fusion, Transformer"
+SoftVote,label_binary,-,,,0,0,0.0,average of 40 fold models' probabilities
+CNN_BiGRU_Att,label_level,A,64.0,0.3,10,93445,0.374,
+CNN_BiLSTM_Att,label_level,A,64.0,0.3,10,109573,0.438,
+Fusion,label_level,B,128.0,0.4,22,219909,0.88,
+Transformer,label_level,A,64.0,0.3,25,81861,0.327,
+Fusion_XGBhead,label_level,B,128.0,0.4,22,219909,0.88,deep part shared with base model; + XGBoost 300 rounds depth 6 lr 0.1 on 64-d embedding
+CNN_BiGRU_Att_XGBhead,label_level,A,64.0,0.3,10,93445,0.374,deep part shared with base model; + XGBoost 300 rounds depth 6 lr 0.1 on 64-d embedding
+Stacking,label_level,-,,,0,0,0.0,"XGBoost meta-learner (200 rounds, depth 3) on OOF probs of CNN_BiGRU_Att, Fusion, Transformer"
+SoftVote,label_level,-,,,0,0,0.0,average of 40 fold models' probabilities
