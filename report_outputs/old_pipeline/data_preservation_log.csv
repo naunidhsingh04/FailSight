@@ -1,0 +1,41 @@
+step,system,object,rows_in,cols_in,rows_out,cols_out,rows_lost,note
+windows -> API-aware block split,SN,windows.parquet -> train_raw + test_raw,1678.0,64.0,1678.0,64.0,0.0,train 1335 + test 343; no window dropped or trimmed
+impute+scale (copy),SN,train_raw -> train_model,1335.0,56.0,1335.0,56.0,0.0,"NaN cells before: 9123, after: 0"
+impute+scale (copy),SN,test_raw -> test_model,343.0,56.0,343.0,56.0,0.0,"NaN cells before: 2207, after: 0"
+10-fold CV,SN,binary: folds on train_raw,1335.0,56.0,1335.0,56.0,0.0,each training row is in exactly one validation fold; validation folds never resampled
+SMOTE on full 80%,SN,binary: train_model -> train_smote_binary,1335.0,56.0,2450.0,56.0,-1115.0,1115 synthetic rows added; all 1335 real rows unchanged (verified)
+ADASYN on full 80%,SN,binary: train_model -> train_adasyn_binary,1335.0,56.0,2451.0,56.0,-1116.0,"1116 synthetic rows added; all 1335 real rows unchanged (verified); counts only, not saved"
+10-fold CV,SN,level: folds on train_raw,1335.0,56.0,1335.0,56.0,0.0,each training row is in exactly one validation fold; validation folds never resampled
+SMOTE on full 80%,SN,level: train_model -> train_smote_level,1335.0,56.0,1630.0,56.0,-295.0,295 synthetic rows added; all 1335 real rows unchanged (verified)
+ADASYN on full 80%,SN,level,1335.0,56.0,,,,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+windows -> API-aware block split,TT,windows.parquet -> train_raw + test_raw,1518.0,118.0,1518.0,118.0,0.0,train 1214 + test 304; no window dropped or trimmed
+impute+scale (copy),TT,train_raw -> train_model,1214.0,110.0,1214.0,110.0,0.0,"NaN cells before: 9505, after: 0"
+impute+scale (copy),TT,test_raw -> test_model,304.0,110.0,304.0,110.0,0.0,"NaN cells before: 1848, after: 0"
+10-fold CV,TT,binary: folds on train_raw,1214.0,110.0,1214.0,110.0,0.0,each training row is in exactly one validation fold; validation folds never resampled
+SMOTE on full 80%,TT,binary: train_model -> train_smote_binary,1214.0,110.0,2308.0,110.0,-1094.0,1094 synthetic rows added; all 1214 real rows unchanged (verified)
+ADASYN on full 80%,TT,binary: train_model -> train_adasyn_binary,1214.0,110.0,2314.0,110.0,-1100.0,"1100 synthetic rows added; all 1214 real rows unchanged (verified); counts only, not saved"
+10-fold CV,TT,level: folds on train_raw,1214.0,110.0,1214.0,110.0,0.0,each training row is in exactly one validation fold; validation folds never resampled
+SMOTE on full 80%,TT,level: train_model -> train_smote_level,1214.0,110.0,1615.0,110.0,-401.0,401 synthetic rows added; all 1214 real rows unchanged (verified)
+ADASYN on full 80%,TT,level,1214.0,110.0,,,,FAILED: ValueError: No samples will be generated with the provided ratio settings.
+tidy -> windows,SN,api: raw rows -> rows in >=1 window,1950.0,,1950.0,,0.0,0 rows (log lines before the first timestamped record) have no time and cannot be placed; 1678 windows built
+tidy -> windows,SN,metrics: raw rows -> rows in >=1 window,145555.0,,145555.0,,0.0,0 rows (log lines before the first timestamped record) have no time and cannot be placed; 1678 windows built
+tidy -> windows,SN,logs: raw rows -> rows in >=1 window,3955693.0,,3955693.0,,0.0,2800 rows (log lines before the first timestamped record) have no time and cannot be placed; 1678 windows built
+tidy -> windows,TT,api: raw rows -> rows in >=1 window,98073.0,,98073.0,,0.0,0 rows (log lines before the first timestamped record) have no time and cannot be placed; 1518 windows built
+tidy -> windows,TT,metrics: raw rows -> rows in >=1 window,4019540.0,,4019540.0,,0.0,0 rows (log lines before the first timestamped record) have no time and cannot be placed; 1518 windows built
+tidy -> windows,TT,logs: raw rows -> rows in >=1 window,430300.0,,430300.0,,0.0,14260 rows (log lines before the first timestamped record) have no time and cannot be placed; 1518 windows built
+TT latency check,TT,api_responses records -> api_latency_* features,98073.0,8.0,98073.0,8.0,0.0,"TT records hold only 'timestamp' (no latency/start/end fields; Date header is 1 s server clock); latency stays NaN, columns kept"
+raw data read-only check,-,SN_data,,,,,,"IDENTICAL before/after (file count, bytes, mtime)"
+raw data read-only check,-,TT_data,,,,,,"IDENTICAL before/after (file count, bytes, mtime)"
+raw data read-only check,-,anomod_all_csv_raw_combined.csv,,,,,,"IDENTICAL before/after (file count, bytes, mtime, sha256)"
+concat SN + TT windows,SN+TT,SN windows + TT windows -> combined_windows.parquet,3196.0,182.0,3196.0,165.0,0.0,"union of columns: 155 feature columns (SN 56, TT 110, both 11); every window kept"
+split union,SN+TT,SN split + TT split -> combined split column,3196.0,165.0,3196.0,165.0,0.0,train 2549 + test 647
+impute+scale (copy),SN+TT,combined train -> combined_train_model,2549.0,156.0,2549.0,156.0,0.0,"+1 column system_is_TT; NaN cells before 205423, after 0"
+impute+scale (copy),SN+TT,combined test -> combined_test_model,647.0,156.0,647.0,156.0,0.0,"fitted on train only; NaN cells before 51692, after 0"
+10-fold CV,SN+TT,folds on combined train (stratified on system + level),2549.0,156.0,2549.0,156.0,0.0,each training row in exactly one validation fold; validation never resampled; preprocessing refitted per fold
+SMOTE on full combined train,SN+TT,binary: combined_train_model -> train_smote_binary,2549.0,156.0,4758.0,156.0,-2209.0,2209 synthetic rows added; all 2549 real rows unchanged (verified)
+ADASYN on full combined train,SN+TT,binary: combined_train_model -> counts only,2549.0,156.0,4734.0,156.0,-2185.0,"2185 synthetic rows added; all 2549 real rows unchanged (verified); counts only, not saved"
+SMOTE on full combined train,SN+TT,level: combined_train_model -> train_smote_level,2549.0,156.0,3065.0,156.0,-516.0,516 synthetic rows added; all 2549 real rows unchanged (verified)
+final raw data check,-,SN_data,,,,,,IDENTICAL to the snapshot taken before the pipeline started
+final raw data check,-,TT_data,,,,,,IDENTICAL to the snapshot taken before the pipeline started
+final raw data check,-,anomod_all_csv_raw_combined.csv,,,,,,IDENTICAL to the snapshot taken before the pipeline started
+final raw data check,-,CSV row cross-check,4190698.0,,4190698.0,,0.0,"234 CSV files, 4,190,698 rows vs combined CSV 4,190,698 rows"
