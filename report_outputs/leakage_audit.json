@@ -1,0 +1,276 @@
+{
+ "generated_at": "2026-10-19 21:17:12",
+ "git_commit": "7d0e571f0b7d15666dba33ff72140b888aba8820",
+ "python": "3.11.9",
+ "seed": 42,
+ "runtime_seconds": 292.7,
+ "versions": {
+  "numpy": "2.4.6",
+  "pandas": "3.0.3",
+  "scikit_learn": "1.9.1",
+  "xgboost": "3.2.0",
+  "imbalanced_learn": "0.14.2",
+  "scipy": "1.17.1"
+ },
+ "summary": {
+  "PASS": 8,
+  "WARN": 1
+ },
+ "checks": [
+  {
+   "id": "C1a",
+   "check": "Preprocessor / imputer / scaler fitted on training rows only",
+   "status": "PASS",
+   "summary": "wrecking all test rows leaves the fitted state identical (global: True; fold 1/5/10 with validation+test wrecked: [True, True, True]); fit() rejects non-train rows: True",
+   "evidence": {
+    "global_state_unchanged": true,
+    "fold_state_unchanged": [
+     true,
+     true,
+     true
+    ],
+    "rejects_test_rows": true,
+    "call_sites": [
+     "leakage_audit.py:127 P.fit_preprocessor(train)",
+     "leakage_audit.py:134 P.fit_preprocessor(train2)",
+     "leakage_audit.py:146 P.fit_preprocessor(df.iloc[np.concatenate([D.train_pos[:50], D.test_pos[:5]])])",
+     "leakage_audit.py:143 P.fit_preprocessor(df3.iloc[tr])",
+     "preprocess.py:319 fit_preprocessor(train)",
+     "v2_data.py:128 P.fit_preprocessor(self.df.iloc[rows])",
+     "v2_data.py:116 P.fit_preprocessor(self.df.iloc[self.train_pos])"
+    ],
+    "method": "refit on rows selected through split_ids.csv after multiplying every test feature by 1e6; state hash compared"
+   },
+   "source": "scripts/preprocess.py, scripts/v2_data.py"
+  },
+  {
+   "id": "C1b",
+   "check": "SMOTE applied to training parts only",
+   "status": "PASS",
+   "summary": "10 folds: train/validation/test index overlaps = 0; validation parts tile the training set exactly: True; fold-1 SMOTE balances to the majority count ([160, 531, 553, 518, 538] -> [553, 553, 553, 553, 553]), validation/test never enter it",
+   "evidence": {
+    "fold_overlap_counts": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "validation_parts_cover_training": true,
+    "fold1_before": [
+     160,
+     531,
+     553,
+     518,
+     538
+    ],
+    "fold1_after": [
+     553,
+     553,
+     553,
+     553,
+     553
+    ],
+    "call_sites": [
+     "common.py:141 SMOTE(random_state=SEED, k_neighbors=min(5, int(cnt.min()) - 1))",
+     "full_pipeline.py:626 smote_seq(Xseq, y)",
+     "full_pipeline.py:639 smote_seq(Xseq, y)",
+     "leakage_audit.py:167 smote_resample(Xtr1, y1)",
+     "leakage_audit.py:339 SMOTE(random_state=SEED, k_neighbors=k)",
+     "robustness_no_overlap.py:45 SMOTE(random_state=SEED, k_neighbors=min(5, int(np.bincount(y).min()) - 1))",
+     "v2_data.py:155 smote_resample(X.reshape(n, -1), y)",
+     "v2_data.py:149 SMOTE(random_state=seed, k_neighbors=k)",
+     "v2_deep.py:51 smote_seq(Xtr, ytr)",
+     "v2_tab.py:103 smote_resample(d['Xtr'], d['ytr'])",
+     "v2_tab.py:66 SMOTE(random_state=SEED, k_neighbors=min(5, int(np.bincount(ya).min()) - 1))",
+     "v2_tab.py:80 SMOTE(random_state=SEED, k_neighbors=k)"
+    ]
+   },
+   "source": "scripts/v2_data.py, scripts/v2_deep.py, scripts/v2_tab.py"
+  },
+  {
+   "id": "C1c",
+   "check": "Thresholds and Optuna choices depend on training rows only",
+   "status": "PASS",
+   "summary": "36 saved decision rules recomputed from out-of-fold predictions (training windows only: True): 36 identical; Optuna objective calls tab_cv on the run-aware training folds (240 trials, 6 studies)",
+   "evidence": {
+    "oof_windows_subset_of_train": "True",
+    "rules_recomputed": 36,
+    "rules_differing": [],
+    "optuna_call_sites": [
+     "full_pipeline.py:127 TB.tab_cv(D, l, n, TB.DEFAULTS[n], v)",
+     "full_pipeline.py:228 TB.tab_cv(D, l, n, params, variant, use_cache=True)",
+     "full_pipeline.py:210 TB.tab_cv(D, l, n, params, variant, use_cache=True)",
+     "full_pipeline.py:511 TB.tab_cv(D, l, r[n]['base'], params, r[n]['variant'], use_cache=True, early_stop=r[n]['base'] in ('XGB', 'LGBM'))"
+    ],
+    "note": "Optuna was run on the same training folds, so cross-validation scores of tuned models are optimistically selected; test rows were never used"
+   },
+   "source": "scripts/full_pipeline.py (tune_decision, stage2), report_outputs/thresholds.json, oof_predictions.parquet"
+  },
+  {
+   "id": "C2",
+   "check": "No window id in both train and test; counts match split_ids.csv",
+   "status": "PASS",
+   "summary": "train 2549 / test 647, shared ids 0, ids unique True, identical to split_ids.csv: True",
+   "evidence": {
+    "train": 2549,
+    "test": 647,
+    "shared_ids": 0,
+    "per_system": {
+     "test": {
+      "SN": 343,
+      "TT": 304
+     },
+     "train": {
+      "SN": 1335,
+      "TT": 1214
+     }
+    }
+   },
+   "source": "report_outputs/split_ids.csv"
+  },
+  {
+   "id": "C3",
+   "check": "Time / run overlap and duplicates between train and test",
+   "status": "WARN",
+   "summary": "98 SN and 102 TT training windows overlap in time with a test window of the SAME run (<= 20 s at block boundaries); overlaps between different runs: 0; 7 test windows duplicate a training window (label conflicts: 0); all 26 runs appear in both parts (block split). Dropping the overlapping windows and refitting (first-run models) changed test balanced accuracy by -0.036 (binary) and +0.010 (five-class) on average",
+   "evidence": {
+    "overlap_same_run": {
+     "SN": 98,
+     "TT": 102
+    },
+    "overlap_different_runs": {
+     "SN": 0,
+     "TT": 0
+    },
+    "duplicate_test_windows": 7,
+    "duplicate_label_conflicts": 0,
+    "runs_in_both_parts": 26,
+    "no_overlap_effect_first_run": {
+     "label_binary": {
+      "models": 8,
+      "mean_delta_balanced_accuracy": -0.03627079923622477,
+      "min": -0.07680941989452617,
+      "max": 0.01957174031642117
+     },
+     "label_level": {
+      "models": 8,
+      "mean_delta_balanced_accuracy": 0.010376196803030605,
+      "min": -0.025666937852566685,
+      "max": 0.06215482621171242
+     }
+    },
+    "blocks_in_both_parts": 0
+   },
+   "source": "report_outputs/leakage_checks.csv, results/v1_16epoch/test_metrics.csv (variant no_overlap)"
+  },
+  {
+   "id": "C4",
+   "check": "Features use only data inside the window or earlier; context = past windows of the same run and split",
+   "status": "PASS",
+   "summary": "400 random windows (both systems, both splits) recomputed from the raw event tables: 400 identical for log lines, ERROR lines, WARN lines and API requests counted strictly in [start, start+30 s); all windows are 30 s long, step 10 s: True; 6-window context violations (future index, other run, other split): 0 of 3196; 1889 of 19176 context slots (9.9%) repeat the earliest available window",
+   "evidence": {
+    "windows_recomputed": 400,
+    "mismatches": 0,
+    "context_violations": 0,
+    "context_slots": 19176,
+    "context_slots_repeating_earliest": 1889,
+    "share_repeating": 0.09850855235711306,
+    "features_recomputed": [
+     "log_line_count",
+     "log_error_count",
+     "log_warning_count",
+     "api_request_count"
+    ]
+   },
+   "source": "AnoMod/processed/tidy/{logs,api}.parquet (read-only), AnoMod/processed/*/windows.parquet"
+  },
+  {
+   "id": "C5",
+   "check": "No label / scenario / run / id column reaches a model; single-feature power",
+   "status": "PASS",
+   "summary": "128 model inputs; forbidden-name columns: 0; metadata columns among inputs: 0 (system_is_TT is an intended input); best single feature balanced accuracy: binary 0.638 (m_socialnet_container_memory__max), five-class 0.554 (m_system_disk_usage_percent__mean), alarm level 0.90",
+   "evidence": {
+    "inputs": 128,
+    "forbidden": [],
+    "metadata_in_inputs": [],
+    "best_single_feature": {
+     "label_binary": {
+      "feature": "m_socialnet_container_memory__max",
+      "balanced_accuracy": 0.6380705582833243
+     },
+     "label_level": {
+      "feature": "m_system_disk_usage_percent__mean",
+      "balanced_accuracy": 0.5538955920991849
+     }
+    }
+   },
+   "source": "report_outputs/leakage_checks.csv (same method, recomputed)"
+  },
+  {
+   "id": "C6",
+   "check": "Shuffled-label sanity test (XGBoost, same folds, SMOTE, never saved)",
+   "status": "PASS",
+   "summary": "binary window_level: test BA 0.489; binary block_level: test BA 0.480; level window_level: test BA 0.215; level block_level: test BA 0.205. Chance = 0.50 (binary) / 0.20 (five-class); highest excess over chance +0.015. Saved XGB with the real labels: 0.774 (binary), 0.887 (five-class)",
+   "evidence": {
+    "results": {
+     "label_binary": {
+      "window_level": {
+       "cv_validation_ba_mean": 0.500440281857522,
+       "cv_validation_ba_std": 0.020635973375992652,
+       "test_ba": 0.48936170212765956,
+       "chance": 0.5
+      },
+      "block_level": {
+       "cv_validation_ba_mean": 0.4920946363499702,
+       "cv_validation_ba_std": 0.07135971328320849,
+       "test_ba": 0.48036006546644844,
+       "chance": 0.5
+      }
+     },
+     "label_level": {
+      "window_level": {
+       "cv_validation_ba_mean": 0.1883955905153852,
+       "cv_validation_ba_std": 0.02648501734937668,
+       "test_ba": 0.21527789741861597,
+       "chance": 0.2
+      },
+      "block_level": {
+       "cv_validation_ba_mean": 0.214515217916159,
+       "cv_validation_ba_std": 0.049846983474314925,
+       "test_ba": 0.20491562329885685,
+       "chance": 0.2
+      }
+     }
+    },
+    "real_label_saved_xgb_test_ba": {
+     "label_binary": 0.7736861247499546,
+     "label_level": 0.8869438188225613
+    },
+    "rule": "PASS if every excess over chance <= 0.10, WARN <= 0.20, else FAIL",
+    "variants": "window_level = labels permuted over windows; block_level = label of each 10-window block reassigned to another block (keeps label autocorrelation)"
+   },
+   "source": "throw-away models trained in this script"
+  },
+  {
+   "id": "C7",
+   "check": "AnoMod / LO2 files unmodified (SHA-256 recorded at start, re-checked at end)",
+   "status": "PASS",
+   "summary": "1180 files (4.37 GB): hash at start == hash at end == recorded baseline for 1180; size/mtime changed during the audit: 0",
+   "evidence": {
+    "files": 1180,
+    "mismatches": 0,
+    "mtime_or_size_changed": [],
+    "baseline_first_recorded": "2026-10-19 21:17:12",
+    "csv": "report_outputs/data_integrity.csv",
+    "scope": "AnoMod raw .jsonl/.csv/.log inputs, combined raw CSV, processed + report_outputs files; LO2 lo2_subset.csv and the one tar used"
+   },
+   "source": "report_outputs/data_integrity.csv"
+  }
+ ]
+}
