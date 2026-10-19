@@ -13,3 +13,8 @@ node_modules/
 AnoMod/
 LO2/
 processed/lo2_sample/
+app/backend/assets/lime_background.npy
+app/frontend/dist/
+app/frontend/test-results/
+app/frontend/playwright-report/
+.pytest_cache/

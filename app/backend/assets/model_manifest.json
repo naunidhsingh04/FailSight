@@ -1,0 +1,618 @@
+[
+ {
+  "name": "LR",
+  "label_version": "label_binary",
+  "kind": "tab",
+  "base": "LR",
+  "imbalance_method": "smote",
+  "tag": "corr",
+  "corrected": true,
+  "members": [],
+  "files": {
+   "model": "label_binary__LR.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "linear"
+ },
+ {
+  "name": "RF",
+  "label_version": "label_binary",
+  "kind": "tab",
+  "base": "RF",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_binary__RF.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "tree"
+ },
+ {
+  "name": "ET",
+  "label_version": "label_binary",
+  "kind": "tab",
+  "base": "ET",
+  "imbalance_method": "smote",
+  "tag": "corr",
+  "corrected": true,
+  "members": [],
+  "files": {
+   "model": "label_binary__ET.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "tree"
+ },
+ {
+  "name": "XGB",
+  "label_version": "label_binary",
+  "kind": "tab",
+  "base": "XGB",
+  "imbalance_method": "smote",
+  "tag": "corr",
+  "corrected": true,
+  "members": [],
+  "files": {
+   "model": "label_binary__XGB.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "tree"
+ },
+ {
+  "name": "LGBM",
+  "label_version": "label_binary",
+  "kind": "tab",
+  "base": "LGBM",
+  "imbalance_method": "smote",
+  "tag": "corr",
+  "corrected": true,
+  "members": [],
+  "files": {
+   "model": "label_binary__LGBM.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "tree"
+ },
+ {
+  "name": "LGBM_tuned",
+  "label_version": "label_binary",
+  "kind": "tab",
+  "base": "LGBM",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_binary__LGBM_tuned.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "tree"
+ },
+ {
+  "name": "XGB_tuned",
+  "label_version": "label_binary",
+  "kind": "tab",
+  "base": "XGB",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_binary__XGB_tuned.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "tree"
+ },
+ {
+  "name": "RF_tuned",
+  "label_version": "label_binary",
+  "kind": "tab",
+  "base": "RF",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_binary__RF_tuned.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "tree"
+ },
+ {
+  "name": "CNN_BiGRU_Att",
+  "label_version": "label_binary",
+  "kind": "deep",
+  "base": "CNN_BiGRU_Att",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_binary__CNN_BiGRU_Att.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep"
+ },
+ {
+  "name": "CNN_BiLSTM_Att",
+  "label_version": "label_binary",
+  "kind": "deep",
+  "base": "CNN_BiLSTM_Att",
+  "imbalance_method": "smote",
+  "tag": "corr",
+  "corrected": true,
+  "members": [],
+  "files": {
+   "model": "label_binary__CNN_BiLSTM_Att.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep"
+ },
+ {
+  "name": "Fusion",
+  "label_version": "label_binary",
+  "kind": "deep",
+  "base": "Fusion",
+  "imbalance_method": "smote",
+  "tag": "corr",
+  "corrected": true,
+  "members": [],
+  "files": {
+   "model": "label_binary__Fusion.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep"
+ },
+ {
+  "name": "Transformer",
+  "label_version": "label_binary",
+  "kind": "deep",
+  "base": "Transformer",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_binary__Transformer.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep"
+ },
+ {
+  "name": "CNN_BiGRU_Att_XGBhead",
+  "label_version": "label_binary",
+  "kind": "head",
+  "base": "CNN_BiGRU_Att",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_binary__CNN_BiGRU_Att_XGBhead.joblib",
+   "base_model": "label_binary__CNN_BiGRU_Att.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep",
+  "head_tag": "corr"
+ },
+ {
+  "name": "CNN_BiLSTM_Att_XGBhead",
+  "label_version": "label_binary",
+  "kind": "head",
+  "base": "CNN_BiLSTM_Att",
+  "imbalance_method": "smote",
+  "tag": "corr",
+  "corrected": true,
+  "members": [],
+  "files": {
+   "model": "label_binary__CNN_BiLSTM_Att_XGBhead.joblib",
+   "base_model": "label_binary__CNN_BiLSTM_Att.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep",
+  "head_tag": "corr"
+ },
+ {
+  "name": "Fusion_XGBhead",
+  "label_version": "label_binary",
+  "kind": "head",
+  "base": "Fusion",
+  "imbalance_method": "smote",
+  "tag": "corr",
+  "corrected": true,
+  "members": [],
+  "files": {
+   "model": "label_binary__Fusion_XGBhead.joblib",
+   "base_model": "label_binary__Fusion.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep",
+  "head_tag": "corr"
+ },
+ {
+  "name": "Transformer_XGBhead",
+  "label_version": "label_binary",
+  "kind": "head",
+  "base": "Transformer",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_binary__Transformer_XGBhead.joblib",
+   "base_model": "label_binary__Transformer.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep",
+  "head_tag": "corr"
+ },
+ {
+  "name": "Stacking",
+  "label_version": "label_binary",
+  "kind": "ens",
+  "base": null,
+  "imbalance_method": null,
+  "tag": "orig",
+  "corrected": false,
+  "members": [
+   "LGBM_tuned",
+   "XGB_tuned",
+   "RF_tuned",
+   "Transformer",
+   "CNN_BiGRU_Att",
+   "Fusion"
+  ],
+  "files": {
+   "model": "label_binary__Stacking.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "ensemble",
+  "ensemble_kind": "stack"
+ },
+ {
+  "name": "SoftVote",
+  "label_version": "label_binary",
+  "kind": "ens",
+  "base": null,
+  "imbalance_method": null,
+  "tag": "corr",
+  "corrected": true,
+  "members": [
+   "CNN_BiGRU_Att",
+   "CNN_BiLSTM_Att",
+   "Fusion",
+   "Transformer"
+  ],
+  "files": {},
+  "servable": false,
+  "reason": "Soft voting averages 40 fold models that each need their own fold preprocessor; the fold preprocessors are not shipped, so it can only be reported, not served.",
+  "family": "ensemble",
+  "ensemble_kind": "vote"
+ },
+ {
+  "name": "LR",
+  "label_version": "label_level",
+  "kind": "tab",
+  "base": "LR",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__LR.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "linear"
+ },
+ {
+  "name": "RF",
+  "label_version": "label_level",
+  "kind": "tab",
+  "base": "RF",
+  "imbalance_method": "cw",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__RF.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "tree"
+ },
+ {
+  "name": "ET",
+  "label_version": "label_level",
+  "kind": "tab",
+  "base": "ET",
+  "imbalance_method": "cw",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__ET.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "tree"
+ },
+ {
+  "name": "XGB",
+  "label_version": "label_level",
+  "kind": "tab",
+  "base": "XGB",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__XGB.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "tree"
+ },
+ {
+  "name": "LGBM",
+  "label_version": "label_level",
+  "kind": "tab",
+  "base": "LGBM",
+  "imbalance_method": "cw",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__LGBM.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "tree"
+ },
+ {
+  "name": "XGB_tuned",
+  "label_version": "label_level",
+  "kind": "tab",
+  "base": "XGB",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__XGB_tuned.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "tree"
+ },
+ {
+  "name": "LGBM_tuned",
+  "label_version": "label_level",
+  "kind": "tab",
+  "base": "LGBM",
+  "imbalance_method": "cw",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__LGBM_tuned.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "tree"
+ },
+ {
+  "name": "RF_tuned",
+  "label_version": "label_level",
+  "kind": "tab",
+  "base": "RF",
+  "imbalance_method": "cw",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__RF_tuned.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "tree"
+ },
+ {
+  "name": "CNN_BiGRU_Att",
+  "label_version": "label_level",
+  "kind": "deep",
+  "base": "CNN_BiGRU_Att",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__CNN_BiGRU_Att.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep"
+ },
+ {
+  "name": "CNN_BiLSTM_Att",
+  "label_version": "label_level",
+  "kind": "deep",
+  "base": "CNN_BiLSTM_Att",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__CNN_BiLSTM_Att.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep"
+ },
+ {
+  "name": "Fusion",
+  "label_version": "label_level",
+  "kind": "deep",
+  "base": "Fusion",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__Fusion.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep"
+ },
+ {
+  "name": "Transformer",
+  "label_version": "label_level",
+  "kind": "deep",
+  "base": "Transformer",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__Transformer.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep"
+ },
+ {
+  "name": "CNN_BiGRU_Att_XGBhead",
+  "label_version": "label_level",
+  "kind": "head",
+  "base": "CNN_BiGRU_Att",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__CNN_BiGRU_Att_XGBhead.joblib",
+   "base_model": "label_level__CNN_BiGRU_Att.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep",
+  "head_tag": null
+ },
+ {
+  "name": "CNN_BiLSTM_Att_XGBhead",
+  "label_version": "label_level",
+  "kind": "head",
+  "base": "CNN_BiLSTM_Att",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__CNN_BiLSTM_Att_XGBhead.joblib",
+   "base_model": "label_level__CNN_BiLSTM_Att.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep",
+  "head_tag": null
+ },
+ {
+  "name": "Fusion_XGBhead",
+  "label_version": "label_level",
+  "kind": "head",
+  "base": "Fusion",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__Fusion_XGBhead.joblib",
+   "base_model": "label_level__Fusion.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep",
+  "head_tag": "corr"
+ },
+ {
+  "name": "Transformer_XGBhead",
+  "label_version": "label_level",
+  "kind": "head",
+  "base": "Transformer",
+  "imbalance_method": "smote",
+  "tag": "orig",
+  "corrected": false,
+  "members": [],
+  "files": {
+   "model": "label_level__Transformer_XGBhead.joblib",
+   "base_model": "label_level__Transformer.keras"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "deep",
+  "head_tag": "corr"
+ },
+ {
+  "name": "Stacking",
+  "label_version": "label_level",
+  "kind": "ens",
+  "base": null,
+  "imbalance_method": null,
+  "tag": "orig",
+  "corrected": false,
+  "members": [
+   "XGB_tuned",
+   "LGBM_tuned",
+   "RF_tuned",
+   "Fusion",
+   "CNN_BiGRU_Att",
+   "CNN_BiLSTM_Att"
+  ],
+  "files": {
+   "model": "label_level__Stacking.joblib"
+  },
+  "servable": true,
+  "reason": "",
+  "family": "ensemble",
+  "ensemble_kind": "stack"
+ },
+ {
+  "name": "SoftVote",
+  "label_version": "label_level",
+  "kind": "ens",
+  "base": null,
+  "imbalance_method": null,
+  "tag": "orig",
+  "corrected": false,
+  "members": [
+   "CNN_BiGRU_Att",
+   "CNN_BiLSTM_Att",
+   "Fusion",
+   "Transformer"
+  ],
+  "files": {},
+  "servable": false,
+  "reason": "Soft voting averages 40 fold models that each need their own fold preprocessor; the fold preprocessors are not shipped, so it can only be reported, not served.",
+  "family": "ensemble",
+  "ensemble_kind": "vote"
+ }
+]

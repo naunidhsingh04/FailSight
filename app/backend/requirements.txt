@@ -1,0 +1,14 @@
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+pydantic>=2
+numpy
+pandas
+scipy
+scikit-learn
+imbalanced-learn
+xgboost
+lightgbm
+joblib
+shap
+lime
