@@ -9,19 +9,25 @@ import Term from '../components/Term'
 import { usePageTitle } from '../usePageTitle'
 import type { DataResponse, Lo2Model, Lo2Response, ModelInfo, ModelsResponse } from '../types'
 
+interface Masking { unmasked: number; api70: number; log70: number; metric70: number; all70: number; normal_recall_unmasked: number; normal_recall_metric70: number }
+interface ProofReport { sections: { id: string; items: { data?: { xgb_binary?: Masking } }[] }[] }
+const maskingOf = (r: ProofReport): Masking | null => r.sections.find((s) => s.id === 'P13')?.items.map((i) => i.data?.xgb_binary).find(Boolean) ?? null
+
 export default function Limits() {
   usePageTitle('Limits')
   const models = useApi<ModelsResponse>('/api/models')
   const lo2 = useApi<Lo2Response>('/api/lo2')
   const data = useApi<DataResponse>('/api/data')
+  const proofs = useApi<ProofReport>('/api/proofs')
   return (
     <>
       <h1>Limits</h1>
       <p className="lede">What FailSight cannot do. Nothing on this page is softened: the numbers come straight from the result files.</p>
-      <Simple><PlainLimits models={models} lo2={lo2} /></Simple>
+      <Simple><PlainLimits models={models} lo2={lo2} proofs={proofs} /></Simple>
       <Detailed>
       <Async level={2} state={models} rows={5} label="Loading model results">{(m) => <NormalRecall models={m.models.filter((x) => x.label_version === 'label_binary')} all={m.models} data={data.data} />}</Async>
       <Async level={2} state={lo2} rows={6} label="Loading LO2 results">{(l) => <External l={l} />}</Async>
+      <Async level={2} state={proofs} rows={2} label="Loading the masking check">{(p) => <Reliance m={maskingOf(p)} />}</Async>
       <Async level={2} state={data} rows={3} label="Loading other limits">{(d) => <Other d={d} />}</Async>
       </Detailed>
     </>
@@ -129,7 +135,7 @@ function Other({ d }: { d: DataResponse }) {
   const perClass = d.leakage.find((r) => r.check === 'run_overlap' && r.item.includes('runs per class'))
   return (
     <section aria-labelledby="oth-h">
-      <h2 id="oth-h">3. Other things to keep in mind</h2>
+      <h2 id="oth-h">4. Other things to keep in mind</h2>
       <ul>
         <li><strong>Known scenarios only.</strong> All {String(runs?.value)} runs appear in both train and test (different blocks), so the test set does not measure generalisation to a new failure type or a new deployment. LO2 is the only check of that, and it failed.</li>
         <li><strong>Overlapping windows.</strong> {String(ovSN?.value)} SN and {String(ovTT?.value)} TT training windows overlap in time with a test window of the same run. Cross-validation scores are optimistic; the test set is the headline.</li>
@@ -146,7 +152,7 @@ function Other({ d }: { d: DataResponse }) {
 
 const pc = (x: number, d = 0) => `${(x * 100).toFixed(d)}%`
 
-function PlainLimits({ models, lo2 }: { models: ReturnType<typeof useApi<ModelsResponse>>; lo2: ReturnType<typeof useApi<Lo2Response>> }) {
+function PlainLimits({ models, lo2, proofs }: { models: ReturnType<typeof useApi<ModelsResponse>>; lo2: ReturnType<typeof useApi<Lo2Response>>; proofs: ReturnType<typeof useApi<ProofReport>> }) {
   return (
     <div className="stack" style={{ maxWidth: 'var(--measure)' }}>
       <Async level={2} state={models} rows={2} label="Loading results">
@@ -158,6 +164,18 @@ function PlainLimits({ models, lo2 }: { models: ReturnType<typeof useApi<ModelsR
             <section>
               <h2 style={{ fontSize: '1.2rem', marginTop: 0 }}>It often cries wolf</h2>
               <p>On healthy recordings the best model ({best.name}) was right only {pc(nr, 1)} of the time. That means about {pc(1 - nr, 1)} of healthy moments were flagged as problems. Its best score at catching failures is much higher, but the false alarms are real. There were only {best.metrics['official/ALL'].support_Normal} healthy test windows, so this number is itself uncertain.</p>
+            </section>
+          )
+        }}
+      </Async>
+      <Async level={2} state={proofs} rows={2} label="Loading the masking check">
+        {(p) => {
+          const m = maskingOf(p)
+          if (!m) return null
+          return (
+            <section>
+              <h2 style={{ fontSize: '1.2rem' }}>It relies on the system readings, not on the request data</h2>
+              <p>We hid random parts of the data to see what the best model leans on. Hiding 70% of the request (API) readings, or of the log readings, changed nothing ({m.unmasked.toFixed(3)} before, {m.api70.toFixed(3)} and {m.log70.toFixed(3)} after). Hiding 70% of the machine and container readings took it to {m.metric70.toFixed(3)}, which is guessing. So for this model the API data adds nothing, and its good results come from the machine readings. When those readings are missing it tends to call the window a failure: it recognised only {(m.normal_recall_metric70 * 100).toFixed(1)}% of healthy windows (before: {(m.normal_recall_unmasked * 100).toFixed(1)}%). That is why the Console shows &ldquo;Not enough data to judge&rdquo; instead of an alert when more than half of the readings are missing. The checks that the missing-data markers themselves are not what carries the result are on the Proofs page (P13).</p>
             </section>
           )
         }}
@@ -187,5 +205,19 @@ function PlainLimits({ models, lo2 }: { models: ReturnType<typeof useApi<ModelsR
         <p>The test recordings come from the same kinds of failure the models were trained on, so the scores do not show how it would handle a brand-new kind of failure. The best model was also picked by looking at the test scores, which makes it look a little better than it really is. The reasons shown with an alert are the signals the model leaned on, not a proven cause.</p>
       </section>
     </div>
+  )
+}
+
+function Reliance({ m }: { m: Masking | null }) {
+  if (!m) return null
+  return (
+    <section aria-labelledby="rel-h">
+      <h2 id="rel-h">3. What the saved XGBoost relies on (missingness check, Proofs P13)</h2>
+      <ul>
+        <li>Masking 70% of the real values: API {m.api70.toFixed(3)}, log {m.log70.toFixed(3)}, metric {m.metric70.toFixed(3)}, all groups {m.all70.toFixed(3)} balanced accuracy (unmasked {m.unmasked.toFixed(3)}). The result rests on the metric readings.</li>
+        <li>With 70% of the metric values missing, Normal recall falls from {m.normal_recall_unmasked.toFixed(3)} to {m.normal_recall_metric70.toFixed(3)}: missing readings push the call toward Anomaly.</li>
+        <li>The was_missing_* indicators alone, and a retrained XGBoost without them and without the system flag, do not explain the result (details and intervals in P13).</li>
+      </ul>
+    </section>
   )
 }

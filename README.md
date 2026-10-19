@@ -41,15 +41,16 @@ python scripts\replay_scenario.py --scenario Normal --dry-run     # show the pla
 ## Proofs: check every number yourself
 
 ```powershell
-python scripts\proofs.py              # all ten sections P1-P10 (about 7 minutes; loads every saved model)
+python scripts\proofs.py              # all sections P1-P10 and P13 (about 10 minutes; loads every saved model)
 python scripts\proofs.py --quick      # data, split, folds, versions only
 python scripts\proofs.py --only P5    # one section; it is merged into report_outputs\proofs.json
 python scripts\leakage_audit.py       # the leakage audit (C1a-C7) that P7 reports
+python scripts\missingness_check.py  # masking / indicator-only / no-shortcut checks (about 9 minutes) -> report_outputs\missingness_check.csv, reported as P13
 ```
 
 The script prints a PASS / WARN / FAIL table and exits non-zero if any check fails. The app's **Proofs** page shows the same report (`report_outputs/proofs.json`), can re-run the checks and stream the terminal output, and downloads the report as JSON or a printable page.
 
-Last full run: 42 PASS, 3 WARN, 0 FAIL, plus 2 items marked **REPORTED ACCURATELY**. That badge (neutral, not green) is used for the LO2 external test, where the result is a failure (the models did not transfer, balanced accuracy 0.500) and the check is only that the failure is reported faithfully; the recomputation of the LO2 numbers in the same section is a real correctness check and stays PASS. The warnings are reported, not hidden:
+Last run: 48 PASS, 3 WARN, 0 FAIL, plus 2 items marked **REPORTED ACCURATELY** (the LO2 external test, where the result is a failure and the check is only that it is reported faithfully; the recomputation of the LO2 numbers stays PASS). P13 (missingness and shortcuts, section numbers 11 and 12 are not used) found that masking, an indicator-only classifier and removing the was_missing_* indicators and the system flag do not explain the saved model's result; it also found that the saved XGBoost rests on the metric readings (masking API or log values changes nothing) and that missing metric readings push its call toward Anomaly.  The warnings are reported, not hidden:
 
 - **P5, ranking metrics.** Decision metrics of all 36 saved models are recomputed and equal `test_metrics.csv` within 1e-6. ROC-AUC / PR-AUC of the forest models differ in the 3rd decimal because tied scores are ordered by floating-point noise; the probabilities themselves match to 1e-16.
 - **C3, time overlap.** Some training windows overlap in time (up to 20 s) with a test window of the same run. This is real; it stays a WARN. Measured effect of removing them: -0.036 balanced accuracy (binary) and +0.010 (five-class), on average.

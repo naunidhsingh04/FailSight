@@ -20,6 +20,7 @@ const PLAIN: Record<string, string> = {
   P8: 'The explanations for three test windows can be recomputed, and their parts add up to the model’s output.',
   P9: 'On a different system the models did not work. This is reported exactly as it is.',
   P10: 'The seeds, library versions and code version, so anyone can repeat this.',
+  P13: 'Do the models lean on patterns of missing data instead of real signals? We hide parts of the data, train small look-alike models on the missing-data patterns alone, and remove those columns, then compare.',
 }
 const QUICK = ['P1', 'P2', 'P3', 'P4', 'P10']
 const badge = (s: string) => <span className={`badge ${s.split(' ')[0].toLowerCase()}`}>{s}</span>

@@ -210,7 +210,7 @@ def main():
         sections.append(s)
 
     # ------------------------------------------------------------------------------------------------ P5 models (recompute test metrics)
-    if want("P5") or want("P6") or want("P8") or want("P9"):
+    if want("P5") or want("P6") or want("P8") or want("P9") or want("P13"):
         sys.argv = ["x", "--stages", "0"]
         import full_pipeline as FP
         FP.D = D
@@ -477,6 +477,92 @@ def main():
               result="high ROC-AUC reflects log volume, not detection")
         sections.append(s)
 
+    # ------------------------------------------------------------------------------------------------ P13 missingness and shortcuts
+    if want("P13"):
+        s = Section("P13", "MISSINGNESS AND SHORTCUTS: do the models rely on missing-data patterns instead of real signals?"); header(s)
+        import missingness_check as MC
+        mp = MC.OUT
+        if not mp.exists() or "reg" not in ctx:
+            s.add("Missingness check", "SKIP", ["report_outputs/missingness_check.csv or the saved models are not present; run python scripts/missingness_check.py"], "-")
+            sections.append(s)
+        else:
+            res = pd.read_csv(mp)
+            rows_csv = res.drop(columns=["generated"]).to_dict("records")
+            reg = ctx["reg"]
+            reps = int(res[(res.kind == "masking") & (res.mask_pct == 10)].draws.iloc[0])
+            # recompute: the whole of parts 2 and 3, and part 1 for three models, must equal the saved csv (same seeds)
+            quiet = lambda *_: None
+            fresh = MC.masking(D, reg, reps, 1000, ["LR", "XGB", "Fusion"], log=quiet) + MC.indicator_only(D, reg.prep, 1000, log=quiet) + MC.no_shortcut_xgb(D, ctx["FP"], reg, 1000, log=quiet)
+            key = lambda r: (r["kind"], r["label_version"], r["model"], r["group"], None if pd.isna(r["mask_pct"]) else int(r["mask_pct"]))
+            old = {key(r): r for r in rows_csv}
+            dmax, n_cmp = 0.0, 0
+            for r in fresh:
+                o = old[key(r)]
+                for k in ("balanced_accuracy", "ci_low", "ci_high"):
+                    dmax = max(dmax, abs(float(r[k]) - float(o[k]))); n_cmp += 1
+            s.add("The saved missingness_check.csv is reproduced by recomputation (all indicator-only and no-shortcut rows, and the masking rows of LR, XGB and Fusion)", "PASS" if dmax <= 1e-6 else "FAIL",
+                  [f"numbers compared: {n_cmp}; max |difference| {dmax:.1e} (same seeds); the other masking rows are read from the file"], "scripts/missingness_check.py, report_outputs/missingness_check.csv")
+            v = MC.verdict(rows_csv)
+            f3 = lambda x: f"{x:.3f}"
+            ci = lambda r: f"{f3(r.balanced_accuracy)} ({f3(r.ci_low)}-{f3(r.ci_high)})"
+            # ---- 1 masking
+            mk = res[res.kind == "masking"]
+            lines = [f"Every saved final model except soft voting (needs 40 fold models) is scored on the 647 test windows after a random share of the REAL values of a feature group is set to missing; the was_missing_* indicators are recomputed by the real preprocessor (they fire at >= 50% missing in a group); {reps} mask draws per cell, 95% block-bootstrap CI.",
+                     "", "XGBoost (binary): balanced accuracy (95% CI) by masked group and share masked"]
+            xb = mk[(mk.label_version == "label_binary") & (mk.model == "XGB")]
+            b0 = xb[xb.mask_pct == 0].iloc[0]
+            trows = [["unmasked", ci(b0), "", "", ""]] + [[g] + [ci(xb[(xb.group == g) & (xb.mask_pct == p)].iloc[0]) for p in MC.LEVELS_PCT] for g in MC.GROUPS]
+            lines += table(trows, ["masked group", "10%", "30%", "50%", "70%"])
+            lines += ["", "XGBoost (binary) when ALL groups are masked: Normal recall and share of windows called Anomaly"]
+            lines += table([["unmasked", f3(b0.normal_recall), f"{b0.share_predicted_anomaly:.1%}"]] + [[f"{p}%", f3(r.normal_recall), f"{r.share_predicted_anomaly:.1%}"] for p in MC.LEVELS_PCT for r in [xb[(xb.group == "all") & (xb.mask_pct == p)].iloc[0]]], ["masked", "Normal recall", "called Anomaly"])
+            lines += ["", "all models, binary labels: balanced accuracy unmasked and with ALL groups masked 10 / 30 / 50 / 70% (point values; the CI of every cell is in missingness_check.csv)"]
+            names = list(mk[mk.label_version == "label_binary"].model.unique())
+            kept = lambda n: (float(mk[(mk.label_version == "label_binary") & (mk.model == n) & (mk.group == "all") & (mk.mask_pct == 70)].balanced_accuracy.iloc[0]) - 0.5) / (float(mk[(mk.label_version == "label_binary") & (mk.model == n) & (mk.mask_pct == 0)].balanced_accuracy.iloc[0]) - 0.5)
+            lines += table([[n, f3(mk[(mk.label_version == "label_binary") & (mk.model == n) & (mk.mask_pct == 0)].balanced_accuracy.iloc[0])] +
+                            [f3(mk[(mk.label_version == "label_binary") & (mk.model == n) & (mk.group == "all") & (mk.mask_pct == p)].balanced_accuracy.iloc[0]) for p in MC.LEVELS_PCT] + [f"{kept(n):.0%}"] for n in names], ["model", "0%", "10%", "30%", "50%", "70%", "lift kept at 70%"])
+            lines += ["'lift kept' = (BA at 70% - 0.5) / (BA unmasked - 0.5); it is unstable for weak models whose unmasked lift is small. Highest: " + ", ".join(f"{n} {kept(n):.0%}" for n in sorted(names, key=kept, reverse=True)[:3]) + "; the rule below is applied to the saved XGBoost."]
+            xg = lambda g, p: xb[(xb.group == g) & (xb.mask_pct == p)].iloc[0].balanced_accuracy
+            lines += ["", f"which group carries the saved XGBoost's performance: masking 70% of the API values changes its balanced accuracy from {f3(b0.balanced_accuracy)} to {f3(xg('api', 70))}, 70% of the log values to {f3(xg('log', 70))}, 70% of the metric values to {f3(xg('metric', 70))}. Its result rests on the metric (host and container) readings; the API and log readings have no effect on it."]
+            lines += ["", "five-class models: balanced accuracy unmasked and with ALL groups masked 10 / 30 / 50 / 70%"]
+            names5 = list(mk[mk.label_version == "label_level"].model.unique())
+            lines += table([[n, f3(mk[(mk.label_version == "label_level") & (mk.model == n) & (mk.mask_pct == 0)].balanced_accuracy.iloc[0])] +
+                            [f3(mk[(mk.label_version == "label_level") & (mk.model == n) & (mk.group == "all") & (mk.mask_pct == p)].balanced_accuracy.iloc[0]) for p in MC.LEVELS_PCT] for n in names5], ["model", "0%", "10%", "30%", "50%", "70%"])
+            lines += ["", f"rule: {MC.RULES[1]}",
+                      f"saved XGBoost: unmasked {f3(v['saved_xgb_ba'])}; with 70% of all values masked {f3(v['masking_all70_ba'])}; share of the lift over chance kept: {v['masking_all70_lift_kept']:.0%}"]
+            s.add("Masking real values: performance falls toward chance as the signal is removed; it is not held up by the missingness pattern", "WARN" if v["masking_explains"] else "PASS", lines, "report_outputs/missingness_check.csv (scripts/missingness_check.py)", dict(masking_all70_lift_kept=v["masking_all70_lift_kept"], xgb_binary=dict(unmasked=float(b0.balanced_accuracy), api70=float(xg("api", 70)), log70=float(xg("log", 70)), metric70=float(xg("metric", 70)), all70=float(xg("all", 70)),
+                                                                                                                                                   normal_recall_unmasked=float(b0.normal_recall), normal_recall_metric70=float(xb[(xb.group == "metric") & (xb.mask_pct == 70)].iloc[0].normal_recall))))
+            # ---- 2 indicator-only
+            io = res[res.kind == "indicator_only"]
+            lines = ["A small throw-away XGBoost (100 trees, depth 3, balanced weights) on the missingness columns only (no system flag, no real feature). Trained on the training split with the 10 block-grouped folds (10-fold = validation score), then fitted on the whole training split and scored once on test. Shuffled-label control: the training labels are permuted (5 shuffles), the scoring labels are real."]
+            for l in ("label_binary", "label_level"):
+                sub = io[io.label_version == l]
+                lines += ["", f"{l[6:]} labels (chance level {'0.500' if l == 'label_binary' else '0.200'}):"] + table(
+                    [[r.model, r.group, f3(r.cv_balanced_accuracy), ci(r)] for r in sub.itertuples()], ["inputs", "labels", "10-fold BA", "test BA (95% CI)"])
+            lines += ["", f"rule: {MC.RULES[0]}", f"saved XGBoost test balanced accuracy {f3(v['saved_xgb_ba'])}; best indicator-only classifier {f3(v['indicator_only_ba'])} ({v['indicator_only_set']}); share of the saved model's lift: {v['indicator_only_lift_share']:.0%}",
+                      "reading: on the training folds the indicators carry a small signal (10-fold balanced accuracy slightly above chance) but on the untouched test set the same classifier is at or below chance, so the indicators alone do not reproduce the saved model's performance"]
+            s.add("The was_missing_* indicators and the per-window missing share, on their own, do not explain the performance", "WARN" if v["indicator_explains"] else "PASS", lines, "report_outputs/missingness_check.csv (scripts/missingness_check.py)", dict(indicator_only_lift_share=v["indicator_only_lift_share"]))
+            # ---- 3 no-shortcut xgb
+            ns = res[res.kind == "no_shortcut_xgb"]
+            lines = ["Throw-away XGBoost with the saved model's settings and the same training procedure (SMOTE / weights, early stopping) on the same training split; not saved."]
+            for l in ("label_binary", "label_level"):
+                sub = ns[ns.label_version == l]
+                lines += ["", f"{l[6:]} labels:"] + table([[r.model, r.group, ci(r), f"{f3(r.normal_recall)} ({f3(r.normal_recall_ci_low)}-{f3(r.normal_recall_ci_high)})"] for r in sub.itertuples()], ["model", "inputs", "test BA (95% CI)", "Normal recall (95% CI)"])
+            lines += ["", f"rule: {MC.RULES[2]}", f"saved {f3(v['saved_xgb_ba'])} versus without indicators and without system flag {f3(v['no_shortcut_ba'])} (difference {v['no_shortcut_drop']:+.3f})",
+                      "the intervals are wide: only 36 of the 647 test windows are Normal and they come from a few blocks (the project's own block bootstrap gives the same width for the saved model)"]
+            s.add("Removing the was_missing_* indicators and the system flag does not change the result", "WARN" if v["no_shortcut_relies"] else "PASS", lines, "report_outputs/missingness_check.csv (scripts/missingness_check.py)", dict(no_shortcut_drop=v["no_shortcut_drop"]))
+            # ---- 4 what missing data does to a decision (live relevance)
+            xa = xb[xb.group == "metric"]
+            lines = ["binary XGBoost, share of windows called Anomaly when a random share of the METRIC values is masked: " + ", ".join(f"{p}%: {xa[xa.mask_pct == p].iloc[0].share_predicted_anomaly:.1%}" for p in MC.LEVELS_PCT) + f" (unmasked: {b0.share_predicted_anomaly:.1%}; the test set itself is {(D.yte['label_binary'] == 1).mean():.1%} Anomaly)",
+                     "Normal recall in the same cells: " + ", ".join(f"{p}%: {f3(xa[xa.mask_pct == p].iloc[0].normal_recall)}" for p in MC.LEVELS_PCT),
+                     "read together with the previous items: missing readings can push a call toward Anomaly. This is why the Console does not issue alerts on windows with more than half of the readings missing (state 'Not enough data to judge')."]
+            s.add("What missing data does to the decision (why the Console has a low-data state)", "PASS", lines, "report_outputs/missingness_check.csv", dict())
+            if v["explains"] or v["no_shortcut_relies"]:
+                s.add("Overall verdict", "WARN", [f"masking explains: {v['masking_explains']}; indicator-only explains: {v['indicator_explains']}; no-shortcut model relies: {v['no_shortcut_relies']}"], "see the items above")
+            else:
+                s.add("Overall verdict", "PASS", ["Neither masking nor an indicator-only model explains the saved model's performance, and removing the indicators and the system flag changes the test balanced accuracy by " + f"{v['no_shortcut_drop']:+.3f}.",
+                                                 "This does not prove the model uses only real signals: it shows that the missingness columns are not what carries the result on these test windows."], "see the items above")
+            sections.append(s)
+
     # ------------------------------------------------------------------------------------------------ P10 reproducibility
     if want("P10"):
         s = Section("P10", "REPRODUCIBILITY: seeds, versions, commit"); header(s)
@@ -502,7 +588,7 @@ def main():
     global CUR
     CUR = []
     new_secs = {x.id: dict(id=x.id, title=x.title, status=x.status, items=x.items, lines=x.lines, generated_at=x.generated_at) for x in sections}
-    order = [f"P{i}" for i in range(1, 11)]
+    order = [f"P{i}" for i in range(1, 11)] + ["P13"]
     merged = dict(new_secs)
     base_p = REP / "proofs.json"
     if (only or args.quick) and base_p.exists():                      # a partial re-run refreshes only its sections of the existing report

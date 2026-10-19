@@ -23,7 +23,7 @@ def test_report_equals_the_file_on_disk(client):
 @needs_report
 def test_report_has_all_ten_sections_and_no_failure(client):
     rep = client.get("/api/proofs").json()
-    assert [s["id"] for s in rep["sections"]] == [f"P{i}" for i in range(1, 11)]
+    assert [s["id"] for s in rep["sections"]] == [f"P{i}" for i in range(1, 11)] + ["P13"]
     assert rep["totals"].get("FAIL", 0) == 0
     assert rep["text"].strip()
 
@@ -86,3 +86,21 @@ def test_lo2_is_reported_accurately_not_shown_as_a_pass(client):
     assert rep["totals"]["REPORTED ACCURATELY"] == 2 and "Result: models did not transfer (0.500)" in rep["text"]
     html = client.get("/api/proofs/report.html").text
     assert "REPORTED ACCURATELY" in html and "Result: models did not transfer (0.500)" in html
+
+
+@needs_report
+def test_missingness_section_matches_the_csv_and_its_rules(client):
+    import pandas as pd
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import missingness_check as MC
+    rep = client.get("/api/proofs").json()
+    p13 = next(s for s in rep["sections"] if s["id"] == "P13")
+    res = pd.read_csv(MC.OUT)
+    v = MC.verdict(res.drop(columns=["generated"]).to_dict("records"))
+    # PASS only if neither masking nor the indicator-only model explains the performance and removing the shortcuts does not change it
+    want = "WARN" if (v["explains"] or v["no_shortcut_relies"]) else "PASS"
+    assert p13["items"][-1]["claim"] == "Overall verdict" and p13["items"][-1]["status"] == want
+    d = next(i["data"] for i in p13["items"] if i["data"].get("xgb_binary"))["xgb_binary"]
+    xb = res[(res.kind == "masking") & (res.label_version == "label_binary") & (res.model == "XGB")]
+    assert d["metric70"] == pytest.approx(float(xb[(xb.group == "metric") & (xb.mask_pct == 70)].balanced_accuracy.iloc[0]), abs=1e-6)
+    assert set(res.kind) == {"masking", "indicator_only", "no_shortcut_xgb"} and set(res[res.kind == "masking"].mask_pct) == {0, 10, 30, 50, 70}
