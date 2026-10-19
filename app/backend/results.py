@@ -59,7 +59,7 @@ def model_metrics(label: str, name: str) -> dict:
             if r.empty:
                 continue
             r = r.iloc[0]
-            out[f"{variant}/{scope}"] = clean({k: r[k] for k in ("n", "accuracy", "balanced_accuracy", "macro_f1", "normal_recall", "roc_auc", "pr_auc") if k in r.index})
+            out[f"{variant}/{scope}"] = clean({k: r[k] for k in ("n", "accuracy", "balanced_accuracy", "macro_f1", "normal_recall", "roc_auc", "pr_auc", "support_Normal", "precision_Normal") if k in r.index})
     ci = {}
     for scope in ("ALL", "SN", "TT"):
         for m in ("balanced_accuracy", "macro_f1", "normal_recall", "roc_auc"):
@@ -167,6 +167,7 @@ def data() -> dict:
         folds=dict(n_folds=int(fa.fold.max()), group_type=str(fa[fa.fold > 0].group_type.iloc[0]),
                    rows_per_fold=records(fa[fa.fold > 0].groupby("fold").size().reset_index(name="windows"))),
         leakage=records(leak), single_feature_max=records(single[["scope", "item", "value", "threshold", "flag"]]),
+        errors=records(csv(str(R("error_normal_summary.csv")))),
         explainability=dict(
             agreement=records(csv(str(R("shap_lime_agreement_summary.csv")))),
             global_top={l: records(csv(str(R(f"shap_global_{l}.csv"))).head(10)) for l in ("label_binary", "label_level")},

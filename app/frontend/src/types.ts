@@ -2,7 +2,7 @@ export type Label = 'label_binary' | 'label_level'
 export const LABEL_NAME: Record<Label, string> = { label_binary: 'Binary (Normal / Anomaly)', label_level: 'Five-class (Normal + four failure levels)' }
 
 export interface CI { point: number | null; low: number | null; high: number | null; n_resamples: number }
-export interface MetricSet { n?: number; accuracy?: number; balanced_accuracy?: number; macro_f1?: number; normal_recall?: number; roc_auc?: number; pr_auc?: number }
+export interface MetricSet { n?: number; support_Normal?: number; precision_Normal?: number; accuracy?: number; balanced_accuracy?: number; macro_f1?: number; normal_recall?: number; roc_auc?: number; pr_auc?: number }
 export interface DecisionRule { type: 'threshold' | 'class_weights'; threshold?: number; weights?: number[]; oof_normal_recall: number; oof_balanced_accuracy: number; oof_balanced_accuracy_default_argmax: number; normal_recall_ge_0_70_reachable: boolean }
 
 export interface ModelInfo {
@@ -59,6 +59,7 @@ export interface DataResponse {
   folds: { n_folds: number; group_type: string; rows_per_fold: { fold: number; windows: number }[] }
   leakage: { check: string; scope: string; item: string; value: string | number; threshold: string | number | null; flag: boolean; detail: string | null }[]
   single_feature_max: { scope: string; item: string; value: number; threshold: string; flag: boolean }[]
+  errors: { label_version: Label; model: string; breakdown: string; value: string; n_misclassified_normal: number; share_of_misclassified: number | null }[]
   explainability: {
     agreement: { label_version: Label; model: string; window_set: string; outcome: string; n_windows: number; mean_shared_top5: number; share_with_ge3_shared: number }[]
     global_top: Record<Label, { feature: string; group: string; mean_abs_shap: number; rank: number; model: string }[]>

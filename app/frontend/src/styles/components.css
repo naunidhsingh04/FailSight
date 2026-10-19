@@ -77,7 +77,8 @@ table.rt .name-cell { font-weight: 650; }
   table.rt, table.rt tbody, table.rt tr, table.rt td { display: block; width: 100%; }
   table.rt thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   table.rt tr { border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space-2) var(--space-3); margin-bottom: var(--space-3); background: var(--surface); }
-  table.rt td { border: 0; padding: 0.3rem 0; display: flex; justify-content: space-between; gap: var(--space-4); text-align: right; }
+  table.rt td { border: 0; padding: 0.3rem 0; display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-1) var(--space-4); text-align: right; min-width: 0; overflow-wrap: anywhere; }
+  table.rt td > * { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
   table.rt td::before { content: attr(data-label); font-weight: 600; color: var(--muted); text-align: left; flex: 0 0 42%; }
   table.rt td.name-cell { font-size: 1.05rem; justify-content: flex-start; text-align: left; }
   table.rt td.name-cell::before { content: none; }

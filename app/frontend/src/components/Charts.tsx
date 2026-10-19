@@ -4,7 +4,7 @@ import { fmt } from '../format'
 export interface RangeItem { label: string; point: number | null; low: number | null; high: number | null; emphasis?: boolean }
 
 export function RangePlot({ items, title, domain = [0, 1], ariaLabel }: { items: RangeItem[]; title?: string; domain?: [number, number]; ariaLabel: string }) {
-  const rowH = 26, left = 150, right = 16, top = 22, W = 720
+  const rowH = 26, left = 200, right = 16, top = 22, W = 760
   const H = top + items.length * rowH + 28
   const x = (v: number) => left + ((v - domain[0]) / (domain[1] - domain[0])) * (W - left - right)
   const ticks = [0, 0.25, 0.5, 0.75, 1].filter((t) => t >= domain[0] && t <= domain[1])
@@ -158,5 +158,37 @@ export function FeatureBars({ items, valueLabel }: { items: FeatureBar[]; valueL
         )
       })}
     </ul>
+  )
+}
+
+/* ---------------------------------------------------------------- grouped bars: before vs after (class counts), values printed on the bars */
+export interface BarGroup { label: string; a: number; b: number }
+
+export function BeforeAfterBars({ groups, aName, bName, ariaLabel }: { groups: BarGroup[]; aName: string; bName: string; ariaLabel: string }) {
+  const W = 560, rowH = 38, left = 110, right = 60, top = 8
+  const H = top + groups.length * rowH + 30
+  const max = Math.max(...groups.flatMap((g) => [g.a, g.b]), 1)
+  const x = (v: number) => left + (v / max) * (W - left - right)
+  return (
+    <figure style={{ margin: 0 }}>
+      <svg className="chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={ariaLabel}>
+        {groups.map((g, i) => {
+          const y = top + i * rowH
+          return (
+            <g key={g.label}>
+              <text x={left - 8} y={y + 22} textAnchor="end">{g.label}</text>
+              <rect x={left} y={y + 3} width={Math.max(x(g.a) - left, 1)} height={13} fill="var(--ink-4)" stroke="var(--ink-2)" />
+              <text x={x(g.a) + 6} y={y + 14}>{g.a.toLocaleString('en-US')}</text>
+              <rect x={left} y={y + 18} width={Math.max(x(g.b) - left, 1)} height={13} fill="var(--ink-1)" />
+              <text x={x(g.b) + 6} y={y + 29}>{g.b.toLocaleString('en-US')}</text>
+            </g>
+          )
+        })}
+      </svg>
+      <ul className="chart-legend">
+        <li><svg width="16" height="12" aria-hidden="true"><rect width="16" height="12" fill="var(--ink-4)" stroke="var(--ink-2)" /></svg>{aName}</li>
+        <li><svg width="16" height="12" aria-hidden="true"><rect width="16" height="12" fill="var(--ink-1)" /></svg>{bName}</li>
+      </ul>
+    </figure>
   )
 }
