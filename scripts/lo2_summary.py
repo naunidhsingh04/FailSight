@@ -44,6 +44,31 @@ for lab, fs, fl in (("variant B, flag TT", "B_logs_plus_node_metrics", "TT"), ("
              f"models predicting Anomaly for every window: {int((r.share_predicted_anomaly == 1).sum())}.")
 m = pred.groupby(["model", "true_label_binary"]).p_anomaly.mean().unstack()
 o.append(f"- Mean predicted P(Anomaly) on Normal vs Anomaly windows (variant A, flag TT) differs by at most {f((m[1] - m[0]).abs().max())} for any model: the models do not separate the two classes.")
+tf_ = pd.read_csv(REP / "lo2_threshold_free.csv")
+o += ["", "## Threshold-free metrics (window bootstrap, 1000 resamples, 95% CI)", ""]
+pf = tf_[(tf_.feature_set == "A_logs_only") & (tf_.system_flag == "TT")].set_index("model")
+o.append(f"- Chance level: ROC-AUC 0.500; PR-AUC with Anomaly as positive class {f(pf.pr_auc_anomaly_chance_level.iloc[0])} (the Anomaly share); PR-AUC with Normal as positive class {f(pf.pr_auc_normal_chance_level.iloc[0])}.")
+b = pf.roc_auc.idxmax(); w_ = pf.roc_auc.idxmin()
+o.append(f"- Variant A, flag TT: ROC-AUC ranges from {f(pf.roc_auc.min())} ({w_}) to {f(pf.roc_auc.max())} ({b}); models with ROC-AUC above 0.5: {int((pf.roc_auc > 0.5).sum())}, below 0.5: {int((pf.roc_auc < 0.5).sum())}, "
+         f"exactly 0.5: {int((pf.roc_auc == 0.5).sum())} of {len(pf)}. Models whose 95% CI lies entirely above 0.5: {int((pf.roc_auc_ci95_low > 0.5).sum())}.")
+o.append(f"- Best by ROC-AUC, {b}: ROC-AUC {f(pf.roc_auc[b])} (95% CI {f(pf.roc_auc_ci95_low[b])} to {f(pf.roc_auc_ci95_high[b])}), PR-AUC Anomaly-positive {f(pf.pr_auc_anomaly_positive[b])} "
+         f"({f(pf.pr_auc_anomaly_positive_ci95_low[b])} to {f(pf.pr_auc_anomaly_positive_ci95_high[b])}), PR-AUC Normal-positive {f(pf.pr_auc_normal_positive[b])} ({f(pf.pr_auc_normal_positive_ci95_low[b])} to {f(pf.pr_auc_normal_positive_ci95_high[b])}).")
+o.append(f"- Mean predicted P(Anomaly), Normal vs Anomaly windows, variant A flag TT: gap (Anomaly minus Normal) ranges from {f(pf.mean_p_gap_anomaly_minus_normal.min())} to {f(pf.mean_p_gap_anomaly_minus_normal.max())}; "
+         f"models with a negative gap (higher P(Anomaly) on Normal windows): {int((pf.mean_p_gap_anomaly_minus_normal < 0).sum())} of {len(pf)}; the largest absolute gap is {f(pf.mean_p_gap_anomaly_minus_normal.abs().max())}.")
+for lab, fs, fl in (("variant B, flag TT", "B_logs_plus_node_metrics", "TT"), ("variant A, flag SN", "A_logs_only", "SN"), ("variant B, flag SN", "B_logs_plus_node_metrics", "SN")):
+    r = tf_[(tf_.feature_set == fs) & (tf_.system_flag == fl)]
+    o.append(f"- {lab}: ROC-AUC {f(r.roc_auc.min())} to {f(r.roc_auc.max())}; models with CI entirely above 0.5: {int((r.roc_auc_ci95_low > 0.5).sum())} of {len(r)}; "
+             f"models with identical scores for all windows (ROC-AUC exactly 0.5): {int((r.roc_auc == 0.5).sum())}; gap range {f(r.mean_p_gap_anomaly_minus_normal.min())} to {f(r.mean_p_gap_anomaly_minus_normal.max())}.")
+lv = pd.read_csv(REP / "lo2_threshold_free_logvolume_check.csv")
+raw = lv[lv.kind == "raw_feature_roc_auc_anomaly_positive"].set_index("name").value
+sp_ = lv[(lv.kind == "spearman_score_vs_log_line_count") & lv.name.str.endswith("|A_logs_only|TT")].set_index("name").value
+hi = pf[pf.roc_auc >= 0.9].index
+rho_hi = [sp_[f"{m}|A_logs_only|TT"] for m in hi]
+o.append(f"- Log-volume check: the raw log_line_count alone separates the two classes with ROC-AUC {f(raw['log_line_count'])} (Normal windows have more log lines because `correct` runs 60 s, error scenarios 10-18 s); "
+         f"raw log_error_count alone: {f(raw['log_error_count'])}. Of the {len(hi)} models with ROC-AUC >= 0.9 (variant A, flag TT), {int((pd.Series(rho_hi).abs() > 0.8).sum())} have a rank correlation with log_line_count above 0.8 in absolute value "
+         f"(range {f(min(rho_hi))} to {f(max(rho_hi))}). Log volume therefore explains the ranking of {int((pd.Series(rho_hi).abs() > 0.8).sum())} of them; for the others this analysis does not identify what drives the ranking "
+         f"(imputed and clipped inputs, system flag, was_missing flags). Because all Normal windows come from one scenario, any separation cannot be told apart from a scenario-specific artefact and is not evidence of failure detection.")
+o.append("- Reading: ROC-AUC is rank-based; with 5 Normal windows from one scenario one ordering decision moves it by 0.2, and the CIs resample windows (as requested), not scenarios, so they understate the real uncertainty.")
 o += ["", "## Why: distribution shift of the three log features that can be built", ""]
 for _, r in sh[(sh.anomod_system == "TT")].iterrows():
     o.append(f"- {r.feature}, LO2 {r.lo2_class}: median {r.lo2_median:,.0f} vs AnoMod TT train median {r.anomod_train_median:,.0f} (99.5th percentile {r.anomod_train_p995:,.0f}); "
@@ -53,6 +78,6 @@ o += ["", "## Caveats", "",
       "- LO2 labels are scenario-level (`correct` still contains failing requests); LO2 logs are DEBUG-level Java logs, so log counts are orders of magnitude above AnoMod's.",
       "- Log counts also encode the scenario length (about 60 s for `correct`, 10-18 s for error scenarios) because windows hold whatever the scenario produced.",
       "- The AnoMod models use system_is_TT; LO2 is assigned TT (primary) or SN (sensitivity), neither is correct.", "",
-      "Files: lo2_sample_manifest.csv, lo2_feature_mapping.csv, lo2_test_metrics.csv, lo2_vs_anomod.csv, lo2_distribution_shift.csv, lo2_window_predictions_A_TT.csv, lo2_inspection.txt, figures/step4/.", ""]
+      "Files: lo2_sample_manifest.csv, lo2_feature_mapping.csv, lo2_test_metrics.csv, lo2_vs_anomod.csv, lo2_distribution_shift.csv, lo2_window_predictions.csv, lo2_threshold_free.csv, lo2_threshold_free_logvolume_check.csv, lo2_inspection.txt, figures/step4/.", ""]
 (REP / "lo2_results_summary.md").write_text("\n".join(o), encoding="utf-8")
 print("\n".join(o))

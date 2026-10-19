@@ -121,12 +121,14 @@ def main():
                 for k, vv in bm.items():
                     row[f"{k}_ci95_low"], row[f"{k}_ci95_high"], row[f"{k}_boot_mean"] = np.nanpercentile(vv, 2.5), np.nanpercentile(vv, 97.5), np.nanmean(vv)
                 rows.append(row)
-                if fname == "A_logs_only" and flag_name == "TT":
-                    probs_out.append(pd.DataFrame({"model": n, "window_id": fr.window_id, "scenario": fr.scenario, "true_label_binary": y, "p_anomaly": Pn[:, 1]}))
+                if True:                      # keep the window-level probabilities of every variant (used by lo2_threshold_free.py)
+                    probs_out.append(pd.DataFrame({"model": n, "feature_set": fname, "system_flag": flag_name, "window_id": fr.window_id, "scenario": fr.scenario, "true_label_binary": y, "p_anomaly": Pn[:, 1]}))
             say(f"  evaluated {len(order)} models: {fname}, system flag {flag_name}; bootstrap blocks per class {nb}")
     res = pd.DataFrame(rows)
     res.to_csv(REP / "lo2_test_metrics.csv", index=False)
-    pd.concat(probs_out).to_csv(REP / "lo2_window_predictions_A_TT.csv", index=False)
+    allp = pd.concat(probs_out)
+    allp.to_csv(REP / "lo2_window_predictions.csv", index=False)
+    allp[(allp.feature_set == "A_logs_only") & (allp.system_flag == "TT")].drop(columns=["feature_set", "system_flag"]).to_csv(REP / "lo2_window_predictions_A_TT.csv", index=False)
     # ---- drop vs the AnoMod test set (official argmax rows of test_metrics.csv, binary)
     an = pd.read_csv(REP / "test_metrics.csv")
     an = an[(an.label_version == "label_binary") & (an.variant == "official")]
