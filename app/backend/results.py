@@ -59,7 +59,7 @@ def model_metrics(label: str, name: str) -> dict:
             if r.empty:
                 continue
             r = r.iloc[0]
-            out[f"{variant}/{scope}"] = clean({k: r[k] for k in ("n", "accuracy", "balanced_accuracy", "macro_f1", "normal_recall", "roc_auc", "pr_auc", "support_Normal", "precision_Normal") if k in r.index})
+            out[f"{variant}/{scope}"] = clean({k: r[k] for k in ("n", "accuracy", "balanced_accuracy", "macro_f1", "normal_recall", "roc_auc", "pr_auc", "support_Normal", "precision_Normal", "recall_Anomaly", "precision_Anomaly") if k in r.index})
     ci = {}
     for scope in ("ALL", "SN", "TT"):
         for m in ("balanced_accuracy", "macro_f1", "normal_recall", "roc_auc"):

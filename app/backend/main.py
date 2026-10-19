@@ -8,7 +8,7 @@ import pandas as pd
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.concurrency import run_in_threadpool
-from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
+from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -18,6 +18,7 @@ from .explain import Explainer
 from .features import InputError, missing_report, sequence_context, to_frame
 from .monitor import IngestError, Monitor
 from .registry import Registry, RegistryError
+from . import proofs_api
 from .replay_ctl import ReplayController
 
 log = logging.getLogger("failsight")
@@ -297,7 +298,7 @@ def create_app(registry: Registry | None = None) -> FastAPI:
         if b.get("system") not in ("SN", "TT"):
             raise IngestError(422, "system must be SN or TT")
         meta = {k: b[k] for k in ("scenario", "true_label_level", "true_label_binary", "source", "block_ids") if k in b}
-        return mon(request).start_session(b["system"], b.get("start_ts"), b.get("session"), meta)
+        return mon(request).start_session(b["system"], b.get("start_ts"), b.get("session"), meta, bool(b.get("keep_counters", False)))
 
     @app.post("/ingest/flush")
     async def ingest_flush(request: Request):
@@ -342,6 +343,41 @@ def create_app(registry: Registry | None = None) -> FastAPI:
             finally:
                 m.hub.unsubscribe(q)
         return StreamingResponse(gen(), media_type="text/event-stream", headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+    # ------------------------------------------------------------------ proofs (report_outputs/proofs.json is written by scripts/proofs.py)
+    @app.get("/api/proofs")
+    async def get_proofs():
+        rep = proofs_api.load()
+        if rep is None:
+            raise IngestError(404, "No proof report yet. Run `python scripts/proofs.py` (or use the Re-run button).")
+        return JSONResponse(content=rep)
+
+    @app.get("/api/proofs/download.json")
+    async def proofs_download_json():
+        rep = proofs_api.load()
+        if rep is None:
+            raise IngestError(404, "No proof report yet.")
+        return Response(json.dumps(rep, indent=1), media_type="application/json", headers={"Content-Disposition": 'attachment; filename="failsight_proofs.json"'})
+
+    @app.get("/api/proofs/report.html")
+    async def proofs_report_html(download: int = 0):
+        rep = proofs_api.load()
+        if rep is None:
+            raise IngestError(404, "No proof report yet.")
+        h = {"Content-Disposition": 'attachment; filename="failsight_proof_report.html"'} if download else {}
+        return Response(proofs_api.render_html(rep), media_type="text/html; charset=utf-8", headers=h)
+
+    @app.post("/api/proofs/run")
+    async def proofs_run(request: Request):
+        b = {}
+        if request.headers.get("content-length", "0") not in ("0", ""):
+            b = await read_json(request)
+        secs = b.get("sections")
+        if secs is not None and (not isinstance(secs, list) or any(x not in proofs_api.SECTIONS for x in secs)):
+            raise IngestError(422, f"sections must be a list of {proofs_api.SECTIONS}")
+        if proofs_api.busy():
+            raise IngestError(409, "A proof run is already in progress.")
+        return StreamingResponse(proofs_api.run_stream(secs, bool(b.get("quick"))), media_type="text/plain; charset=utf-8", headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
     # ------------------------------------------------------------------ replay control (the replay itself is scripts/replay_scenario.py, a separate client process)
     @app.post("/api/replay/start")

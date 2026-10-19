@@ -25,16 +25,19 @@ REP = ROOT / "report_outputs"
 TOL = 1e-6
 T0 = time.time()
 LINES: list = []
+CUR: list = []
 
 
 def out(s=""):
     print(s, flush=True)
     LINES.append(s)
+    CUR.append(s)
 
 
 class Section:
     def __init__(self, sid, title):
         self.id, self.title, self.items = sid, title, []
+        self.lines, self.generated_at = [], time.strftime("%Y-%m-%d %H:%M:%S")
 
     def add(self, claim, status, evidence, source, data=None):
         """evidence: list of text lines (shown identically in the terminal and on the web page); data: optional structured numbers"""
@@ -51,6 +54,8 @@ class Section:
 
 
 def header(sec):
+    global CUR
+    CUR = sec.lines
     out(""); out("=" * 100); out(f"{sec.id}  {sec.title}"); out("=" * 100)
 
 
@@ -484,25 +489,36 @@ def main():
         s.add("Run time of this report", "PASS", [f"{time.time() - T0:.0f} s so far (see the total in the summary)"], "this run")
         sections.append(s)
 
-    # ------------------------------------------------------------------------------------------------ summary
-    out(""); out("=" * 100); out("SUMMARY"); out("=" * 100)
-    rows = []
-    for sec in sections:
-        for it in sec.items:
-            rows.append((sec.id, it["claim"][:78], it["status"], it["source"][:46]))
-    for r in table([[a, b, c, d] for a, b, c, d in rows], ["#", "claim", "status", "source file"]):
-        out("  " + r)
-    flat = [it["status"] for sec in sections for it in sec.items]
+    # ------------------------------------------------------------------------------------------------ summary / report assembly
+    global CUR
+    CUR = []
+    new_secs = {x.id: dict(id=x.id, title=x.title, status=x.status, items=x.items, lines=x.lines, generated_at=x.generated_at) for x in sections}
+    order = [f"P{i}" for i in range(1, 11)]
+    merged = dict(new_secs)
+    base_p = REP / "proofs.json"
+    if (only or args.quick) and base_p.exists():                      # a partial re-run refreshes only its sections of the existing report
+        old = {x["id"]: x for x in json.loads(base_p.read_text(encoding="utf-8"))["sections"]}
+        merged = {**old, **new_secs}
+    final = [merged[i] for i in order if i in merged]
+    rows = [(sec["id"], it["claim"][:78], it["status"], it["source"][:46]) for sec in final for it in sec["items"]]
+    flat = [it["status"] for sec in final for it in sec["items"]]
     tot = {k: flat.count(k) for k in ("PASS", "WARN", "FAIL", "SKIP") if flat.count(k)}
-    out(""); out(f"  totals: {tot}   sections: {', '.join(f'{x.id} {x.status}' for x in sections)}   runtime {time.time() - T0:.0f} s")
+    summary_lines = ["", "=" * 100, "SUMMARY", "=" * 100]
+    summary_lines += ["  " + r for r in table([[a_, b_, c_, d_] for a_, b_, c_, d_ in rows], ["#", "claim", "status", "source file"])]
+    secs_txt = ", ".join(x["id"] + " " + x["status"] for x in final)
+    summary_lines += ["", f"  totals: {tot}   sections: {secs_txt}   runtime of this run {time.time() - T0:.0f} s"]
     if "FAIL" in flat:
-        out("  !!! at least one item FAILED !!!")
-    report = dict(generated_at=time.strftime("%Y-%m-%d %H:%M:%S"), partial=bool(only or args.quick), runtime_seconds=round(time.time() - T0, 1), totals=tot,
+        summary_lines.append("  !!! at least one item FAILED !!!")
+    for ln in summary_lines:
+        print(ln, flush=True)
+    head = ["FAILSIGHT PROOF REPORT", time.strftime("%Y-%m-%d %H:%M:%S"), "Every number below is recomputed from the data or the saved models, or read from a named result file. Nothing is retrained."]
+    text = "\n".join(head + [ln for sec in final for ln in sec.get("lines", [])] + summary_lines)
+    complete = all(i in merged for i in order) and not any(it["status"] == "SKIP" for sec in final for it in sec["items"])
+    report = dict(generated_at=time.strftime("%Y-%m-%d %H:%M:%S"), partial=not complete, refreshed_sections=list(new_secs), runtime_seconds=round(time.time() - T0, 1), totals=tot,
                   git_commit=subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip(),
-                  sections=[dict(id=x.id, title=x.title, status=x.status, items=x.items) for x in sections],
-                  summary=[dict(section=a, claim=b, status=c, source=d) for a, b, c, d in rows], text="\n".join(LINES))
-    (REP / "proofs.json").write_text(json.dumps(report, indent=1, default=str), encoding="utf-8")
-    out("  wrote report_outputs/proofs.json")
+                  sections=[{k: v for k, v in sec.items()} for sec in final], summary=[dict(section=a_, claim=b_, status=c_, source=d_) for a_, b_, c_, d_ in rows], text=text)
+    base_p.write_text(json.dumps(report, indent=1, default=str), encoding="utf-8")
+    print("  wrote report_outputs/proofs.json", flush=True)
     sys.exit(1 if "FAIL" in flat else 0)
 
 
