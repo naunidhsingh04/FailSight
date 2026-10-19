@@ -3,7 +3,7 @@ import Layout from './components/Layout'
 import Console from './pages/Console'
 import HowItWorks from './pages/HowItWorks'
 import Proofs from './pages/Proofs'
-import Models from './pages/Models'
+import Results from './pages/Results'
 import Limits from './pages/Limits'
 import Glossary from './pages/Glossary'
 import { usePageTitle } from './usePageTitle'
@@ -25,7 +25,7 @@ export default function App() {
         <Route index element={<Console />} />
         <Route path="how-it-works" element={<HowItWorks />} />
         <Route path="proofs" element={<Proofs />} />
-        <Route path="results" element={<Models />} />
+        <Route path="results" element={<Results />} />
         <Route path="limits" element={<Limits />} />
         <Route path="glossary" element={<Glossary />} />
         <Route path="*" element={<NotFound />} />

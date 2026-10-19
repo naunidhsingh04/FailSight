@@ -4,6 +4,8 @@ import { useApi } from '../api'
 import ResponsiveTable from '../components/ResponsiveTable'
 import { Async } from '../components/States'
 import { fmt, int, pct, range } from '../format'
+import { Detailed, Simple } from '../mode'
+import Term from '../components/Term'
 import { usePageTitle } from '../usePageTitle'
 import type { DataResponse, Lo2Model, Lo2Response, ModelInfo, ModelsResponse } from '../types'
 
@@ -15,10 +17,13 @@ export default function Limits() {
   return (
     <>
       <h1>Limits</h1>
-      <p className="lede">What these models cannot do yet. Nothing on this page is softened: the numbers are the ones in the result files.</p>
+      <p className="lede">What FailSight cannot do. Nothing on this page is softened: the numbers come straight from the result files.</p>
+      <Simple><PlainLimits models={models} lo2={lo2} /></Simple>
+      <Detailed>
       <Async level={2} state={models} rows={5} label="Loading model results">{(m) => <NormalRecall models={m.models.filter((x) => x.label_version === 'label_binary')} all={m.models} data={data.data} />}</Async>
       <Async level={2} state={lo2} rows={6} label="Loading LO2 results">{(l) => <External l={l} />}</Async>
       <Async level={2} state={data} rows={3} label="Loading other limits">{(d) => <Other d={d} />}</Async>
+      </Detailed>
     </>
   )
 }
@@ -128,12 +133,59 @@ function Other({ d }: { d: DataResponse }) {
       <ul>
         <li><strong>Known scenarios only.</strong> All {String(runs?.value)} runs appear in both train and test (different blocks), so the test set does not measure generalisation to a new failure type or a new deployment. LO2 is the only check of that, and it failed.</li>
         <li><strong>Overlapping windows.</strong> {String(ovSN?.value)} SN and {String(ovTT?.value)} TT training windows overlap in time with a test window of the same run. Cross-validation scores are optimistic; the test set is the headline.</li>
-        <li><strong>Few runs per class.</strong> Each class comes from a small number of runs ({perClass ? String(perClass.value) : 'see the leakage table'}), so the intervals on the Models page cannot cover run-to-run variation.</li>
+        <li><strong>Few runs per class.</strong> Each class comes from a small number of runs ({perClass ? String(perClass.value) : 'see the leakage table'}), so the intervals on the Results page cannot cover run-to-run variation.</li>
         <li><strong>The best model was chosen on the test set.</strong> Its lead over the others is optimistic; many models are statistically tied with it.</li>
-        <li><strong>Explanations describe the model, not the system.</strong> The most important features are host-level gauges that may identify the run; see <Link to="/data">Data &amp; method</Link>.</li>
-        <li><strong>Reliability bands are heuristics.</strong> The Predict page&apos;s completeness bands (10% and 50% missing) were not validated; the only measured evidence about missing features is the LO2 result above.</li>
-        <li><strong>Sequence models see no history in this app</strong> unless you upload a <code>run_id</code> column; for a single window the window is repeated six times, which the models never saw in training.</li>
+        <li><strong>Explanations describe the model, not the system.</strong> The most important features are host-level gauges that may identify the run; see <Link to="/how-it-works">How it works</Link>.</li>
+        <li><strong>Reliability bands are heuristics.</strong> The data-quality bands (10% and 50% of readings missing) were not validated; the only measured evidence about missing features is the LO2 result above.</li>
+        <li><strong>The demo feed is a replay.</strong> The Console replays recorded AnoMod windows through the real ingestion pipeline; it is not a live production system.</li>
+        <li><strong>It detects, it does not forecast.</strong> A window is judged on what it contains now; the model gives no time-to-failure.</li>
       </ul>
     </section>
+  )
+}
+
+const pc = (x: number, d = 0) => `${(x * 100).toFixed(d)}%`
+
+function PlainLimits({ models, lo2 }: { models: ReturnType<typeof useApi<ModelsResponse>>; lo2: ReturnType<typeof useApi<Lo2Response>> }) {
+  return (
+    <div className="stack" style={{ maxWidth: 'var(--measure)' }}>
+      <Async level={2} state={models} rows={2} label="Loading results">
+        {(m) => {
+          const bin = m.models.filter((x) => x.label_version === 'label_binary' && x.metrics['official/ALL'])
+          const best = [...bin].sort((a, b) => (b.metrics['official/ALL'].balanced_accuracy ?? 0) - (a.metrics['official/ALL'].balanced_accuracy ?? 0))[0]
+          const nr = best.metrics['official/ALL'].normal_recall ?? 0
+          return (
+            <section>
+              <h2 style={{ fontSize: '1.2rem', marginTop: 0 }}>It often cries wolf</h2>
+              <p>On healthy recordings the best model ({best.name}) was right only {pc(nr)} of the time. That means about {pc(1 - nr)} of healthy moments were flagged as problems. Its best score at catching failures is much higher, but the false alarms are real. There were only {best.metrics['official/ALL'].support_Normal} healthy test windows, so this number is itself uncertain.</p>
+            </section>
+          )
+        }}
+      </Async>
+      <Async level={2} state={lo2} rows={2} label="Loading outside test">
+        {(l) => {
+          const a = l.feature_mapping.A_logs_only
+          const maxBA = Math.max(...l.models.map((x) => x.balanced_accuracy))
+          return (
+            <section>
+              <h2 style={{ fontSize: '1.2rem' }}>It did not work on a different system</h2>
+              <p>We tried the saved models on <Term k="lo2">LO2</Term>, a different system. They scored {maxBA.toFixed(3)} on balanced accuracy, which is the same as guessing. Only {a.used_features_built} of the {a.used_features_total} readings the models need could be built from that data, and we had just {l.sample.windows} windows to test on. Some models still showed a high ranking score (ROC-AUC), but that is explained by log volume: the normal run was longer and so wrote more log lines. It is not evidence of detection.</p>
+            </section>
+          )
+        }}
+      </Async>
+      <section>
+        <h2 style={{ fontSize: '1.2rem' }}>The live feed is a replay</h2>
+        <p>The Console replays recorded AnoMod data through a real ingestion pipeline. It is a demonstration on recorded data, not a live production system. The &ldquo;correct alert&rdquo; and &ldquo;false alarm&rdquo; counts are known only because the recording says what really happened.</p>
+      </section>
+      <section>
+        <h2 style={{ fontSize: '1.2rem' }}>It sees what is happening now, not what will happen</h2>
+        <p>The model looks at the last 30 seconds and says whether they look like a failure. It does not predict a future failure or say when one will happen.</p>
+      </section>
+      <section>
+        <h2 style={{ fontSize: '1.2rem' }}>Only failures it has seen before</h2>
+        <p>The test recordings come from the same kinds of failure the models were trained on, so the scores do not show how it would handle a brand-new kind of failure. The best model was also picked by looking at the test scores, which makes it look a little better than it really is. The reasons shown with an alert are the signals the model leaned on, not a proven cause.</p>
+      </section>
+    </div>
   )
 }

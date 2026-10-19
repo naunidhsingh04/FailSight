@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useApi } from '../api'
 import { ConfusionMatrix, LineChart, RangePlot } from '../components/Charts'
 import { LabelToggle } from '../components/pickers'
@@ -6,6 +7,8 @@ import ResponsiveTable from '../components/ResponsiveTable'
 import type { Column } from '../components/ResponsiveTable'
 import { Async } from '../components/States'
 import { FAMILY_LABEL, fmt, range } from '../format'
+import { Detailed, Simple } from '../mode'
+import Term from '../components/Term'
 import { usePageTitle } from '../usePageTitle'
 import type { CorrectionRow, Label, ModelDetail, ModelInfo, ModelsResponse, OverfitRow, PairedRow, ResultsResponse, V1Row } from '../types'
 
@@ -27,8 +30,8 @@ function Cell({ m, k }: { m: ModelInfo; k: MetricKey }) {
   )
 }
 
-export default function Models() {
-  usePageTitle('Models')
+export default function Results() {
+  usePageTitle('Results')
   const models = useApi<ModelsResponse>('/api/models')
   const results = useApi<ResultsResponse>('/api/results')
   const [label, setLabel] = useState<Label>('label_binary')
@@ -57,7 +60,9 @@ export default function Models() {
 
   return (
     <>
-      <h1>Models</h1>
+      <h1>Results</h1>
+      <Simple><SimpleResults models={models} /></Simple>
+      <Detailed>
       <p className="lede">Every model was scored once on the 647 untouched test windows. Intervals are 95% block-bootstrap ranges, and they are wide: with few Normal windows, small differences between models are not reliable.</p>
       <div className="row" style={{ marginBottom: 'var(--space-5)' }}>
         <LabelToggle value={label} onChange={(l) => { setLabel(l); setSelected(null) }} />
@@ -99,6 +104,58 @@ export default function Models() {
             <Correction label={label} correction={r.correction.filter((x) => x.label_version === label)} overfit={r.overfit.filter((x) => x.label_version === label)} />
           </>
         )}
+      </Async>
+      </Detailed>
+    </>
+  )
+}
+
+const pc = (x: number) => `${(x * 100).toFixed(1)}%`
+
+/** Three plain cards from test_metrics.csv (binary labels, all 647 test windows); ties are shown, not hidden. */
+function SimpleResults({ models }: { models: ReturnType<typeof useApi<ModelsResponse>> }) {
+  return (
+    <>
+      <p className="lede">We tried several kinds of model and scored each one once on recordings it had never seen. Here are the three that matter most, picked by the numbers below. No single model is best at everything.</p>
+      <Async state={models} rows={4} label="Loading results" level={2}>
+        {(m) => {
+          const list = m.models.filter((x) => x.label_version === 'label_binary' && x.metrics['official/ALL'])
+          const val = (x: ModelInfo, k: string) => (x.metrics['official/ALL'] as unknown as Record<string, number>)[k] ?? 0
+          const pick = (k: string) => {
+            const top = Math.max(...list.map((x) => val(x, k)))
+            const tied = list.filter((x) => Math.abs(val(x, k) - top) < 1e-9)
+            return { top, best: tied[0], others: tied.slice(1) }
+          }
+          const a = pick('recall_Anomaly'), n = pick('normal_recall'), b = pick('balanced_accuracy')
+          const cards = [
+            { id: 'catch', title: 'Best at catching failures', p: a, value: pc(a.top), line: (x: ModelInfo) => `It spotted ${pc(val(x, 'recall_Anomaly'))} of the windows that were really failing.`, price: (x: ModelInfo) => `The price: it called only ${pc(val(x, 'normal_recall'))} of the healthy windows healthy, so it raises many false alarms.` },
+            { id: 'quiet', title: 'Fewest false alarms', p: n, value: pc(n.top), line: (x: ModelInfo) => `It correctly left ${pc(val(x, 'normal_recall'))} of the healthy windows alone.`, price: (x: ModelInfo) => `That is still low: about ${pc(1 - val(x, 'normal_recall'))} of healthy windows were flagged by mistake. It caught ${pc(val(x, 'recall_Anomaly'))} of the failures.` },
+            { id: 'bal', title: 'Most balanced', p: b, value: pc(b.top), line: (x: ModelInfo) => `Average of the two scores above: ${pc(val(x, 'recall_Anomaly'))} of failures caught and ${pc(val(x, 'normal_recall'))} of healthy windows left alone.`, price: () => 'Decent at both jobs, but not perfect at either.' },
+          ]
+          return (
+            <>
+              <ul className="grid cols-3" style={{ listStyle: 'none', padding: 0, maxWidth: 'none' }}>
+                {cards.map((c) => (
+                  <li key={c.id} className="card stack" data-testid={`card-${c.id}`}>
+                    <h2 style={{ margin: 0, fontSize: '1.15rem' }}>{c.title}</h2>
+                    <div className="num" style={{ fontFamily: 'var(--font-serif)', fontSize: '2.6rem', fontWeight: 650, lineHeight: 1 }}>{c.value}</div>
+                    <p style={{ margin: 0 }}><strong>{c.p.best.name}</strong>{c.p.others.length > 0 && <> (tied with {c.p.others.map((o) => o.name).join(', ')})</>}</p>
+                    <p className="small" style={{ margin: 0 }}>{c.line(c.p.best)}</p>
+                    <p className="small muted" style={{ margin: 0 }}>{c.price(c.p.best)}</p>
+                  </li>
+                ))}
+              </ul>
+              <div className="callout" style={{ marginTop: 'var(--space-5)' }}>
+                <span className="label">How much to trust this</span>
+                <ul>
+                  <li>Only {list[0]?.metrics['official/ALL']?.support_Normal} of the {list[0]?.metrics['official/ALL']?.n} test windows are healthy ones, so the false-alarm numbers move a lot with a few windows. Switch to Detailed to see the ranges.</li>
+                  <li>We picked these three by looking at the test results, so they look slightly better than they would on brand-new data.</li>
+                  <li>On a completely different system (<Term k="lo2">LO2</Term>) none of the models worked. See <Link to="/limits">Limits</Link>.</li>
+                </ul>
+              </div>
+            </>
+          )
+        }}
       </Async>
     </>
   )

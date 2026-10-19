@@ -2,7 +2,7 @@ export type Label = 'label_binary' | 'label_level'
 export const LABEL_NAME: Record<Label, string> = { label_binary: 'Binary (Normal / Anomaly)', label_level: 'Five-class (Normal + four failure levels)' }
 
 export interface CI { point: number | null; low: number | null; high: number | null; n_resamples: number }
-export interface MetricSet { n?: number; support_Normal?: number; precision_Normal?: number; accuracy?: number; balanced_accuracy?: number; macro_f1?: number; normal_recall?: number; roc_auc?: number; pr_auc?: number }
+export interface MetricSet { n?: number; support_Normal?: number; precision_Normal?: number; accuracy?: number; balanced_accuracy?: number; macro_f1?: number; normal_recall?: number; roc_auc?: number; pr_auc?: number; recall_Anomaly?: number; precision_Anomaly?: number }
 export interface DecisionRule { type: 'threshold' | 'class_weights'; threshold?: number; weights?: number[]; oof_normal_recall: number; oof_balanced_accuracy: number; oof_balanced_accuracy_default_argmax: number; normal_recall_ge_0_70_reachable: boolean }
 
 export interface ModelInfo {
