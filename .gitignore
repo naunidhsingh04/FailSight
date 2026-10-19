@@ -19,3 +19,9 @@ app/frontend/test-results/
 app/frontend/playwright-report/
 .pytest_cache/
 app/frontend/tests/last-run.json
+testbed/runs/*
+!testbed/runs/manifest.csv
+!testbed/runs/*/
+testbed/runs/*/*
+!testbed/runs/*/fault_schedule.csv
+!testbed/runs/*/meta.json

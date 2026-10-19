@@ -1,0 +1,16 @@
+[project]
+name = "failsight-agent"
+version = "0.1.0"
+description = "Instrument a Python web app and send request, log and process-metric events to a FailSight monitor"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.optional-dependencies]
+metrics = ["psutil"]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["failsight_agent"]
