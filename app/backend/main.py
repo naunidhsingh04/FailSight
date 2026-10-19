@@ -1,5 +1,5 @@
 """FailSight API. Start: uvicorn app.backend.main:app  (from the repo root)."""
-import io, json, logging
+import asyncio, io, json, logging
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -7,30 +7,19 @@ import numpy as np
 import pandas as pd
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.concurrency import run_in_threadpool
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from . import config, results
+from .decision import apply_decision
 from .explain import Explainer
 from .features import InputError, missing_report, sequence_context, to_frame
+from .monitor import IngestError, Monitor
 from .registry import Registry, RegistryError
 
 log = logging.getLogger("failsight")
-
-
-def apply_decision(label: str, name: str, p: np.ndarray):
-    """the model's saved decision rule from thresholds.json (tuned on out-of-fold predictions): binary threshold on P(Anomaly) / five-class class weights"""
-    spec = results.thresholds()[label][name]
-    if spec["type"] == "threshold":
-        pred = (p[:, 1] >= spec["threshold"]).astype(int)
-        used = dict(type="threshold", on="P(Anomaly)", value=spec["threshold"])
-    else:
-        pred = (p * np.array(spec["weights"])).argmax(1)
-        used = dict(type="class_weights", weights=spec["weights"])
-    used.update(oof_normal_recall=spec["oof_normal_recall"], oof_balanced_accuracy=spec["oof_balanced_accuracy"], oof_balanced_accuracy_default_argmax=spec["oof_balanced_accuracy_default_argmax"],
-                normal_recall_ge_0_70_reachable=spec["normal_recall_ge_0_70_reachable"])
-    return pred, used
 
 
 class PredictBody(BaseModel):
@@ -57,6 +46,8 @@ def create_app(registry: Registry | None = None) -> FastAPI:
         reg.load()                         # raises RegistryError with a clear message when a model file is missing
         app.state.reg = reg
         app.state.explainer = Explainer(reg)
+        app.state.monitor = Monitor(reg, app.state.explainer)
+        app.state.monitor.hub.loop = asyncio.get_running_loop()
         log.info("FailSight: %d model entries, %d available", len(reg.entries), sum(e["available"] for e in reg.entries.values()))
         yield
 
@@ -65,6 +56,10 @@ def create_app(registry: Registry | None = None) -> FastAPI:
 
     @app.exception_handler(InputError)
     async def input_error(_, exc: InputError):
+        return JSONResponse(status_code=exc.status, content={"error": exc.detail})
+
+    @app.exception_handler(IngestError)
+    async def ingest_error(_, exc: IngestError):
         return JSONResponse(status_code=exc.status, content={"error": exc.detail})
 
     @app.exception_handler(RegistryError)
@@ -255,6 +250,95 @@ def create_app(registry: Registry | None = None) -> FastAPI:
     @app.get("/api/lo2")
     async def get_lo2():
         return JSONResponse(content=results.lo2())
+
+    # ------------------------------------------------------------------ live monitoring: ingestion, control, SSE
+    async def read_json(request: Request) -> dict:
+        cl = request.headers.get("content-length")
+        if cl and cl.isdigit() and int(cl) > config.MAX_UPLOAD_BYTES:
+            raise IngestError(413, f"request too large: limit is {config.MAX_UPLOAD_BYTES // (1024 * 1024)} MB")
+        raw = await request.body()
+        if len(raw) > config.MAX_UPLOAD_BYTES:
+            raise IngestError(413, f"request too large: limit is {config.MAX_UPLOAD_BYTES // (1024 * 1024)} MB")
+        try:
+            body = json.loads(raw)
+        except Exception as ex:
+            raise IngestError(400, f"body is not valid JSON: {ex}")
+        if not isinstance(body, dict):
+            raise IngestError(422, "body must be a JSON object: {\"system\": \"SN\", \"events\": [...]} or one event with a \"system\" field")
+        return body
+
+    def mon(request: Request) -> Monitor:
+        return request.app.state.monitor
+
+    async def ingest_route(kind: str, request: Request):
+        body = await read_json(request)
+        system = body.get("system")
+        events = body["events"] if "events" in body else [{k: v for k, v in body.items() if k != "system"}]
+        return JSONResponse(content=await run_in_threadpool(mon(request).ingest, kind, system, events))
+
+    @app.post("/ingest/api")
+    async def ingest_api(request: Request):
+        return await ingest_route("api", request)
+
+    @app.post("/ingest/logs")
+    async def ingest_logs(request: Request):
+        return await ingest_route("logs", request)
+
+    @app.post("/ingest/metrics")
+    async def ingest_metrics(request: Request):
+        return await ingest_route("metrics", request)
+
+    @app.post("/ingest/reset")
+    async def ingest_reset(request: Request):
+        b = await read_json(request)
+        if b.get("system") not in ("SN", "TT"):
+            raise IngestError(422, "system must be SN or TT")
+        meta = {k: b[k] for k in ("scenario", "true_label_level", "true_label_binary", "source", "block_ids") if k in b}
+        return mon(request).start_session(b["system"], b.get("start_ts"), b.get("session"), meta)
+
+    @app.post("/ingest/flush")
+    async def ingest_flush(request: Request):
+        b = await read_json(request)
+        return JSONResponse(content=await run_in_threadpool(mon(request).flush, b.get("system"), b.get("upto_ts")))
+
+    @app.get("/api/monitor/state")
+    async def monitor_state(request: Request):
+        return JSONResponse(content=results.clean(mon(request).state()))
+
+    @app.put("/api/monitor/config")
+    async def monitor_config(request: Request):
+        b = await read_json(request)
+        return mon(request).set_config(b.get("model"), b.get("label_version"))
+
+    @app.get("/api/stream")
+    async def stream(request: Request, replay: int = 60, max: int = 0):
+        m = mon(request)
+        q, snap = m.hub.subscribe(replay)
+
+        async def gen():
+            sent = 0
+            try:
+                yield "retry: 2000\n\n"
+                for ev in snap:
+                    yield f"data: {json.dumps(results.clean(ev))}\n\n"
+                    sent += 1
+                    if max and sent >= max:
+                        return
+                while True:
+                    if await request.is_disconnected():
+                        break
+                    try:
+                        ev = await asyncio.wait_for(q.get(), timeout=15)
+                    except asyncio.TimeoutError:
+                        yield ": keep-alive\n\n"
+                        continue
+                    yield f"data: {json.dumps(results.clean(ev))}\n\n"
+                    sent += 1
+                    if max and sent >= max:
+                        break
+            finally:
+                m.hub.unsubscribe(q)
+        return StreamingResponse(gen(), media_type="text/event-stream", headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
     # ------------------------------------------------------------------ built frontend (single-container deployment)
     dist = config.FRONTEND_DIST

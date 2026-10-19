@@ -107,6 +107,22 @@ def lime_bg():
     print("lime background saved")
 
 
+def baselines():
+    """median raw value of every feature over the NORMAL TRAINING windows of each system (used for 'normally X' in plain-language alerts)"""
+    import preprocess as P
+    df = P.load_windows()
+    sp = pd.read_csv(ROOT / "report_outputs" / "split_ids.csv")
+    d = df.merge(sp[["window_id", "split"]], on="window_id")
+    d = d[(d.split == "train") & (d.label_level == "Normal")]
+    feats = P.feature_columns(d)
+    out = {s: {f: float(g[f].median()) for f in feats if g[f].notna().any()} for s, g in d.groupby("system")}
+    (ASSETS / "normal_baselines.json").write_text(json.dumps(dict(source="median over Normal windows of the training split (split_ids.csv)", **out)))
+    print("baselines:", {s: len(v) for s, v in out.items()}, {s: int((d.system == s).sum()) for s in out})
+
+
 if __name__ == "__main__":
     ASSETS.mkdir(exist_ok=True)
-    manifest(); samples(); curves(); lime_bg()
+    if len(sys.argv) > 1 and sys.argv[1] == "baselines":
+        baselines()
+    else:
+        manifest(); samples(); curves(); lime_bg(); baselines()

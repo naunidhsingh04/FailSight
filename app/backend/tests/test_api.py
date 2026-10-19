@@ -20,12 +20,6 @@ REP = config.REPORTS
 
 
 @pytest.fixture(scope="session")
-def client():
-    with TestClient(create_app()) as c:
-        yield c
-
-
-@pytest.fixture(scope="session")
 def samples(client):
     return client.get("/api/samples").json()["windows"]
 
