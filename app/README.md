@@ -1,6 +1,6 @@
 # FailSight web app
 
-A FastAPI backend and a React + Vite + TypeScript frontend for the FailSight models: predict from a real or uploaded window, compare models with 95% intervals, explain with SHAP and LIME, and read an honest account of the limits (including the failed LO2 external test).
+A FastAPI backend and a React + Vite + TypeScript frontend for the FailSight models. Pages: **Console** (replay of recorded AnoMod data through the real ingestion pipeline, with status, risk, alerts and a plain-language "Why this alert?"), **How it works**, **Proofs** (the P1-P10 checklist with a live re-run), **Results**, **Limits** (including the failed LO2 external test) and **Glossary**, with a Simple / Detailed switch. The demo source is a *replay of recorded AnoMod data*, not a live system. See the [root README](../README.md) for the architecture and how a real deployment would connect.
 
 Everything shown comes from result files in `report_outputs/` and `results/v1_16epoch/` and from the saved final models. **Nothing is retrained or tuned by the app.** AnoMod and LO2 are never touched.
 
@@ -24,7 +24,7 @@ Two terminals, from the repository root (`code/`).
 ```powershell
 python -m venv .venv; .\.venv\Scripts\Activate.ps1
 pip install -r app\backend\requirements.txt -r app\backend\requirements-deep.txt
-python -m uvicorn app.backend.main:app --port 8000        # terminal 1 (loads the models, about 30-60 s with TensorFlow)
+python -m app.backend.serve                               # terminal 1 (port 8000; loads the models, about 30-60 s with TensorFlow)
 
 cd app\frontend; npm install; npm run dev                  # terminal 2 -> http://localhost:5173
 ```
@@ -70,6 +70,13 @@ WITH_DEEP=0 docker compose up --build   # no TensorFlow: smaller image, deep mod
 | `GET /api/results/model/{label}/{name}` | confusion matrices and ROC/PR points |
 | `GET /api/data` | dataset numbers, split, folds, SMOTE counts, leakage checks, SHAP summary, error analysis |
 | `GET /api/lo2` | LO2 external-test results |
+| `POST /ingest/api`, `/ingest/logs`, `/ingest/metrics` | `{system: SN\|TT, events: [...]}` (or one bare event); API event `{timestamp, status_code, latency_ms, content_length}`, log event `{timestamp, level}`, metric event `{timestamp, metric, series, value}`; invalid events are rejected with the reason |
+| `POST /ingest/reset`, `/ingest/flush` | start a fresh session for a system / close the windows that are ready |
+| `GET /api/monitor/state`, `PUT /api/monitor/config` | current status, counters, recent alerts; choose the model |
+| `GET /api/stream` | Server-Sent Events: one `window` event per scored window |
+| `POST /api/replay/start`, `GET/POST /api/replay/control`, `GET /api/replay/status` | start a replay (scenario, speed 1/10/60), pause / resume / change speed / stop |
+| `GET /api/proofs`, `/api/proofs/download.json`, `/api/proofs/report.html` | the proof report (`report_outputs/proofs.json`), JSON download, printable page |
+| `POST /api/proofs/run` | re-run `scripts/proofs.py` (optionally `{sections: [...]}`) and stream its output; 409 if a run is in progress |
 
 A prediction window is one row with the 155 raw feature names (see `report_outputs/` and `processed/feature_names.json`) plus `system` = `SN` or `TT`. Missing columns are treated as missing features and reported by group (api / log / metric). An optional `run_id` column lets the sequence models use the previous windows of the same run; otherwise the window is repeated six times.
 
@@ -79,21 +86,24 @@ The decision rule is the one saved in `report_outputs/thresholds.json` (binary: 
 
 ```bash
 pip install -r app/backend/requirements-dev.txt
-python -m pytest app/backend/tests -q                       # 41 backend tests, use the real models (skipped if they are absent)
+python -m pytest app/backend/tests -q                       # 71 backend tests, use the real models (skipped if they are absent)
 
 cd app/frontend
 npx playwright install chromium firefox webkit              # once
 npm run build && npm run test:e2e                           # Chromium, Firefox, WebKit at 375 / 768 / 1280 / 1920 px, axe accessibility checks
+npm run test:replay                                         # replay flows (start, pause, alert, explanation, proofs re-run); one worker because the server owns one replay
 node tests/lighthouse.mjs                                   # Lighthouse on every page (needs the app on port 8765)
 ```
 
-`tests/lighthouse-summary.json` holds the last Lighthouse scores (accessibility, best practices and SEO 100 on every page; performance 85-100).
+`tests/lighthouse-summary.json` holds the last Lighthouse scores (accessibility 100, best practices 100 and SEO 100 on every page; performance 79-100).
+
+The proofs re-run test executes `scripts/proofs.py` for real and refreshes its sections in `report_outputs/proofs.json`.
 
 Test notes: on Windows start the server with `python -m app.backend.serve` (it selects the selector event loop; uvicorn's default Proactor loop can stop accepting connections when WebKit resets speculative connections). WebKit/Safari do not Tab onto links by default, so the skip-link test focuses the link directly there. Headless Firefox on Windows occasionally loses its software compositor under parallel load, so the Firefox project allows one retry.
 
 ## Design notes
 
-Editorial, restrained: one serif (Source Serif 4) for headings, one sans (Inter) for the interface, both self-hosted; neutral palette plus a single accent; grayscale-first charts that stay readable when printed; tables become stacked cards under 640 px; skeleton loaders, empty and error states; visible focus rings, ARIA labels, a skip link; light and dark colour schemes; animations are disabled under `prefers-reduced-motion`. No UI kit, template, gradient or glass effect is used.
+Editorial, restrained: one serif (Source Serif 4) for headings, one sans (Inter) for the interface, both self-hosted; neutral palette plus a single accent; grayscale-first charts that stay readable when printed; tables become stacked cards on narrow screens; skeleton loaders, empty and error states; visible focus rings, ARIA labels, a skip link; light and dark colour schemes; animations are disabled under `prefers-reduced-motion`. No UI kit, template, gradient or glass effect is used.
 
 ## Regenerating the small assets
 
