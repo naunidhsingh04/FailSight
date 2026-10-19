@@ -21,6 +21,7 @@ export const GLOSSARY: Record<string, Entry> = {
   correctalert: { term: 'Correct alert', plain: 'An alert raised while a failure was really happening (according to the recording).' },
   falsealarm: { term: 'False alarm', plain: 'An alert raised while everything was normal (according to the recording).' },
   missed: { term: 'Missed failure', plain: 'A window where a failure was really happening but no alert was raised.' },
+  nodata: { term: 'Not enough data to judge', plain: 'When more than half of the readings a system normally sends are missing in a window, the system does not guess. It raises no alert for that window and counts it separately.' },
   recording: {
     term: 'Known from the recording',
     plain: 'The data comes from a recorded experiment in which the failures were created on purpose, so we know the right answer for every window. A real system would not know this.',

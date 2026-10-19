@@ -38,20 +38,20 @@
 .board > li { margin: 0; }
 @media (min-width: 640px) { .board { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .sys-card { border: 2px solid var(--border-strong); border-radius: var(--radius); padding: var(--space-4) var(--space-5); background: var(--surface); }
-.sys-card.healthy { border-color: var(--ok); } .sys-card.watch { border-color: var(--watch); } .sys-card.failing { border-color: var(--fail); }
+.sys-card.healthy { border-color: var(--ok); } .sys-card.watch { border-color: var(--watch); } .sys-card.failing { border-color: var(--fail); } .sys-card.nodata { border-color: var(--muted); border-style: dashed; }
 .sys-card h3 { margin: 0; font-size: 1rem; font-family: var(--font-sans); font-weight: 650; color: var(--muted); }
 .status-word { display: flex; align-items: center; gap: var(--space-3); font-family: var(--font-serif); font-size: 2rem; font-size: clamp(1.8rem, 1.4rem + 1.5vw, 2.6rem); font-weight: 650; line-height: 1.1; margin: var(--space-2) 0; }
 .status-word .icon { width: 2.1rem; height: 2.1rem; flex: 0 0 auto; }
-.status-word.healthy { color: var(--ok); } .status-word.watch { color: var(--watch); } .status-word.failing { color: var(--fail); } .status-word.idle { color: var(--muted); }
+.status-word.healthy { color: var(--ok); } .status-word.watch { color: var(--watch); } .status-word.failing { color: var(--fail); } .status-word.idle { color: var(--muted); } .status-word.nodata { color: var(--muted); font-size: clamp(1.3rem, 1.1rem + 1vw, 1.8rem); }
 .status-chip { display: inline-block; padding: 0.1rem 0.6rem; border-radius: 999px; font-weight: 700; font-size: 0.8rem; border: 1px solid currentColor; }
-.chip-healthy { color: var(--ok); background: var(--ok-bg); } .chip-watch { color: var(--watch); background: var(--watch-bg); } .chip-failing { color: var(--fail); background: var(--fail-bg); } .chip-idle { color: var(--muted); }
+.chip-healthy { color: var(--ok); background: var(--ok-bg); } .chip-watch { color: var(--watch); background: var(--watch-bg); } .chip-failing { color: var(--fail); background: var(--fail-bg); } .chip-idle { color: var(--muted); } .chip-nodata { color: var(--muted); }
 .gauge-wrap { max-width: 15rem; }
 .tiles { display: grid; gap: var(--space-3); grid-template-columns: repeat(2, minmax(0, 1fr)); list-style: none; padding: 0; margin: 0; max-width: none; }
-@media (min-width: 760px) { .tiles { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+@media (min-width: 760px) { .tiles { grid-template-columns: repeat(5, minmax(0, 1fr)); } .tiles.six { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
 .tiles li { margin: 0; border-top: 3px solid var(--text); padding-top: var(--space-2); }
 .tiles .n { font-family: var(--font-serif); font-size: 2rem; font-weight: 650; line-height: 1.05; font-variant-numeric: tabular-nums; }
 .tiles .c { font-size: 0.82rem; color: var(--muted); }
-.tiles li.bad { border-top-color: var(--fail); } .tiles li.good { border-top-color: var(--ok); }
+.tiles li.neutral { border-top-color: var(--muted); border-top-style: dashed; } .tiles li.bad { border-top-color: var(--fail); } .tiles li.good { border-top-color: var(--ok); }
 .takeaway { font-size: 0.92rem; color: var(--muted); margin: var(--space-2) 0 0; max-width: 70ch; }
 .takeaway::before { content: 'Takeaway: '; font-weight: 700; color: var(--text); }
 
@@ -83,6 +83,8 @@
 .badge.warn { background: var(--watch-bg); color: var(--watch); border-color: var(--watch); }
 .badge.fail { background: var(--fail-bg); color: var(--fail); border-color: var(--fail); }
 .badge.skip { color: var(--muted); }
+.badge.reported { background: var(--surface-2); color: var(--text); border: 1px dashed var(--text); }
+.result-line { font-weight: 600; margin: 2px 0 2px 0; font-style: italic; }
 .evidence { font-family: var(--font-mono); font-size: 0.78rem; background: var(--surface-2); padding: var(--space-3); border-radius: var(--radius); overflow-x: auto; white-space: pre; margin: var(--space-2) 0; max-width: 100%; }
 .gloss dt { font-weight: 700; margin-top: var(--space-4); font-family: var(--font-serif); font-size: 1.1rem; }
 .gloss dd { margin: 0; max-width: var(--measure); }

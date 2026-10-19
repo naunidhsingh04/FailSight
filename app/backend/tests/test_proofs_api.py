@@ -73,3 +73,16 @@ def test_run_streams_the_script_output(client, monkeypatch):
         body = "".join(r.iter_text())
     assert seen["sections"] == ["P1"]
     assert body.startswith("P1 line one") and body.rstrip().endswith("[finished: exit code 0]")
+
+
+@needs_report
+def test_lo2_is_reported_accurately_not_shown_as_a_pass(client):
+    rep = client.get("/api/proofs").json()
+    p9 = next(s for s in rep["sections"] if s["id"] == "P9")
+    assert p9["status"] == "REPORTED ACCURATELY"
+    first = p9["items"][0]
+    assert first["status"] == "REPORTED ACCURATELY" and first["result"] == "models did not transfer (0.500)"
+    assert any(i["status"] == "PASS" for i in p9["items"])          # the recomputation of the LO2 numbers is a real correctness check and keeps PASS
+    assert rep["totals"]["REPORTED ACCURATELY"] == 2 and "Result: models did not transfer (0.500)" in rep["text"]
+    html = client.get("/api/proofs/report.html").text
+    assert "REPORTED ACCURATELY" in html and "Result: models did not transfer (0.500)" in html

@@ -34,15 +34,23 @@ def out(s=""):
     CUR.append(s)
 
 
+REPORTED = "REPORTED ACCURATELY"
+
+
 class Section:
     def __init__(self, sid, title):
         self.id, self.title, self.items = sid, title, []
         self.lines, self.generated_at = [], time.strftime("%Y-%m-%d %H:%M:%S")
 
-    def add(self, claim, status, evidence, source, data=None):
-        """evidence: list of text lines (shown identically in the terminal and on the web page); data: optional structured numbers"""
-        self.items.append(dict(claim=claim, status=status, evidence=evidence if isinstance(evidence, list) else [evidence], source=source, data=data or {}))
+    def add(self, claim, status, evidence, source, data=None, result=None):
+        """evidence: list of text lines (shown identically in the terminal and on the web page); data: optional structured numbers.
+        status: PASS / WARN / FAIL for checks of correctness; REPORTED = "REPORTED ACCURATELY" for a result that is reported exactly as it is
+        but is not a success (the check is that the report is faithful, so it must not look like a green PASS); result: one-line outcome shown in the same row."""
+        status = REPORTED if status == "REPORTED" else status
+        self.items.append(dict(claim=claim, status=status, evidence=evidence if isinstance(evidence, list) else [evidence], source=source, data=data or {}, result=result))
         out(f"  [{status}] {claim}")
+        if result:
+            out(f"         Result: {result}")
         for e in self.items[-1]["evidence"]:
             out(f"         {e}")
         out(f"         source: {source}")
@@ -50,7 +58,7 @@ class Section:
     @property
     def status(self):
         s = [i["status"] for i in self.items]
-        return "FAIL" if "FAIL" in s else "WARN" if "WARN" in s else "SKIP" if s and all(x == "SKIP" for x in s) else "PASS"
+        return "FAIL" if "FAIL" in s else "WARN" if "WARN" in s else REPORTED if REPORTED in s else "SKIP" if s and all(x == "SKIP" for x in s) else "PASS"
 
 
 def header(sec):
@@ -431,11 +439,11 @@ def main():
         built = int(used.variant_A_logs_only.str.startswith("built").sum())
         w = pd.read_parquet(ROOT / "processed" / "lo2_windows_A.parquet") if (ROOT / "processed" / "lo2_windows_A.parquet").exists() else None
         ok = prim.balanced_accuracy.round(6).eq(0.5).all() and len(prim) == 18 and built == 3 and len(used) == 124 and int(prim.n_windows.iloc[0]) == 28
-        s.add("On LO2 every saved model scores balanced accuracy 0.500; only 3 of the 124 model features can be built; 28 windows", "PASS" if ok else "FAIL",
+        s.add("On LO2 every saved model scores balanced accuracy 0.500; only 3 of the 124 model features can be built; 28 windows", "REPORTED" if ok else "FAIL",
               [f"models: {len(prim)}; balanced accuracy min {prim.balanced_accuracy.min():.3f}, max {prim.balanced_accuracy.max():.3f}", f"model features buildable from LO2 logs: {built} of {len(used)} ({built / len(used):.1%}); AnoMod features: {int(mp.variant_A_logs_only.str.startswith('built').sum())} of {len(mp)}",
                f"windows: {int(prim.n_windows.iloc[0])} = {int(prim.n_normal.iloc[0])} Normal (one scenario) + {int(prim.n_anomaly.iloc[0])} Anomaly",
                f"models labelling every window Anomaly: {int((prim.share_predicted_anomaly == 1).sum())}; every window Normal: {int((prim.share_predicted_anomaly == 0).sum())}",
-               "variant B (adds 19 shared node metrics) and the SN system flag were also run: see lo2_test_metrics.csv; every model still predicted one class for every window"], "report_outputs/lo2_test_metrics.csv, lo2_feature_mapping.csv, lo2_sample_manifest.csv", dict(models=len(prim), built=built, used=len(used)))
+               "variant B (adds 19 shared node metrics) and the SN system flag were also run: see lo2_test_metrics.csv; every model still predicted one class for every window"], "report_outputs/lo2_test_metrics.csv, lo2_feature_mapping.csv, lo2_sample_manifest.csv", dict(models=len(prim), built=built, used=len(used)), result=f"models did not transfer ({prim.balanced_accuracy.max():.3f})")
         if w is not None and "reg" in ctx:
             import lo2_eval
             v2_data.common.LOG = ROOT / "outputs" / "proofs_log.txt"      # lo2_eval points the shared log at report_outputs/lo2_log.txt; keep tracked files untouched
@@ -462,10 +470,11 @@ def main():
         hi = p2[p2.roc_auc >= 0.9]
         sp_ = chk[(chk.kind == "spearman_score_vs_log_line_count") & chk.name.str.endswith("|A_logs_only|TT")]
         rho = [float(sp_[sp_.name == f"{x}|A_logs_only|TT"].value.iloc[0]) for x in hi.model]
-        s.add("The high ROC-AUCs are not evidence of detection: log volume alone separates the classes", "PASS",
+        s.add("The high ROC-AUCs are not evidence of detection: log volume alone separates the classes", "REPORTED",
               [f"{len(hi)} of {len(p2)} models have ROC-AUC >= 0.90 although balanced accuracy is 0.500", f"raw log_line_count alone: ROC-AUC {raw['log_line_count']:.3f}; raw log_error_count alone: {raw['log_error_count']:.3f} (Normal scenario runs 60 s, failure scenarios 10-18 s)",
                f"of those {len(hi)} models, {sum(abs(r) > 0.8 for r in rho)} rank windows like log volume (|Spearman| > 0.8); for the others the driver is unidentified",
-               "all 5 Normal windows come from one scenario, so separation cannot be told apart from a scenario artefact"], "report_outputs/lo2_threshold_free.csv, lo2_threshold_free_logvolume_check.csv")
+               "all 5 Normal windows come from one scenario, so separation cannot be told apart from a scenario artefact"], "report_outputs/lo2_threshold_free.csv, lo2_threshold_free_logvolume_check.csv",
+              result="high ROC-AUC reflects log volume, not detection")
         sections.append(s)
 
     # ------------------------------------------------------------------------------------------------ P10 reproducibility
@@ -500,9 +509,9 @@ def main():
         old = {x["id"]: x for x in json.loads(base_p.read_text(encoding="utf-8"))["sections"]}
         merged = {**old, **new_secs}
     final = [merged[i] for i in order if i in merged]
-    rows = [(sec["id"], it["claim"][:78], it["status"], it["source"][:46]) for sec in final for it in sec["items"]]
+    rows = [(sec["id"], it["claim"][:78] + (f"  [Result: {it['result']}]" if it.get("result") else ""), it["status"], it["source"][:46]) for sec in final for it in sec["items"]]
     flat = [it["status"] for sec in final for it in sec["items"]]
-    tot = {k: flat.count(k) for k in ("PASS", "WARN", "FAIL", "SKIP") if flat.count(k)}
+    tot = {k: flat.count(k) for k in ("PASS", "WARN", "FAIL", REPORTED, "SKIP") if flat.count(k)}
     summary_lines = ["", "=" * 100, "SUMMARY", "=" * 100]
     summary_lines += ["  " + r for r in table([[a_, b_, c_, d_] for a_, b_, c_, d_ in rows], ["#", "claim", "status", "source file"])]
     secs_txt = ", ".join(x["id"] + " " + x["status"] for x in final)

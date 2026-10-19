@@ -151,7 +151,7 @@ def test_windows_are_built_every_10s_and_scored_with_the_saved_rule(client):
     assert s["counters"]["windows"] == 7 and s["last"]["window_index"] == 6
     last = s["last"]
     assert last["window_end"] - last["window_start"] == 30 and last["window_start"] == T0 + 60
-    assert 0.0 <= last["risk"] <= 1.0 and last["verdict"] in ("Normal", "Anomaly") and len(last["top_features"]) == 10
+    assert 0.0 <= last["risk"] <= 1.0 and last["verdict"] in ("Normal", "Anomaly", "Not enough data") and len(last["top_features"]) == 10
     assert last["decision_rule"]["type"] == "threshold" and last["decision_rule"]["value"] == json.loads((config.REPORTS / "thresholds.json").read_text())["label_binary"]["XGB"]["threshold"]
     assert last["missing"]["tier"] in ("normal", "degraded", "unreliable") and last["missing"]["fraction"] > 0.5      # only logs were sent: almost everything is missing
     assert last["truth"]["known_from"] == "recording" and last["truth"]["label_binary"] == "Anomaly"
@@ -159,7 +159,23 @@ def test_windows_are_built_every_10s_and_scored_with_the_saved_rule(client):
     hist = {w["window_index"]: w for w in s["history"]}
     assert all(not hist[k]["flagged"] for k in (0, 1))
     c = s["counters"]
-    assert c["labelled"] == 5 and c["correct_alerts"] + c["missed"] == 5      # k = 2..6 are scored against the recording's label
+    # only logs were sent, so every scored window (k = 2..6) has more than 50% of its features missing: not judged, no alert, counted separately
+    assert c["low_data"] == 5 and c["labelled"] == 0 and c["alerts"] == 0 and c["correct_alerts"] + c["false_alarms"] + c["missed"] + c["correct_quiet"] == 0
+    assert last["low_data"] is True and last["flagged"] is False and last["status"] == "nodata" and last["verdict"] == "Not enough data"
+    assert "Not enough data to judge" in last["summary"] and s["status"] == "nodata"
+    assert state["config"]["low_data_share"] == 0.5
+    assert client.get("/api/monitor/state").json()["alerts"] == []
+
+
+@needs_models
+def test_the_same_windows_are_judged_when_the_low_data_limit_is_raised(client, monkeypatch):
+    monkeypatch.setattr(M, "LOW_DATA_SHARE", 0.99)                       # the model and the saved rule are untouched; only the share that blocks a verdict moves
+    reset(client, "SN", true_label_binary=1, true_label_level="Performance", scenario="synthetic")
+    client.put("/api/monitor/config", json=dict(model="XGB", label_version="label_binary"))
+    ev = logs(T0, 100, "INFO") + [dict(timestamp=T0 + i, level="ERROR", service="s") for i in range(0, 100, 2)]
+    client.post("/ingest/logs", json=dict(system="SN", events=ev))
+    c = client.get("/api/monitor/state").json()["systems"]["SN"]["counters"]
+    assert c["low_data"] == 0 and c["labelled"] == 5 and c["correct_alerts"] + c["missed"] == 5
 
 
 @needs_models

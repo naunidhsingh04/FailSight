@@ -5,7 +5,7 @@ import { Async } from '../components/States'
 import { Detailed, Simple } from '../mode'
 import { usePageTitle } from '../usePageTitle'
 
-interface Item { claim: string; status: string; evidence: string[]; source: string }
+interface Item { claim: string; status: string; evidence: string[]; source: string; result?: string | null }
 interface Section { id: string; title: string; status: string; items: Item[]; generated_at?: string }
 interface Report { generated_at: string; partial: boolean; refreshed_sections?: string[]; runtime_seconds: number; totals: Record<string, number>; git_commit: string; sections: Section[]; summary: { section: string; claim: string; status: string; source: string }[]; text: string }
 
@@ -22,7 +22,7 @@ const PLAIN: Record<string, string> = {
   P10: 'The seeds, library versions and code version, so anyone can repeat this.',
 }
 const QUICK = ['P1', 'P2', 'P3', 'P4', 'P10']
-const badge = (s: string) => <span className={`badge ${s.toLowerCase()}`}>{s}</span>
+const badge = (s: string) => <span className={`badge ${s.split(' ')[0].toLowerCase()}`}>{s}</span>
 
 export default function Proofs() {
   usePageTitle('Proofs')
@@ -66,16 +66,17 @@ export default function Proofs() {
       <Async state={rep} rows={6} label="Loading the proof report" level={2}>
         {(r) => (
           <>
-            <ul className="tiles" aria-label="Result of the checks" style={{ marginBottom: 'var(--space-4)' }}>
+            <ul className="tiles six" aria-label="Result of the checks" style={{ marginBottom: 'var(--space-4)' }}>
               <li className="good"><div className="n">{r.totals.PASS ?? 0}</div><div className="c">Passed</div></li>
               <li><div className="n">{r.totals.WARN ?? 0}</div><div className="c">Passed with a caveat (warn)</div></li>
               <li className="bad"><div className="n">{r.totals.FAIL ?? 0}</div><div className="c">Failed</div></li>
+              {(r.totals['REPORTED ACCURATELY'] ?? 0) > 0 && <li className="neutral"><div className="n">{r.totals['REPORTED ACCURATELY']}</div><div className="c">Reported accurately (a result, not a pass)</div></li>}
               <li><div className="n" style={{ fontSize: '1.2rem' }}>{r.generated_at}</div><div className="c">Last run{r.partial ? ' (some sections older)' : ''}</div></li>
               <li><div className="n" style={{ fontSize: '1.2rem' }}>{r.git_commit.slice(0, 8)}</div><div className="c">Code version</div></li>
             </ul>
             {(r.totals.FAIL ?? 0) > 0 && <div className="callout" role="alert"><span className="label">A check failed</span><p>Read the evidence below before trusting the affected numbers.</p></div>}
             <p className="takeaway">
-              {(r.totals.FAIL ?? 0) === 0 ? `All ${r.summary.length} checks ran without a failure; ${r.totals.WARN ?? 0} carry a caveat that is stated next to them.` : 'At least one check failed.'}
+              {(r.totals.FAIL ?? 0) === 0 ? `All ${r.summary.length} checks ran without a failure; ${r.totals.WARN ?? 0} carry a caveat that is stated next to them${(r.totals['REPORTED ACCURATELY'] ?? 0) > 0 ? `; ${r.totals['REPORTED ACCURATELY']} are results that are not successes (the LO2 test), checked only for being reported faithfully` : ''}.` : 'At least one check failed.'}
             </p>
 
             <div className="card stack" style={{ marginTop: 'var(--space-5)' }}>
@@ -113,12 +114,13 @@ export default function Proofs() {
               <div>
                 {r.sections.map((s) => (
                   <details key={s.id} className="acc" open={s.id === 'P5' || s.id === 'P7' || s.id === 'P9'}>
-                    <summary>{badge(s.status)} <strong>{s.id}</strong> &nbsp;{s.title}</summary>
+                    <summary>{badge(s.status)} <strong>{s.id}</strong> &nbsp;{s.title}{s.status === 'REPORTED ACCURATELY' && s.items.find((i) => i.result)?.result ? <span className="result-line"> &mdash; Result: {s.items.find((i) => i.result)?.result}</span> : null}</summary>
                     <p className="muted" style={{ marginTop: 0 }}>{PLAIN[s.id]}{s.generated_at ? <span className="small"> (run {s.generated_at})</span> : null}</p>
                     <ul style={{ listStyle: 'none', padding: 0, maxWidth: 'none' }}>
                       {s.items.map((it, i) => (
                         <li key={i} style={{ marginBottom: 'var(--space-4)' }}>
                           <div>{badge(it.status)} <strong>{it.claim}</strong></div>
+                          {it.result && <div className="result-line">Result: {it.result}</div>}
                           <Simple>
                             <details><summary className="small">Show the numbers and the source</summary><pre className="evidence">{it.evidence.join('\n')}</pre><span className="small muted">source: {it.source}</span></details>
                           </Simple>

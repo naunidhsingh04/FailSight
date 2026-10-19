@@ -6,6 +6,7 @@ export function StatusIcon({ status }: { status: Status }) {
   if (status === 'healthy') return <svg {...common}><circle cx="16" cy="16" r="13" /><path d="M9 16.5l5 5 9-10" /></svg>
   if (status === 'watch') return <svg {...common}><path d="M16 3.5L29 27H3z" /><path d="M16 12v7M16 23.2v.1" /></svg>
   if (status === 'failing') return <svg {...common}><circle cx="16" cy="16" r="13" /><path d="M10.5 10.5l11 11M21.5 10.5l-11 11" /></svg>
+  if (status === 'nodata') return <svg {...common}><circle cx="16" cy="16" r="13" /><path d="M12.3 12.6a3.8 3.8 0 1 1 5.4 3.4c-1.2.7-1.7 1.4-1.7 2.6M16 23v.1" /></svg>
   return <svg {...common}><circle cx="16" cy="16" r="13" strokeDasharray="4 4" /></svg>
 }
 

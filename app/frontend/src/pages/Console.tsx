@@ -16,12 +16,13 @@ export const SCENARIOS: { id: string; label: string; hint: string }[] = [
   { id: 'Database', label: 'Database trouble', hint: 'The data store is limited or stuck.' },
   { id: 'Code', label: 'Code error', hint: 'A bug makes requests fail.' },
 ]
-const WORD: Record<Status, string> = { idle: 'Waiting', healthy: 'Healthy', watch: 'Watch', failing: 'Failing' }
+const WORD: Record<Status, string> = { idle: 'Waiting', healthy: 'Healthy', watch: 'Watch', failing: 'Failing', nodata: 'Not enough data to judge' }
 const SENTENCE: Record<Status, string> = {
   idle: 'No data yet. Choose a scenario and press Play.',
   healthy: 'Everything looks normal.',
   watch: 'One recent window looked unusual. Keeping an eye on it.',
   failing: 'Several recent windows look like a failure.',
+  nodata: 'More than half of the readings this system normally sends are missing, so the system cannot say if it is healthy. No alert is raised.',
 }
 
 export function HowStrip() {
@@ -88,7 +89,7 @@ export default function Console() {
   const totals = useMemo(() => {
     const c = SYSTEMS.map((s) => systems[s].counters)
     const sum = (k: keyof typeof c[0]) => c.reduce((a, x) => a + (x[k] as number), 0)
-    return { windows: sum('windows'), alerts: sum('alerts'), correct: sum('correct_alerts'), false: sum('false_alarms'), missed: sum('missed'), labelled: sum('labelled'), quiet: sum('correct_quiet') }
+    return { windows: sum('windows'), alerts: sum('alerts'), correct: sum('correct_alerts'), false: sum('false_alarms'), missed: sum('missed'), nodata: sum('low_data'), labelled: sum('labelled'), quiet: sum('correct_quiet') }
   }, [systems])
   const failureWindows = totals.correct + totals.missed
   const hist = systems[tab].history
@@ -167,6 +168,7 @@ export default function Console() {
               <span><span className="k" style={{ background: 'var(--fail)', borderColor: 'var(--fail)', borderRadius: 2 }} />window that raised an alert</span>
               <span><span className="k" style={{ background: 'var(--bg)' }} />window with no alert</span>
               <span><span className="k" style={{ background: 'var(--ink-3)', borderColor: 'var(--ink-3)' }} />warm-up (first 20 s)</span>
+              <span><span className="k" style={{ background: 'var(--bg)', borderStyle: 'dashed', borderColor: 'var(--muted)', borderRadius: 2, transform: 'rotate(45deg)' }} />not enough data to judge</span>
             </div>
             <p className="takeaway">
               {hist.length === 0 ? 'The line appears here once data arrives.' :
@@ -185,17 +187,19 @@ export default function Console() {
 
           <section aria-labelledby="cnt-h">
             <h2 id="cnt-h" style={{ fontSize: '1.3rem' }}>3. How is it doing? <span className="small muted" style={{ fontFamily: 'var(--font-sans)', fontWeight: 400 }}>(checked against the answers <Term k="recording">known from the recording</Term>)</span></h2>
-            <ul className="tiles" aria-label="Live counters">
+            <ul className="tiles six" aria-label="Live counters">
               <li><div className="n">{totals.windows}</div><div className="c">Windows checked</div></li>
               <li><div className="n">{totals.alerts}</div><div className="c">Alerts raised</div></li>
               <li className="good"><div className="n">{totals.correct}</div><div className="c"><Term k="correctalert">Correct alerts</Term></div></li>
               <li className="bad"><div className="n">{totals.false}</div><div className="c"><Term k="falsealarm">False alarms</Term></div></li>
               <li className="bad"><div className="n">{totals.missed}</div><div className="c"><Term k="missed">Missed failures</Term></div></li>
+              <li className="neutral"><div className="n">{totals.nodata}</div><div className="c"><Term k="nodata">Not enough data</Term></div></li>
             </ul>
             <p className="takeaway">
               {totals.labelled === 0 ? 'The score appears once windows have been checked.' :
                 failureWindows === 0 ? `${totals.false} false alarm${totals.false === 1 ? '' : 's'} in ${totals.false + totals.quiet} normal windows.` :
                   `It caught ${totals.correct} of ${failureWindows} failure windows and raised ${totals.false} false alarm${totals.false === 1 ? '' : 's'}.`}
+              {totals.nodata > 0 ? ` ${totals.nodata} window${totals.nodata === 1 ? ' was' : 's were'} not judged because more than half of the readings were missing; they are not counted above.` : ''}
               {' '}The first two windows of each replay are a warm-up and are not counted.
             </p>
           </section>
@@ -211,7 +215,7 @@ export default function Console() {
                   const cur = selected && selected.system === a.system && selected.session === a.session && selected.window_index === a.window_index
                   return (
                     <li key={key}>
-                      <button type="button" className="alert-btn" aria-current={cur ? 'true' : undefined} aria-controls="why-panel" onClick={(e) => { lastBtn.current = e.currentTarget; setSelected(a) }}>
+                      <button type="button" className="alert-btn" aria-current={cur ? 'true' : undefined} aria-controls={cur ? 'why-panel' : undefined} onClick={(e) => { lastBtn.current = e.currentTarget; setSelected(a) }}>
                         <span className="t">{SYSTEM_NAME[a.system]} &middot; {clock(a.window_start)} UTC &middot; risk {percent(a.risk)}{a.truth ? (a.truth.label_binary === 'Anomaly' ? ' · correct alert' : ' · false alarm') : ''}</span>
                         <span className="s">{a.summary}</span>
                       </button>

@@ -1,7 +1,7 @@
 import type { HistPoint, Status } from '../monitor'
 import { clock, percent } from '../monitor'
 
-const COLOR: Record<Status, string> = { idle: 'var(--ink-3)', healthy: 'var(--ok)', watch: 'var(--watch)', failing: 'var(--fail)' }
+const COLOR: Record<Status, string> = { idle: 'var(--ink-3)', healthy: 'var(--ok)', watch: 'var(--watch)', failing: 'var(--fail)', nodata: 'var(--ink-3)' }
 
 /** Half-circle risk gauge, 0-100%, with a tick at the alert line. */
 export function Gauge({ risk, threshold, status, label }: { risk: number | null; threshold: number | null; status: Status; label: string }) {
@@ -57,7 +57,9 @@ export function RiskTimeline({ points, threshold, ariaLabel }: { points: HistPoi
         <g key={`${p.window_start}-${i}`}>
           {p.truth === 'Anomaly' && <rect x={x(i) - bw / 2} y={stripY} width={bw} height={10} fill="url(#hatch)" stroke="var(--text)" strokeWidth="0.6" />}
           {p.truth === 'Normal' && <rect x={x(i) - bw / 2} y={stripY} width={bw} height={10} fill="var(--surface-2)" stroke="var(--border-strong)" strokeWidth="0.6" />}
-          {p.flagged
+          {p.low_data
+            ? <rect x={x(i) - 4} y={y(p.risk) - 4} width="8" height="8" transform={`rotate(45 ${x(i)} ${y(p.risk)})`} fill="var(--bg)" stroke="var(--muted)" strokeWidth="1.6" strokeDasharray="2 1.5"><title>{`${clock(p.window_start)} UTC: not enough data to judge (risk ${percent(p.risk)} not used)`}</title></rect>
+            : p.flagged
             ? <rect x={x(i) - 5} y={y(p.risk) - 5} width="10" height="10" fill="var(--fail)" stroke="var(--bg)" strokeWidth="1.5"><title>{`${clock(p.window_start)} UTC: alert, risk ${percent(p.risk)}`}</title></rect>
             : <circle cx={x(i)} cy={y(p.risk)} r={p.warmup ? 2.5 : 4} fill={p.warmup ? 'var(--ink-3)' : 'var(--bg)'} stroke="var(--ink-1)" strokeWidth="1.6"><title>{`${clock(p.window_start)} UTC: risk ${percent(p.risk)}${p.warmup ? ' (warm-up)' : ''}`}</title></circle>}
         </g>

@@ -26,6 +26,7 @@ import window_features as WF   # noqa: E402  (the shared training / live feature
 SYSTEMS = ("SN", "TT")
 LATENESS = 1.0                 # seconds of event time a window waits for stragglers before it is built
 HISTORY = 6                    # sequence length of the deep models (past windows of the same session)
+LOW_DATA_SHARE = 0.5            # a scored window with MORE than this share of its expected features missing is not judged: state "nodata", no alert, counted separately
 WARMUP_WINDOWS = 2             # counter rates need a previous sample: the first windows of a session have incomplete counter features (not scored, no alerts)
 MAX_BATCH = 20000
 KEEP_WINDOWS = 600
@@ -159,7 +160,7 @@ class Stream:
         self.flags = deque(maxlen=3)
         self.windows = deque(maxlen=KEEP_WINDOWS)
         self.counters = dict(windows=0, alerts=0, correct_alerts=0, false_alarms=0, missed=0, correct_quiet=0, labelled=0, late_dropped=0, before_start=0,
-                             events_api=0, events_logs=0, events_metrics=0, rejected=0)
+                             events_api=0, events_logs=0, events_metrics=0, rejected=0, low_data=0, low_data_would_alert=0)
         self.last = None
         if keep:                                    # next segment of the same replay: the running tally continues
             self.counters, self.windows, self.flags, self.last = keep
@@ -314,20 +315,25 @@ class Monitor:
         pred, rule = apply_decision(label, model, P)
         risk = float(P[0, 1])
         warmup = k < WARMUP_WINDOWS
-        flagged = bool(pred[0] == 1) and not warmup
+        model_flag = bool(pred[0] == 1) and not warmup           # what the saved model and rule say
+        low = (not warmup) and miss["missing_fraction"] > LOW_DATA_SHARE
+        flagged = model_flag and not low                         # too little data: the model's call is not turned into an alert
         sh = self.explainer.shap_values(label, model, Xp, 1, top=10)
         top = [dict(feature=t["feature"], group=t["group"], shap=t["shap"], scaled_value=t["preprocessed_value"], raw_value=(None if (row.get(t["feature"]) is None or (isinstance(row.get(t["feature"]), float) and math.isnan(row.get(t["feature"])))) else row.get(t["feature"])),
                    normal_value=self.normal.get(st.system, {}).get(t["feature"])) for t in sh["top"]]
         reasons = explain_text.reasons(st.system, top, row, 3)
-        if not warmup:
-            st.flags.append(flagged)
+        if not warmup and not low:
+            st.flags.append(flagged)                              # windows that were not judged do not count for or against the status
         f3 = sum(st.flags)
         thr = rule.get("value", 0.5)
-        status = "failing" if f3 >= 2 else "watch" if (f3 == 1 or risk >= max(0.5, 0.9 * thr)) else "healthy"
+        status = "nodata" if low else "failing" if f3 >= 2 else "watch" if (f3 == 1 or risk >= max(0.5, 0.9 * thr)) else "healthy"
         truth = None
         c = st.counters
         c["windows"] += 1
-        if st.meta.get("true_label_binary") is not None and not warmup:
+        if low:
+            c["low_data"] += 1
+            c["low_data_would_alert"] += int(model_flag)
+        if st.meta.get("true_label_binary") is not None and not warmup and not low:
             tb = int(st.meta["true_label_binary"])
             c["labelled"] += 1
             if flagged and tb:
@@ -343,8 +349,8 @@ class Monitor:
         if flagged:
             c["alerts"] += 1
         ev = dict(type="window", system=st.system, session=st.session, window_index=k, window_start=ws, window_end=we, emitted_at=time.time(), model=model, label_version=label,
-                  risk=risk, verdict="Anomaly" if flagged else "Normal", flagged=flagged, status=status, decision_rule=dict(type=rule["type"], value=rule.get("value")),
-                  top_features=top, reasons=reasons, summary=(explain_text.summary_sentence(reasons) if flagged else ("Warming up: rates need two samples, so no alert is raised for the first windows." if warmup else "No alert: the signals look like normal operation.")),
+                  risk=risk, verdict="Not enough data" if low else "Anomaly" if flagged else "Normal", flagged=flagged, low_data=low, model_flagged=model_flag, status=status, decision_rule=dict(type=rule["type"], value=rule.get("value")),
+                  top_features=top, reasons=reasons, summary=(f"Not enough data to judge: {miss['missing_features']} of {miss['expected_features']} expected readings are missing in this window, so no alert is raised." if low else explain_text.summary_sentence(reasons) if flagged else ("Warming up: rates need two samples, so no alert is raised for the first windows." if warmup else "No alert: the signals look like normal operation.")),
                   missing=dict(fraction=miss["missing_fraction"], tier=miss["reliability"], expected=miss["expected_features"], missing=miss["missing_features"], by_group=miss["by_group"]),
                   warmup=warmup, scored=(not warmup), truth=truth, counters=dict(c), n_features_built=int(sum(1 for v in feats.values() if not (isinstance(v, float) and math.isnan(v)))))
         st.last = ev
@@ -361,6 +367,6 @@ class Monitor:
             for s, st in self.streams.items():
                 last = st.last
                 systems[s] = dict(session=st.session, meta=st.meta, anchor=st.anchor, status=(last or {}).get("status", "idle"), risk=(last or {}).get("risk"),
-                                  counters=dict(st.counters), last=last, history=[dict(window_index=w["window_index"], window_start=w["window_start"], risk=w["risk"], flagged=w["flagged"],
+                                  counters=dict(st.counters), last=last, history=[dict(window_index=w["window_index"], window_start=w["window_start"], risk=w["risk"], flagged=w["flagged"], low_data=w.get("low_data", False),
                                                                                          truth=(w["truth"] or {}).get("label_binary")) for w in list(st.windows)[-120:]])
-            return dict(config=self.config, models=self.monitor_models(), systems=systems, alerts=list(self.alerts)[-30:])
+            return dict(config=dict(self.config, low_data_share=LOW_DATA_SHARE), models=self.monitor_models(), systems=systems, alerts=list(self.alerts)[-30:])

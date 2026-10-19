@@ -49,7 +49,7 @@ python scripts\leakage_audit.py       # the leakage audit (C1a-C7) that P7 repor
 
 The script prints a PASS / WARN / FAIL table and exits non-zero if any check fails. The app's **Proofs** page shows the same report (`report_outputs/proofs.json`), can re-run the checks and stream the terminal output, and downloads the report as JSON or a printable page.
 
-Last full run: 44 PASS, 3 WARN, 0 FAIL. The warnings are reported, not hidden:
+Last full run: 42 PASS, 3 WARN, 0 FAIL, plus 2 items marked **REPORTED ACCURATELY**. That badge (neutral, not green) is used for the LO2 external test, where the result is a failure (the models did not transfer, balanced accuracy 0.500) and the check is only that the failure is reported faithfully; the recomputation of the LO2 numbers in the same section is a real correctness check and stays PASS. The warnings are reported, not hidden:
 
 - **P5, ranking metrics.** Decision metrics of all 36 saved models are recomputed and equal `test_metrics.csv` within 1e-6. ROC-AUC / PR-AUC of the forest models differ in the 3rd decimal because tied scores are ordered by floating-point noise; the probabilities themselves match to 1e-16.
 - **C3, time overlap.** Some training windows overlap in time (up to 20 s) with a test window of the same run. This is real; it stays a WARN. Measured effect of removing them: -0.036 balanced accuracy (binary) and +0.010 (five-class), on average.
@@ -68,9 +68,9 @@ Last full run: 44 PASS, 3 WARN, 0 FAIL. The warnings are reported, not hidden:
 
 - **Collector.** `scripts/replay_scenario.py` reads recorded AnoMod events (read-only) from *test* blocks only (never training data) and posts them at 1x / 10x / 60x.
 - **Ingestion API.** `app/backend/monitor.py`, `main.py`: validates events, rejects bad ones with a reason, and keeps per-system buffers. Late events are accepted up to 1 s after a window closes.
-- **Window builder.** `scripts/window_features.py` is the exact feature arithmetic used for training, shared with the live path; a test checks that windows built from replayed events equal the training windows. Counter metrics are converted to rates; the first two windows are warm-up and are not scored.
+- **Window builder.** `scripts/window_features.py` is the exact feature arithmetic used for training, shared with the live path; a test checks that windows built from replayed events equal the training windows. Counter metrics are converted to rates; the first two windows are warm-up and are not scored. The replay sends recorded events in slices of at most 0.5 s of recorded time (all three kinds per slice), because the ingestion API drops events older than its 1 s lateness; at high speeds the replay can therefore run a little slower than requested.
 - **Model.** The saved final model and its saved decision rule (`report_outputs/thresholds.json`), explained with SHAP.
-- **Alerts.** Browsers receive each result over Server-Sent Events. Status: *Failing* if at least 2 of the last 3 scored windows are flagged; *Watch* if one is flagged or the risk is close to the alert line; otherwise *Healthy*. "Correct alert / false alarm / missed" counts are known only because the recording carries the true labels.
+- **Alerts.** Browsers receive each result over Server-Sent Events. If more than half of the features a system normally provides are missing in a window, the window is shown as **Not enough data to judge**: no alert is raised and it is counted separately (the saved model and threshold are unchanged). Status: *Failing* if at least 2 of the last 3 scored windows are flagged; *Watch* if one is flagged or the risk is close to the alert line; otherwise *Healthy*. "Correct alert / false alarm / missed" counts are known only because the recording carries the true labels.
 
 ## How a real deployment connects
 

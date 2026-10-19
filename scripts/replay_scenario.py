@@ -128,6 +128,9 @@ def send(client, base, path, payload):
     raise RuntimeError(f"could not POST {path}")
 
 
+MAX_SLICE = 0.5      # seconds of recorded time per slice sent to the ingestion API
+
+
 def replay_segment(client, base, system, row, speed, ctrl, log, chunk_event_seconds=1.0, keep_counters=False):
     """send one test block: reset (anchor = block start, truth from the recording), events paced at `speed`, then flush"""
     tick = lambda: ctrl.poll()
@@ -150,7 +153,9 @@ def replay_segment(client, base, system, row, speed, ctrl, log, chunk_event_seco
             paused_total += 0.2
             continue
         sp = float(st.get("speed") or speed)
-        step = chunk_event_seconds * sp
+        # events are sent in slices of at most 0.5 s of RECORDED time, all three kinds per slice, so that the API stream never moves the watermark past
+        # metric or log events of the same moment (the ingestion API drops events older than its 1 s lateness); a higher speed only shortens the wait
+        step = min(chunk_event_seconds * sp, MAX_SLICE)
         nxt = min(sim + step, t1)
         for kind, evs, idx in (("api", a, ia), ("logs", l, il), ("metrics", m, im)):
             j = idx

@@ -45,7 +45,7 @@ CSS = """
 body{font:14px/1.5 Georgia,serif;max-width:60rem;margin:2rem auto;padding:0 1rem;color:#111;background:#fff}
 h1{font-size:1.8rem;margin:0 0 .2rem} h2{font-size:1.2rem;margin:2rem 0 .5rem;border-bottom:2px solid #111;padding-bottom:.2rem}
 .meta{color:#444;margin:0 0 1rem} .badge{display:inline-block;font:700 11px/1 Arial,sans-serif;padding:3px 7px;border:1px solid #111;border-radius:3px;margin-right:.4rem}
-.PASS{background:#fff}.WARN{background:#111;color:#fff}.FAIL{background:#000;color:#fff;text-decoration:underline}.SKIP{background:#eee}
+.PASS{background:#fff}.WARN{background:#111;color:#fff}.FAIL{background:#000;color:#fff;text-decoration:underline}.SKIP{background:#eee}.REPORTED{background:#e8eef5;border-style:dashed}.result{font-style:italic}
 .item{margin:0 0 1rem;page-break-inside:avoid} .claim{font-weight:700}
 pre{font:12px/1.35 Consolas,Menlo,monospace;background:#f4f4f4;border:1px solid #ccc;padding:.5rem;white-space:pre-wrap;overflow-wrap:anywhere;margin:.3rem 0}
 .src{color:#444;font-size:12px} table{border-collapse:collapse;width:100%;font:12px Arial,sans-serif} td,th{border:1px solid #999;padding:3px 6px;text-align:left;vertical-align:top}
@@ -61,9 +61,9 @@ def render_html(rep: dict) -> str:
            "<p>Every number is recomputed from the data or the saved models, or read from a named result file. The live demo source is a <b>replay of recorded AnoMod data</b>, not a production system.</p>",
            "<p class='noprint'>Use the browser's Print command to save this page as PDF.</p>"]
     for sec in rep["sections"]:
-        out.append(f"<h2>{e(sec['id'])} &mdash; {e(sec['title'])} <span class='badge {e(sec['status'])}'>{e(sec['status'])}</span></h2>")
+        out.append(f"<h2>{e(sec['id'])} &mdash; {e(sec['title'])} <span class='badge {e(sec['status'].split()[0])}'>{e(sec['status'])}</span></h2>")
         for it in sec["items"]:
-            out.append(f"<div class='item'><span class='badge {e(it['status'])}'>{e(it['status'])}</span><span class='claim'>{e(it['claim'])}</span><pre>{e(chr(10).join(it['evidence']))}</pre><div class='src'>source: {e(it['source'])}</div></div>")
+            out.append(f"<div class='item'><span class='badge {e(it['status'].split()[0])}'>{e(it['status'])}</span><span class='claim'>{e(it['claim'])}</span>{(' <div class=result>Result: ' + e(it['result']) + '</div>') if it.get('result') else ''}<pre>{e(chr(10).join(it['evidence']))}</pre><div class='src'>source: {e(it['source'])}</div></div>")
     out.append("<h2>Summary</h2><table><tr><th>#</th><th>claim</th><th>status</th><th>source file</th></tr>")
     for r in rep["summary"]:
         out.append(f"<tr><td>{e(r['section'])}</td><td>{e(r['claim'])}</td><td>{e(r['status'])}</td><td>{e(r['source'])}</td></tr>")

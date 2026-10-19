@@ -2,27 +2,27 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { getJson, postJson } from './api'
 
 export type Sys = 'SN' | 'TT'
-export type Status = 'idle' | 'healthy' | 'watch' | 'failing'
+export type Status = 'idle' | 'healthy' | 'watch' | 'failing' | 'nodata'
 export const SYSTEMS: Sys[] = ['SN', 'TT']
 export const SYSTEM_NAME: Record<Sys, string> = { SN: 'Social Network app', TT: 'Train Ticket app' }
 
-export interface Counters { windows: number; alerts: number; correct_alerts: number; false_alarms: number; missed: number; correct_quiet: number; labelled: number; late_dropped: number; before_start: number; events_api: number; events_logs: number; events_metrics: number; rejected: number }
+export interface Counters { windows: number; alerts: number; correct_alerts: number; false_alarms: number; missed: number; correct_quiet: number; labelled: number; late_dropped: number; before_start: number; events_api: number; events_logs: number; events_metrics: number; rejected: number; low_data: number; low_data_would_alert: number }
 export interface TopFeature { feature: string; group: string; shap: number; scaled_value: number; raw_value: number | null; normal_value: number | null }
 export interface Reason { feature: string; plain_name: string; value: number | null; normal: number | null; value_text: string; normal_text: string; direction: string; sentence: string }
 export interface Truth { label_binary: 'Normal' | 'Anomaly'; label_level: string | null; scenario: string | null; known_from: string }
 export interface WinEvent {
   type: 'window'; system: Sys; session: string; window_index: number; window_start: number; window_end: number; model: string; label_version: string
-  risk: number; verdict: string; flagged: boolean; status: Status; decision_rule: { type: string; value: number | null }
+  risk: number; verdict: string; flagged: boolean; low_data: boolean; model_flagged: boolean; status: Status; decision_rule: { type: string; value: number | null }
   top_features: TopFeature[]; reasons: Reason[]; summary: string
   missing: { fraction: number; tier: 'normal' | 'degraded' | 'unreliable'; expected: number; missing: number; by_group: Record<string, { expected: number; missing: number }> }
   warmup: boolean; scored: boolean; truth: Truth | null; counters: Counters; n_features_built: number; emitted_at: number
 }
-export interface HistPoint { window_index: number; window_start: number; risk: number; flagged: boolean; truth: string | null; warmup?: boolean }
+export interface HistPoint { window_index: number; window_start: number; risk: number; flagged: boolean; truth: string | null; warmup?: boolean; low_data?: boolean }
 export interface SysState { status: Status; risk: number | null; counters: Counters; last: WinEvent | null; history: HistPoint[]; session: string | null; meta: Record<string, unknown> }
 export interface MonitorState { config: { model: string; label_version: string }; models: string[]; systems: Record<Sys, SysState>; alerts: WinEvent[] }
 export interface ReplayStatus { running: boolean; paused: boolean; speed: number | null; info: { scenario?: string; speed?: number; system?: string; blocks?: number }; log: string[] }
 
-const ZERO: Counters = { windows: 0, alerts: 0, correct_alerts: 0, false_alarms: 0, missed: 0, correct_quiet: 0, labelled: 0, late_dropped: 0, before_start: 0, events_api: 0, events_logs: 0, events_metrics: 0, rejected: 0 }
+const ZERO: Counters = { windows: 0, alerts: 0, correct_alerts: 0, false_alarms: 0, missed: 0, correct_quiet: 0, labelled: 0, late_dropped: 0, before_start: 0, events_api: 0, events_logs: 0, events_metrics: 0, rejected: 0, low_data: 0, low_data_would_alert: 0 }
 const empty = (): SysState => ({ status: 'idle', risk: null, counters: { ...ZERO }, last: null, history: [], session: null, meta: {} })
 const KEEP = 60
 
@@ -43,7 +43,7 @@ export function useMonitor() {
         const key = `${w.session}|${w.window_index}`
         if (seen.current.has(w.system + key)) return prev
         seen.current.add(w.system + key)
-        const point: HistPoint = { window_index: w.window_index, window_start: w.window_start, risk: w.risk, flagged: w.flagged, truth: w.truth?.label_binary ?? null, warmup: w.warmup }
+        const point: HistPoint = { window_index: w.window_index, window_start: w.window_start, risk: w.risk, flagged: w.flagged, truth: w.truth?.label_binary ?? null, warmup: w.warmup, low_data: w.low_data }
         return { ...prev, [w.system]: { ...s, status: w.status, risk: w.risk, counters: w.counters, last: w, session: w.session, history: [...s.history, point].slice(-KEEP) } }
       })
       if (w.flagged) setAlerts((a) => (a.some((x) => x.system === w.system && x.session === w.session && x.window_index === w.window_index) ? a : [w, ...a].slice(0, 100)))
