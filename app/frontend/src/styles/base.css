@@ -1,0 +1,44 @@
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { max-width: 100%; }
+h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 600; line-height: 1.2; margin: 0 0 var(--space-3); letter-spacing: -0.01em; }
+h1 { font-size: 2rem; font-size: clamp(2rem, 1.4rem + 2.6vw, 3.4rem); letter-spacing: -0.02em; }
+h2 { font-size: 1.5rem; font-size: clamp(1.5rem, 1.25rem + 1vw, 2.1rem); margin-top: var(--space-7); }
+h3 { font-size: 1.2rem; font-size: clamp(1.2rem, 1.1rem + 0.4vw, 1.4rem); margin-top: var(--space-5); }
+h4 { font-size: 1rem; font-family: var(--font-sans); font-weight: 650; }
+p { margin: 0 0 var(--space-4); max-width: var(--measure); }
+ul, ol { margin: 0 0 var(--space-4); padding-left: 1.25rem; max-width: var(--measure); }
+li { margin-bottom: var(--space-2); }
+a { color: var(--accent); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+strong { font-weight: 650; }
+code, kbd { font-family: var(--font-mono); font-size: 0.9em; background: var(--surface-2); padding: 0.1em 0.35em; border-radius: 4px; overflow-wrap: anywhere; }
+hr { border: 0; border-top: 1px solid var(--border); margin: var(--space-6) 0; }
+table { border-collapse: collapse; }
+
+:focus-visible { outline: var(--focus); outline-offset: 2px; border-radius: 3px; }
+:focus:not(:focus-visible) { outline: none; }
+
+.skip-link {
+  position: absolute; left: var(--space-3); top: -4rem; z-index: 100;
+  background: var(--accent); color: var(--accent-ink); padding: var(--space-2) var(--space-4); border-radius: var(--radius); text-decoration: none; font-weight: 600;
+}
+.skip-link:focus { top: var(--space-3); }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

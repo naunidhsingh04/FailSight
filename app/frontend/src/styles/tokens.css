@@ -1,0 +1,58 @@
+/* Design tokens. Neutral palette + ONE accent. Contrast pairs checked for WCAG AA (text >= 4.5:1, UI >= 3:1) in both schemes. */
+:root {
+  color-scheme: light dark;
+
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --surface-2: #f1efe9;
+  --text: #1b1a17;
+  --muted: #57544d;
+  --border: #d6d2c8;
+  --border-strong: #8d897e;
+  --accent: #1d5a8a;
+  --accent-ink: #ffffff;
+  --accent-weak: #e4eef6;
+
+  /* chart inks: a grayscale ramp that stays distinguishable when printed or colour-blind */
+  --ink-1: #1b1a17;
+  --ink-2: #57544d;
+  --ink-3: #8d897e;
+  --ink-4: #c9c5ba;
+
+  --font-serif: 'Source Serif 4 Variable', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 5rem;
+
+  --radius: 6px;
+  --measure: 68ch;
+  --container: 76rem;
+  --focus: 3px solid var(--accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #151513;
+    --surface: #1d1d1a;
+    --surface-2: #262521;
+    --text: #ecebe5;
+    --muted: #aaa79d;
+    --border: #3b3a35;
+    --border-strong: #7a776d;
+    --accent: #8dbfe6;
+    --accent-ink: #0d1a26;
+    --accent-weak: #1e2c38;
+    --ink-1: #ecebe5;
+    --ink-2: #aaa79d;
+    --ink-3: #7a776d;
+    --ink-4: #4a4943;
+  }
+}
