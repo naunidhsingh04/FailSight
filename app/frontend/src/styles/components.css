@@ -63,7 +63,7 @@ select { padding-right: 2rem; }
 .tabs button[aria-selected='true'] { color: var(--text); border-bottom-color: var(--accent); }
 
 /* ---------- tables: become stacked cards under 640px ---------- */
-.table-wrap { width: 100%; }
+.table-wrap { width: 100%; overflow-x: auto; }
 table.rt { width: 100%; font-size: 0.92rem; font-variant-numeric: tabular-nums; }
 table.rt caption { text-align: left; font-weight: 650; padding-bottom: var(--space-2); color: var(--text); }
 table.rt th, table.rt td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
@@ -73,8 +73,9 @@ table.rt th[aria-sort='ascending'] button::after { content: ' \25B2'; font-size:
 table.rt th[aria-sort='descending'] button::after { content: ' \25BC'; font-size: 0.7em; }
 table.rt tbody tr[data-active='true'] { background: var(--accent-weak); }
 table.rt .name-cell { font-weight: 650; }
-@media (max-width: 639px) {
+@media (max-width: 899px) {
   table.rt, table.rt tbody, table.rt tr, table.rt td { display: block; width: 100%; }
+  .table-wrap { overflow-x: visible; }
   table.rt thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   table.rt tr { border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space-2) var(--space-3); margin-bottom: var(--space-3); background: var(--surface); }
   table.rt td { border: 0; padding: 0.3rem 0; display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-1) var(--space-4); text-align: right; min-width: 0; overflow-wrap: anywhere; }
@@ -88,7 +89,7 @@ table.rt .name-cell { font-weight: 650; }
 .skeleton { background: var(--surface-2); border-radius: var(--radius); min-height: 1rem; animation: pulse 1.6s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
 .state { border: 1px dashed var(--border-strong); border-radius: var(--radius); padding: var(--space-5); background: var(--surface); }
-.state h3 { margin-top: 0; font-size: 1.1rem; }
+.state h2, .state h3 { margin-top: 0; font-size: 1.1rem; font-family: var(--font-serif); }
 .state.error { border-style: solid; border-width: 2px; border-color: var(--text); }
 
 /* ---------- charts (grayscale-first) ---------- */

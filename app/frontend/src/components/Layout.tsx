@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 
 const LINKS: { to: string; label: string; end?: boolean }[] = [
@@ -12,7 +12,9 @@ const LINKS: { to: string; label: string; end?: boolean }[] = [
 
 export default function Layout() {
   const { pathname } = useLocation()
+  const first = useRef(true)
   useEffect(() => {
+    if (first.current) { first.current = false; return }   // keep the natural tab order (skip link first) on the initial load
     window.scrollTo(0, 0)
     document.getElementById('main')?.focus({ preventScroll: true })
   }, [pathname])

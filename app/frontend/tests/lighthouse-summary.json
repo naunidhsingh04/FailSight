@@ -1,0 +1,114 @@
+{
+ "tool": "lighthouse",
+ "base": "http://127.0.0.1:8765",
+ "results": [
+  {
+   "page": "/",
+   "formFactor": "mobile",
+   "performance": 94,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/predict",
+   "formFactor": "mobile",
+   "performance": 96,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/models",
+   "formFactor": "mobile",
+   "performance": 92,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/explain",
+   "formFactor": "mobile",
+   "performance": 91,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/data",
+   "formFactor": "mobile",
+   "performance": 97,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/limits",
+   "formFactor": "mobile",
+   "performance": 93,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/",
+   "formFactor": "desktop",
+   "performance": 99,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/predict",
+   "formFactor": "desktop",
+   "performance": 85,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/models",
+   "formFactor": "desktop",
+   "performance": 92,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/explain",
+   "formFactor": "desktop",
+   "performance": 90,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/data",
+   "formFactor": "desktop",
+   "performance": 100,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/limits",
+   "formFactor": "desktop",
+   "performance": 100,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  }
+ ]
+}

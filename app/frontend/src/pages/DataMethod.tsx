@@ -21,7 +21,7 @@ export default function DataMethod() {
     <>
       <h1>Data &amp; method</h1>
       <p className="lede">What the models were trained on, how the data was split, and what the leakage checks found. The checks found real problems; they are reported here as measured.</p>
-      <Async state={data} rows={8} label="Loading data and method">{(d) => <Body d={d} />}</Async>
+      <Async level={2} state={data} rows={8} label="Loading data and method">{(d) => <Body d={d} />}</Async>
     </>
   )
 }

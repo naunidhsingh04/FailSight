@@ -16,9 +16,9 @@ export default function Limits() {
     <>
       <h1>Limits</h1>
       <p className="lede">What these models cannot do yet. Nothing on this page is softened: the numbers are the ones in the result files.</p>
-      <Async state={models} rows={5} label="Loading model results">{(m) => <NormalRecall models={m.models.filter((x) => x.label_version === 'label_binary')} all={m.models} data={data.data} />}</Async>
-      <Async state={lo2} rows={6} label="Loading LO2 results">{(l) => <External l={l} />}</Async>
-      <Async state={data} rows={3} label="Loading other limits">{(d) => <Other d={d} />}</Async>
+      <Async level={2} state={models} rows={5} label="Loading model results">{(m) => <NormalRecall models={m.models.filter((x) => x.label_version === 'label_binary')} all={m.models} data={data.data} />}</Async>
+      <Async level={2} state={lo2} rows={6} label="Loading LO2 results">{(l) => <External l={l} />}</Async>
+      <Async level={2} state={data} rows={3} label="Loading other limits">{(d) => <Other d={d} />}</Async>
     </>
   )
 }

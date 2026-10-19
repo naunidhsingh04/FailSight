@@ -149,7 +149,7 @@ export default function Predict() {
 
       <div aria-live="polite" style={{ marginTop: 'var(--space-6)' }}>
         {busy && <SkeletonBlock rows={3} label="Scoring" />}
-        {error && <ErrorState error={error} title={error instanceof ApiError && error.status >= 400 && error.status < 500 ? 'The input was not accepted' : 'Prediction failed'} />}
+        {error && <ErrorState level={2} error={error} title={error instanceof ApiError && error.status >= 400 && error.status < 500 ? 'The input was not accepted' : 'Prediction failed'} />}
         {result && res && (
           <div className="stack">
             <h2 tabIndex={-1} ref={resultRef} style={{ marginTop: 0 }}>Result</h2>

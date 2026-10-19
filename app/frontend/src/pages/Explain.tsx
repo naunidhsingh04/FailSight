@@ -73,7 +73,7 @@ export default function Explain() {
 
       <div aria-live="polite" style={{ marginTop: 'var(--space-6)' }}>
         {busy && <SkeletonBlock rows={6} label="Computing explanations" />}
-        {err && <ErrorState error={err} title="Could not explain this window" />}
+        {err && <ErrorState level={2} error={err} title="Could not explain this window" />}
         {data && (
           <div className="stack">
             <div className="card">
@@ -118,7 +118,7 @@ export default function Explain() {
             </div>
           </div>
         )}
-        {!data && !busy && !err && <div className="state"><h3>Nothing explained yet</h3><p>Choose a window and press <strong>Explain this window</strong>.</p></div>}
+        {!data && !busy && !err && <div className="state"><h2>Nothing explained yet</h2><p>Choose a window and press <strong>Explain this window</strong>.</p></div>}
       </div>
     </>
   )

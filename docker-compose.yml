@@ -1,0 +1,20 @@
+# Start with:  docker compose up --build     then open http://localhost:8000
+# Needs two local paths that are not in git: ./models (final models from the training run) and ./processed/preprocessor.joblib
+# (created by `python scripts/preprocess.py`). Set WITH_DEEP=0 to build without TensorFlow (deep models and stacking then show as unavailable).
+services:
+  failsight:
+    build:
+      context: .
+      args:
+        WITH_DEEP: "${WITH_DEEP:-1}"
+    image: failsight:latest
+    ports:
+      - "8000:8000"
+    environment:
+      FAILSIGHT_MODELS_DIR: /data/models
+      FAILSIGHT_PREPROCESSOR: /data/preprocessor.joblib
+      FAILSIGHT_LOAD_DEEP: "${WITH_DEEP:-1}"
+    volumes:
+      - ./models:/data/models:ro
+      - ./processed/preprocessor.joblib:/data/preprocessor.joblib:ro
+    restart: unless-stopped
