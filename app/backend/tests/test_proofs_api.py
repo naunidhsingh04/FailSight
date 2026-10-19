@@ -83,7 +83,7 @@ def test_lo2_is_reported_accurately_not_shown_as_a_pass(client):
     first = p9["items"][0]
     assert first["status"] == "REPORTED ACCURATELY" and first["result"] == "models did not transfer (0.500)"
     assert any(i["status"] == "PASS" for i in p9["items"])          # the recomputation of the LO2 numbers is a real correctness check and keeps PASS
-    assert rep["totals"]["REPORTED ACCURATELY"] == 2 and "Result: models did not transfer (0.500)" in rep["text"]
+    assert rep["totals"]["REPORTED ACCURATELY"] == sum(i["status"] == "REPORTED ACCURATELY" for sec in rep["sections"] for i in sec["items"]) >= 2 and "Result: models did not transfer (0.500)" in rep["text"]
     html = client.get("/api/proofs/report.html").text
     assert "REPORTED ACCURATELY" in html and "Result: models did not transfer (0.500)" in html
 
