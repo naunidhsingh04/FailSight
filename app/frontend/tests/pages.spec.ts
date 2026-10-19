@@ -3,12 +3,12 @@ import AxeBuilder from '@axe-core/playwright'
 
 const WIDTHS = [375, 768, 1280, 1920]
 const PAGES: { path: string; h1: string; ready: RegExp }[] = [
-  { path: '/', h1: 'Can a 30-second window of telemetry tell us an API is failing?', ready: /How the results were produced/ },
-  { path: '/predict', h1: 'Predict', ready: /Real test window/ },
-  { path: '/models', h1: 'Models', ready: /Overfitting: before and after correction/ },
-  { path: '/explain', h1: 'Explain', ready: /Explain this window/ },
-  { path: '/data', h1: 'Data & method', ready: /Leakage checks and what they found/ },
-  { path: '/limits', h1: 'Limits', ready: /Other things to keep in mind/ },
+  { path: '/', h1: 'Is the system healthy right now?', ready: /Replay of recorded AnoMod data/ },
+  { path: '/how-it-works', h1: 'How it works', ready: /replay/i },
+  { path: '/proofs', h1: 'Proofs', ready: /Run the checks again/ },
+  { path: '/results', h1: 'Results', ready: /Fewest false alarms/ },
+  { path: '/limits', h1: 'Limits', ready: /It did not work on a different system/ },
+  { path: '/glossary', h1: 'Glossary', ready: /Data leakage/ },
 ]
 
 for (const width of WIDTHS) {
@@ -38,12 +38,13 @@ for (const width of WIDTHS) {
 
 test.describe('responsive tables', () => {
   test('table becomes stacked cards under 900px and a real table above', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('failsight.mode', 'detailed'))
     await page.setViewportSize({ width: 768, height: 800 })
-    await page.goto('/models')
+    await page.goto('/results')
     await expect(page.locator('table.rt tbody tr').first()).toBeVisible()
     expect(await page.locator('table.rt tbody tr').first().evaluate((e) => getComputedStyle(e).display)).toBe('block')
     await page.setViewportSize({ width: 375, height: 800 })
-    await page.goto('/models')
+    await page.goto('/results')
     const row = page.locator('table.rt tbody tr').first()
     await expect(row).toBeVisible()
     expect(await row.evaluate((e) => getComputedStyle(e).display)).toBe('block')
@@ -71,28 +72,25 @@ test.describe('accessibility behaviour', () => {
     const ol = await skip.evaluate((e) => { const s = getComputedStyle(e); return { style: s.outlineStyle, width: parseFloat(s.outlineWidth) } })
     expect(ol.style, `outline on ${browserName}`).not.toBe('none')
     expect(ol.width).toBeGreaterThanOrEqual(2)
-    // keyboard order of the interactive controls on a form page
-    await page.goto('/predict')
-    await expect(page.getByRole('button', { name: 'Score' })).toBeVisible()
-    await page.getByRole('button', { name: 'Binary' }).focus()
+    // keyboard order: the mode toggle is followed by another focusable control
+    await page.getByRole('button', { name: 'Simple' }).focus()
     await page.keyboard.press('Tab')
-    expect(await page.evaluate(() => document.activeElement?.tagName)).toMatch(/BUTTON|SELECT/)
+    expect(await page.evaluate(() => document.activeElement?.tagName)).toMatch(/BUTTON|A|SELECT/)
   })
 
   test('landmarks, current page and form labels', async ({ page }) => {
-    await page.goto('/predict')
+    await page.goto('/proofs')
     await expect(page.getByRole('navigation', { name: 'Main' })).toBeVisible()
     await expect(page.getByRole('main')).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Predict' }).first()).toHaveAttribute('aria-current', 'page')
-    await expect(page.getByLabel('Model')).toBeVisible()
-    await expect(page.getByLabel('Real test window')).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Proofs' }).first()).toHaveAttribute('aria-current', 'page')
+    await expect(page.getByLabel('How much to run')).toBeVisible()
   })
 
   test('respects prefers-reduced-motion', async ({ browser }) => {
     const ctx = await browser.newContext({ reducedMotion: 'reduce' })
     const page = await ctx.newPage()
     await page.route('**/api/**', async (r) => { await new Promise((res) => setTimeout(res, 2500)); await r.continue() })
-    await page.goto('/')
+    await page.goto('/results')
     const sk = page.locator('.skeleton').first()
     await sk.waitFor({ state: 'attached' })
     expect(await sk.evaluate((e) => getComputedStyle(e).animationName)).toBe('none')

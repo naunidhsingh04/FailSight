@@ -1,103 +1,53 @@
 import { expect, test } from '@playwright/test'
-import { Buffer } from 'node:buffer'
 
-for (const width of [375, 1280]) {
+for (const width of [375, 768, 1280, 1920]) {
   test.describe(`user flows at ${width}px`, () => {
     test.use({ viewport: { width, height: 900 } })
 
-    test('Predict: score a real sample window and see verdict, probabilities, SHAP and completeness', async ({ page }) => {
-      await page.goto('/predict')
-      await page.getByLabel('Real test window').selectOption('sample-07')
-      await page.getByRole('button', { name: 'Score' }).click()
-      await expect(page.getByRole('heading', { name: 'Result' })).toBeVisible()
-      await expect(page.getByText(/Decision rule: call/)).toBeVisible()
-      await expect(page.getByRole('group', { name: 'Predicted probability per class' })).toBeVisible()
-      await expect(page.getByText('Input completeness')).toBeVisible()
-      await expect(page.getByRole('list', { name: 'SHAP per feature' })).toBeVisible()
+    test('Simple/Detailed toggle changes the page and is remembered', async ({ page }) => {
+      await page.goto('/results')
+      await expect(page.getByRole('button', { name: 'Simple' })).toHaveAttribute('aria-pressed', 'true')
+      await expect(page.getByText('Fewest false alarms')).toBeVisible()
+      await page.getByRole('button', { name: 'Detailed' }).click()
+      await expect(page.getByRole('button', { name: 'Detailed' })).toHaveAttribute('aria-pressed', 'true')
+      await expect(page.getByRole('heading', { name: 'Leaderboard' })).toBeVisible()
+      await expect(page.getByText('Fewest false alarms')).toHaveCount(0)
+      await page.reload()
+      await expect(page.getByRole('heading', { name: 'Leaderboard' })).toBeVisible()
     })
 
-    test('Predict: five-class model with tuned class weights', async ({ page }) => {
-      await page.goto('/predict')
-      await page.getByRole('button', { name: 'Five-class' }).click()
-      await page.getByLabel('Model').selectOption('LGBM_tuned')
-      await page.getByRole('button', { name: 'Score' }).click()
-      await expect(page.getByText(/per-class weights/)).toBeVisible()
-      await expect(page.getByRole('group', { name: 'Predicted probability per class' }).getByText('Performance')).toBeVisible()
-    })
-
-    test('Predict: uploading a CSV scores several windows', async ({ page, request }) => {
-      const s = (await (await request.get('/api/samples')).json()).windows.slice(0, 4)
-      const cols = Object.keys(s[0].features)
-      const csv = ['system,window_id,' + cols.join(','), ...s.map((w: any) => [w.system, w.window_id, ...cols.map((c) => w.features[c] ?? '')].join(','))].join('\n')
-      await page.goto('/predict')
-      await page.getByRole('button', { name: 'Upload CSV' }).click()
-      await page.getByLabel(/CSV of windows/).setInputFiles({ name: 'windows.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) })
-      await expect(page.getByText('4 window(s) read')).toBeVisible()
-      await page.getByRole('button', { name: 'Score' }).click()
-      await expect(page.getByText('4 windows scored')).toBeVisible()
-    })
-
-    test('Predict: a CSV with almost no features is flagged unreliable', async ({ page }) => {
-      await page.goto('/predict')
-      await page.getByRole('button', { name: 'Upload CSV' }).click()
-      await page.getByLabel(/CSV of windows/).setInputFiles({ name: 'thin.csv', mimeType: 'text/csv', buffer: Buffer.from('system,log_line_count,log_error_count\nTT,120,3\n') })
-      await page.getByRole('button', { name: 'Score' }).click()
-      await expect(page.getByText('unreliable').first()).toBeVisible()
-      await expect(page.getByText(/Do not rely on this verdict/)).toBeVisible()
-      await expect(page.getByText(/LO2 external test/).first()).toBeVisible()
-    })
-
-    test('Predict: bad inputs give clear errors', async ({ page }) => {
-      await page.goto('/predict')
-      await page.getByRole('button', { name: 'Upload CSV' }).click()
-      await page.getByLabel(/CSV of windows/).setInputFiles({ name: 'nosystem.csv', mimeType: 'text/csv', buffer: Buffer.from('log_line_count\n10\n') })
-      await page.getByRole('button', { name: 'Score' }).click()
-      await expect(page.getByRole('alert').filter({ hasText: 'not accepted' })).toContainText('system')
-      await page.getByLabel(/CSV of windows/).setInputFiles({ name: 'empty.csv', mimeType: 'text/csv', buffer: Buffer.from('a,b\n') })
-      await expect(page.getByRole('alert').filter({ hasText: 'no data rows' })).toBeVisible()
-      await page.getByLabel(/CSV of windows/).setInputFiles({ name: 'big.csv', mimeType: 'text/csv', buffer: Buffer.alloc(5 * 1024 * 1024 + 10, 'a') })
-      await expect(page.getByRole('alert').filter({ hasText: 'limit is 5 MB' })).toBeVisible()
-    })
-
-    test('Explain: SHAP and LIME side by side with hover details', async ({ page }) => {
-      await page.goto('/explain')
-      await page.getByRole('button', { name: 'Explain this window' }).click()
-      await expect(page.getByRole('heading', { name: 'SHAP' })).toBeVisible()
-      await expect(page.getByRole('heading', { name: 'LIME' })).toBeVisible()
-      await expect(page.getByText(/share .* of their top 5 features/)).toBeVisible()
-      const first = page.getByRole('list', { name: 'SHAP per feature' }).getByRole('listitem').first()
-      await first.focus()
-      await expect(first.locator('.fbar-tip')).toBeVisible()
-      await expect(first.locator('.fbar-tip')).toContainText('group')
-    })
-
-    test('Models: toggle label, sort, inspect a model', async ({ page }) => {
-      await page.goto('/models')
+    test('Results: three cards computed from test_metrics.csv; detailed leaderboard has intervals', async ({ page, request }) => {
+      await page.goto('/results')
+      for (const t of ['Best at catching failures', 'Fewest false alarms', 'Most balanced']) await expect(page.getByRole('heading', { name: t })).toBeVisible()
+      const ms = (await (await request.get('/api/models')).json()).models.filter((m: any) => m.label_version === 'label_binary')
+      const bestBA = Math.max(...ms.map((m: any) => m.metrics['official/ALL'].balanced_accuracy))
+      await expect(page.getByTestId('card-bal')).toContainText(`${(bestBA * 100).toFixed(1)}%`)
+      await page.getByRole('button', { name: 'Detailed' }).click()
       await expect(page.getByRole('table').first()).toBeVisible()
-      await page.getByRole('button', { name: 'Five-class' }).click()
-      await expect(page.getByText(/five-class labels/).first()).toBeVisible()
-      if (width >= 640) {
-        await page.getByRole('button', { name: 'Normal recall (95% CI)' }).click()
-        await expect(page.locator('th[aria-sort]').first()).toHaveAttribute('aria-sort', /ascending|descending/)
-      }
-      await page.getByRole('button', { name: 'Fusion', exact: true }).first().click()
-      await expect(page.getByRole('heading', { name: /Fusion: confusion matrix and curves/ })).toBeVisible()
-      await expect(page.getByRole('img', { name: /Confusion matrix of Fusion/ })).toBeVisible()
-      await expect(page.getByRole('img', { name: /ROC curve of Fusion/ })).toBeVisible()
+      await expect(page.getByText(/95% CI/).first()).toBeVisible()
     })
 
-    test('Limits: states the weaknesses plainly', async ({ page }) => {
+    test('Limits: states the weaknesses plainly in both modes', async ({ page }) => {
       await page.goto('/limits')
+      await expect(page.getByText('55.6%').first()).toBeVisible()
+      await expect(page.getByText(/Only 3 of the 124/)).toBeVisible()
+      await expect(page.getByText(/The live feed is a replay/)).toBeVisible()
+      await expect(page.getByText(/does not predict a future failure/)).toBeVisible()
+      await page.getByRole('button', { name: 'Detailed' }).click()
       await expect(page.getByText('0.556').first()).toBeVisible()
       await expect(page.getByText('3 of 124').first()).toBeVisible()
       await expect(page.getByText(/not evidence of detection/)).toBeVisible()
-      await expect(page.getByText(/28/).first()).toBeVisible()
     })
 
-    test('Data & method: leakage findings and class counts', async ({ page }) => {
-      await page.goto('/data')
-      await expect(page.getByText(/All 26 runs appear in both train and test/)).toBeVisible()
-      await expect(page.getByRole('img', { name: /before and after SMOTE, binary/ })).toBeVisible()
+    test('Proofs: checklist, audit table with C3 warning and the C7 baseline note, downloads', async ({ page }) => {
+      await page.goto('/proofs')
+      await expect(page.getByText('Passed', { exact: true })).toBeVisible()
+      await expect(page.getByText('P7', { exact: true }).first()).toBeVisible()
+      await expect(page.getByText(/C3\s+Time \/ run overlap/)).toBeVisible()
+      await expect(page.getByText(/recorded its baseline/)).toBeVisible()
+      await expect(page.getByRole('link', { name: /Download proof report \(JSON\)/ })).toHaveAttribute('href', '/api/proofs/download.json')
+      await page.getByRole('tab', { name: /Terminal output/ }).click()
+      await expect(page.getByLabel(/exactly as the terminal prints it/)).toContainText('P7')
     })
 
     test('unknown route shows a not-found page', async ({ page }) => {
@@ -108,8 +58,8 @@ for (const width of [375, 1280]) {
 }
 
 test('API error state: backend down shows an error with retry', async ({ page }) => {
-  await page.route('**/api/data', (r) => r.abort())
-  await page.goto('/')
+  await page.route('**/api/models', (r) => r.abort())
+  await page.goto('/results')
   await expect(page.getByRole('alert').first()).toBeVisible()
   await expect(page.getByRole('button', { name: 'Try again' }).first()).toBeVisible()
 })

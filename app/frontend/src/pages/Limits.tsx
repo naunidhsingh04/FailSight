@@ -157,7 +157,7 @@ function PlainLimits({ models, lo2 }: { models: ReturnType<typeof useApi<ModelsR
           return (
             <section>
               <h2 style={{ fontSize: '1.2rem', marginTop: 0 }}>It often cries wolf</h2>
-              <p>On healthy recordings the best model ({best.name}) was right only {pc(nr)} of the time. That means about {pc(1 - nr)} of healthy moments were flagged as problems. Its best score at catching failures is much higher, but the false alarms are real. There were only {best.metrics['official/ALL'].support_Normal} healthy test windows, so this number is itself uncertain.</p>
+              <p>On healthy recordings the best model ({best.name}) was right only {pc(nr, 1)} of the time. That means about {pc(1 - nr, 1)} of healthy moments were flagged as problems. Its best score at catching failures is much higher, but the false alarms are real. There were only {best.metrics['official/ALL'].support_Normal} healthy test windows, so this number is itself uncertain.</p>
             </section>
           )
         }}

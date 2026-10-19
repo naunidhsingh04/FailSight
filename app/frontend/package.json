@@ -9,7 +9,8 @@
     "preview": "vite preview --port 4173",
     "typecheck": "tsc -b --noEmit",
     "test:e2e": "playwright test",
-    "lighthouse": "node tests/lighthouse.mjs"
+    "lighthouse": "node tests/lighthouse.mjs",
+    "test:replay": "node -e \"process.env.REPLAY_ONLY='1';require('child_process').spawnSync('npx',['playwright','test'],{stdio:'inherit',shell:true,env:process.env})\""
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.1.0",

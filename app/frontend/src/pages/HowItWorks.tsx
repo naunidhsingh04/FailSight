@@ -24,6 +24,7 @@ export default function HowItWorks() {
     <>
       <h1>How it works</h1>
       <p className="lede">FailSight looks at the last 30 seconds of an application’s activity, every 10 seconds, and says how likely it is that something is going wrong <em>right now</em>.</p>
+      <h2>In four steps</h2>
       <HowStrip />
 
       <h2>The pipeline</h2>

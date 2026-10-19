@@ -1,14 +1,16 @@
 import { defineConfig, devices } from '@playwright/test'
 
 const PORT = 8765
+const REPLAY = !!process.env.REPLAY_ONLY   // replay.spec.ts drives the server's single replay, so it runs alone with one worker
 // The FastAPI app serves the built frontend (app/frontend/dist) and the API on one port, exactly like the Docker image.
 export default defineConfig({
   testDir: './tests',
-  testMatch: /.*\.spec\.ts/,
+  testMatch: REPLAY ? /replay\.spec\.ts/ : /.*\.spec\.ts/,
+  testIgnore: REPLAY ? [] : /replay\.spec\.ts/,
   timeout: 90_000,
   expect: { timeout: 30_000 },
-  fullyParallel: true,
-  workers: 4,
+  fullyParallel: !REPLAY,
+  workers: REPLAY ? 1 : 4,
   retries: 0,
   reporter: [['list'], ['json', { outputFile: 'tests/last-run.json' }]],
   use: { baseURL: `http://127.0.0.1:${PORT}`, trace: 'off', screenshot: 'only-on-failure' },
