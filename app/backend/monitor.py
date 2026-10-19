@@ -145,7 +145,8 @@ class Stream:
         self.system = system
         self.reset(None)
 
-    def reset(self, anchor, session=None, meta=None):
+    def reset(self, anchor, session=None, meta=None, keep_counters=False):
+        keep = (self.counters, self.windows, self.flags, self.last) if keep_counters and hasattr(self, "counters") else None
         self.anchor = anchor
         self.session = session
         self.meta = meta or {}
@@ -160,6 +161,8 @@ class Stream:
         self.counters = dict(windows=0, alerts=0, correct_alerts=0, false_alarms=0, missed=0, correct_quiet=0, labelled=0, late_dropped=0, before_start=0,
                              events_api=0, events_logs=0, events_metrics=0, rejected=0)
         self.last = None
+        if keep:                                    # next segment of the same replay: the running tally continues
+            self.counters, self.windows, self.flags, self.last = keep
 
     # ---- ingestion of already validated rows (shared by the live API and the offline equivalence tests)
     def add_rows(self, kind, rows):
@@ -242,11 +245,11 @@ class Monitor:
         return self.config
 
     # ---------------------------------------------------------------- session control
-    def start_session(self, system, anchor, session=None, meta=None):
+    def start_session(self, system, anchor, session=None, meta=None, keep_counters=False):
         with self.lock:
             st = self.streams[system]
-            st.reset(parse_ts(anchor) if anchor is not None else None, session or f"{system}-{int(time.time())}", meta)
-        self.hub.publish(dict(type="session", system=system, session=self.streams[system].session, meta=meta or {}, anchor=self.streams[system].anchor))
+            st.reset(parse_ts(anchor) if anchor is not None else None, session or f"{system}-{int(time.time())}", meta, keep_counters=keep_counters)
+        self.hub.publish(dict(type="session", system=system, session=self.streams[system].session, meta=meta or {}, anchor=self.streams[system].anchor, keep_counters=keep_counters))
         return dict(system=system, session=self.streams[system].session, anchor=self.streams[system].anchor)
 
     # ---------------------------------------------------------------- ingestion

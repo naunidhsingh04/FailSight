@@ -128,14 +128,14 @@ def send(client, base, path, payload):
     raise RuntimeError(f"could not POST {path}")
 
 
-def replay_segment(client, base, system, row, speed, ctrl, log, chunk_event_seconds=1.0):
+def replay_segment(client, base, system, row, speed, ctrl, log, chunk_event_seconds=1.0, keep_counters=False):
     """send one test block: reset (anchor = block start, truth from the recording), events paced at `speed`, then flush"""
     tick = lambda: ctrl.poll()
     t0, t1 = float(row["start"]), float(row["end"])
     api, lg, mt = load_events(system, row["scenario"], t0, t1)
     a, l, m = to_events(api, lg, mt)
     send(client, base, "/ingest/reset", dict(system=system, start_ts=t0, scenario=row["scenario"], true_label_level=row["label_level"], true_label_binary=int(row["label_binary"]),
-                                              block_ids=[row["block_id"]], source=SOURCE, session=f"{system}-{row['block_id']}"))
+                                              block_ids=[row["block_id"]], source=SOURCE, session=f"{system}-{row['block_id']}", keep_counters=keep_counters))
     log(f"[{system}] segment {row['block_id']} ({row['label_level']}, {row['scenario']}): {len(a):,} api, {len(l):,} log, {len(m):,} metric events over {t1 - t0:.0f} s of recorded time")
     ia = il = im = 0
     wall0 = time.monotonic()
@@ -193,8 +193,8 @@ def run(args):
     threads, results = [], {}
 
     def worker(system, rows):
-        for r in rows:
-            ok = replay_segment(client, args.server, system, r, args.speed, ctrl, log)
+        for i, r in enumerate(rows):
+            ok = replay_segment(client, args.server, system, r, args.speed, ctrl, log, keep_counters=i > 0)   # one running tally per replay
             if not ok:
                 break
         results[system] = True

@@ -112,11 +112,14 @@ def reasons(system: str, top: list, raw: dict, k: int = 3) -> list:
         v = raw.get(f)
         if f.startswith("was_missing") or f == "system_is_TT" or v is None or (isinstance(v, float) and math.isnan(v)):
             continue                                   # a reading that was not measured cannot be described as "rose" or "fell"
+        d = describe(f, v, base.get(f), t["shap"])
+        if d["value_text"] == d["normal_text"] and d["normal"] is not None:
+            continue                                   # identical when shown to the reader: it would say "rose to 37.9% (normally 37.9%)"
         key = split_feature(f)[0]
         if key in seen:                                # one sentence per underlying signal (not mean + max + std of the same one)
             continue
         seen.add(key)
-        out.append(describe(f, v, base.get(f), t["shap"]))
+        out.append(d)
     return out
 
 

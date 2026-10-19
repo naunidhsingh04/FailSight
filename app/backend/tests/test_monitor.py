@@ -203,3 +203,17 @@ def test_config_accepts_only_servable_tree_models(client):
     client.put("/api/monitor/config", json=dict(model="XGB", label_version="label_binary"))
     st = client.get("/api/monitor/state").json()
     assert st["config"]["model"] == "XGB" and "XGB" in st["models"] and "Transformer" not in st["models"]
+
+
+@needs_models
+def test_counters_continue_across_segments_of_one_replay(client):
+    reset(client, "SN", true_label_binary=1, true_label_level="Performance", scenario="a")
+    client.post("/ingest/logs", json=dict(system="SN", events=logs(T0, 100, "INFO")))
+    n1 = client.get("/api/monitor/state").json()["systems"]["SN"]["counters"]["windows"]
+    assert n1 == 7
+    client.post("/ingest/reset", json=dict(system="SN", start_ts=T0 + 1000, scenario="b", true_label_binary=1, true_label_level="Performance", keep_counters=True))
+    client.post("/ingest/logs", json=dict(system="SN", events=logs(T0 + 1000, 45, "INFO")))
+    s = client.get("/api/monitor/state").json()["systems"]["SN"]
+    assert s["counters"]["windows"] == n1 + 2 and len(s["history"]) == n1 + 2           # the tally and the timeline continue
+    reset(client, "SN")                                                                  # a plain reset starts clean
+    assert client.get("/api/monitor/state").json()["systems"]["SN"]["counters"]["windows"] == 0
