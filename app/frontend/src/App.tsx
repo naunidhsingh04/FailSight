@@ -1,11 +1,11 @@
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
-import Overview from './pages/Overview'
-import Predict from './pages/Predict'
+import Console from './pages/Console'
+import HowItWorks from './pages/HowItWorks'
+import Proofs from './pages/Proofs'
 import Models from './pages/Models'
-import Explain from './pages/Explain'
-import DataMethod from './pages/DataMethod'
 import Limits from './pages/Limits'
+import Glossary from './pages/Glossary'
 import { usePageTitle } from './usePageTitle'
 
 function NotFound() {
@@ -22,12 +22,12 @@ export default function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route index element={<Overview />} />
-        <Route path="predict" element={<Predict />} />
-        <Route path="models" element={<Models />} />
-        <Route path="explain" element={<Explain />} />
-        <Route path="data" element={<DataMethod />} />
+        <Route index element={<Console />} />
+        <Route path="how-it-works" element={<HowItWorks />} />
+        <Route path="proofs" element={<Proofs />} />
+        <Route path="results" element={<Models />} />
         <Route path="limits" element={<Limits />} />
+        <Route path="glossary" element={<Glossary />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

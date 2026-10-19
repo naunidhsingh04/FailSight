@@ -6,12 +6,16 @@ import '@fontsource-variable/source-serif-4'
 import './styles/tokens.css'
 import './styles/base.css'
 import './styles/components.css'
+import './styles/console.css'
+import { ModeProvider } from './mode'
 import App from './App'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <ModeProvider>
+        <App />
+      </ModeProvider>
     </BrowserRouter>
   </React.StrictMode>,
 )

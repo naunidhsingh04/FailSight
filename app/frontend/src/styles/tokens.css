@@ -14,6 +14,10 @@
   --accent-weak: #e4eef6;
 
   /* chart inks: a grayscale ramp that stays distinguishable when printed or colour-blind */
+  --ok: #1d6b40; --ok-bg: #e4f1e9;
+  --watch: #7d5200; --watch-bg: #fbefd2;
+  --fail: #a02419; --fail-bg: #fbe3e0;
+
   --ink-1: #1b1a17;
   --ink-2: #57544d;
   --ink-3: #8d897e;
@@ -50,6 +54,9 @@
     --accent: #8dbfe6;
     --accent-ink: #0d1a26;
     --accent-weak: #1e2c38;
+    --ok: #7bd9a1; --ok-bg: #12291b;
+    --watch: #f3c777; --watch-bg: #2c2210;
+    --fail: #ff9a8d; --fail-bg: #35150f;
     --ink-1: #ecebe5;
     --ink-2: #aaa79d;
     --ink-3: #7a776d;
