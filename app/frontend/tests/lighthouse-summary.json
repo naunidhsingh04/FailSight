@@ -5,7 +5,7 @@
   {
    "page": "/",
    "formFactor": "mobile",
-   "performance": 82,
+   "performance": 78,
    "accessibility": 100,
    "bestPractices": 100,
    "seo": 100,
@@ -14,7 +14,7 @@
   {
    "page": "/how-it-works",
    "formFactor": "mobile",
-   "performance": 88,
+   "performance": 82,
    "accessibility": 100,
    "bestPractices": 100,
    "seo": 100,
@@ -23,7 +23,7 @@
   {
    "page": "/proofs",
    "formFactor": "mobile",
-   "performance": 96,
+   "performance": 81,
    "accessibility": 100,
    "bestPractices": 100,
    "seo": 100,
@@ -32,7 +32,7 @@
   {
    "page": "/results",
    "formFactor": "mobile",
-   "performance": 96,
+   "performance": 86,
    "accessibility": 100,
    "bestPractices": 100,
    "seo": 100,
@@ -50,7 +50,7 @@
   {
    "page": "/glossary",
    "formFactor": "mobile",
-   "performance": 93,
+   "performance": 84,
    "accessibility": 100,
    "bestPractices": 100,
    "seo": 100,
@@ -86,7 +86,7 @@
   {
    "page": "/results",
    "formFactor": "desktop",
-   "performance": 99,
+   "performance": 100,
    "accessibility": 100,
    "bestPractices": 100,
    "seo": 100,

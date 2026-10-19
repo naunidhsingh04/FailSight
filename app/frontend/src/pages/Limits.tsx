@@ -10,15 +10,15 @@ import { usePageTitle } from '../usePageTitle'
 import type { DataResponse, Lo2Model, Lo2Response, ModelInfo, ModelsResponse } from '../types'
 
 interface Masking { unmasked: number; api70: number; log70: number; metric70: number; all70: number; normal_recall_unmasked: number; normal_recall_metric70: number }
-interface ProofReport { sections: { id: string; items: { data?: { xgb_binary?: Masking } }[] }[] }
-const maskingOf = (r: ProofReport): Masking | null => r.sections.find((s) => s.id === 'P13')?.items.map((i) => i.data?.xgb_binary).find(Boolean) ?? null
+interface ProofReport { xgb_binary: Masking }
+const maskingOf = (r: ProofReport): Masking | null => r.xgb_binary ?? null
 
 export default function Limits() {
   usePageTitle('Limits')
   const models = useApi<ModelsResponse>('/api/models')
   const lo2 = useApi<Lo2Response>('/api/lo2')
   const data = useApi<DataResponse>('/api/data')
-  const proofs = useApi<ProofReport>('/api/proofs')
+  const proofs = useApi<ProofReport>('/api/proofs/masking')
   return (
     <>
       <h1>Limits</h1>

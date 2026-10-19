@@ -104,3 +104,10 @@ def test_missingness_section_matches_the_csv_and_its_rules(client):
     xb = res[(res.kind == "masking") & (res.label_version == "label_binary") & (res.model == "XGB")]
     assert d["metric70"] == pytest.approx(float(xb[(xb.group == "metric") & (xb.mask_pct == 70)].balanced_accuracy.iloc[0]), abs=1e-6)
     assert set(res.kind) == {"masking", "indicator_only", "no_shortcut_xgb"} and set(res[res.kind == "masking"].mask_pct) == {0, 10, 30, 50, 70}
+
+
+@needs_report
+def test_masking_endpoint_serves_the_p13_numbers(client):
+    d = client.get("/api/proofs/masking").json()["xgb_binary"]
+    p13 = next(s for s in client.get("/api/proofs").json()["sections"] if s["id"] == "P13")
+    assert d == next(i["data"]["xgb_binary"] for i in p13["items"] if i["data"].get("xgb_binary"))

@@ -46,6 +46,7 @@ def thresholds() -> dict:
     return json.loads(R("thresholds.json").read_text())
 
 
+@lru_cache(maxsize=None)
 def model_metrics(label: str, name: str) -> dict:
     """official (argmax) and tuned-threshold test metrics with the 95% bootstrap CIs, all scopes, exactly as in the CSVs"""
     tm = test_metrics()

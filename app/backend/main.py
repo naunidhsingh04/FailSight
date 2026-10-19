@@ -51,6 +51,8 @@ def create_app(registry: Registry | None = None) -> FastAPI:
         app.state.monitor = Monitor(reg, app.state.explainer)
         app.state.monitor.hub.loop = asyncio.get_running_loop()
         app.state.replay = ReplayController()
+        for (_l, _n) in reg.entries:         # fill the metric cache now so the first page load of Results / Limits is not slow
+            results.model_metrics(_l, _n)
         log.info("FailSight: %d model entries, %d available", len(reg.entries), sum(e["available"] for e in reg.entries.values()))
         yield
         app.state.replay.stop(wait=True)
@@ -351,6 +353,16 @@ def create_app(registry: Registry | None = None) -> FastAPI:
         if rep is None:
             raise IngestError(404, "No proof report yet. Run `python scripts/proofs.py` (or use the Re-run button).")
         return JSONResponse(content=rep)
+
+    @app.get("/api/proofs/masking")
+    async def get_proofs_masking():
+        """the few P13 numbers the Limits page quotes (kept small so that page does not download the whole report)"""
+        rep = proofs_api.load()
+        sec = next((x for x in (rep or {}).get("sections", []) if x["id"] == "P13"), None)
+        d = next((i["data"]["xgb_binary"] for i in (sec or {}).get("items", []) if i.get("data", {}).get("xgb_binary")), None)
+        if d is None:
+            raise IngestError(404, "No P13 result yet. Run `python scripts/proofs.py --only P13`.")
+        return JSONResponse(content=dict(xgb_binary=d, generated_at=sec.get("generated_at")))
 
     @app.get("/api/proofs/download.json")
     async def proofs_download_json():
