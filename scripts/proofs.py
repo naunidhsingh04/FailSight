@@ -477,6 +477,95 @@ def main():
               result="high ROC-AUC reflects log volume, not detection")
         sections.append(s)
 
+    # ------------------------------------------------------------------------------------------------ P11 universal features and cross-system test
+    if want("P11"):
+        s = Section("P11", "UNIVERSAL FEATURES AND CROSS-SYSTEM TEST: do shared and baseline-relative features generalise from one system to the other?"); header(s)
+        import universal_features as UF
+        import cross_system as CS
+        cp = CS.OUT
+        if not cp.exists() or not UF.OUT.exists():
+            s.add("Cross-system test", "SKIP", ["report_outputs/cross_system_results.csv or processed/universal_windows.parquet missing; run scripts/generic_metrics.py, scripts/universal_features.py, scripts/cross_system.py"], "-")
+            sections.append(s)
+        else:
+            shared = pd.read_csv(REP / "shared_features.csv")
+            gen = pd.read_csv(REP / "generic_metric_features.csv")
+            ud = pd.read_parquet(UF.OUT)
+            sh = shared[shared.shared]
+            # ---- 1 shared features and generic aggregates
+            both = gen[gen.both_systems == True]  # noqa: E712
+            nob = gen[gen.both_systems != True]
+            lines = [f"shared features (values in both SocialNetwork and TrainTicket windows): {len(sh)} of {len(shared)}: " + ", ".join(sh.feature),
+                     f"  = {int((sh.group == 'api').sum())} API + {int((sh.group == 'logs').sum())} log features. SocialNetwork also has {int(((shared.group == 'api') & shared.in_SN & ~shared.in_TT).sum())} API latency features that TrainTicket does not ({', '.join(shared[(shared.group == 'api') & shared.in_SN & ~shared.in_TT].feature)}).",
+                     f"  metric features: SN {int(((shared.group == 'metrics') & shared.in_SN).sum())}, TT {int(((shared.group == 'metrics') & shared.in_TT).sum())}, shared by name: {int(((shared.group == 'metrics') & shared.shared).sum())} (the two systems do not export a single metric under the same name).",
+                     "", f"generic metric aggregates that can be built for BOTH systems ({len(both)}), each as window mean / max / std of one per-scrape total: scripts/generic_metrics.py"]
+            lines += table([[r.aggregate, r.SN_windows_with_value, r.TT_windows_with_value, f"{r.SN_median:.3g}", f"{r.TT_median:.3g}"] for r in both.itertuples()], ["aggregate", "SN windows with value", "TT windows with value", "SN median", "TT median"])
+            lines += ["(the medians differ by a large factor, e.g. memory 1e9 vs 2.7e10 bytes: raw values are not comparable between the systems, which is why baseline-relative forms are needed)", "", "cannot be built for both systems:"]
+            lines += [f"  {r.aggregate}: {r.SN_source}" for r in nob.itertuples()]
+            first = []
+            for sy in ("SN", "TT"):
+                dd = ud[ud.system == sy]
+                pos = []
+                for run, g in dd.groupby("run_id"):
+                    g = g.sort_values("window_index")
+                    h = g.api_request_count.to_numpy(float) > 0
+                    pos.append(np.where(h)[0][0] / len(g) if h.any() else np.nan)
+                first.append(f"{sy}: windows with API traffic {(dd.api_request_count > 0).mean():.1%}; first window with API traffic at {np.nanmedian(pos):.0%} of the run (median over runs; {int(np.isnan(pos).sum())} runs without any)")
+            lines += ["", "what the shared API features look like in the recordings (computed from the window table):"] + ["  " + x for x in first]
+            lines += ["", "baseline-relative rule (scripts/universal_features.py): z = clip((x - median) / max(1.4826 MAD, 0.05 |median|, 1e-12), +-10); baseline = the most recent 60 non-missing values of the same run among windows that ended before this window began (index <= k - 3); at least 9 needed; no label, other run, other system or future window.",
+                      "training windows use only earlier TRAINING windows; test windows may use any earlier window of their own run (a live agent has no labels). The first 11 windows of each run have no value and are left out of training and testing."]
+            n_chk, n_bad = UF.prove(ud, sorted(set(sum(UF.feature_sets(shared).values(), []))))
+            lines += [f"proof: for {n_chk} windows (random runs and positions) every future / overlapping window, and for training windows every test window, was overwritten with random values 100x the data scale; baseline-relative features changed in {n_bad} cases"]
+            s.add("Shared features, generic metric aggregates and the baseline rule: no future or test data enters a baseline", "PASS" if (n_bad == 0 and len(sh) == 8 and len(both) == 9) else "FAIL", lines, "scripts/universal_features.py, scripts/generic_metrics.py, report_outputs/shared_features.csv, generic_metric_features.csv", dict(shared=len(sh), generic_both=len(both), proof_windows=n_chk, proof_differences=n_bad))
+            # ---- 2 recomputation
+            cs = pd.read_csv(cp)
+            fresh = CS.reproduce(1000)
+            dmax = 0.0
+            for r in fresh:
+                o = cs[(cs.model == "XGB") & (cs.control == "real labels") & (cs.direction == r["direction"]) & (cs.feature_set == r["feature_set"]) & (cs.representation == r["representation"])].iloc[0]
+                for k in ("balanced_accuracy", "macro_f1", "normal_recall", "roc_auc", "balanced_accuracy_ci_low", "balanced_accuracy_ci_high"):
+                    dmax = max(dmax, abs(float(r[k]) - float(o[k])))
+            s.add("The cross-system results of XGBoost (both directions, 3 feature sets, baseline-relative and raw) are reproduced by recomputation", "PASS" if dmax <= 1e-5 else "FAIL",
+                  [f"cells recomputed: {len(fresh)}; max |difference| over balanced accuracy, macro-F1, Normal recall, ROC-AUC and the BA interval {dmax:.1e}; the other models and the shuffled controls are read from the file"], "scripts/cross_system.py, report_outputs/cross_system_results.csv")
+            # ---- 3 the result
+            real = cs[cs.control == "real labels"]
+            cross = real[real.direction.isin(["SN->TT", "TT->SN"])]
+            xb = cross[cross.model == "XGB"]
+            best = xb.sort_values("balanced_accuracy", ascending=False).iloc[0]
+            above = cross[cross.balanced_accuracy_ci_low > 0.5]
+            f3 = lambda x: f"{x:.3f}"
+            cell = lambda r: f"{f3(r.balanced_accuracy)} ({r.balanced_accuracy_ci_low:.2f}-{r.balanced_accuracy_ci_high:.2f})"
+            lines = ["Train on one system's TRAINING split, test on the other system's TEST windows (SN->TT, TT->SN); SN->SN and TT->TT are in-system references. XGBoost with the saved recipe (SMOTE on the training part only, early stopping), throw-away, never saved. Balanced accuracy (95% block-bootstrap CI over the target test blocks); chance = 0.500."]
+            for rep in ("rel", "raw"):
+                lines += ["", f"XGBoost, {'baseline-relative' if rep == 'rel' else 'raw'} features:"]
+                rows_ = []
+                for fs in CS.SET_NAMES.values():
+                    row = [fs]
+                    for dr in ("SN->TT", "TT->SN", "SN->SN", "TT->TT"):
+                        c = real[(real.model == "XGB") & (real.representation == rep) & (real.feature_set == fs) & (real.direction == dr)].iloc[0]
+                        row.append(cell(c))
+                    rows_.append(row)
+                lines += table(rows_, ["feature set", "SN->TT", "TT->SN", "SN->SN (in-system)", "TT->TT (in-system)"])
+            lines += ["", "XGBoost, cross-system cells: Normal recall and ROC-AUC (point values; intervals in the CSV)"]
+            lines += table([[r.direction, r.feature_set, "rel" if r.representation == "rel" else "raw", f3(r.normal_recall), f3(r.roc_auc), f"{int(r.n_train)} / {int(r.n_train_normal)}", f"{int(r.n_test)} / {int(r.n_test_normal)}"] for r in xb.itertuples()],
+                           ["direction", "feature set", "features", "Normal recall", "ROC-AUC", "train windows / Normal", "test windows / Normal"])
+            lines += ["", "the two other models (LGBM_tuned and XGB_tuned: the best other refittable models by test balanced accuracy in the earlier runs), cross-system, mean over the 12 cells of each representation:"]
+            lines += table([[m, rep, f3(cross[(cross.model == m) & (cross.representation == rep)].balanced_accuracy.mean()), f3(cross[(cross.model == m) & (cross.representation == rep)].balanced_accuracy.max())] for m in CS.MODELS for rep in ("rel", "raw")], ["model", "features", "mean BA", "best BA"])
+            shuf = cs[cs.control.str.startswith("shuffled") & cs.direction.isin(["SN->TT", "TT->SN"])]
+            lines += ["", f"shuffled-label control (training labels permuted, scoring labels real), all cross-system cells and models: mean balanced accuracy {f3(shuf.balanced_accuracy.mean())}, range {f3(shuf.balanced_accuracy.min())} to {f3(shuf.balanced_accuracy.max())}"]
+            tm = pd.read_csv(REP / "test_metrics.csv")
+            ref = tm[(tm.model == "XGB") & (tm.label_version == "label_binary") & (tm.scope == "ALL") & (tm.variant == "official")].iloc[0]
+            lines += [f"reference, in-system with ALL 128 raw features (the saved XGBoost, both systems pooled): test balanced accuracy {f3(ref.balanced_accuracy)}, Normal recall {f3(ref.normal_recall)}"]
+            cvr = cs[cs.control.str.startswith("10-fold") & (cs.representation == "rel")]
+            lines += ["10-fold CV (block-grouped folds) of XGBoost on the training split of one system, baseline-relative: " + ", ".join(f"{r.direction[:2]} {r.feature_set[:3]} {f3(r.balanced_accuracy)}" for r in cvr.itertuples())]
+            res = (f"best cross-system XGBoost balanced accuracy {f3(best.balanced_accuracy)} (95% CI {best.balanced_accuracy_ci_low:.2f}-{best.balanced_accuracy_ci_high:.2f}); "
+                   f"{len(above)} of {len(cross)} cross-system cells (all models) have a CI above chance")
+            lines += ["", "rule: generalisation is shown only if the CI of the cross-system balanced accuracy lies above 0.5 (and clearly above the shuffled control).", "result: " + res]
+            if len(above):
+                lines += ["cells above chance: " + "; ".join(f"{r.direction} {r.feature_set} {r.representation} {r.model} {cell(r)}" for r in above.itertuples())]
+            s.add("Cross-system generalisation of shared and baseline-relative features", "REPORTED", lines, "report_outputs/cross_system_results.csv (scripts/cross_system.py)",
+                  dict(best_xgb_cross_ba=float(best.balanced_accuracy), cells_above_chance=int(len(above)), cells=int(len(cross))), result=("not shown: " + res) if not len(above) else res)
+            sections.append(s)
+
     # ------------------------------------------------------------------------------------------------ P13 missingness and shortcuts
     if want("P13"):
         s = Section("P13", "MISSINGNESS AND SHORTCUTS: do the models rely on missing-data patterns instead of real signals?"); header(s)
@@ -588,7 +677,7 @@ def main():
     global CUR
     CUR = []
     new_secs = {x.id: dict(id=x.id, title=x.title, status=x.status, items=x.items, lines=x.lines, generated_at=x.generated_at) for x in sections}
-    order = [f"P{i}" for i in range(1, 11)] + ["P13"]
+    order = [f"P{i}" for i in range(1, 12)] + ["P13"]
     merged = dict(new_secs)
     base_p = REP / "proofs.json"
     if (only or args.quick) and base_p.exists():                      # a partial re-run refreshes only its sections of the existing report
