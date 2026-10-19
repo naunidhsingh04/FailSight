@@ -652,6 +652,82 @@ def main():
                                                  "This does not prove the model uses only real signals: it shows that the missingness columns are not what carries the result on these test windows."], "see the items above")
             sections.append(s)
 
+    # ------------------------------------------------------------------------------------------------ P14 run identification
+    if want("P14"):
+        s = Section("P14", "RUN IDENTIFICATION: can a model tell which run a window comes from, and would that alone reproduce the scores?"); header(s)
+        import run_identification as RI
+        if not RI.OUT.exists():
+            s.add("Run identification", "SKIP", ["report_outputs/run_identification.csv missing; run python scripts/run_identification.py"], "-")
+            sections.append(s)
+        else:
+            ri = pd.read_csv(RI.OUT)
+            fresh = RI.compute(1000, log=lambda *_: None)
+            dmax, n_cmp = 0.0, 0
+            for col in ("accuracy", "accuracy_ci_low", "accuracy_ci_high", "agreement", "model_accuracy", "rule_accuracy", "balanced_accuracy", "balanced_accuracy_ci_low", "balanced_accuracy_ci_high", "normal_recall", "macro_f1"):
+                if col in fresh and col in ri:
+                    a_, b_ = pd.to_numeric(fresh[col], errors="coerce").to_numpy(float), pd.to_numeric(ri[col], errors="coerce").to_numpy(float)
+                    ok_ = np.isfinite(a_) & np.isfinite(b_)
+                    if ok_.any():
+                        dmax = max(dmax, float(np.abs(a_[ok_] - b_[ok_]).max())); n_cmp += int(ok_.sum())
+            s.add("The run-identification results are reproduced by recomputation", "PASS" if (dmax <= 1e-5 and len(fresh) == len(ri)) else "FAIL",
+                  [f"throw-away XGBoost refitted, the saved models re-scored; rows {len(fresh)} = {len(ri)}; numbers compared {n_cmp}; max |difference| {dmax:.1e}"], "scripts/run_identification.py, report_outputs/run_identification.csv")
+            f3 = lambda x: f"{x:.3f}"
+            rid_ = ri[ri.kind == "run_identification"]
+            lines = ["A throw-away XGBoost (150 trees, depth 4; never saved) predicts which of the 26 runs a window comes from, trained on the training windows, scored on the 647 test windows. The project's split is by 10-window blocks, so every run has windows on both sides (a held-out-run split cannot recognise a run).",
+                     ""] + table([[r.feature_set, int(r.n_features), f"{f3(r.accuracy)} ({f3(r.accuracy_ci_low)}-{f3(r.accuracy_ci_high)})", f"{r.chance_26_runs:.3f}", f3(r.system_correct)] for r in rid_.itertuples()],
+                                 ["inputs", "features", "run accuracy (95% CI)", "chance", "system right"])
+            allr = rid_[rid_.feature_set == "all 124 model inputs"].iloc[0]
+            lines += ["", f"with all model inputs the run is identified in {allr.accuracy:.1%} of the test windows (chance {allr.chance_26_runs:.1%}); with the metric inputs alone {rid_[rid_.feature_set == 'metric inputs only'].iloc[0].accuracy:.1%}; with the API and log inputs alone {rid_[rid_.feature_set == 'API + log inputs only'].iloc[0].accuracy:.1%}; with the generic metric aggregates alone {rid_[rid_.feature_set.str.startswith('generic')].iloc[0].accuracy:.1%}"]
+            s.add("Runs can be identified from the model inputs (26 classes)", "REPORTED", lines, "report_outputs/run_identification.csv (scripts/run_identification.py)", dict(accuracy_all=float(allr.accuracy)), result=f"run identified in {allr.accuracy:.1%} of test windows (chance {allr.chance_26_runs:.1%})")
+            rule = ri[ri.kind == "run_id_rule"]
+            sv = ri[ri.kind == "saved_model_vs_rule"]
+            lines = ["The run-identification rule: predict the run, then output that run's own label (every window of a run carries the run's single label). Its test scores are the ceiling of pure run recognition."]
+            for r in rule.itertuples():
+                lines += [f"  {r.label_version[6:]:>6} labels: balanced accuracy {f3(r.balanced_accuracy)} ({f3(r.balanced_accuracy_ci_low)}-{f3(r.balanced_accuracy_ci_high)}), macro-F1 {f3(r.macro_f1)}, Normal recall {f3(r.normal_recall)} ({f3(r.normal_recall_ci_low)}-{f3(r.normal_recall_ci_high)})"]
+            for l in ("label_binary", "label_level"):
+                x = sv[sv.label_version == l]
+                lines += ["", f"{l[6:]} labels: how often a saved final model's test prediction equals the label of the predicted run (agreement), its own accuracy and balanced accuracy"]
+                lines += table([[r.model, f3(r.agreement), f3(r.model_accuracy), f3(r.rule_accuracy), f3(r.balanced_accuracy)] for r in x.itertuples()], ["model", "agreement with rule", "model accuracy", "rule accuracy", "model BA"])
+            xb_ = sv[(sv.label_version == "label_binary") & (sv.model == "XGB")].iloc[0]
+            rb = rule[rule.label_version == "label_binary"].iloc[0]
+            tm_ = pd.read_csv(REP / "test_metrics.csv")
+            xnr = float(tm_[(tm_.model == "XGB") & (tm_.label_version == "label_binary") & (tm_.scope == "ALL") & (tm_.variant == "official")].normal_recall.iloc[0])
+            expl = bool(allr.accuracy >= 0.5 and rb.balanced_accuracy >= xb_.balanced_accuracy - 0.02)
+            lines += ["", "rule for the verdict: run identification explains the scores if the run-identification rule reaches the saved XGBoost's balanced accuracy within 0.02 (binary labels) and the run is identified in at least half of the test windows.",
+                      f"binary: rule {f3(rb.balanced_accuracy)} versus saved XGBoost {f3(xb_.balanced_accuracy)} (Normal recall {f3(rb.normal_recall)} versus {f3(xnr)}); the saved XGBoost agrees with the rule on {xb_.agreement:.1%} of the test windows",
+                      "reading: this does not prove the saved models recognise runs. It shows that recognising the run would, on its own, reproduce their test scores, so those scores cannot be read as the ability to detect faults. A test that separates the two needs windows labelled normal and faulty inside the same run, which needs fault start and end times that the data do not contain (P15)."]
+            s.add("Would run identification alone reproduce the saved models' scores?", "WARN" if expl else "PASS", lines, "report_outputs/run_identification.csv (scripts/run_identification.py)", dict(rule_ba=float(rb.balanced_accuracy), saved_xgb_ba=float(xb_.balanced_accuracy), agreement=float(xb_.agreement)))
+            sections.append(s)
+
+    # ------------------------------------------------------------------------------------------------ P15 fault times and the within-run (segment) test
+    if want("P15"):
+        s = Section("P15", "FAULT TIMES AND THE WITHIN-RUN (SEGMENT) TEST: do exact fault start and end times exist?"); header(s)
+        import fault_times as FT
+        import contextlib
+        import io
+        ftp = FT.OUT
+        if not ftp.exists():
+            s.add("Fault times", "SKIP", ["report_outputs/fault_times.csv missing; run python scripts/fault_times.py"], "-")
+            sections.append(s)
+        else:
+            old = pd.read_csv(ftp)
+            with contextlib.redirect_stdout(io.StringIO()):
+                new = FT.main()
+            same = len(old) == len(new) and (old.run_id == new.run_id).all() and (old.files_checked == new.files_checked.to_numpy()).all() and (old.files_with_injection_keyword == new.files_with_injection_keyword.to_numpy()).all()
+            s.add("The fault-time table is reproduced by re-reading the raw folders", "PASS" if same else "FAIL", [f"runs {len(new)}; files checked {int(new.files_checked.sum())}; files with an injection keyword {int(new.files_with_injection_keyword.sum())}; identical to report_outputs/fault_times.csv: {same}"], "scripts/fault_times.py, report_outputs/fault_times.csv")
+            n_start = int((~new.fault_start.astype(str).str.startswith("not recorded")).sum())
+            cols = ["system", "scenario", "label_level", "experiment_start_from_folder_name", "collection_end_from_log_report", "run_minutes", "api_probe_period", "fault_start", "fault_end"]
+            lines = ["Every metric, log, API-response and trace folder of each run was searched (coverage artefacts excluded): folder names, metadata, collection reports, summaries, API probes, Kubernetes events, trace files, injection / chaos keywords.", ""]
+            lines += table([[str(getattr(r, c))[:38] if c != "api_probe_period" else str(r.api_probe_period)[:36] for c in cols] for r in new.itertuples()], ["system", "scenario", "class", "experiment start (folder name)", "collection end", "min", "API probe period", "fault start", "fault end"])
+            lines += ["", f"runs with a recorded fault start: {n_start} of {len(new)}; with a recorded fault end: {int((~new.fault_end.astype(str).str.startswith('not recorded')).sum())} of {len(new)}.",
+                      "the only absolute times are the experiment start (folder name) and, for TrainTicket, the end of collection; the API probes cover only the end of a run (SocialNetwork: one 60 s probe; TrainTicket: the last 3.7 to 12.4 minutes).",
+                      "labels are per run: all windows of a run carry the run's single label. Every run, the Normal ones too, begins with a start-up transient (first windows differ from the last 30% of the run), so metric excursions cannot locate a fault.",
+                      "consequence: the segment-label test (Normal before the fault, fault class during it, Normal after it) and the early-warning labels (fault within the next 2 / 5 / 10 minutes) cannot be built without inventing the times. They were NOT built; nothing is estimated.",
+                      "what would make it possible: report_outputs/early_warning_feasibility.md"]
+            s.add("Exact fault start and end times do not exist in the data, so the within-run test and early-warning labels cannot be built", "REPORTED", lines, "scripts/fault_times.py, report_outputs/fault_times.csv, report_outputs/early_warning_feasibility.md",
+                  dict(runs=len(new), runs_with_fault_start=n_start), result=f"not run: 0 of {len(new)} runs have a recorded fault start" if n_start == 0 else f"{n_start} of {len(new)} runs have a recorded fault start")
+            sections.append(s)
+
     # ------------------------------------------------------------------------------------------------ P10 reproducibility
     if want("P10"):
         s = Section("P10", "REPRODUCIBILITY: seeds, versions, commit"); header(s)
@@ -677,7 +753,7 @@ def main():
     global CUR
     CUR = []
     new_secs = {x.id: dict(id=x.id, title=x.title, status=x.status, items=x.items, lines=x.lines, generated_at=x.generated_at) for x in sections}
-    order = [f"P{i}" for i in range(1, 12)] + ["P13"]
+    order = [f"P{i}" for i in range(1, 12)] + ["P13", "P14", "P15"]
     merged = dict(new_secs)
     base_p = REP / "proofs.json"
     if (only or args.quick) and base_p.exists():                      # a partial re-run refreshes only its sections of the existing report

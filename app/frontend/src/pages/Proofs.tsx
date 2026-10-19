@@ -21,6 +21,8 @@ const PLAIN: Record<string, string> = {
   P9: 'On a different system the models did not work. This is reported exactly as it is.',
   P10: 'The seeds, library versions and code version, so anyone can repeat this.',
   P11: 'Do features that exist in both systems, shown relative to each system’s own normal, let a model trained on one system work on the other? This is the key test for using FailSight on other applications.',
+  P14: 'Can a model tell which recording a window comes from? If so, recognising the recording alone would reproduce the scores, and they would say little about spotting faults.',
+  P15: 'Do exact fault start and end times exist, so that windows before, during and after a fault can be labelled? If not, the within-recording test and early-warning labels cannot be built honestly.',
   P13: 'Do the models lean on patterns of missing data instead of real signals? We hide parts of the data, train small look-alike models on the missing-data patterns alone, and remove those columns, then compare.',
 }
 const QUICK = ['P1', 'P2', 'P3', 'P4', 'P10']
