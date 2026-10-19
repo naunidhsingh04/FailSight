@@ -1,0 +1,9 @@
+17:43:06 ============================================================
+17:43:06 LO2 external test: every final binary model, unchanged
+17:43:06 LO2 windows 28: Normal 5 (scenario `correct` only), Anomaly 23 (23 error scenarios, 1 window each)
+17:44:30   evaluated 18 models: A_logs_only, system flag TT; bootstrap blocks per class {0: 1, 1: 23}
+17:45:44   evaluated 18 models: A_logs_only, system flag SN; bootstrap blocks per class {0: 1, 1: 23}
+17:47:05   evaluated 18 models: B_logs_plus_node_metrics, system flag TT; bootstrap blocks per class {0: 1, 1: 23}
+17:48:22   evaluated 18 models: B_logs_plus_node_metrics, system flag SN; bootstrap blocks per class {0: 1, 1: 23}
+17:48:23 saved lo2_test_metrics.csv, lo2_vs_anomod.csv, lo2_window_predictions_A_TT.csv, figures/step4/lo2_vs_anomod_balanced_accuracy.png
+17:48:23 done in 5.3 min

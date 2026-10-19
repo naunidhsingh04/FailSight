@@ -1,0 +1,53 @@
+LO2 inspection (read-only). runs in lo2_subset.csv: 33 (1719592986 .. 1725869703); raw tar per run in LO2/lo2_tar (352 MB each)
+lo2_subset.csv: 5676 rows (5 s scrape rows), 54 scenarios per run; scenario `correct` = order 1 in every run (33 runs)
+selected run: 1719592986 (rule: earliest run_id)
+
+--- other log (jaeger/prometheus/node_exporter)  [correct/jaeger-container.log, 0 bytes]
+    (empty file)
+--- mysql log  [correct/light-oauth2-mysqldb-1.log, 107 bytes]
+    2024-06-28T16:29:32.522714Z 2 [Note] Access denied for user 'abakhtin22'@'172.24.0.1' (using password: NO)
+--- service log  [correct/light-oauth2-oauth2-client-1.log, 4924067 bytes]
+    java.lang.NoSuchFieldException: handshaker
+    	at io.undertow.protocols.ssl.ALPNHackSSLEngine.<clinit>(ALPNHackSSLEngine.java:79)
+    	at io.undertow.protocols.alpn.ALPNManager.getProvider(ALPNManager.java:71)
+--- locust.log  [correct/locust.log, 8696131 bytes]
+    [2024-06-28 19:29:33,117] mufano.oulu.fi/INFO/locust.main: Run time limit set to 60 seconds
+    [2024-06-28 19:29:33,118] mufano.oulu.fi/INFO/locust.main: Starting Locust 2.21.0
+    [2024-06-28 19:29:33,119] mufano.oulu.fi/INFO/locust.runners: Ramping to 7 users at a rate of 1.00 per second
+--- last_fetch_time  [correct/metrics/last_fetch_time.txt, 25 bytes]
+    2024-06-28T16:30:33+00:00
+--- metric json  [correct/metrics/metric_go_gc_duration_seconds.json, 13731 bytes]
+    [
+        {
+            "metric": {
+                "__name__": "go_gc_duration_seconds",
+                "group": "production",
+                "instance": "node_exporter:9100",
+--- traces csv  [correct/metrics/traces_jaeger-all-in-one.csv, 58 bytes]
+    Trace ID,Span ID,Operation Name,Start Time,End Time,Tags
+--- other log (jaeger/prometheus/node_exporter)  [get_token_page_400_no_page/jaeger-container.log, 0 bytes]
+    (empty file)
+--- mysql log  [get_token_page_400_no_page/light-oauth2-mysqldb-1.log, 0 bytes]
+    (empty file)
+--- service log  [get_token_page_400_no_page/light-oauth2-oauth2-client-1.log, 1151891 bytes]
+    	at com.networknt.handler.Handler.next(Handler.java:233)
+    	at com.networknt.handler.Handler.next(Handler.java:212)
+    	at com.networknt.correlation.CorrelationHandler.handleRequest(CorrelationHandler.java:77)
+--- locust.log  [get_token_page_400_no_page/locust.log, 1255865 bytes]
+    [2024-06-28 19:40:06,673] mufano.oulu.fi/INFO/locust.main: Run time limit set to 10 seconds
+    [2024-06-28 19:40:06,673] mufano.oulu.fi/INFO/locust.main: Starting Locust 2.21.0
+    [2024-06-28 19:40:06,675] mufano.oulu.fi/INFO/locust.runners: Ramping to 7 users at a rate of 1.00 per second
+--- last_fetch_time  [get_token_page_400_no_page/metrics/last_fetch_time.txt, 25 bytes]
+    2024-06-28T16:40:16+00:00
+--- metric json  [get_token_page_400_no_page/metrics/metric_go_gc_duration_seconds.json, 5046 bytes]
+    [
+        {
+            "metric": {
+                "__name__": "go_gc_duration_seconds",
+                "group": "production",
+                "instance": "node_exporter:9100",
+--- traces csv  [get_token_page_400_no_page/metrics/traces_jaeger-all-in-one.csv, 58 bytes]
+    Trace ID,Span ID,Operation Name,Start Time,End Time,Tags
+
+SAMPLE: run 1719592986, scenarios order 1..24 (24 scenarios, 23 error + 1 correct), 98.6 MB copied to processed/lo2_sample/1719592986/ (648 files). Time span: epoch 1719592172 .. 1719592547
+AnoMod metric names also present as LO2 metric files (copied): node_cpu_seconds_total, node_disk_io_time_seconds_total, node_filesystem_avail_bytes, node_filesystem_size_bytes, node_load5, node_memory_MemAvailable_bytes, node_memory_MemFree_bytes, node_memory_MemTotal_bytes, node_network_receive_bytes_total, node_network_receive_drop_total, node_network_receive_errs_total, node_network_transmit_bytes_total, node_network_transmit_drop_total, node_network_transmit_errs_total, process_cpu_seconds_total, process_max_fds, process_open_fds, process_resident_memory_bytes, up

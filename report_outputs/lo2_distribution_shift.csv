@@ -1,0 +1,13 @@
+feature,anomod_system,anomod_train_median,anomod_train_p995,anomod_train_max,lo2_class,lo2_median,lo2_min,lo2_max,share_lo2_above_anomod_p995,ratio_lo2_median_to_anomod_median
+log_line_count,SN,305.0,225255.66999999995,236694.0,Normal,68713.0,41220.0,83454.0,0.0,225.28852459016395
+log_line_count,SN,305.0,225255.66999999995,236694.0,Anomaly,19598.0,17024.0,22569.0,0.0,64.25573770491803
+log_line_count,TT,7.0,28804.229999999985,29477.0,Normal,68713.0,41220.0,83454.0,1.0,9816.142857142857
+log_line_count,TT,7.0,28804.229999999985,29477.0,Anomaly,19598.0,17024.0,22569.0,0.0,2799.714285714286
+log_error_count,SN,6.0,12.0,12.0,Normal,1009.0,619.0,1252.0,1.0,168.16666666666666
+log_error_count,SN,6.0,12.0,12.0,Anomaly,309.0,179.0,437.0,1.0,51.5
+log_error_count,TT,0.0,478.93499999999995,492.0,Normal,1009.0,619.0,1252.0,1.0,1008999999999.9999
+log_error_count,TT,0.0,478.93499999999995,492.0,Anomaly,309.0,179.0,437.0,0.0,309000000000.0
+log_warning_count,SN,0.0,0.0,0.0,Normal,0.0,0.0,1.0,0.4,0.0
+log_warning_count,SN,0.0,0.0,0.0,Anomaly,0.0,0.0,0.0,0.0,0.0
+log_warning_count,TT,0.0,31.0,32.0,Normal,0.0,0.0,1.0,0.0,0.0
+log_warning_count,TT,0.0,31.0,32.0,Anomaly,0.0,0.0,0.0,0.0,0.0
