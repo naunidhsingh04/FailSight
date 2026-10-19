@@ -59,6 +59,11 @@ export interface DataResponse {
   folds: { n_folds: number; group_type: string; rows_per_fold: { fold: number; windows: number }[] }
   leakage: { check: string; scope: string; item: string; value: string | number; threshold: string | number | null; flag: boolean; detail: string | null }[]
   single_feature_max: { scope: string; item: string; value: number; threshold: string; flag: boolean }[]
+  explainability: {
+    agreement: { label_version: Label; model: string; window_set: string; outcome: string; n_windows: number; mean_shared_top5: number; share_with_ge3_shared: number }[]
+    global_top: Record<Label, { feature: string; group: string; mean_abs_shap: number; rank: number; model: string }[]>
+    group_share: Record<Label, { group: string; share_of_total_mean_abs_shap: number; model: string }[]>
+  }
 }
 
 export interface Lo2Model { model: string; balanced_accuracy: number; balanced_accuracy_ci95_low: number; balanced_accuracy_ci95_high: number; macro_f1: number; normal_recall: number; anomaly_recall: number; share_predicted_anomaly: number; roc_auc: number; roc_auc_ci95_low: number; roc_auc_ci95_high: number; pr_auc_anomaly_positive: number; mean_p_anomaly_normal_windows: number; mean_p_anomaly_anomaly_windows: number; mean_p_gap_anomaly_minus_normal: number; anomod_test: number; drop_lo2_minus_anomod: number }

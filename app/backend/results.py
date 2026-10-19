@@ -166,7 +166,11 @@ def data() -> dict:
         split_counts=split_counts, fold_validation_counts=folds, smote_final_train=smote,
         folds=dict(n_folds=int(fa.fold.max()), group_type=str(fa[fa.fold > 0].group_type.iloc[0]),
                    rows_per_fold=records(fa[fa.fold > 0].groupby("fold").size().reset_index(name="windows"))),
-        leakage=records(leak), single_feature_max=records(single[["scope", "item", "value", "threshold", "flag"]])))
+        leakage=records(leak), single_feature_max=records(single[["scope", "item", "value", "threshold", "flag"]]),
+        explainability=dict(
+            agreement=records(csv(str(R("shap_lime_agreement_summary.csv")))),
+            global_top={l: records(csv(str(R(f"shap_global_{l}.csv"))).head(10)) for l in ("label_binary", "label_level")},
+            group_share={l: records(csv(str(R(f"shap_group_share_{l}.csv")))) for l in ("label_binary", "label_level")})))
 
 
 # ------------------------------------------------------------------ LO2
