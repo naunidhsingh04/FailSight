@@ -1,5 +1,5 @@
 """FailSight API. Start: uvicorn app.backend.main:app  (from the repo root)."""
-import asyncio, io, json, logging
+import asyncio, io, json, logging, os
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -18,6 +18,7 @@ from .explain import Explainer
 from .features import InputError, missing_report, sequence_context, to_frame
 from .monitor import IngestError, Monitor
 from .registry import Registry, RegistryError
+from .replay_ctl import ReplayController
 
 log = logging.getLogger("failsight")
 
@@ -48,8 +49,10 @@ def create_app(registry: Registry | None = None) -> FastAPI:
         app.state.explainer = Explainer(reg)
         app.state.monitor = Monitor(reg, app.state.explainer)
         app.state.monitor.hub.loop = asyncio.get_running_loop()
+        app.state.replay = ReplayController()
         log.info("FailSight: %d model entries, %d available", len(reg.entries), sum(e["available"] for e in reg.entries.values()))
         yield
+        app.state.replay.stop(wait=True)
 
     app = FastAPI(title="FailSight API", version="1.0", lifespan=lifespan)
     app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"], allow_methods=["GET", "POST"], allow_headers=["*"])
@@ -339,6 +342,32 @@ def create_app(registry: Registry | None = None) -> FastAPI:
             finally:
                 m.hub.unsubscribe(q)
         return StreamingResponse(gen(), media_type="text/event-stream", headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+    # ------------------------------------------------------------------ replay control (the replay itself is scripts/replay_scenario.py, a separate client process)
+    @app.post("/api/replay/start")
+    async def replay_start(request: Request):
+        b = await read_json(request)
+        port = request.url.port or int(os.environ.get("PORT", "8000"))
+        try:
+            return request.app.state.replay.start(b.get("scenario", "Performance"), int(b.get("speed", 10)), b.get("system", "both"), int(b.get("blocks", 2)), port, b.get("model"))
+        except (ValueError, TypeError) as ex:
+            raise IngestError(422, str(ex))
+
+    @app.get("/api/replay/control")
+    async def replay_control_get(request: Request):
+        return request.app.state.replay.state
+
+    @app.post("/api/replay/control")
+    async def replay_control_set(request: Request):
+        b = await read_json(request)
+        try:
+            return request.app.state.replay.control(b.get("paused"), b.get("speed"), b.get("stop"))
+        except ValueError as ex:
+            raise IngestError(422, str(ex))
+
+    @app.get("/api/replay/status")
+    async def replay_status(request: Request):
+        return request.app.state.replay.status()
 
     # ------------------------------------------------------------------ built frontend (single-container deployment)
     dist = config.FRONTEND_DIST

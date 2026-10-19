@@ -93,22 +93,30 @@ def describe(feature: str, value, normal, shap: float) -> dict:
         frag = f"{phrase}: {vs}"
     else:
         up = value > normal
+        rel = abs(value - normal) / max(abs(normal), 1e-9)
         same = abs(value - normal) <= 1e-9 * max(1.0, abs(normal))
-        frag = f"{name} {'was ' + vs + ' (normally ' + ns + ')' if same else ('rose' if up else 'fell') + ' to ' + vs + ' (normally ' + ns + ')'}"
+        slight = rel < 0.05 and not same
+        verb = ('rose slightly' if up else 'fell slightly') if slight else ('rose' if up else 'fell')
+        frag = f"{name} {'was ' + vs + ' (normally ' + ns + ')' if same else verb + ' to ' + vs + ' (normally ' + ns + ')'}"
     return dict(feature=feature, plain_name=name, value=value, normal=normal, value_text=vs, normal_text=ns, direction=("towards failure" if shap > 0 else "towards normal"), sentence=frag)
 
 
 def reasons(system: str, top: list, raw: dict, k: int = 3) -> list:
     """top = SHAP list (feature, shap); only features pushing towards failure, with a real measured value, make a reason"""
     base = baselines().get(system, {})
-    out = []
+    out, seen = [], set()
     for t in top:
         if t["shap"] <= 0 or len(out) >= k:
             continue
         f = t["feature"]
-        if f.startswith("was_missing") or f == "system_is_TT":
+        v = raw.get(f)
+        if f.startswith("was_missing") or f == "system_is_TT" or v is None or (isinstance(v, float) and math.isnan(v)):
+            continue                                   # a reading that was not measured cannot be described as "rose" or "fell"
+        key = split_feature(f)[0]
+        if key in seen:                                # one sentence per underlying signal (not mean + max + std of the same one)
             continue
-        out.append(describe(f, raw.get(f), base.get(f), t["shap"]))
+        seen.add(key)
+        out.append(describe(f, v, base.get(f), t["shap"]))
     return out
 
 
