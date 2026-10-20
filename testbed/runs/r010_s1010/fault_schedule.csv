@@ -1,0 +1,3 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r010_s1010,b2c3d241,pool_exhaustion,Service,gradual,mild,0.2963,"{""every_s"": 15.6, ""severity"": 0.2963, ""severity_level"": ""mild""}",1792493800.99671,1792493966.762287,1792493910.3276474,165.77
+r010_s1010,181dc864,cpu_burn,Performance,abrupt,mild,0.1108,"{""threads"": 1, ""duty"": 0.29, ""severity"": 0.1108, ""severity_level"": ""mild""}",1792494037.3873591,1792494103.8993242,,66.51

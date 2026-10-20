@@ -1,0 +1,2 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r009_s1009,624eee0c,route_500,Service,abrupt,severe,0.8381,"{""route"": ""pay"", ""prob"": 0.85, ""severity"": 0.8381, ""severity_level"": ""severe""}",1792493207.9141655,1792493306.1180081,,98.2

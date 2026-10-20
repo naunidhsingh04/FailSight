@@ -1,0 +1,61 @@
+{
+ "run_id": "r007_s1007",
+ "index": 7,
+ "seed": 1007,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "steady",
+ "rate": 10.2,
+ "mix": {
+  "browse": 0.4316263765659432,
+  "purchase": 0.18021852027842672,
+  "abandon": 0.047642597925623344,
+  "refund": 0.3405125052300067
+ },
+ "faults": [
+  {
+   "type": "db_lock",
+   "klass": "Database",
+   "kind": "abrupt",
+   "u": 0.1754,
+   "level": "mild",
+   "duration": 29.9,
+   "params": {
+    "lock_s": 30
+   },
+   "start": 231.6
+  },
+  {
+   "type": "leak",
+   "klass": "Code",
+   "kind": "gradual",
+   "u": 0.4244,
+   "level": "medium",
+   "duration": 141.7,
+   "params": {
+    "mb_per_s": 2.26
+   },
+   "start": 318.0
+  }
+ ],
+ "start_ts": 1792491779.6864696,
+ "end_ts": 1792492380.9858236,
+ "load": {
+  "requests": 5033,
+  "by_status": {
+   "200": 4829,
+   "500": 204
+  },
+  "client_errors": 0,
+  "sessions": 1874,
+  "shed": 0
+ },
+ "events": {
+  "api": 5036,
+  "logs": 5033,
+  "metrics": 1794
+ },
+ "shop_restarts": 0,
+ "faults_recorded": 2,
+ "python": "3.11.9"
+}

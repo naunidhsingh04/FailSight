@@ -74,3 +74,43 @@ def test_schedule_from_events_including_crash_restart_and_gradual_failure(tmp_pa
     assert by["leak"]["failure_ts"] == 380.0 and by["leak"]["kind"] == "gradual"
     assert by["crash"]["end_ts"] == 526.5 and by["crash"]["duration_s"] == 26.5
     assert (tmp_path / "fault_schedule.csv").exists()
+
+
+def _fake_run(d, dur=600.0, wall=601.0, span=599.0, gap_at=None, late=0.0, crash=False):
+    d.mkdir(parents=True, exist_ok=True)
+    t0 = 1_000_000.0
+    api = [{"timestamp": t0 + i * 5.0} for i in range(int(span / 5) + 1)]
+    (d / "api.jsonl").write_text("\n".join(json.dumps(e) for e in api), encoding="utf-8")
+    (d / "logs.jsonl").write_text("", encoding="utf-8")
+    mt = [{"timestamp": t0 + i * 2.0, "metric": "process_threads"} for i in range(int(dur / 2)) if gap_at is None or not (gap_at <= i * 2.0 < gap_at + 100)]
+    (d / "metrics.jsonl").write_text("\n".join(json.dumps(e) for e in mt), encoding="utf-8")
+    faults = [dict(type="latency", start=200.0, duration=60.0)]
+    (d / "meta.json").write_text(json.dumps(dict(duration_s=dur, start_ts=t0, end_ts=t0 + wall, faults=faults)), encoding="utf-8")
+    (d / "fault_schedule.csv").write_text(f"run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s\nr,a,latency,Performance,abrupt,mild,0.1,{{}},{t0 + 200 + late},{t0 + 260 + late},,60\n", encoding="utf-8")
+    (d / "DONE").write_text("x", encoding="utf-8")
+
+
+def test_validate_run_accepts_a_clean_run_and_rejects_suspended_or_stalled_ones(tmp_path):
+    _fake_run(tmp_path / "ok")
+    assert RG.validate_run(tmp_path / "ok") == []
+    _fake_run(tmp_path / "wall", wall=21868.0)
+    assert any("wall time" in p for p in RG.validate_run(tmp_path / "wall"))
+    _fake_run(tmp_path / "gap", gap_at=100.0)
+    assert any("no process metrics" in p for p in RG.validate_run(tmp_path / "gap"))
+    _fake_run(tmp_path / "late", late=31.0)
+    assert any("injected" in p for p in RG.validate_run(tmp_path / "late"))
+    _fake_run(tmp_path / "short", span=540.0)
+    assert any("span only" in p for p in RG.validate_run(tmp_path / "short"))
+    (tmp_path / "ok" / "meta.json").unlink()
+    assert RG.validate_run(tmp_path / "ok") == ["missing meta.json"]
+
+
+def test_quarantine_keeps_the_data_and_drops_the_manifest_row(tmp_path, monkeypatch):
+    monkeypatch.setattr(RG, "RUNS_DIR", tmp_path)
+    monkeypatch.setattr(RG, "MANIFEST", tmp_path / "manifest.csv")
+    (tmp_path / "manifest.csv").write_text("run_id,seed\nrA,1\nrB,2\n", encoding="utf-8")
+    (tmp_path / "rB").mkdir()
+    (tmp_path / "rB" / "api.jsonl").write_text("x", encoding="utf-8")
+    RG.quarantine(tmp_path / "rB")
+    assert not (tmp_path / "rB").exists() and list((tmp_path / "_invalid").glob("rB_*/api.jsonl"))
+    assert (tmp_path / "manifest.csv").read_text(encoding="utf-8").split() == ["run_id,seed", "rA,1"]

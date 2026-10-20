@@ -1,0 +1,63 @@
+{
+ "run_id": "r010_s1010",
+ "index": 10,
+ "seed": 1010,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "bursty",
+ "rate": 7.81,
+ "mix": {
+  "browse": 0.32475477915913525,
+  "purchase": 0.4865423819871601,
+  "abandon": 0.12029308696711855,
+  "refund": 0.06840975188658618
+ },
+ "faults": [
+  {
+   "type": "pool_exhaustion",
+   "klass": "Service",
+   "kind": "gradual",
+   "u": 0.2963,
+   "level": "mild",
+   "duration": 165.7,
+   "params": {
+    "every_s": 15.6
+   },
+   "start": 183.0
+  },
+  {
+   "type": "cpu_burn",
+   "klass": "Performance",
+   "kind": "abrupt",
+   "u": 0.1108,
+   "level": "mild",
+   "duration": 66.5,
+   "params": {
+    "threads": 1,
+    "duty": 0.29
+   },
+   "start": 419.4
+  }
+ ],
+ "start_ts": 1792493617.2246358,
+ "end_ts": 1792494218.8478563,
+ "load": {
+  "requests": 6126,
+  "by_status": {
+   "200": 5983,
+   "503": 140,
+   "409": 3
+  },
+  "client_errors": 0,
+  "sessions": 2393,
+  "shed": 0
+ },
+ "events": {
+  "api": 6129,
+  "logs": 6126,
+  "metrics": 1800
+ },
+ "shop_restarts": 0,
+ "faults_recorded": 2,
+ "python": "3.11.9"
+}

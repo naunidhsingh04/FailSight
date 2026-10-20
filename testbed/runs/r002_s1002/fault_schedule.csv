@@ -1,0 +1,2 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r002_s1002,c58233cb,latency_ramp,Performance,gradual,mild,0.1558,"{""ramp_s"": 162, ""max_ms"": 1934, ""severity"": 0.1558, ""severity_level"": ""mild""}",1792488892.3648605,1792489095.302874,1792489018.2319074,202.94

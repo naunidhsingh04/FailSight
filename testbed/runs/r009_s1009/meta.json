@@ -1,0 +1,50 @@
+{
+ "run_id": "r009_s1009",
+ "index": 9,
+ "seed": 1009,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "bursty",
+ "rate": 3.11,
+ "mix": {
+  "browse": 0.21000788637660028,
+  "purchase": 0.22716540940254737,
+  "abandon": 0.1995516645341874,
+  "refund": 0.36327503968666486
+ },
+ "faults": [
+  {
+   "type": "route_500",
+   "klass": "Service",
+   "kind": "abrupt",
+   "u": 0.8381,
+   "level": "severe",
+   "duration": 98.2,
+   "params": {
+    "route": "pay",
+    "prob": 0.85
+   },
+   "start": 203.6
+  }
+ ],
+ "start_ts": 1792493003.5607831,
+ "end_ts": 1792493606.6188452,
+ "load": {
+  "requests": 2531,
+  "by_status": {
+   "200": 2461,
+   "500": 70
+  },
+  "client_errors": 0,
+  "sessions": 852,
+  "shed": 0
+ },
+ "events": {
+  "api": 2533,
+  "logs": 2531,
+  "metrics": 1800
+ },
+ "shop_restarts": 0,
+ "faults_recorded": 1,
+ "python": "3.11.9"
+}

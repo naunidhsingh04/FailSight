@@ -168,10 +168,86 @@ def count_lines(p):
     return sum(1 for _ in open(p, encoding="utf-8")) if p.exists() else 0
 
 
+REQUIRED_FILES = ["api.jsonl", "logs.jsonl", "metrics.jsonl", "fault_schedule.csv", "meta.json", "DONE"]
+
+
+def validate_run(run_dir):
+    """problems that make a finished run unusable as training data (an empty list = valid): missing files, a run that is truncated or stretched by a suspended
+    laptop (wall time, event span), holes in the 2 s process-metric samples outside a crash, or a fault injected late (the planned time was missed)"""
+    run_dir = Path(run_dir)
+    problems = [f"missing {f}" for f in REQUIRED_FILES if not (run_dir / f).exists()]
+    if problems:
+        return problems
+    m = json.loads((run_dir / "meta.json").read_text(encoding="utf-8"))
+    dur = m["duration_s"]
+    wall = m["end_ts"] - m["start_ts"]
+    if not (dur - 5 <= wall <= dur + 90):
+        problems.append(f"wall time {wall:.0f} s for a planned {dur:.0f} s (suspended or stalled machine)")
+    api_ts = [json.loads(line)["timestamp"] for line in open(run_dir / "api.jsonl", encoding="utf-8")]
+    span = (max(api_ts) - min(api_ts)) if api_ts else 0
+    if span < 0.95 * dur:
+        problems.append(f"request events span only {span:.0f} s of {dur:.0f} s")
+    sched = []
+    with open(run_dir / "fault_schedule.csv", encoding="utf-8") as fh:
+        sched = list(csv.DictReader(fh))
+    if len(sched) != len(m["faults"]):
+        problems.append(f"{len(sched)} faults recorded, {len(m['faults'])} planned")
+    allowed = []                                                     # a crashed shop sends no metrics while it is down
+    for r in sched:
+        if r["fault_type"] == "crash" and r["end_ts"]:
+            allowed.append((float(r["start_ts"]) - 3, float(r["end_ts"]) + 12))
+    mt = sorted(json.loads(line)["timestamp"] for line in open(run_dir / "metrics.jsonl", encoding="utf-8") if '"process_threads"' in line)
+    for a, b in zip(mt, mt[1:]):
+        if b - a > 12 and not any(lo <= a and b <= hi for lo, hi in allowed):
+            problems.append(f"no process metrics for {b - a:.0f} s at +{a - m['start_ts']:.0f} s (machine stalled)")
+            break
+    for plan_f, r in zip(sorted(m["faults"], key=lambda f: f["start"]), sorted(sched, key=lambda r: float(r["start_ts"]))):
+        late = float(r["start_ts"]) - (m["start_ts"] + plan_f["start"])
+        if abs(late) > 5:
+            problems.append(f"{plan_f['type']} injected {late:+.0f} s from its planned time")
+    return problems
+
+
+def drop_manifest_row(run_id):
+    if not MANIFEST.exists():
+        return
+    rows = list(csv.reader(open(MANIFEST, encoding="utf-8")))
+    keep = [rows[0]] + [r for r in rows[1:] if r and r[0] != run_id]
+    with open(MANIFEST, "w", newline="", encoding="utf-8") as fh:
+        csv.writer(fh).writerows(keep)
+
+
+def quarantine(run_dir):
+    """keep the data of an invalid run for inspection (testbed/runs/_invalid/...), remove it from the manifest, free the name for a clean redo"""
+    run_dir = Path(run_dir)
+    if not run_dir.exists():
+        return
+    dst = RUNS_DIR / "_invalid" / f"{run_dir.name}_{time.strftime('%Y%m%d_%H%M%S')}"
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(str(run_dir), str(dst))
+    drop_manifest_row(run_dir.name)
+
+
+def keep_awake():
+    """Windows: tell the system not to go to sleep / Modern Standby while this process runs (it does not help against a critical battery or a closed lid)"""
+    if sys.platform == "win32":
+        import ctypes
+        ctypes.windll.kernel32.SetThreadExecutionState(0x80000000 | 0x00000001)       # ES_CONTINUOUS | ES_SYSTEM_REQUIRED
+
+
+def on_battery():
+    try:
+        import psutil
+        b = psutil.sensors_battery()
+        return b is not None and not b.power_plugged
+    except Exception:
+        return False
+
+
 def execute(plan, log):
     run_dir = RUNS_DIR / plan["run_id"]
     if run_dir.exists():
-        shutil.rmtree(run_dir)                                         # a partial run from an interrupted attempt is redone from scratch
+        quarantine(run_dir)                                            # a partial or invalid run from an interrupted attempt is kept aside and redone from scratch
     tb = Testbed(run_dir, seed=plan["seed"], log=log).start()
     t_start = time.time()
     stop = threading.Event()
@@ -198,6 +274,10 @@ def execute(plan, log):
                 shop_restarts=len(tb.restarts), faults_recorded=len(rows), python=sys.version.split()[0])
     (run_dir / "meta.json").write_text(json.dumps(meta, indent=1), encoding="utf-8")
     (run_dir / "DONE").write_text(time.strftime("%Y-%m-%d %H:%M:%S"), encoding="utf-8")
+    problems = validate_run(run_dir)
+    if problems:                                                       # never keep a run that the laptop interrupted: it is redone the next time the script starts
+        quarantine(run_dir)
+        raise RuntimeError("run invalid, set aside and not counted: " + "; ".join(problems))
     new = not MANIFEST.exists()
     with open(MANIFEST, "a", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
@@ -218,7 +298,18 @@ def main():
     if a.seed0 + a.runs > 9000:
         sys.exit("seeds >= 9000 are reserved for the live demo")
     plans = plan_all(a.runs, a.seed0, a.minutes)
-    todo = [p for p in plans if not (RUNS_DIR / p["run_id"] / "DONE").exists()]
+    todo, invalid = [], {}
+    for p in plans:
+        d = RUNS_DIR / p["run_id"]
+        if (d / "DONE").exists():
+            probs = validate_run(d)
+            if probs:
+                invalid[p["run_id"]] = probs
+                todo.append(p)
+        else:
+            todo.append(p)
+    for rid, probs in invalid.items():
+        print(f"finished run {rid} is INVALID and will be redone: " + "; ".join(probs))
     n_faultfree = sum(1 for p in plans if not p["faults"])
     print(f"plan: {len(plans)} runs of {a.minutes:g} min, {len(todo)} still to do, {n_faultfree} runs without any fault, {sum(len(p['faults']) for p in plans)} faults in total")
     print("\nfault instances by type and severity level (all runs):")
@@ -235,6 +326,9 @@ def main():
     if sys.platform == "win32":
         print("keep the laptop awake for the whole run: powercfg /change standby-timeout-ac 0   and   powercfg /change monitor-timeout-ac 0   (undo afterwards)")
     RUNS_DIR.mkdir(parents=True, exist_ok=True)
+    if on_battery():
+        sys.exit("the laptop is running on battery: plug it in (a critical battery puts it to sleep and corrupts the run), then start again")
+    keep_awake()
     t0 = time.time()
     for k, p in enumerate(todo):
         print(f"[{time.strftime('%H:%M:%S')}] run {k + 1}/{len(todo)}: {p['run_id']} {p['profile']} rate {p['rate']} faults: " + ("; ".join(f"{f['type']}[{f['level']}]@{f['start']:.0f}s" for f in p["faults"]) or "none"), flush=True)

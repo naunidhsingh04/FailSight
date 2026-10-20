@@ -1,0 +1,2 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r001_s1001,8e6b9d42,pool_exhaustion,Service,gradual,severe,0.9206,"{""every_s"": 11.8, ""severity"": 0.9206, ""severity_level"": ""severe""}",1792488370.2076616,1792488585.631004,1792488452.8904777,215.42

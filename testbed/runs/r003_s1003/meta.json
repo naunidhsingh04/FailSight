@@ -1,0 +1,61 @@
+{
+ "run_id": "r003_s1003",
+ "index": 3,
+ "seed": 1003,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "daily",
+ "rate": 8.03,
+ "mix": {
+  "browse": 0.32056021811979274,
+  "purchase": 0.5496099851513043,
+  "abandon": 0.09207064047531982,
+  "refund": 0.0377591562535831
+ },
+ "faults": [
+  {
+   "type": "cpu_burn",
+   "klass": "Performance",
+   "kind": "abrupt",
+   "u": 0.6537,
+   "level": "medium",
+   "duration": 83.0,
+   "params": {
+    "threads": 1,
+    "duty": 0.72
+   },
+   "start": 176.9
+  },
+  {
+   "type": "latency",
+   "klass": "Performance",
+   "kind": "abrupt",
+   "u": 0.2864,
+   "level": "mild",
+   "duration": 43.8,
+   "params": {
+    "added_ms": 250
+   },
+   "start": 408.2
+  }
+ ],
+ "start_ts": 1792489334.4543085,
+ "end_ts": 1792489936.7341726,
+ "load": {
+  "requests": 3825,
+  "by_status": {
+   "200": 3825
+  },
+  "client_errors": 0,
+  "sessions": 1431,
+  "shed": 0
+ },
+ "events": {
+  "api": 3828,
+  "logs": 3825,
+  "metrics": 1800
+ },
+ "shop_restarts": 0,
+ "faults_recorded": 2,
+ "python": "3.11.9"
+}

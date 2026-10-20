@@ -1,0 +1,3 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r004_s1004,99a189e9,latency_ramp,Performance,gradual,medium,0.4747,"{""ramp_s"": 137, ""max_ms"": 2412, ""severity"": 0.4747, ""severity_level"": ""medium""}",1792490126.5551388,1792490297.7857924,1792490211.9672396,171.23
+r004_s1004,14df0217,db_lock,Database,abrupt,medium,0.63,"{""lock_s"": 69, ""severity"": 0.63, ""severity_level"": ""medium""}",1792490372.5814219,1792490441.2024832,,68.62

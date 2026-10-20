@@ -1,0 +1,3 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r003_s1003,d80c76b8,cpu_burn,Performance,abrupt,medium,0.6537,"{""threads"": 1, ""duty"": 0.72, ""severity"": 0.6537, ""severity_level"": ""medium""}",1792489512.2804196,1792489595.3211935,,83.04
+r003_s1003,4daeedc4,latency,Performance,abrupt,mild,0.2864,"{""added_ms"": 250, ""severity"": 0.2864, ""severity_level"": ""mild""}",1792489743.8466837,1792489787.685632,,43.84

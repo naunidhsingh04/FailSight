@@ -1,0 +1,62 @@
+{
+ "run_id": "r005_s1005",
+ "index": 5,
+ "seed": 1005,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "daily",
+ "rate": 10.11,
+ "mix": {
+  "browse": 0.44825174692934405,
+  "purchase": 0.1997730435392678,
+  "abandon": 0.27433302688797645,
+  "refund": 0.07764218264341172
+ },
+ "faults": [
+  {
+   "type": "latency",
+   "klass": "Performance",
+   "kind": "abrupt",
+   "u": 0.0343,
+   "level": "mild",
+   "duration": 85.9,
+   "params": {
+    "added_ms": 56
+   },
+   "start": 209.1
+  },
+  {
+   "type": "route_500",
+   "klass": "Service",
+   "kind": "abrupt",
+   "u": 0.1516,
+   "level": "mild",
+   "duration": 56.5,
+   "params": {
+    "route": "pay",
+    "prob": 0.19
+   },
+   "start": 440.4
+  }
+ ],
+ "start_ts": 1792490555.831235,
+ "end_ts": 1792491156.666681,
+ "load": {
+  "requests": 5419,
+  "by_status": {
+   "200": 5406,
+   "500": 13
+  },
+  "client_errors": 0,
+  "sessions": 2263,
+  "shed": 0
+ },
+ "events": {
+  "api": 5422,
+  "logs": 5419,
+  "metrics": 1794
+ },
+ "shop_restarts": 0,
+ "faults_recorded": 2,
+ "python": "3.11.9"
+}

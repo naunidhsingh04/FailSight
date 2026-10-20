@@ -1,0 +1,63 @@
+{
+ "run_id": "r004_s1004",
+ "index": 4,
+ "seed": 1004,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "daily",
+ "rate": 3.96,
+ "mix": {
+  "browse": 0.3456152742821987,
+  "purchase": 0.055370637484478874,
+  "abandon": 0.16721962646272687,
+  "refund": 0.4317944617705956
+ },
+ "faults": [
+  {
+   "type": "latency_ramp",
+   "klass": "Performance",
+   "kind": "gradual",
+   "u": 0.4747,
+   "level": "medium",
+   "duration": 171.2,
+   "params": {
+    "ramp_s": 137,
+    "max_ms": 2412
+   },
+   "start": 177.6
+  },
+  {
+   "type": "db_lock",
+   "klass": "Database",
+   "kind": "abrupt",
+   "u": 0.63,
+   "level": "medium",
+   "duration": 68.6,
+   "params": {
+    "lock_s": 69
+   },
+   "start": 423.6
+  }
+ ],
+ "start_ts": 1792489947.9715197,
+ "end_ts": 1792490549.5013704,
+ "load": {
+  "requests": 2247,
+  "by_status": {
+   "200": 2122,
+   "504": 56,
+   "500": 69
+  },
+  "client_errors": 0,
+  "sessions": 827,
+  "shed": 0
+ },
+ "events": {
+  "api": 2250,
+  "logs": 2247,
+  "metrics": 1794
+ },
+ "shop_restarts": 0,
+ "faults_recorded": 2,
+ "python": "3.11.9"
+}
