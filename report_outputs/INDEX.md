@@ -1,9 +1,10 @@
 # Results index
 
-Every result file in `report_outputs/` (92 files plus the sub-folders below). Nothing was moved or renamed. *final* = a result that is reported or shown; *intermediate* = needed to produce or check a final result; *log* = run log. 'Used by' lists the proof sections (`scripts/proofs.py`) and whether the web app reads the file; 'report only' means it is a stand-alone result file.
+Every result file in `report_outputs/` (93 files plus the sub-folders below). Nothing was moved or renamed. *final* = a result that is reported or shown; *intermediate* = needed to produce or check a final result; *log* = run log. 'Used by' lists the proof sections (`scripts/proofs.py`) and whether the web app reads the file; 'report only' means it is a stand-alone result file.
 
 | file | what it is | used by | status |
 |---|---|---|---|
+| `FINAL_STATUS.md` | Status of the final task list, key result files and every stated limitation | proofs P18 | final |
 | `INDEX.md` | This index | report only | final |
 | `baseline_cv.csv` | Cross-validation of the baseline AnoMod models | report only | intermediate |
 | `before_after_correction.csv` | Effect of the regularisation correction on overfit AnoMod models | proofs P6; app | final |
@@ -97,7 +98,7 @@ Every result file in `report_outputs/` (92 files plus the sub-folders below). No
 | `training_time.csv` | Training time of the AnoMod models | report only | intermediate |
 | `underfit_overfit.csv` | Train / cross-validation / test macro-F1 and the overfitting diagnosis per AnoMod model | proofs P6; app | final |
 
-92 files: 64 final, 21 intermediate, 7 logs.
+93 files: 65 final, 21 intermediate, 7 logs.
 
 ## Sub-folders
 
