@@ -1,0 +1,28 @@
+system,aggregate,cases_with_aggregate,cases,in_every_case,used_by_detectors,source
+Online Boutique,cpu_total,50,50,True,True,sum of <service>_cpu
+Online Boutique,mem_total,50,50,True,True,sum of <service>_mem
+Online Boutique,net_rx,0,50,False,False,not present
+Online Boutique,net_tx,0,50,False,False,not present
+Online Boutique,disk_read,0,50,False,False,not present
+Online Boutique,disk_write,0,50,False,False,not present
+Online Boutique,latency_p95,20,50,False,False,mean of <service>_latency (as given)
+Online Boutique,request_rate,20,50,False,False,sum of <service>_load (workload as given)
+Online Boutique,error_rate,50,50,True,True,sum of <service>_error
+Sock Shop,cpu_total,50,50,True,True,sum of the per-second rate of container-cpu-usage-seconds-total
+Sock Shop,mem_total,50,50,True,True,sum of container-memory-working-set-bytes
+Sock Shop,net_rx,50,50,True,True,rate of container-network-receive-bytes-total
+Sock Shop,net_tx,50,50,True,True,rate of container-network-transmit-bytes-total
+Sock Shop,disk_read,50,50,True,True,rate of container-fs-reads-bytes-total
+Sock Shop,disk_write,50,50,True,True,rate of container-fs-writes-bytes-total
+Sock Shop,latency_p95,50,50,True,True,mean of istio-latency-95
+Sock Shop,request_rate,50,50,True,True,rate of istio-request-total
+Sock Shop,error_rate,50,50,True,True,rate of istio-error-total
+Train Ticket,cpu_total,50,50,True,True,sum of the per-second rate of container-cpu-usage-seconds-total
+Train Ticket,mem_total,50,50,True,True,sum of container-memory-working-set-bytes
+Train Ticket,net_rx,50,50,True,True,rate of container-network-receive-bytes-total
+Train Ticket,net_tx,50,50,True,True,rate of container-network-transmit-bytes-total
+Train Ticket,disk_read,50,50,True,True,rate of container-fs-reads-bytes-total
+Train Ticket,disk_write,50,50,True,True,rate of container-fs-writes-bytes-total
+Train Ticket,latency_p95,50,50,True,True,mean of istio-latency-95
+Train Ticket,request_rate,50,50,True,True,rate of istio-request-total
+Train Ticket,error_rate,50,50,True,True,rate of istio-error-total

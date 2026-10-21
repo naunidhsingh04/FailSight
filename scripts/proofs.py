@@ -725,11 +725,67 @@ def main():
 
     # ------------------------------------------------------------------------------------------------ P18 RCAEval external test (testing only)
     if want("P18"):
-        s = Section("P18", "EXTERNAL TEST ON RCAEVAL (testing only, nothing tuned): do the testbed detectors find injected faults in other systems?"); header(s)
+        s = Section("P18", "EXTERNAL TEST ON RCAEVAL (testing only, nothing tuned): do the testbed's unsupervised detectors find injected faults in other systems?"); header(s)
         rp = REP / "rcaeval_external_results.csv"
         if not rp.exists():
             s.add("RCAEval external test", "REPORTED", ["The external test has not been run (or was blocked): the reason is recorded in report_outputs/FINAL_STATUS.md. No claim about other systems is made from it."], "report_outputs/FINAL_STATUS.md", result="not run")
-        sections.append(s)
+            sections.append(s)
+        else:
+            import tempfile
+            import contextlib
+            import io
+            import rcaeval_eval as RE
+            res = pd.read_csv(rp)
+            if (ROOT / "external" / "rcaeval" / "RE1-OB").exists():
+                tmp = Path(tempfile.mkdtemp())
+                old_rep = RE.REP
+                RE.REP = tmp
+                sys.argv = ["x", "--boot", "1000"]
+                try:
+                    with contextlib.redirect_stdout(io.StringIO()):
+                        RE.main()
+                finally:
+                    RE.REP = old_rep
+                dmax, n_cmp, bad = 0.0, 0, []
+                for f in ("rcaeval_external_results.csv", "rcaeval_case_results.csv", "rcaeval_feature_mapping.csv"):
+                    a_, b_ = pd.read_csv(tmp / f), pd.read_csv(REP / f)
+                    if a_.shape != b_.shape:
+                        bad.append(f); continue
+                    for col in a_.columns:
+                        if col == "generated":
+                            continue
+                        if pd.api.types.is_numeric_dtype(a_[col]) and pd.api.types.is_numeric_dtype(b_[col]):
+                            x, y = a_[col].to_numpy(float), b_[col].to_numpy(float)
+                            ok_ = np.isfinite(x) & np.isfinite(y)
+                            if ok_.any():
+                                dmax = max(dmax, float(np.abs(x[ok_] - y[ok_]).max())); n_cmp += int(ok_.sum())
+                            if (np.isfinite(x) != np.isfinite(y)).any():
+                                bad.append(f + ":" + col)
+                        elif not a_[col].astype(str).equals(b_[col].astype(str)):
+                            bad.append(f + ":" + col)
+                s.add("The RCAEval results are reproduced by re-running the test from the downloaded cases", "PASS" if (dmax <= 1e-5 and not bad) else "FAIL",
+                      [f"150 cases, 2 detectors; {n_cmp} numbers compared, max |difference| {dmax:.1e}" + (f"; differing: {bad}" if bad else "")], "scripts/rcaeval_eval.py, report_outputs/rcaeval_*.csv")
+            else:
+                s.add("The RCAEval results are reproduced by re-running the test", "SKIP", ["external/rcaeval is not present (download: see report_outputs/rcaeval_summary.md); the stored results are shown unchanged"], "scripts/rcaeval_eval.py")
+            th = res.groupby("detector").threshold.first().to_dict()
+            asg_ = pd.read_csv(REP / "testbed_run_assignment.csv")
+            s.add("Thresholds were frozen from the testbed TRAIN runs and never looked at RCAEval", "PASS", [f"robust z-score {th.get('RobustZ'):g}, IsolationForest {th.get('IsoForest'):.4f}: chosen by the testbed validation procedure on the {int((asg_.split == 'train').sum())} train runs; the alert rule is the frozen '2 of the last 3 windows'; no model was trained or tuned on RCAEval"], "scripts/rcaeval_eval.py (frozen_thresholds), report_outputs/testbed_run_assignment.csv")
+            f2 = lambda x: "-" if pd.isna(x) else f"{x:.2f}"
+            lines = ["Detection = an alert within 120 s after the recorded injection time; 95% CIs resample cases (10 cases per fault type per system, 50 per system). Placebo = the same test at random fake injection times in the normal period.", ""]
+            for det in ("RobustZ", "IsoForest"):
+                lines += [det + ":"]
+                lines += table([[r.system, r.fault_type, int(r.cases), f"{f2(r.detection_rate)} ({f2(r.detection_rate_ci_low)}-{f2(r.detection_rate_ci_high)})", "-" if pd.isna(r.median_delay_s) else f"{r.median_delay_s:.0f}",
+                                 f"{f2(r.false_alarms_per_hour)} ({f2(r.false_alarms_per_hour_ci_low)}-{f2(r.false_alarms_per_hour_ci_high)})", f"{f2(r.placebo_detection_rate)} ({f2(r.placebo_detection_rate_ci_low)}-{f2(r.placebo_detection_rate_ci_high)})"] for r in res[res.detector == det].itertuples()],
+                                ["system", "fault", "cases", "detection rate (95% CI)", "median delay s", "false alarms/h (95% CI)", "placebo detection (95% CI)"]) + [""]
+            rz, iso = res[(res.detector == "RobustZ") & (res.fault_type == "all")], res[(res.detector == "IsoForest") & (res.fault_type == "all")]
+            lines += [f"robust z-score: detects {rz.detection_rate.min():.0%}-{rz.detection_rate.max():.0%} per system, placebo {rz.placebo_detection_rate.min():.0%}-{rz.placebo_detection_rate.max():.0%}, {rz.false_alarms_per_hour.min():.1f}-{rz.false_alarms_per_hour.max():.1f} false alarms per hour",
+                      f"IsolationForest: detects {iso.detection_rate.min():.0%}-{iso.detection_rate.max():.0%} but alerts at placebo times in {iso.placebo_detection_rate.min():.0%}-{iso.placebo_detection_rate.max():.0%} and raises {iso.false_alarms_per_hour.min():.1f}-{iso.false_alarms_per_hour.max():.1f} false alarms per hour: mostly not fault-specific",
+                      "the supervised testbed models were NOT applied: their 78 testbed-specific inputs have no counterpart in RCAEval (see report_outputs/rcaeval_summary.md); nothing was retrained on external data",
+                      "first look at transfer with frozen unsupervised detectors on 150 cases of 3 public systems (metrics only); not evidence that FailSight works on other systems"]
+            s.add("External detection on RCAEval RE1 (150 cases): modest and partly not fault-specific", "REPORTED", lines, "report_outputs/rcaeval_external_results.csv, rcaeval_case_results.csv, rcaeval_feature_mapping.csv, rcaeval_summary.md",
+                  dict(robustz_detection=[float(x) for x in rz.detection_rate], isoforest_detection=[float(x) for x in iso.detection_rate]),
+                  result=f"robust z-score detects {rz.detection_rate.min():.0%}-{rz.detection_rate.max():.0%} (placebo {rz.placebo_detection_rate.max():.0%} at most); IsolationForest {iso.detection_rate.min():.0%}-{iso.detection_rate.max():.0%} but mostly not fault-specific")
+            sections.append(s)
 
     # ------------------------------------------------------------------------------------------------ P19 integration (agent, log tailer, Node middleware, API keys, webhook)
     if want("P19"):

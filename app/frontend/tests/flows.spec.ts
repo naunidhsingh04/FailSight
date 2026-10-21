@@ -86,6 +86,7 @@ for (const width of [375, 768, 1280, 1920]) {
       await expect(page.getByRole('heading', { name: 'What the testbed shows, and what it does not' })).toBeVisible()
       for (const t of LIMITS) await expect(page.getByText(t).first()).toBeVisible()
       await expect(page.getByText(/any app is not supported/)).toBeVisible()
+      await expect(page.getByText(/An outside benchmark \(RCAEval, testing only\)/)).toBeVisible()
     })
 
     test('Proofs: checklist, audit table with C3 warning and the C7 baseline note, downloads', async ({ page }) => {

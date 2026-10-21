@@ -77,6 +77,10 @@ start_testbed.bat                                        # one command: monitor 
 
 Dataset description: [docs/TESTBED_DATASET.md](docs/TESTBED_DATASET.md). Presentation script: [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
 
+## External test on RCAEval (testing only)
+
+`python scripts/rcaeval_eval.py` downloads nothing itself; the RE1 metrics-only cases (RCAEval, Zenodo 14504480/14504481, 390 MB: Online Boutique, Sock Shop, Train Ticket) are read from `external/rcaeval/` (git-ignored). 150 cases (10 per fault type per system, explicit injection times). The testbed's two unsupervised per-app detectors, with their thresholds frozen from the testbed train runs, were applied to generic aggregates (CPU, memory, network, disk, request rate, latency, errors where present): the robust z-score detected 20% to 36% of the faults per system (placebo detections at most 10%), IsolationForest 68% to 86% but also at placebo times in 31% to 79% of the cases. The supervised testbed models could not be applied (testbed-specific inputs). Nothing was tuned on this data; it is a first look, not evidence of transfer. Details: `report_outputs/rcaeval_summary.md`, proofs P18.
+
 ## Connect your app
 
 [docs/INTEGRATION.md](docs/INTEGRATION.md) ("Connect your app in 15 minutes") has copy-paste snippets for a Python ASGI middleware (`agent/failsight_agent`), a Node/Express middleware (`agent/node/failsight-express.js`) and tailing an nginx or application access log (`python -m failsight_agent.tail`); the web app has a **Connect** page with the same snippets, the connection state (events received, last event, learning or live), an optional webhook form, and Simple/Detailed modes. Optional and off by default: a per-app API key on the ingestion endpoints (`FAILSIGHT_API_KEYS="app:key,..."`) and a Slack-compatible alert webhook (`FAILSIGHT_WEBHOOK_URL`). Flow: collect, send, learning period (150 s), scoring every 10 s, alerts with reasons. **The detector was validated only on the testbed shop; every other app is labelled unvalidated, and transfer to other apps has not been shown.** Checks: proofs P19.

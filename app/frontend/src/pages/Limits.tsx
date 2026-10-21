@@ -225,7 +225,7 @@ function Reliance({ m }: { m: Masking | null }) {
   )
 }
 
-interface TbRes { live: Record<string, any>[]; overall: Record<string, any>[]; frozen: Record<string, any> | null }
+interface TbRes { live: Record<string, any>[]; overall: Record<string, any>[]; frozen: Record<string, any> | null; rcaeval: Record<string, any>[] }
 
 function TestbedSection() {
   const res = useApi<TbRes>('/api/testbed/results')
@@ -241,6 +241,17 @@ function TestbedSection() {
           const faulty = r.live.filter((x) => x.actual_fault !== 'none').length
           return (
             <p><strong>What the testbed shows.</strong> In our own shop, with faults injected at recorded times and whole recordings held out, the best model reached a balanced accuracy of {best ? Number(best.balanced_accuracy).toFixed(3) : '–'} on 12 held-out runs. In the three live demos on new seeds it detected {detected} of {faulty} injected faults{r.live.length ? ` and raised ${r.live.reduce((a, x) => a + Number(x.false_alarms), 0)} false alarm(s) in total` : ''}; see the <Link to="/testbed">Testbed page</Link> for every number, including misses.</p>
+          )
+        }}
+      </Async>
+      <Async level={2} state={res} rows={1} label="Loading the outside benchmark">
+        {(r) => {
+          const all = (r.rcaeval ?? []).filter((x) => x.fault_type === 'all')
+          if (!all.length) return null
+          const rz = all.filter((x) => x.detector === 'RobustZ'), iso = all.filter((x) => x.detector === 'IsoForest')
+          const rng = (v: Record<string, any>[], k: string) => `${Math.round(Math.min(...v.map((x) => x[k])) * 100)}% to ${Math.round(Math.max(...v.map((x) => x[k])) * 100)}%`
+          return (
+            <p><strong>An outside benchmark (RCAEval, testing only).</strong> On 150 cases of three public systems, with the testbed&apos;s detectors and thresholds frozen, the simple per-app detector (robust z-score) found {rng(rz, 'detection_rate')} of the injected faults; the other one (IsolationForest) found {rng(iso, 'detection_rate')} but also raised alerts at random times in {rng(iso, 'placebo_detection_rate')} of the cases, so most of its detections are not about the fault. The learned testbed models could not be applied at all because the signals differ. This is a first look, not evidence of transfer (Proofs P18).</p>
           )
         }}
       </Async>

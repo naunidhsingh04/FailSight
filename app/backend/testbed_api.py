@@ -159,4 +159,4 @@ def register(app):
             small["alert_rule"] = cfg["alert_rule"]["name"]
         return JSONResponse(content=dict(limits=LIMITS, frozen=small, assignment=table("testbed_run_assignment.csv"), overall=table("testbed_heldout_overall.csv"), by_fault=table("testbed_heldout_by_fault.csv"),
                                          false_alarms=table("testbed_false_alarms.csv"), prefailure=table("testbed_prefailure.csv"), runid=table("testbed_runid_check.csv"), shuffled=table("testbed_shuffled_control.csv"),
-                                         live=table("testbed_live_validation.csv"), cv_by_fault=table("testbed_cv_by_fault.csv")))
+                                         live=table("testbed_live_validation.csv"), rcaeval=table("rcaeval_external_results.csv"), cv_by_fault=table("testbed_cv_by_fault.csv")))
