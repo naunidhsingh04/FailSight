@@ -25,3 +25,8 @@ testbed/runs/*
 testbed/runs/*/*
 !testbed/runs/*/fault_schedule.csv
 !testbed/runs/*/meta.json
+
+testbed/runs/_live_*
+testbed/runs/_invalid/
+outputs/
+external/
