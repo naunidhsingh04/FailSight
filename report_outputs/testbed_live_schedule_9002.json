@@ -1,0 +1,32 @@
+{
+ "scenario": "abrupt",
+ "seed": 9002,
+ "minutes": 12.0,
+ "duration_s": 720.0,
+ "profile": "ramp",
+ "rate": 8.82,
+ "mix": {
+  "browse": 0.2363603876364289,
+  "purchase": 0.20219339716872473,
+  "abandon": 0.42941925797172376,
+  "refund": 0.13202695722312255
+ },
+ "faults": [
+  {
+   "type": "exception_route",
+   "klass": "Code",
+   "kind": "abrupt",
+   "u": 0.1445,
+   "level": "mild",
+   "duration": 64.0,
+   "params": {
+    "route": "book",
+    "prob": 0.19
+   },
+   "start": 203.2
+  }
+ ],
+ "written_at": "2026-10-21 12:53:23",
+ "written_at_epoch": 1792567403.0434856,
+ "sha256_of_plan": "b292a4b882ec7a69b33226782f9f01d2ccc9aaed352c35715368aac2954d76c6"
+}

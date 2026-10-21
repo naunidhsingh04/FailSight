@@ -1,0 +1,31 @@
+{
+ "scenario": "gradual",
+ "seed": 9003,
+ "minutes": 12.0,
+ "duration_s": 720.0,
+ "profile": "steady",
+ "rate": 3.53,
+ "mix": {
+  "browse": 0.06694720093834924,
+  "purchase": 0.13154709926479552,
+  "abandon": 0.5631412834984131,
+  "refund": 0.23836441629844216
+ },
+ "faults": [
+  {
+   "type": "leak",
+   "klass": "Code",
+   "kind": "gradual",
+   "u": 0.5774,
+   "level": "medium",
+   "duration": 177.0,
+   "params": {
+    "mb_per_s": 2.03
+   },
+   "start": 247.1
+  }
+ ],
+ "written_at": "2026-10-21 13:06:16",
+ "written_at_epoch": 1792568176.828735,
+ "sha256_of_plan": "6e96bd4dee3d621819fa022fa766ec780f8e3c4c42ed1202c8a43d3562e1cadf"
+}

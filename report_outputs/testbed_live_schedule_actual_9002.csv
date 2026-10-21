@@ -1,0 +1,2 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+live_9002,9e90954d,exception_route,Code,abrupt,mild,0.1445,"{""route"": ""book"", ""prob"": 0.19, ""severity"": 0.1445, ""severity_level"": ""mild""}",1792567613.0918016,1792567677.1344926,,64.04

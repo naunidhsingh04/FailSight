@@ -1,0 +1,2 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+live_9003,fd6fad1f,leak,Code,gradual,medium,0.5774,"{""mb_per_s"": 2.03, ""severity"": 0.5774, ""severity_level"": ""medium""}",1792568428.4884703,1792568605.6475606,1792568536.828362,177.16

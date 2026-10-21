@@ -1,0 +1,18 @@
+{
+ "scenario": "fault_free",
+ "seed": 9001,
+ "minutes": 12.0,
+ "duration_s": 720.0,
+ "profile": "steady",
+ "rate": 5.72,
+ "mix": {
+  "browse": 0.24228449134562544,
+  "purchase": 0.14940985186983863,
+  "abandon": 0.11545247017482921,
+  "refund": 0.4928531866097066
+ },
+ "faults": [],
+ "written_at": "2026-10-21 12:40:31",
+ "written_at_epoch": 1792566631.0744057,
+ "sha256_of_plan": "565b52a6eafb8c949470d4d50b5e95b68b077ad947b3dd815162b587962cf524"
+}
