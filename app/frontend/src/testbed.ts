@@ -71,22 +71,26 @@ export function useTestbed(app = 'shop') {
 export function useFaults() {
   const [active, setActive] = useState<TbFault[]>([])
   const [err, setErr] = useState<string | null>(null)
+  const timer = useRef<number | null>(null)
+  const alive = useRef(true)
   const refresh = useCallback(async () => {
+    let failed = false
     try {
       const r = await fetch('/api/testbed/faults')
       const j = await r.json()
-      if (!r.ok) { setErr(j.error ?? 'the demo shop is not reachable'); setActive([]); return }
-      setErr(null); setActive(j.active ?? [])
-    } catch (e: any) { setErr(String(e?.message ?? e)) }
+      if (!r.ok || j.reachable === false) { failed = true; setErr(j.error ?? 'the demo shop is not reachable'); setActive([]) } else { setErr(null); setActive(j.active ?? []) }
+    } catch (e: any) { failed = true; setErr(String(e?.message ?? e)) }
+    if (alive.current) timer.current = window.setTimeout(refresh, failed ? 10000 : 2000)       // one request at a time, slower while the shop is unreachable
   }, [])
-  useEffect(() => { refresh(); const id = window.setInterval(refresh, 2000); return () => window.clearInterval(id) }, [refresh])
+  useEffect(() => { alive.current = true; refresh(); return () => { alive.current = false; if (timer.current) window.clearTimeout(timer.current) } }, [refresh])
   const inject = async (type: string, severity: string) => {
     const r = await fetch('/api/testbed/fault', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type, severity }) })
     const j = await r.json().catch(() => ({}))
     if (!r.ok) setErr(j.error ?? `HTTP ${r.status}`)
+    if (timer.current) window.clearTimeout(timer.current)
     refresh()
   }
-  const clear = async () => { await fetch('/api/testbed/clear', { method: 'POST' }); refresh() }
+  const clear = async () => { await fetch('/api/testbed/clear', { method: 'POST' }); if (timer.current) window.clearTimeout(timer.current); refresh() }
   return { active, err, inject, clear }
 }
 

@@ -566,6 +566,163 @@ def main():
                   dict(best_xgb_cross_ba=float(best.balanced_accuracy), cells_above_chance=int(len(above)), cells=int(len(cross))), result=("not shown: " + res) if not len(above) else res)
             sections.append(s)
 
+    # ------------------------------------------------------------------------------------------------ P12 live demo, P16 run-held-out results, P17 run identification on the testbed
+    if want("P12") or want("P16") or want("P17"):
+        import tempfile
+        import contextlib
+        import io
+        tb_files = ["testbed_run_assignment.csv", "testbed_heldout_overall.csv", "testbed_heldout_by_fault.csv", "testbed_false_alarms.csv", "testbed_prefailure.csv", "testbed_shuffled_control.csv",
+                    "testbed_runid_check.csv", "testbed_cv_by_fault.csv", "testbed_train_cv.csv"]
+        f3 = lambda x: "nan" if pd.isna(x) else f"{x:.3f}"
+        ci3 = lambda r, k: f"{f3(r[k])} ({f3(r[k + '_ci_low'])}-{f3(r[k + '_ci_high'])})"
+        have = all((REP / f).exists() for f in tb_files)
+    if want("P16") or want("P17"):
+        s16 = Section("P16", "TESTBED, RUN-HELD-OUT VALIDATION: detection of injected faults on whole runs the models never saw"); header(s16)
+        if not have:
+            s16.add("Testbed validation", "SKIP", ["report_outputs/testbed_*.csv missing; run python -m testbed.validate"], "-")
+            sections.append(s16)
+        else:
+            import testbed.validate as TV
+            tmp = Path(tempfile.mkdtemp())
+            old_rep = TV.REP
+            TV.REP = tmp
+            sys.argv = ["x", "--boot", "1000"]
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    TV.main()
+            finally:
+                TV.REP = old_rep
+            dmax, n_cmp, bad_files = 0.0, 0, []
+            for f in tb_files:
+                a_, b_ = pd.read_csv(tmp / f), pd.read_csv(REP / f)
+                if a_.shape != b_.shape:
+                    bad_files.append(f)
+                    continue
+                for col in a_.columns:
+                    if pd.api.types.is_numeric_dtype(a_[col]) and pd.api.types.is_numeric_dtype(b_[col]):
+                        x, y = a_[col].to_numpy(float), b_[col].to_numpy(float)
+                        ok_ = np.isfinite(x) & np.isfinite(y)
+                        if ok_.any():
+                            dmax = max(dmax, float(np.abs(x[ok_] - y[ok_]).max())); n_cmp += int(ok_.sum())
+                        if (np.isfinite(x) != np.isfinite(y)).any():
+                            bad_files.append(f"{f}:{col}")
+                    elif not a_[col].astype(str).equals(b_[col].astype(str)):
+                        bad_files.append(f"{f}:{col}")
+            s16.add("The run-held-out results are reproduced by re-running the whole validation", "PASS" if (dmax <= 1e-5 and not bad_files) else "FAIL",
+                    [f"split, cross-validation, models, bootstrap, delays, false alarms, controls recomputed; {len(tb_files)} result files, {n_cmp} numbers compared, max |difference| {dmax:.1e}" + (f"; differing: {bad_files}" if bad_files else "")],
+                    "testbed/validate.py, report_outputs/testbed_*.csv")
+            asg = pd.read_csv(REP / "testbed_run_assignment.csv")
+            Wt = pd.read_parquet(ROOT / "processed" / "testbed_windows.parquet")
+            Sf = pd.concat([pd.read_csv(f, dtype={"fault_id": str}) for f in sorted((ROOT / "testbed" / "runs").glob("r*/fault_schedule.csv"))], ignore_index=True)
+            test_r, train_r = set(asg[asg.split == "test"].run_id), set(asg[asg.split == "train"].run_id)
+            free_r = set(Wt.groupby("run_id").label_binary.max().loc[lambda s: s == 0].index)
+            ok_split = (not (test_r & train_r) and set(Sf[Sf.run_id.isin(test_r)].fault_type) == set(Sf.fault_type) and len(test_r & free_r) >= 2 and Wt.run_seed.max() < 9000
+                        and all(Wt[Wt.run_id == r].window_id.str.startswith(r).all() for r in test_r))
+            lines = [f"{len(test_r)} test runs and {len(train_r)} train runs; windows of one run are never on both sides; every one of the {Sf.fault_type.nunique()} fault types is in the test runs ({len(Sf[Sf.run_id.isin(test_r)])} faults); fault-free test runs: {len(test_r & free_r)}; largest run seed in the data {int(Wt.run_seed.max())} (live demo seeds start at 9000)", ""]
+            lines += table([[r.run_id, r.split, "" if pd.isna(r.fold) else int(r.fold), r.faults] for r in asg.itertuples()], ["run", "split", "fold", "faults"])
+            s16.add("Whole runs are split, every fault type is in the test runs, at least two test runs are fault-free", "PASS" if ok_split else "FAIL", lines, "report_outputs/testbed_run_assignment.csv, testbed/validate.py")
+            ov = pd.read_csv(REP / "testbed_heldout_overall.csv")
+            bf = pd.read_csv(REP / "testbed_heldout_by_fault.csv")
+            fa = pd.read_csv(REP / "testbed_false_alarms.csv")
+            pf = pd.read_csv(REP / "testbed_prefailure.csv")
+            inst = pd.read_csv(REP / "testbed_heldout_instances.csv")
+            sup = ov[ov.kind == "supervised"].sort_values("balanced_accuracy", ascending=False)
+            best = sup.iloc[0]
+            lines = [f"scored windows only (after each run's 150 s learning period, transition windows left out): {int(best.n_windows)} windows, {int(best.n_fault_windows)} of them fault windows, {int(best.n_test_runs)} test runs. 95% CIs resample whole runs (1000 resamples).", ""]
+            lines += table([[r.method, f"{f3(r.balanced_accuracy)} ({f3(r.balanced_accuracy_ci_low)}-{f3(r.balanced_accuracy_ci_high)})", f3(r.macro_f1), f"{f3(r.normal_recall)} ({f3(r.normal_recall_ci_low)}-{f3(r.normal_recall_ci_high)})", f3(r.roc_auc)] for r in ov.itertuples()],
+                           ["method", "balanced accuracy", "macro-F1", "Normal recall", "ROC-AUC"])
+            lines += ["", "recall of fault windows by severity level and by fault kind (share of the fault windows that were flagged), test runs; 'reliable' needs at least 5 fault instances"]
+            for m in [best.method]:
+                x = bf[(bf.method == m) & bf.group.isin(["severity level", "fault kind"])]
+                lines += table([[r.group, r.value, int(r.instances), int(r.windows), f"{f3(r.recall)} ({f3(r.ci_low)}-{f3(r.ci_high)})", "yes" if r.reliable else "NO: too few instances"] for r in x.itertuples()], ["group", "value", "instances", "windows", "recall (95% CI)", "reliable"])
+            lines += ["", "recall by fault type, test runs: instances per type are 1 to 3, so none of these ten numbers is reliable (the project's rule: at least 5 instances)"]
+            x = bf[(bf.method == best.method) & (bf.group == "fault type")]
+            lines += table([[r.value, int(r.instances), int(r.windows), f"{f3(r.recall)} ({f3(r.ci_low)}-{f3(r.ci_high)})", "yes" if r.reliable else "NO"] for r in x.itertuples()], ["fault type", "instances", "windows", "recall (95% CI)", "reliable"])
+            cvb = pd.read_csv(REP / "testbed_cv_by_fault.csv")
+            lines += ["", "supplementary, every one of the 40 runs held out once (XGBoost, 8 folds by run): more instances per cell, descriptive only"]
+            lines += table([[r.group, r.value, int(r.instances), f"{f3(r.recall)} ({f3(r.ci_low)}-{f3(r.ci_high)})", "yes" if r.reliable else "NO"] for r in cvb.itertuples()], ["group", "value", "instances", "recall (95% CI)", "reliable"])
+            lines += ["", "detection delay (seconds from the recorded fault start to the first alert), false alarms per hour on the fault-free test runs, per method and alert rule"]
+            rows_ = []
+            for r in fa.itertuples():
+                sub = inst[(inst.method == r.method) & (inst.rule == r.rule)]
+                rows_.append([r.method, r.rule, f"{int(sub.detected.sum())}/{len(sub)}", f"{sub.delay_s.median():.0f}", f"{sub.delay_s.quantile(0.9):.0f}", f"{int(r.alert_episodes_fault_free)} in {r.fault_free_hours:.2f} h = {r.false_alarms_per_hour_fault_free:.1f}/h"])
+            lines += table(rows_, ["method", "alert rule", "detected", "median delay s", "90th pct s", "false alarms (fault-free runs)"])
+            lines += ["", f"only {int(fa.fault_free_runs.iloc[0])} fault-free test runs ({fa.fault_free_hours.iloc[0]:.2f} h): one alert changes the rate by {1 / fa.fault_free_hours.iloc[0]:.0f} per hour, so these rates are very coarse"]
+            lines += ["", "pre-failure warning for the gradual faults (XGBoost, dedicated classifier per horizon; 3 gradual instances in the test runs)"]
+            lines += table([[int(r.horizon_min), f"{f3(r.precision)} ({f3(r.precision_ci_low)}-{f3(r.precision_ci_high)})", f"{f3(r.recall)} ({f3(r.recall_ci_low)}-{f3(r.recall_ci_high)})", f"{int(r.instances_warned)}/{int(r.gradual_instances)}", f"{r.median_lead_time_s:.0f}"] for r in pf.itertuples()],
+                           ["horizon (min)", "precision (95% CI)", "recall (95% CI)", "instances warned", "median lead time s"])
+            res = (f"best supervised model {best.method}: balanced accuracy {f3(best.balanced_accuracy)} ({f3(best.balanced_accuracy_ci_low)}-{f3(best.balanced_accuracy_ci_high)}) on {int(best.n_test_runs)} held-out runs; "
+                   f"cells with too few instances are marked")
+            s16.add("Run-held-out detection results (12 test runs, 15 faults): small test, per-type numbers unreliable", "REPORTED", lines, "report_outputs/testbed_heldout_*.csv, testbed_false_alarms.csv, testbed_prefailure.csv, testbed_cv_by_fault.csv", dict(best_method=str(best.method), best_ba=float(best.balanced_accuracy)), result=res)
+            sh = pd.read_csv(REP / "testbed_shuffled_control.csv")
+            s16.add("Shuffled-label control: with the training labels shuffled the models are at chance", "PASS" if sh.shuffled_labels_mean_ba.between(0.45, 0.55).all() else "WARN",
+                    table([[r.method, f3(r.shuffled_labels_mean_ba), f"{f3(r.min_ba)}-{f3(r.max_ba)}", f3(r.real_labels_ba)] for r in sh.itertuples()], ["method", "shuffled mean BA", "range", "real-label BA"]) + ["rule: the mean balanced accuracy with shuffled labels must lie in 0.45-0.55"],
+                    "report_outputs/testbed_shuffled_control.csv")
+            sections.append(s16)
+            s17 = Section("P17", "TESTBED, RUN-IDENTIFICATION CHECK: could recognising the run explain the result?"); header(s17)
+            rid = pd.read_csv(REP / "testbed_runid_check.csv")
+            g = lambda key: float(rid[rid.check.str.contains(key, regex=False)].value.iloc[0])
+            acc, rule_ba, best_ba = g("runs identifiable"), g("majority label"), g("best held-out")
+            ok17 = rule_ba <= 0.6 and best_ba - rule_ba >= 0.2
+            s17.add("Recognising the run does not explain the held-out result (every run contains both normal and faulty windows)", "PASS" if ok17 else "WARN",
+                    table([[r.check, f3(r.value), f3(r.chance)] for r in rid.itertuples()], ["check", "value", "chance"]) +
+                    ["", "rule: PASS only if the best 'predict the run, output its majority label' rule stays at or below 0.60 balanced accuracy and the best held-out model beats it by at least 0.20.",
+                     f"runs are identifiable from the features (accuracy {f3(acc)} within runs, chance 0.025), but the rule scores {f3(rule_ba)}; the held-out runs are unseen, so run identity cannot help them. This is the opposite of AnoMod (P14), where the run-identification rule reproduced the saved model's score."],
+                    "report_outputs/testbed_runid_check.csv (testbed/validate.py)", dict(rule_ba=rule_ba, best_ba=best_ba))
+            sections.append(s17)
+    if want("P12"):
+        s12 = Section("P12", "TESTBED, LIVE DEMO VALIDATION: three new 12-minute runs through the real agent and monitor"); header(s12)
+        lv_path = REP / "testbed_live_validation.csv"
+        if not lv_path.exists():
+            s12.add("Live demo validation", "SKIP", ["report_outputs/testbed_live_validation.csv missing; run python -m testbed.live_demo --scenario all"], "-")
+            sections.append(s12)
+        else:
+            import testbed.freeze as FZ
+            import testbed.live_eval as LE
+            import hashlib as _hl
+            lv = pd.read_csv(lv_path)
+            cfg = json.loads((REP / "testbed_frozen_config.json").read_text(encoding="utf-8"))
+            man = pd.read_csv(ROOT / "testbed" / "runs" / "manifest.csv")
+            order_ok, lines = True, []
+            for r in lv.itertuples():
+                plan = json.loads((REP / f"testbed_live_schedule_{r.seed}.json").read_text(encoding="utf-8"))
+                plan_hash = _hl.sha256(json.dumps({k: v for k, v in plan.items() if k not in ("written_at", "written_at_epoch", "sha256_of_plan")}, sort_keys=True).encode()).hexdigest()
+                t_frozen, t_plan = cfg["frozen_at"], plan["written_at"]
+                ok = bool(t_frozen < t_plan < r.run_started_at) and plan_hash == plan["sha256_of_plan"] and int(r.seed) >= 9000 and int(r.seed) not in set(man.seed)
+                order_ok &= ok
+                lines.append(f"seed {int(r.seed)} ({r.scenario}): detector frozen {t_frozen}; schedule written {t_plan} (plan hash {'matches' if plan_hash == plan['sha256_of_plan'] else 'DIFFERS'}); run started {r.run_started_at}; seed >= 9000 and not among the {len(man)} training runs: {int(r.seed) >= 9000 and int(r.seed) not in set(man.seed)}; attempts {int(r.attempt)}")
+            lines += [f"frozen model: {cfg['model']} on {cfg['feature_set']} features, threshold {cfg['threshold']:.3f}, alert rule '{cfg['alert_rule']['name']}', selected by cross-validation on the train runs only", f"model file still matches the frozen config: {FZ.check() if (ROOT / 'models' / 'testbed' / 'detector.joblib').exists() else 'model file not present'}"]
+            s12.add("The detector and the alert rule were frozen before the demos, and each fault schedule was recorded before its run", "PASS" if order_ok else "FAIL", lines, "report_outputs/testbed_frozen_config.json, testbed_live_schedule_<seed>.json, testbed_live_validation.csv")
+            dmax, n_cmp = 0.0, 0
+            for r in lv.itertuples():
+                W_ = pd.read_csv(REP / f"testbed_live_windows_{r.seed}.csv")
+                sched = pd.read_csv(REP / f"testbed_live_schedule_actual_{r.seed}.csv", dtype={"fault_id": str})
+                anchor = float(W_.window_start.iloc[0])
+                Wl = W_.copy()
+                Wl["learning"] = Wl.learning.astype(bool)
+                L = LE.label_windows(Wl[["window_index", "window_start", "window_end", "learning", "risk", "flagged", "alert", "new_alert"]], sched, anchor)
+                ev = LE.evaluate(L, sched)
+                inst_ = ev.pop("instances")
+                chk = dict(missed_fault_windows=ev["missed_fault_windows"], fault_windows=ev["fault_windows"], false_alarms=ev["false_alarms"], fault_windows_flagged=ev["fault_windows_flagged"], scored_windows=ev["scored_windows"])
+                if inst_:
+                    chk["detection_delay_s"] = inst_[0]["delay_s"]
+                for k, v in chk.items():
+                    if pd.notna(v) and pd.notna(getattr(r, k)):
+                        dmax = max(dmax, abs(float(v) - float(getattr(r, k)))); n_cmp += 1
+            s12.add("The live-validation numbers are recomputed from the stored per-window predictions and the recorded fault schedule", "PASS" if dmax <= 1e-6 else "FAIL",
+                    [f"demos recomputed: {len(lv)}; numbers compared {n_cmp}; max |difference| {dmax:.1e}", "per-window predictions: report_outputs/testbed_live_windows_<seed>.csv (monitor output); fault record: testbed_live_schedule_actual_<seed>.csv (the app's own start / end / failure timestamps)"],
+                    "testbed/live_eval.py, report_outputs/testbed_live_windows_*.csv")
+            rows_ = [[int(r.seed), r.scenario, f"{r.actual_fault} ({r.planned_severity})" if r.actual_fault != "none" else "none", ("yes" if r.detected else "NO") if r.actual_fault != "none" else "-", f"{r.detection_delay_s:.0f}" if pd.notna(r.detection_delay_s) else "-",
+                      f"{int(r.false_alarms)} ({r.false_alarms_per_hour:.1f}/h)", f"{int(r.missed_fault_windows)}/{int(r.fault_windows)}", f"{r.lead_time_s:.0f}" if pd.notna(r.lead_time_s) else "-", f"{r.balanced_accuracy:.3f}" if pd.notna(r.balanced_accuracy) else "-"] for r in lv.itertuples()]
+            lines = table(rows_, ["seed", "scenario", "fault (severity)", "detected", "delay s", "false alarms", "fault windows missed", "lead time s", "window BA"])
+            nf = lv[lv.actual_fault != "none"]
+            lines += ["", f"detected {int(nf.detected.sum())} of {len(nf)} injected faults; false alarms {int(lv.false_alarms.sum())} in {lv.scored_hours_outside_faults.sum():.2f} scored hours outside faults; fault windows missed {int(lv.missed_fault_windows.sum())} of {int(lv.fault_windows.sum())}",
+                      "alerts use the frozen rule (2 of the last 3 windows flagged); delay = seconds from the recorded fault start to the end of the first alert window; a miss is a fault window the model did not flag; the schedule was drawn from the seed before the run; nothing was tuned on these runs",
+                      "three runs, one fault each: this is a demonstration, not a statistic. One app, one machine, synthetic traffic and injected faults; transfer to other apps has not been shown."]
+            s12.add("Live demos reported as they came out", "REPORTED", lines, "report_outputs/testbed_live_validation.csv", dict(detected=int(nf.detected.sum()), faults=len(nf), false_alarms=int(lv.false_alarms.sum())),
+                    result=f"detected {int(nf.detected.sum())} of {len(nf)} injected faults, {int(lv.false_alarms.sum())} false alarm(s), {int(lv.missed_fault_windows.sum())} of {int(lv.fault_windows.sum())} fault windows missed")
+            sections.append(s12)
+
     # ------------------------------------------------------------------------------------------------ P13 missingness and shortcuts
     if want("P13"):
         s = Section("P13", "MISSINGNESS AND SHORTCUTS: do the models rely on missing-data patterns instead of real signals?"); header(s)
@@ -753,7 +910,7 @@ def main():
     global CUR
     CUR = []
     new_secs = {x.id: dict(id=x.id, title=x.title, status=x.status, items=x.items, lines=x.lines, generated_at=x.generated_at) for x in sections}
-    order = [f"P{i}" for i in range(1, 12)] + ["P13", "P14", "P15"]
+    order = [f"P{i}" for i in range(1, 18)]
     merged = dict(new_secs)
     base_p = REP / "proofs.json"
     if (only or args.quick) and base_p.exists():                      # a partial re-run refreshes only its sections of the existing report

@@ -124,7 +124,10 @@ def register(app):
 
     @app.get("/api/testbed/faults")
     async def tb_faults():
-        return await shop("GET", "/admin/faults")
+        r = await shop("GET", "/admin/faults")
+        if r.status_code == 502:                       # the shop not running is a state to show, not a server error
+            return JSONResponse(content=dict(active=[], reachable=False, error=json.loads(r.body)["error"]))
+        return r
 
     @app.post("/api/testbed/clear")
     async def tb_clear():

@@ -57,6 +57,26 @@ Last run: 48 PASS, 3 WARN, 0 FAIL, plus 2 items marked **REPORTED ACCURATELY** (
 
 **What the file-integrity check proves.** The audit's check C7 hashes the AnoMod and LO2 files (SHA-256). That baseline was **first recorded during the audit run itself**, so it proves that no file has changed *since then*, not before.
 
+## The testbed: our own shop, faults at recorded times, whole runs held out
+
+AnoMod has one label per run and no fault times, so it cannot show whether failures are really detected (proofs P14, P15). The **testbed** answers that for one app: a small real ticket shop (`testbed/shop`, FastAPI + SQLite) monitored only through the `failsight_agent` package (`agent/`), driven by a load generator (steady, bursty, ramp and daily profiles, random user mixes and rates) and broken with real faults injected at exact, recorded times (10 fault types in 4 classes, random severity from mild to severe, some gradual with a known failure time).
+
+```powershell
+python -m testbed.run_generator --runs 40 --minutes 10   # 40 labelled runs, resumable (about 7 hours); invalid runs (laptop asleep, stalls) are set aside and redone
+python -m testbed.dataset ; python -m testbed.dataset_doc # windows, labels, docs\TESTBED_DATASET.md
+python -m testbed.validate                               # run-held-out validation -> report_outputs\testbed_*.csv
+python -m testbed.freeze                                 # freeze the detector and the alert rule BEFORE the live demos
+python -m testbed.live_demo --scenario all               # three 12-minute live demos on new seeds (9001-9003), schedule written first
+start_testbed.bat                                        # one command: monitor + shop + load generator + dashboard (Console > Live demo app)
+```
+
+- **Validation by whole runs.** 12 test runs (fixed seed; every fault type appears, 2 are fault-free), the rest train/validation folds by run. Best supervised model, chosen on the train runs only: RF (both), balanced accuracy 0.960 (95% run-bootstrap CI 0.893-1.000) on windows after each run's 150 s learning period. Shuffled labels give 0.50; recognising the run explains nothing here (P17).
+- **Live demos (P12).** The detector (RF on raw + baseline-relative features, alert when 2 of the last 3 windows are flagged) was frozen first. In three new 12-minute runs the schedule was written before each run: detected 2 of 2 injected faults, 1 false alarm(s) in total, 0 of 24 fault windows missed. This is a demonstration, not a statistic.
+- **Reliability.** The held-out test has 12 runs and 15 faults; most fault types have one to three test instances, so per-type recall is marked unreliable (fewer than 5 instances). The 2 fault-free test runs cover only 0.25 hours, so false-alarm rates are very coarse.
+- **What is not shown.** One app, one machine, synthetic traffic and injected faults, a small held-out test, unreliable per-type results, and **no transfer to other apps** (the cross-system test, P11, failed). A claim that FailSight works on any app is not supported.
+
+Dataset description: [docs/TESTBED_DATASET.md](docs/TESTBED_DATASET.md). Presentation script: [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
+
 ## Architecture
 
 ```

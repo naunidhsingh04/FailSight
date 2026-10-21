@@ -7,6 +7,8 @@ const PAGES: { path: string; h1: string; ready: RegExp }[] = [
   { path: '/how-it-works', h1: 'How it works', ready: /replay/i },
   { path: '/proofs', h1: 'Proofs', ready: /Run the checks again/ },
   { path: '/results', h1: 'Results', ready: /Fewest false alarms/ },
+  { path: '/testbed', h1: 'Testbed', ready: /Read this first/ },
+  { path: '/?tab=live', h1: 'Is our demo shop healthy right now?', ready: /Live demo of our own test shop/ },
   { path: '/limits', h1: 'Limits', ready: /It did not work on a different system/ },
   { path: '/glossary', h1: 'Glossary', ready: /Data leakage/ },
 ]

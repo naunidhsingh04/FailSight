@@ -23,7 +23,7 @@ def test_report_equals_the_file_on_disk(client):
 @needs_report
 def test_report_has_all_ten_sections_and_no_failure(client):
     rep = client.get("/api/proofs").json()
-    assert [s["id"] for s in rep["sections"]] == [f"P{i}" for i in range(1, 12)] + ["P13", "P14", "P15"]
+    assert [s["id"] for s in rep["sections"]] == [f"P{i}" for i in range(1, 18)]
     assert rep["totals"].get("FAIL", 0) == 0
     assert rep["text"].strip()
 
@@ -111,3 +111,21 @@ def test_masking_endpoint_serves_the_p13_numbers(client):
     d = client.get("/api/proofs/masking").json()["xgb_binary"]
     p13 = next(s for s in client.get("/api/proofs").json()["sections"] if s["id"] == "P13")
     assert d == next(i["data"]["xgb_binary"] for i in p13["items"] if i["data"].get("xgb_binary"))
+
+
+@needs_report
+def test_testbed_sections_are_present_with_honest_statuses(client):
+    import pandas as pd
+    rep = client.get("/api/proofs").json()
+    sec = {s["id"]: s for s in rep["sections"]}
+    assert {"P12", "P16", "P17"} <= set(sec)
+    assert sec["P12"]["status"] == "REPORTED ACCURATELY" and sec["P16"]["status"] == "REPORTED ACCURATELY"
+    live = pd.read_csv(ROOT / "report_outputs" / "testbed_live_validation.csv")
+    res = next(i for i in sec["P12"]["items"] if i["status"] == "REPORTED ACCURATELY")["result"]
+    nf = live[live.actual_fault != "none"]
+    assert f"detected {int(nf.detected.sum())} of {len(nf)} injected faults" in res and f"{int(live.false_alarms.sum())} false alarm" in res       # reported as it came out
+    rid = pd.read_csv(ROOT / "report_outputs" / "testbed_runid_check.csv")
+    rule = float(rid[rid.check.str.contains("majority label")].value.iloc[0])
+    best = float(rid[rid.check.str.contains("best held-out")].value.iloc[0])
+    assert sec["P17"]["items"][0]["status"] == ("PASS" if (rule <= 0.6 and best - rule >= 0.2) else "WARN")
+    assert all(i["status"] != "FAIL" for s in sec.values() for i in s["items"])

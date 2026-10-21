@@ -5,32 +5,14 @@
   {
    "page": "/",
    "formFactor": "mobile",
-   "performance": 78,
+   "performance": 84,
    "accessibility": 100,
    "bestPractices": 100,
    "seo": 100,
    "failedAccessibilityAudits": []
   },
   {
-   "page": "/how-it-works",
-   "formFactor": "mobile",
-   "performance": 82,
-   "accessibility": 100,
-   "bestPractices": 100,
-   "seo": 100,
-   "failedAccessibilityAudits": []
-  },
-  {
-   "page": "/proofs",
-   "formFactor": "mobile",
-   "performance": 81,
-   "accessibility": 100,
-   "bestPractices": 100,
-   "seo": 100,
-   "failedAccessibilityAudits": []
-  },
-  {
-   "page": "/results",
+   "page": "/?tab=live",
    "formFactor": "mobile",
    "performance": 86,
    "accessibility": 100,
@@ -39,9 +21,45 @@
    "failedAccessibilityAudits": []
   },
   {
+   "page": "/how-it-works",
+   "formFactor": "mobile",
+   "performance": 88,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/proofs",
+   "formFactor": "mobile",
+   "performance": 96,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/results",
+   "formFactor": "mobile",
+   "performance": 95,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/testbed",
+   "formFactor": "mobile",
+   "performance": 94,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
    "page": "/limits",
    "formFactor": "mobile",
-   "performance": 79,
+   "performance": 76,
    "accessibility": 100,
    "bestPractices": 100,
    "seo": 100,
@@ -50,7 +68,7 @@
   {
    "page": "/glossary",
    "formFactor": "mobile",
-   "performance": 84,
+   "performance": 87,
    "accessibility": 100,
    "bestPractices": 100,
    "seo": 100,
@@ -58,6 +76,15 @@
   },
   {
    "page": "/",
+   "formFactor": "desktop",
+   "performance": 100,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/?tab=live",
    "formFactor": "desktop",
    "performance": 100,
    "accessibility": 100,
@@ -85,6 +112,15 @@
   },
   {
    "page": "/results",
+   "formFactor": "desktop",
+   "performance": 99,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/testbed",
    "formFactor": "desktop",
    "performance": 100,
    "accessibility": 100,
