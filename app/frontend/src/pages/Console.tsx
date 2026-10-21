@@ -1,13 +1,14 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
-import LiveDemo from './LiveDemo'
+import { Link } from 'react-router-dom'
+import { StatusBar } from '../components/DemoViz'
 import { StatusIcon, StepIcon } from '../components/Icons'
-import { Gauge, RiskTimeline } from '../components/RiskCharts'
+import { RiskTimeline } from '../components/RiskCharts'
 import Term from '../components/Term'
 import WhyPanel from '../components/WhyPanel'
 import { Detailed, Simple, useMode } from '../mode'
 import { SYSTEMS, SYSTEM_NAME, clock, percent, setModel, useMonitor, useReplay } from '../monitor'
 import type { Status, Sys, SysState, WinEvent } from '../monitor'
+import type { Level } from '../plain'
 import { usePageTitle } from '../usePageTitle'
 
 export const SCENARIOS: { id: string; label: string; hint: string }[] = [
@@ -17,9 +18,10 @@ export const SCENARIOS: { id: string; label: string; hint: string }[] = [
   { id: 'Database', label: 'Database trouble', hint: 'The data store is limited or stuck.' },
   { id: 'Code', label: 'Code error', hint: 'A bug makes requests fail.' },
 ]
-const WORD: Record<Status, string> = { idle: 'Waiting', healthy: 'Healthy', watch: 'Watch', failing: 'Failing', nodata: 'Not enough data to judge' }
+const LEVEL: Record<Status, Level> = { idle: 'idle', healthy: 'ok', watch: 'watch', failing: 'problem', nodata: 'idle' }
+const WORD: Record<Status, string> = { idle: 'Ready', healthy: 'Healthy', watch: 'Watch', failing: 'Failing', nodata: 'Not enough data to judge' }
 const SENTENCE: Record<Status, string> = {
-  idle: 'No data yet. Choose a scenario and press Play.',
+  idle: 'No data yet. Choose a scenario and press Start.',
   healthy: 'Everything looks normal.',
   watch: 'One recent window looked unusual. Keeping an eye on it.',
   failing: 'Several recent windows look like a failure.',
@@ -54,7 +56,8 @@ function SystemCard({ sys, st, threshold }: { sys: Sys; st: SysState; threshold:
           <span><span className="visually-hidden">{SYSTEM_NAME[sys]} status: </span>{WORD[st.status]}</span>
         </div>
         <p className="small muted" style={{ marginTop: 0 }}>{SENTENCE[st.status]}</p>
-        <div className="gauge-wrap"><Gauge risk={st.risk} threshold={threshold} status={st.status} label={SYSTEM_NAME[sys]} /></div>
+        <StatusBar level={LEVEL[st.status]} />
+        {st.risk !== null && <p className="small muted" style={{ marginBottom: 0 }}>Risk of failure right now: {percent(st.risk)}</p>}
         {last && <p className="small muted" style={{ marginBottom: 0 }}>Last check: recording time {clock(last.window_end)} UTC</p>}
         <Detailed>
           <p className="small" style={{ marginBottom: 0 }}>
@@ -98,7 +101,8 @@ function ReplayConsole() {
 
   return (
     <>
-      <h1>Is the system healthy right now?</h1>
+      <h1>Recorded benchmark data</h1>
+      <p className="banner-line"><strong>Recorded benchmark data (cannot prove fault detection).</strong> Nothing here is live: the recording has no exact start or end time for any problem.</p>
       <p className="lede"><Simple>Watch two sample applications while recorded data plays back. The page says in plain words whether each one looks healthy, and why.</Simple><Detailed>Live view of the failure-risk model: windows built from replayed events, scored with the saved decision rule, explained with feature contributions.</Detailed></p>
 
       <div className="banner" role="note">
@@ -127,7 +131,7 @@ function ReplayConsole() {
         <div className="field">
           <span className="label">&nbsp;</span>
           <div className="row" style={{ gap: 'var(--space-2)' }}>
-            <button type="button" className="btn play" onClick={play} disabled={rep.busy || (running && !paused)}>{running && paused ? 'Resume' : 'Play'}</button>
+            <button type="button" className="btn play" onClick={play} disabled={rep.busy || (running && !paused)}>{running && paused ? 'Resume' : 'Start'}</button>
             <button type="button" className="btn secondary" onClick={() => rep.pause(true)} disabled={!running || paused || rep.busy}>Pause</button>
             <button type="button" className="btn danger" onClick={() => rep.stop()} disabled={!running || rep.busy}>Stop</button>
           </div>
@@ -142,9 +146,8 @@ function ReplayConsole() {
         </Detailed>
       </div>
       <p className="small muted" role="status" aria-live="polite">
-        {error ? `Could not reach the server: ${error}` : rep.err ? rep.err : running ? `${paused ? 'Paused' : 'Playing'}: ${SCENARIOS.find((s) => s.id === rep.status.info.scenario)?.label ?? rep.status.info.scenario} at ${rep.status.speed ?? rep.status.info.speed}×.` : 'Not playing.'}
-        {' '}{connected ? 'Live updates connected.' : 'Connecting to live updates…'}
-        {SCENARIOS.find((s) => s.id === scenario)?.hint ? ` ${SCENARIOS.find((s) => s.id === scenario)?.hint}` : ''}
+        {error ? `Could not reach the server: ${error}` : rep.err ? rep.err : running ? `${paused ? 'Paused' : 'Playing'}: ${SCENARIOS.find((s) => s.id === rep.status.info.scenario)?.label ?? rep.status.info.scenario} at ${rep.status.speed ?? rep.status.info.speed}×.` : !connected ? 'Connecting to the server…' : 'Ready. Press Start.'}
+        {!running && !error && !rep.err && connected && SCENARIOS.find((s) => s.id === scenario)?.hint ? ` You picked “${SCENARIOS.find((s) => s.id === scenario)?.label}”: ${SCENARIOS.find((s) => s.id === scenario)?.hint}` : ''}
       </p>
 
       <h2>2. Is it healthy?</h2>
@@ -154,7 +157,7 @@ function ReplayConsole() {
             {SYSTEMS.map((s) => <SystemCard key={s} sys={s} st={systems[s]} threshold={threshold} />)}
           </ul>
           <p className="takeaway">
-            {totals.windows === 0 ? 'Press Play to start. Each system is checked every 10 seconds of recording time.' :
+            {totals.windows === 0 ? 'Press Start. Each system is checked every 10 seconds of recording time.' :
               `So far ${totals.windows} windows were checked and ${totals.alerts} raised an alert.`}
           </p>
 
@@ -234,19 +237,6 @@ function ReplayConsole() {
 }
 
 export default function Console() {
-  const [params, setParams] = useSearchParams()
-  const tab = params.get('tab') === 'live' ? 'live' : 'replay'
-  usePageTitle(tab === 'live' ? 'Live demo' : 'Console')
-  const pick = (t: 'replay' | 'live') => setParams(t === 'live' ? { tab: 'live' } : {}, { replace: true })
-  return (
-    <>
-      <div className="tabs" role="tablist" aria-label="Console view">
-        <button role="tab" id="tab-replay" aria-selected={tab === 'replay'} aria-controls="panel-main" onClick={() => pick('replay')}>Recorded data (replay)</button>
-        <button role="tab" id="tab-live" aria-selected={tab === 'live'} aria-controls="panel-main" onClick={() => pick('live')}>Live demo app</button>
-      </div>
-      <div id="panel-main" role="tabpanel" aria-labelledby={tab === 'live' ? 'tab-live' : 'tab-replay'}>
-        {tab === 'live' ? <><h1>Is our demo shop healthy right now?</h1><LiveDemo /></> : <ReplayConsole />}
-      </div>
-    </>
-  )
+  usePageTitle('Recorded benchmark data')
+  return <ReplayConsole />
 }

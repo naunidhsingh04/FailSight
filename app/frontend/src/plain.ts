@@ -1,0 +1,56 @@
+import type { TbReason, TbWindow } from './testbed'
+
+/** The four things a visitor can break in the demo shop, in everyday words. `type` is the real fault the shop is given. */
+export const BREAKS: { id: string; type: string; label: string; what: string; duration_s?: number }[] = [
+  { id: 'slow-pages', type: 'latency', label: 'Make pages slow', what: 'every page takes longer to open', duration_s: 90 },
+  { id: 'slow-db', type: 'db_slow', label: 'Make the database slow', what: 'the shop’s database answers slowly', duration_s: 90 },
+  { id: 'page-crash', type: 'exception_route', label: 'Make a page crash', what: 'one page shows an error', duration_s: 90 },
+  { id: 'server-crash', type: 'crash', label: 'Make the server crash', what: 'the whole shop stops for a while' },
+]
+
+export type Level = 'idle' | 'learning' | 'ok' | 'watch' | 'problem'
+
+export interface Plain { headline: string; reason: string }
+
+const times = (value: number, normal: number | null) => {
+  if (normal == null || normal <= 0) return null
+  const r = value / normal
+  return r >= 1.5 ? Math.round(r) : null
+}
+
+/** Turn the strongest reading behind a window into a short plain sentence ("Response time went up 4 times"). */
+export function plainReason(r: TbReason | undefined): Plain {
+  if (!r) return { headline: 'something looks wrong', reason: 'The shop behaves differently from how it did while FailSight was learning.' }
+  const f = r.feature
+  const x = times(r.value, r.normal)
+  if (f.startsWith('api_latency')) return { headline: 'pages are getting slow', reason: x ? `Response time went up ${x} times (from ${Math.round(r.normal as number)} to ${Math.round(r.value)} milliseconds).` : 'Pages take longer to answer than usual.' }
+  if (f === 'api_error_rate' || f === 'log_error_count') return { headline: 'pages are showing errors', reason: 'More visitors than usual are getting an error instead of a page.' }
+  if (f.includes('db_')) return { headline: 'the database is slow', reason: 'The shop waits much longer than usual for its database.' }
+  if (f.includes('cpu')) return { headline: 'the server is working too hard', reason: x ? `The server is using ${x} times more processor power than usual.` : 'The server is using more processor power than usual.' }
+  if (f.includes('rss')) return { headline: 'the server is using too much memory', reason: 'The shop is using much more memory than usual.' }
+  if (f.includes('event_loop')) return { headline: 'the server is slow to react', reason: 'The shop is slow to start work on each request.' }
+  if (f === 'api_request_count') return r.value < (r.normal ?? 0) ? { headline: 'visitors are not getting through', reason: 'Far fewer requests are being answered than usual.' } : { headline: 'there is a rush of visitors', reason: 'Many more requests than usual are arriving.' }
+  return { headline: 'something looks wrong', reason: r.sentence.charAt(0).toUpperCase() + r.sentence.slice(1) + '.' }
+}
+
+export function levelOf(status: string | undefined | null, shopUp: boolean): Level {
+  if (!shopUp || !status) return 'idle'
+  if (status === 'learning') return 'learning'
+  if (status === 'healthy') return 'ok'
+  if (status === 'watch') return 'watch'
+  if (status === 'failing') return 'problem'
+  return 'idle'
+}
+
+/** The one sentence in Step 3. */
+export function sentence(level: Level, w: TbWindow | null, learnedPct: number): string {
+  if (level === 'idle') return 'Ready. Press Start.'
+  if (level === 'learning') return `Learning what normal looks like (${learnedPct}% done)`
+  if (level === 'ok') return 'Everything looks normal'
+  const top = w?.reasons?.[0]
+  const p = plainReason(top)
+  if (level === 'watch') return `Keeping an eye on it: ${p.headline}`
+  return `Something is wrong: ${p.headline}`
+}
+
+export const clock12 = (t: number) => new Date(t * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })

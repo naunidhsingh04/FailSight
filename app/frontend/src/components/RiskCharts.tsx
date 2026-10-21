@@ -1,33 +1,5 @@
-import type { HistPoint, Status } from '../monitor'
+import type { HistPoint } from '../monitor'
 import { clock, percent } from '../monitor'
-
-const COLOR: Record<Status, string> = { idle: 'var(--ink-3)', healthy: 'var(--ok)', watch: 'var(--watch)', failing: 'var(--fail)', nodata: 'var(--ink-3)' }
-
-/** Half-circle risk gauge, 0-100%, with a tick at the alert line. */
-export function Gauge({ risk, threshold, status, label }: { risk: number | null; threshold: number | null; status: Status; label: string }) {
-  const R = 78, CX = 100, CY = 92
-  const len = Math.PI * R
-  const r = risk ?? 0
-  const t = threshold ?? null
-  const ang = (v: number) => Math.PI * v
-  const tx = (v: number, rad: number) => CX - rad * Math.cos(ang(v))
-  const ty = (v: number, rad: number) => CY - rad * Math.sin(ang(v))
-  return (
-    <svg viewBox="0 0 200 112" className="chart" role="img" aria-label={`${label}: failure risk ${risk === null ? 'not available yet' : percent(risk)}${t !== null ? `, alert line at ${percent(t)}` : ''}`}>
-      <path d={`M ${CX - R} ${CY} A ${R} ${R} 0 0 1 ${CX + R} ${CY}`} fill="none" stroke="var(--surface-2)" strokeWidth="16" strokeLinecap="butt" />
-      <path d={`M ${CX - R} ${CY} A ${R} ${R} 0 0 1 ${CX + R} ${CY}`} fill="none" stroke="var(--border)" strokeWidth="16" strokeLinecap="butt" opacity="0.6" />
-      {risk !== null && <path d={`M ${CX - R} ${CY} A ${R} ${R} 0 0 1 ${CX + R} ${CY}`} fill="none" stroke={COLOR[status]} strokeWidth="16" strokeLinecap="butt" strokeDasharray={`${Math.max(len * r, 1)} ${len}`} />}
-      {t !== null && (
-        <g>
-          <line x1={tx(t, R - 13)} y1={ty(t, R - 13)} x2={tx(t, R + 13)} y2={ty(t, R + 13)} stroke="var(--text)" strokeWidth="3" />
-          <text x={tx(t, R - 22)} y={ty(t, R - 22) + 3} fontSize="9" textAnchor="end" style={{ fill: 'var(--text)' }}>alert line</text>
-        </g>
-      )}
-      <text x={CX} y={CY - 8} textAnchor="middle" fontSize="26" fontWeight="650" style={{ fill: 'var(--text)', fontFamily: 'var(--font-serif)' }}>{risk === null ? '–' : percent(risk)}</text>
-      <text x={CX} y={CY + 10} textAnchor="middle" fontSize="10" style={{ fill: 'var(--muted)' }}>failure risk</text>
-    </svg>
-  )
-}
 
 /** Risk per window with the alert line; the strip underneath marks windows the recording says were failures. */
 export function RiskTimeline({ points, threshold, ariaLabel }: { points: HistPoint[]; threshold: number | null; ariaLabel: string }) {

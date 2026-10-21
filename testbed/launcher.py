@@ -21,7 +21,7 @@ sys.path.insert(0, str(ROOT))
 from testbed import loadgen, run_generator as RG  # noqa: E402
 from testbed.harness import Testbed  # noqa: E402
 
-BACKEND = "http://127.0.0.1:8000"
+BACKEND = os.environ.get("FAILSIGHT_MONITOR_URL", "http://127.0.0.1:8000")          # set when the monitor itself starts the shop (Start button on the Demo page)
 
 
 def main():

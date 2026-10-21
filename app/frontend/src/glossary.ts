@@ -2,6 +2,15 @@
 export interface Entry { term: string; plain: string; more?: string }
 
 export const GLOSSARY: Record<string, Entry> = {
+  learning: {
+    term: 'Learning what normal looks like',
+    plain: 'When it starts, FailSight just watches the shop for about two minutes to see what a normal day looks like. Later, anything very different counts as a sign of trouble.',
+    more: 'The first 150 seconds of an app are the learning period: no alerts are raised, and each reading’s normal value is taken from it.',
+  },
+  recorded: {
+    term: 'Recorded benchmark data',
+    plain: 'Data that was recorded earlier from two sample applications. It has no exact start or end time for each problem, so it cannot prove that a problem is noticed quickly.',
+  },
   window: {
     term: 'Window',
     plain: 'A 30-second slice of recent activity. A new window is made every 10 seconds, so neighbouring windows overlap.',

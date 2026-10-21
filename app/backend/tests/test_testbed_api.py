@@ -65,3 +65,20 @@ def test_webhook_endpoint_validates_and_reports_state(client):
     assert client.put("/api/testbed/webhook", json=dict(url="http://127.0.0.1:9/hook")).json() == dict(webhook_configured=True)
     assert client.get("/api/testbed/state").json()["integration"]["webhook_configured"] is True
     assert client.put("/api/testbed/webhook", json=dict(url="")).json() == dict(webhook_configured=False)
+
+
+@needs_frozen
+def test_start_and_stop_endpoints_never_start_a_second_shop(client, monkeypatch):
+    import subprocess
+    started = []
+
+    class P:
+        pid = 0
+        def poll(self): return None
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **k: started.append(a) or P())
+    monkeypatch.setattr("app.backend.testbed_api.SHOP_ADMIN", "http://127.0.0.1:1")           # nothing listens there: the shop is "down"
+    client.app.state.shop_proc = None
+    assert client.post("/api/testbed/start").json() == {"started": True} and len(started) == 1
+    assert client.post("/api/testbed/start").json() == {"started": False, "starting": True} and len(started) == 1
+    client.app.state.shop_proc = None
+    assert client.post("/api/testbed/stop").json()["stopped"] is False

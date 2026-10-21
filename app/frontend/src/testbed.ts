@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 export interface TbReason { feature: string; plain_name: string; value: number; normal: number | null; shap: number; sentence: string }
 export interface TbWindow {
-  type: 'window'; app: string; window_index: number; window_start: number; window_end: number; learning: boolean; learning_progress: number
+  type: 'window'; app: string; window_index: number; window_start: number; window_end: number; emitted_at?: number; learning: boolean; learning_progress: number
   risk: number; threshold: number; flagged: boolean; alert: boolean; new_alert: boolean; status: 'learning' | 'healthy' | 'watch' | 'failing'
   reasons: TbReason[]; summary: string | null; robust_z_score: number | null; robust_z_flag: boolean; has_baseline: boolean
   validated: boolean; sources: { api: boolean; logs: boolean; process_metrics: boolean }
@@ -48,6 +48,11 @@ export function useTestbed(app = 'shop') {
       setState(st)
       const w = st.apps[app]
       if (w?.last) for (const h of w.history) seen.current.add(`${w.anchor}|${h.window_index}`)
+      fetch(`/api/testbed/windows?app_id=${encodeURIComponent(app)}`).then((r) => r.json()).then((past: TbWindow[]) => {
+        if (!alive || !Array.isArray(past)) return
+        for (const p of past) seen.current.add(`${p.window_start}|${p.window_index}`)
+        setWindows((cur) => [...past, ...cur.filter((c) => !past.some((p) => p.window_start === c.window_start && p.window_index === c.window_index))].slice(-120))
+      }).catch(() => undefined)
       es = new EventSource('/api/testbed/stream?replay=0')
       es.onopen = () => alive && setConnected(true)
       es.onerror = () => alive && setConnected(false)
@@ -73,6 +78,7 @@ export function useTestbed(app = 'shop') {
 export function useFaults() {
   const [active, setActive] = useState<TbFault[]>([])
   const [err, setErr] = useState<string | null>(null)
+  const [ready, setReady] = useState(false)               // true once the first answer (even "not reachable") has arrived
   const timer = useRef<number | null>(null)
   const alive = useRef(true)
   const refresh = useCallback(async () => {
@@ -82,18 +88,19 @@ export function useFaults() {
       const j = await r.json()
       if (!r.ok || j.reachable === false) { failed = true; setErr(j.error ?? 'the demo shop is not reachable'); setActive([]) } else { setErr(null); setActive(j.active ?? []) }
     } catch (e: any) { failed = true; setErr(String(e?.message ?? e)) }
-    if (alive.current) timer.current = window.setTimeout(refresh, failed ? 10000 : 2000)       // one request at a time, slower while the shop is unreachable
+    if (alive.current) { setReady(true); timer.current = window.setTimeout(refresh, failed ? 4000 : 2000) }       // one request at a time, slower while the shop is unreachable
   }, [])
   useEffect(() => { alive.current = true; refresh(); return () => { alive.current = false; if (timer.current) window.clearTimeout(timer.current) } }, [refresh])
-  const inject = async (type: string, severity: string) => {
-    const r = await fetch('/api/testbed/fault', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type, severity }) })
+  const inject = async (type: string, severity: string, duration_s?: number) => {
+    const r = await fetch('/api/testbed/fault', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(duration_s ? { type, severity, duration_s } : { type, severity }) })
     const j = await r.json().catch(() => ({}))
     if (!r.ok) setErr(j.error ?? `HTTP ${r.status}`)
     if (timer.current) window.clearTimeout(timer.current)
     refresh()
+    return r.ok
   }
   const clear = async () => { await fetch('/api/testbed/clear', { method: 'POST' }); if (timer.current) window.clearTimeout(timer.current); refresh() }
-  return { active, err, inject, clear }
+  return { active, err, ready, inject, clear, refresh }
 }
 
 export const TESTBED_LIMITS: string[] = [

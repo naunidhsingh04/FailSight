@@ -145,6 +145,41 @@ def register(app):
             return JSONResponse(content=dict(active=[], reachable=False, error=json.loads(r.body)["error"]))
         return r
 
+    @app.post("/api/testbed/start")
+    async def tb_start(request: Request):
+        """start the demo shop and its steady traffic (the same thing start_testbed.bat does) as a child process of the monitor; the launcher notices that the monitor is already running"""
+        import subprocess
+        import sys
+        mon(request)
+        if not (REP / "testbed_frozen_config.json").exists() or not (ROOT / "models" / "testbed" / "detector.joblib").exists():
+            return JSONResponse(status_code=409, content={"error": "The frozen detector is missing: run `python -m testbed.freeze` first."})
+        r = await shop("GET", "/admin/faults")
+        if r.status_code != 502:
+            return {"started": False, "already_running": True}
+        proc = getattr(request.app.state, "shop_proc", None)
+        if proc is not None and proc.poll() is None:
+            return {"started": False, "starting": True}
+        (ROOT / "outputs").mkdir(exist_ok=True)
+        flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+        request.app.state.shop_proc = subprocess.Popen([sys.executable, "-m", "testbed.launcher", "--no-browser"], cwd=ROOT, env=dict(os.environ, FAILSIGHT_MONITOR_URL=str(request.base_url).rstrip("/"), PYTHONPATH=str(ROOT)), stdout=open(ROOT / "outputs" / "launcher_from_page.log", "ab"), stderr=subprocess.STDOUT, creationflags=flags)
+        return {"started": True}
+
+    @app.post("/api/testbed/stop")
+    async def tb_stop(request: Request):
+        """stop a demo shop that was started from the page (a shop started with start_testbed.bat is stopped in its own window)"""
+        proc = getattr(request.app.state, "shop_proc", None)
+        if proc is None or proc.poll() is not None:
+            return {"stopped": False, "note": "This page did not start the demo shop (or it has already stopped). A shop started with start_testbed.bat is stopped in that window."}
+        import psutil
+        try:
+            parent = psutil.Process(proc.pid)
+            for c in parent.children(recursive=True):
+                c.kill()
+            parent.kill()
+        except psutil.NoSuchProcess:
+            pass
+        return {"stopped": True}
+
     @app.post("/api/testbed/clear")
     async def tb_clear():
         return await shop("POST", "/admin/clear")
@@ -159,4 +194,4 @@ def register(app):
             small["alert_rule"] = cfg["alert_rule"]["name"]
         return JSONResponse(content=dict(limits=LIMITS, frozen=small, assignment=table("testbed_run_assignment.csv"), overall=table("testbed_heldout_overall.csv"), by_fault=table("testbed_heldout_by_fault.csv"),
                                          false_alarms=table("testbed_false_alarms.csv"), prefailure=table("testbed_prefailure.csv"), runid=table("testbed_runid_check.csv"), shuffled=table("testbed_shuffled_control.csv"),
-                                         live=table("testbed_live_validation.csv"), rcaeval=table("rcaeval_external_results.csv"), cv_by_fault=table("testbed_cv_by_fault.csv")))
+                                         live=table("testbed_live_validation.csv"), rcaeval=table("rcaeval_external_results.csv"), cv_by_fault=table("testbed_cv_by_fault.csv"), instances=table("testbed_heldout_instances.csv")))
