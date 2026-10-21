@@ -18,7 +18,9 @@ Known weak spot, stated plainly: on healthy recordings the best binary model's r
 
 ## Run it (Windows first, no Docker needed)
 
-You need Python 3.11+ and Node 20+. The trained models are not in git (see [app/README.md](app/README.md)); they must be in `models/` and `processed/preprocessor.joblib`.
+You need Python 3.11+ and Node 20+.
+
+**What a fresh clone contains and what it does not.** Git holds the code, the result files in `report_outputs/` (including the proof report), the testbed run schedules and the documents. It does **not** hold data or trained models: the AnoMod / LO2 data, `models/`, `processed/*.joblib` and `processed/*.parquet`, the raw events of the testbed runs, `external/`. Without the AnoMod models the backend still starts, in **testbed-only mode** (`/api/health` says `testbed-only`): the Proofs, Testbed, Limits and Connect pages and the live testbed monitor work, while the AnoMod replay console and the Results page answer with a clear 503 message. To get the AnoMod models you need the AnoMod data and `scripts/full_pipeline.py` (see [app/README.md](app/README.md)); to get the testbed detector you generate the testbed runs yourself (see below).
 
 ```powershell
 python -m venv .venv; .\.venv\Scripts\Activate.ps1
@@ -26,6 +28,10 @@ pip install -r app\backend\requirements.txt -r app\backend\requirements-deep.txt
 cd app\frontend; npm install; npm run build; cd ..\..
 python -m app.backend.serve          # http://127.0.0.1:8000 (loads the models: 30-60 s)
 ```
+
+The first install pulls TensorFlow (large); for the testbed and the dashboard alone `pip install -r app\backend\requirements.txt` is enough (set `FAILSIGHT_LOAD_DEEP=0` to skip the deep models when you have the AnoMod models). Run the tests with `pip install -r app\backend\requirements-dev.txt` and `python -m pytest tests app\backend\tests` (tests that need data or models are skipped with a reason).
+
+**Reproduce the testbed from a clean clone (no data needed, about 7 hours of laptop time):** `python -m testbed.run_generator --runs 40 --minutes 10`, then `python -m testbed.dataset`, `python -m testbed.validate`, `python -m testbed.freeze`, then `start_testbed.bat`. The generated runs will differ from ours in timing details, so numbers will not match `report_outputs/` exactly.
 
 Open the address, choose a scenario, pick a speed (1x, 10x, 60x) and press **Play**. On macOS or Linux use `python3` and `python -m uvicorn app.backend.main:app --port 8000`.
 

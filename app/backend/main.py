@@ -45,12 +45,21 @@ def create_app(registry: Registry | None = None) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         reg = registry or Registry()
-        reg.load()                         # raises RegistryError with a clear message when a model file is missing
-        app.state.reg = reg
-        app.state.explainer = Explainer(reg)
-        app.state.monitor = Monitor(reg, app.state.explainer)
-        app.state.monitor.hub.loop = asyncio.get_running_loop()
-        app.state.replay = ReplayController()
+        app.state.anomod_error = None
+        try:
+            reg.load()                     # raises RegistryError with a clear message when a model file is missing
+            app.state.reg = reg
+            app.state.explainer = Explainer(reg)
+            app.state.monitor = Monitor(reg, app.state.explainer)
+            app.state.monitor.hub.loop = asyncio.get_running_loop()
+            app.state.replay = ReplayController()
+            for (_l, _n) in reg.entries:     # fill the metric cache now so the first page load of Results / Limits is not slow
+                results.model_metrics(_l, _n)
+            log.info("FailSight: %d model entries, %d available", len(reg.entries), sum(e["available"] for e in reg.entries.values()))
+        except RegistryError as ex:        # a clean clone has no AnoMod models (they are not in git): the testbed monitor, Connect, Proofs and Testbed pages still work
+            app.state.anomod_error = str(ex)
+            app.state.reg = app.state.explainer = app.state.monitor = app.state.replay = None
+            log.warning("AnoMod models are not available, starting in testbed-only mode: %s", ex)
         app.state.testbed = None
         try:                                           # the live testbed monitor needs the frozen detector (python -m testbed.freeze)
             from . import testbed_monitor
@@ -60,13 +69,11 @@ def create_app(registry: Registry | None = None) -> FastAPI:
                 app.state.testbed.start()
         except Exception as ex:                        # noqa: BLE001
             log.warning("testbed monitor not started: %r", ex)
-        for (_l, _n) in reg.entries:         # fill the metric cache now so the first page load of Results / Limits is not slow
-            results.model_metrics(_l, _n)
-        log.info("FailSight: %d model entries, %d available", len(reg.entries), sum(e["available"] for e in reg.entries.values()))
         yield
         if app.state.testbed is not None:
             app.state.testbed.stop()
-        app.state.replay.stop(wait=True)
+        if app.state.replay is not None:
+            app.state.replay.stop(wait=True)
 
     app = FastAPI(title="FailSight API", version="1.0", lifespan=lifespan)
     app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"], allow_methods=["GET", "POST"], allow_headers=["*"])
@@ -83,8 +90,14 @@ def create_app(registry: Registry | None = None) -> FastAPI:
     async def registry_error(_, exc: RegistryError):
         return JSONResponse(status_code=503, content={"error": str(exc)})
 
+    def need(request: Request, name: str):
+        obj = getattr(request.app.state, name)
+        if obj is None:
+            raise RegistryError("The AnoMod models are not available on this machine (testbed-only mode): " + str(request.app.state.anomod_error))
+        return obj
+
     def reg_of(request: Request) -> Registry:
-        return request.app.state.reg
+        return need(request, "reg")
 
     def samples() -> list:
         p = config.ASSETS / "samples.json"
@@ -152,6 +165,8 @@ def create_app(registry: Registry | None = None) -> FastAPI:
     # ------------------------------------------------------------------ endpoints
     @app.get("/api/health")
     async def health(request: Request):
+        if request.app.state.reg is None:
+            return dict(status="testbed-only", models=0, available=0, tensorflow=False, testbed=request.app.state.testbed is not None, anomod_error=request.app.state.anomod_error)
         reg = reg_of(request)
         return dict(status="ok", models=len(reg.entries), available=sum(e["available"] for e in reg.entries.values()), tensorflow=reg.tf_available and reg.load_deep)
 
@@ -223,7 +238,7 @@ def create_app(registry: Registry | None = None) -> FastAPI:
     @app.post("/api/explain")
     async def explain(request: Request, body: ExplainBody):
         reg = reg_of(request)
-        ex: Explainer = request.app.state.explainer
+        ex: Explainer = need(request, "explainer")
         e = get_entry(reg, body.label_version, body.model)
         if not ex.supported(body.label_version, body.model):
             raise InputError(400, f"SHAP/LIME are offered for tree models only (RF, ET, XGB, LGBM and their tuned versions); '{body.model}' is a {e['family']} model.")
@@ -285,7 +300,7 @@ def create_app(registry: Registry | None = None) -> FastAPI:
         return body
 
     def mon(request: Request) -> Monitor:
-        return request.app.state.monitor
+        return need(request, "monitor")
 
     async def ingest_route(kind: str, request: Request):
         body = await read_json(request)
@@ -420,25 +435,25 @@ def create_app(registry: Registry | None = None) -> FastAPI:
         b = await read_json(request)
         port = request.url.port or int(os.environ.get("PORT", "8000"))
         try:
-            return request.app.state.replay.start(b.get("scenario", "Performance"), int(b.get("speed", 10)), b.get("system", "both"), int(b.get("blocks", 2)), port, b.get("model"))
+            return need(request, "replay").start(b.get("scenario", "Performance"), int(b.get("speed", 10)), b.get("system", "both"), int(b.get("blocks", 2)), port, b.get("model"))
         except (ValueError, TypeError) as ex:
             raise IngestError(422, str(ex))
 
     @app.get("/api/replay/control")
     async def replay_control_get(request: Request):
-        return request.app.state.replay.state
+        return need(request, "replay").state
 
     @app.post("/api/replay/control")
     async def replay_control_set(request: Request):
         b = await read_json(request)
         try:
-            return request.app.state.replay.control(b.get("paused"), b.get("speed"), b.get("stop"))
+            return need(request, "replay").control(b.get("paused"), b.get("speed"), b.get("stop"))
         except ValueError as ex:
             raise IngestError(422, str(ex))
 
     @app.get("/api/replay/status")
     async def replay_status(request: Request):
-        return request.app.state.replay.status()
+        return need(request, "replay").status()
 
     # ------------------------------------------------------------------ built frontend (single-container deployment)
     dist = config.FRONTEND_DIST

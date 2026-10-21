@@ -25,4 +25,4 @@ fold
 9              60        60      20           56       64    260
 10             57        60      20           60       64    261
 blocks per fold: {1: 25, 2: 26, 3: 26, 4: 27, 5: 26, 6: 25, 7: 26, 8: 27, 9: 27, 10: 27} | same block in >1 fold: 0
-saved: C:\Users\Lenovo\Documents\AI PROJECT\code\processed\preprocessor.joblib C:\Users\Lenovo\Documents\AI PROJECT\code\processed\feature_names.json C:\Users\Lenovo\Documents\AI PROJECT\code\report_outputs\split_ids.csv C:\Users\Lenovo\Documents\AI PROJECT\code\report_outputs\fold_assignment.csv
+saved: <repo>\processed\preprocessor.joblib <repo>\processed\feature_names.json <repo>\report_outputs\split_ids.csv <repo>\report_outputs\fold_assignment.csv

@@ -5,7 +5,6 @@ import math
 import os
 from pathlib import Path
 
-import httpx
 import pandas as pd
 from fastapi import Request
 from fastapi.responses import JSONResponse, StreamingResponse
@@ -109,6 +108,7 @@ def register(app):
 
     async def shop(method, path, **kw):
         try:
+            import httpx                               # only needed for the fault switches of the live demo
             async with httpx.AsyncClient(timeout=6) as c:
                 r = await c.request(method, SHOP_ADMIN + path, **kw)
             return JSONResponse(status_code=r.status_code, content=r.json())

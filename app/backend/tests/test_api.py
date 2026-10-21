@@ -74,12 +74,13 @@ def test_registry_reports_missing_preprocessor(tmp_path):
         Registry(preprocessor_path=tmp_path / "nope.joblib").load()
 
 
-def test_app_startup_fails_clearly_when_models_missing(tmp_path):
+def test_app_starts_in_testbed_only_mode_and_names_the_missing_model_file_when_models_missing(tmp_path):
     if not config.PREPROCESSOR.exists():
         pytest.skip("preprocessor.joblib not present")
-    with pytest.raises(RegistryError, match="model file"):
-        with TestClient(create_app(Registry(models_dir=tmp_path))):
-            pass
+    with TestClient(create_app(Registry(models_dir=tmp_path))) as c:                  # the AnoMod models are not in git: the app still starts and says exactly what is missing
+        assert c.get("/api/health").json()["status"] == "testbed-only"
+        r = c.get("/api/models")
+        assert r.status_code == 503 and "model file" in r.json()["error"]
 
 
 @needs_models

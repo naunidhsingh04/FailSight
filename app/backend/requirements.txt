@@ -12,3 +12,7 @@ lightgbm
 joblib
 shap
 lime
+httpx
+psutil
+pyarrow
+matplotlib
