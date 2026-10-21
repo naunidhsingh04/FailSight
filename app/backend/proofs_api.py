@@ -9,7 +9,7 @@ import threading
 from . import config
 
 PATH = config.REPORTS / "proofs.json"
-SECTIONS = [f"P{i}" for i in range(1, 18)]
+SECTIONS = [f"P{i}" for i in range(1, 20)]
 _lock = threading.Lock()
 
 

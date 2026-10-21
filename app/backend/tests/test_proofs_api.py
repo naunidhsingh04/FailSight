@@ -23,7 +23,7 @@ def test_report_equals_the_file_on_disk(client):
 @needs_report
 def test_report_has_all_ten_sections_and_no_failure(client):
     rep = client.get("/api/proofs").json()
-    assert [s["id"] for s in rep["sections"]] == [f"P{i}" for i in range(1, 18)]
+    assert [s["id"] for s in rep["sections"]] == [f"P{i}" for i in range(1, 20)]
     assert rep["totals"].get("FAIL", 0) == 0
     assert rep["text"].strip()
 

@@ -293,6 +293,9 @@ def create_app(registry: Registry | None = None) -> FastAPI:
         events = body["events"] if "events" in body else [{k: v for k, v in body.items() if k != "system"}]
         tb = getattr(request.app.state, "testbed", None)
         if tb is not None and system not in ("SN", "TT"):                   # any other app id belongs to the testbed (agent-instrumented apps)
+            from .testbed_monitor import check_api_key, parse_keys
+            if not check_api_key(system, request.headers.get("x-api-key"), parse_keys(os.environ.get("FAILSIGHT_API_KEYS"))):        # off unless FAILSIGHT_API_KEYS is set
+                raise IngestError(401, "missing or wrong API key for this app (X-API-Key header)")
             try:
                 return JSONResponse(content=await run_in_threadpool(tb.ingest, kind, system, events))
             except ValueError as ex:

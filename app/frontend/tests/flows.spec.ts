@@ -54,6 +54,19 @@ for (const width of [375, 768, 1280, 1920]) {
       await expect(page).toHaveURL(/tab=live/)
     })
 
+    test('Connect page: validation scope, three snippets with copy buttons, connection state and webhook form', async ({ page }) => {
+      await page.goto('/connect')
+      for (const t of LIMITS) await expect(page.getByText(t).first()).toBeVisible()
+      await expect(page.getByText(/validated only on our own test shop/)).toBeVisible()
+      for (const t of ['Python (ASGI middleware)', 'Node (Express middleware)', 'Any server (tail an nginx or app access log)']) await expect(page.getByRole('heading', { name: t })).toBeVisible()
+      await expect(page.getByRole('button', { name: /Copy the Python/ })).toBeVisible()
+      await page.getByLabel(/App id/).fill('shop')
+      await expect(page.getByRole('status').filter({ hasText: /Learning normal behaviour|Live|Not connected/ }).first()).toBeVisible()
+      await page.getByRole('button', { name: 'Detailed' }).click()
+      await expect(page.getByText(/API key required/)).toBeVisible()
+      await expect(page.getByLabel('Webhook address')).toBeVisible()
+    })
+
     test('Testbed page: limits first, the three live demos exactly as recorded, detailed tables on demand', async ({ page, request }) => {
       await page.goto('/testbed')
       for (const t of LIMITS) await expect(page.getByText(t).first()).toBeVisible()

@@ -24,6 +24,8 @@ const PLAIN: Record<string, string> = {
   P14: 'Can a model tell which recording a window comes from? If so, recognising the recording alone would reproduce the scores, and they would say little about spotting faults.',
   P15: 'Do exact fault start and end times exist, so that windows before, during and after a fault can be labelled? If not, the within-recording test and early-warning labels cannot be built honestly.',
   P12: 'The live demo: three 12-minute runs of the real shop with the real agent and monitor, on new seeds, with the fault schedule written down before each run. Reported as it came out.',
+  P18: 'A test on a public outside benchmark (RCAEval): do the per-app detectors from the testbed find injected faults in other people’s systems? Testing only; nothing was tuned on it.',
+  P19: 'Can another app be connected? The agent, the log tailer, the Node middleware, the optional API key and the Slack-compatible webhook are checked here; whether the detector works on that app is not.',
   P16: 'The testbed results on whole runs the models never saw: how well faults are detected, how fast, with how many false alarms.',
   P17: 'Can the testbed result be explained by recognising which run a window comes from? Here every run contains both normal and faulty windows, so it should not be.',
   P13: 'Do the models lean on patterns of missing data instead of real signals? We hide parts of the data, train small look-alike models on the missing-data patterns alone, and remove those columns, then compare.',

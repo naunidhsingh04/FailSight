@@ -77,6 +77,10 @@ start_testbed.bat                                        # one command: monitor 
 
 Dataset description: [docs/TESTBED_DATASET.md](docs/TESTBED_DATASET.md). Presentation script: [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
 
+## Connect your app
+
+[docs/INTEGRATION.md](docs/INTEGRATION.md) ("Connect your app in 15 minutes") has copy-paste snippets for a Python ASGI middleware (`agent/failsight_agent`), a Node/Express middleware (`agent/node/failsight-express.js`) and tailing an nginx or application access log (`python -m failsight_agent.tail`); the web app has a **Connect** page with the same snippets, the connection state (events received, last event, learning or live), an optional webhook form, and Simple/Detailed modes. Optional and off by default: a per-app API key on the ingestion endpoints (`FAILSIGHT_API_KEYS="app:key,..."`) and a Slack-compatible alert webhook (`FAILSIGHT_WEBHOOK_URL`). Flow: collect, send, learning period (150 s), scoring every 10 s, alerts with reasons. **The detector was validated only on the testbed shop; every other app is labelled unvalidated, and transfer to other apps has not been shown.** Checks: proofs P19.
+
 ## Architecture
 
 ```

@@ -7,8 +7,10 @@ Events arrive through the same ingestion protocol as every other app (POST /inge
  * explains an alert in plain language from the tree-SHAP contributions of the model compared with the app's own normal,
  * runs a per-app robust z-score detector as a second opinion (it never raises alerts).
 Nothing here is tuned: the configuration is read from the frozen file."""
+import hmac
 import json
 import math
+import os
 import sys
 import threading
 import time
@@ -17,6 +19,7 @@ from pathlib import Path
 
 import joblib
 import numpy as np
+import urllib.request
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
@@ -32,6 +35,7 @@ LATENESS = 3.0                       # seconds an event may arrive after its win
 IDLE_AFTER = 90.0                    # no event for this long: the app is idle and no more windows are built
 UNSUP_THRESHOLD = 10.0               # robust z-score alert level chosen on the train runs in the held-out validation (second opinion only)
 KEEP_SECONDS = 70.0
+VALIDATED_APPS = {"shop"}            # the only app the detector was validated on (the testbed shop); every other app id is reported as unvalidated
 
 PLAIN = {
     "api_request_count": ("requests in the last 30 s", ""), "api_4xx_count": ("client-error responses (4xx)", ""), "api_5xx_count": ("failed requests (5xx)", ""),
@@ -60,6 +64,34 @@ def fmt_value(base, v):
     if unit == "%" and base.endswith(("rate", "share")):
         return f"{v * 100:.0f}%"
     return f"{v:.0f}{unit}" if abs(v) >= 100 else f"{v:.1f}{unit}" if abs(v) >= 1 else f"{v:.2f}{unit}"
+
+
+# ------------------------------------------------------------------------------------------------ optional per-app API keys and alert webhook
+def parse_keys(spec):
+    """FAILSIGHT_API_KEYS="shop:key1,other:key2" -> {"shop": "key1", "other": "key2"}; empty or unset = the check is OFF (default)"""
+    keys = {}
+    for part in (spec or "").split(","):
+        if ":" in part:
+            a, k = part.split(":", 1)
+            if a.strip() and k.strip():
+                keys[a.strip()] = k.strip()
+    return keys
+
+
+def check_api_key(app_id, provided, keys):
+    """True when no keys are configured (off), or when `provided` equals the key configured for this app"""
+    if not keys:
+        return True
+    want = keys.get(app_id)
+    return want is not None and provided is not None and hmac.compare_digest(str(provided), want)
+
+
+def slack_payload(ev):
+    """Slack-compatible incoming-webhook body ({"text": ...}); other chat tools that accept the same shape work as well"""
+    pct = int(round(ev["risk"] * 100))
+    why = ev.get("summary") or "The detector flagged this window."
+    tag = "" if ev.get("validated") else " (unvalidated app: the detector was validated only on the testbed shop)"
+    return {"text": f":rotating_light: FailSight alert for {ev['app']}{tag} (failure risk {pct}%): {why}"}
 
 
 class AppStream:
@@ -99,6 +131,8 @@ class TestbedMonitor:
         self.lock = threading.RLock()
         self.apps = {}
         self.explainer = None
+        self.webhook_url = os.environ.get("FAILSIGHT_WEBHOOK_URL") or None
+        self.webhook_log = []
         self._stop = threading.Event()
         self._thread = None
 
@@ -260,6 +294,7 @@ class TestbedMonitor:
         done = min(1.0, (we - st.anchor) / self.learning_s)
         ev = dict(type="window", app=st.app_id, window_index=k, window_start=ws, window_end=we, emitted_at=time.time(), learning=bool(learning), learning_progress=done,
                   risk=risk, threshold=self.threshold, flagged=bool(flagged), alert=bool(alert), new_alert=bool(new_alert), status=status, reasons=reasons, summary=summary,
+                  validated=st.app_id in VALIDATED_APPS, sources=dict(api=bool(row["api_request_count"] > 0), logs=bool(row["log_line_count"] > 0), process_metrics=bool(np.isfinite(row["m_process_cpu_percent__mean"]))),
                   robust_z_score=z_score, robust_z_flag=bool(z_score is not None and z_score >= UNSUP_THRESHOLD), has_baseline=bool(np.isfinite(rel).any()),
                   features={c: (None if not np.isfinite(row[c]) else row[c]) for c in DS.DELTA_BASE if c in row},
                   model=dict(name=self.cfg["model"], feature_set=self.cfg["feature_set"], alert_rule=self.cfg["alert_rule"]["name"], frozen_at=self.cfg["frozen_at"]))
@@ -269,6 +304,7 @@ class TestbedMonitor:
         if new_alert:
             st.counters["alerts"] += 1
             st.alerts.append(ev)
+            self._notify(ev)
         with open(LIVE_DIR / f"{st.app_id}_windows.jsonl", "a", encoding="utf-8") as f:
             f.write(json.dumps(ev, default=float) + "\n")
         self.hub.publish(ev)
@@ -279,6 +315,27 @@ class TestbedMonitor:
         for m in st.mets:
             st.mets[m] = [a for a in st.mets[m] if a[0] >= cut]
         return ev
+
+
+    def set_webhook(self, url):
+        self.webhook_url = url or None
+
+    def _notify(self, ev):
+        """send the alert to the configured webhook in the background; a failing webhook never disturbs the monitor"""
+        url = self.webhook_url
+        if not url:
+            return
+
+        def post():
+            try:
+                req = urllib.request.Request(url, data=json.dumps(slack_payload(ev)).encode(), headers={"Content-Type": "application/json"}, method="POST")
+                with urllib.request.urlopen(req, timeout=5) as r:
+                    status = r.status
+            except Exception as e:                                # noqa: BLE001
+                status = repr(e)
+            self.webhook_log.append(dict(app=ev["app"], window_end=ev["window_end"], status=status))
+            del self.webhook_log[:-50]
+        threading.Thread(target=post, daemon=True).start()
 
     # ------------------------------------------------------------------ learning mode, second opinion, explanation
     def _finish_learning(self, st):

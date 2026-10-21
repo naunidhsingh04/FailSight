@@ -5,13 +5,15 @@ export interface TbWindow {
   type: 'window'; app: string; window_index: number; window_start: number; window_end: number; learning: boolean; learning_progress: number
   risk: number; threshold: number; flagged: boolean; alert: boolean; new_alert: boolean; status: 'learning' | 'healthy' | 'watch' | 'failing'
   reasons: TbReason[]; summary: string | null; robust_z_score: number | null; robust_z_flag: boolean; has_baseline: boolean
+  validated: boolean; sources: { api: boolean; logs: boolean; process_metrics: boolean }
   features: Record<string, number | null>; model: { name: string; feature_set: string; alert_rule: string; frozen_at: string }
 }
 export interface TbApp {
   app: string; anchor: number | null; status: string; idle: boolean; last_event_at: number | null; learning: { done: boolean; progress: number }
   last: TbWindow | null; counters: Record<string, number>; history: { window_index: number; window_end: number; risk: number; flagged: boolean; alert: boolean; learning: boolean; status: string }[]; alerts: TbWindow[]
 }
-export interface TbState { config: { frozen_at: string; model: string; feature_set: string; n_features: number; threshold: number; learning_period_s: number; alert_rule: string }; apps: Record<string, TbApp> }
+export interface TbIntegration { api_key_required: boolean; apps_with_keys: string[]; webhook_configured: boolean; webhook_host: string | null; last_webhook: { status: unknown } | null }
+export interface TbState { integration?: TbIntegration; config: { frozen_at: string; model: string; feature_set: string; n_features: number; threshold: number; learning_period_s: number; alert_rule: string }; apps: Record<string, TbApp> }
 export interface TbFault { id: string; type: string; klass: string; kind: string; start: number; until: number; failed: boolean; params: Record<string, unknown> }
 
 export const FAULTS: { id: string; label: string; klass: string; hint: string }[] = [

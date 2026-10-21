@@ -43,3 +43,25 @@ def test_fault_endpoints_validate_input_and_report_an_unreachable_shop(client):
     r = client.post("/api/testbed/fault", json=dict(type="latency", severity="mild"))
     assert r.status_code in (200, 502)                                       # 502 when no shop is running on port 8802
     assert client.get("/api/testbed/faults").status_code in (200, 502)
+
+
+@needs_frozen
+def test_api_key_check_on_ingestion_is_off_by_default_and_enforced_when_configured(client, monkeypatch):
+    ev = dict(timestamp=time.time(), status_code=200, latency_ms=3.0)
+    monkeypatch.delenv("FAILSIGHT_API_KEYS", raising=False)
+    assert client.post("/ingest/api", json=dict(system="keytest", events=[ev])).status_code == 200            # off by default
+    monkeypatch.setenv("FAILSIGHT_API_KEYS", "keytest:s3cret")
+    assert client.post("/ingest/api", json=dict(system="keytest", events=[ev])).status_code == 401
+    assert client.post("/ingest/api", json=dict(system="keytest", events=[ev]), headers={"X-API-Key": "wrong"}).status_code == 401
+    assert client.post("/ingest/api", json=dict(system="keytest", events=[ev]), headers={"X-API-Key": "s3cret"}).status_code == 200
+    assert client.post("/ingest/api", json=dict(system="SN", events=[dict(timestamp=1.7e9, status_code=200)])).status_code == 200      # the AnoMod replay is not affected
+    st = client.get("/api/testbed/state").json()["integration"]
+    assert st["api_key_required"] is True and st["apps_with_keys"] == ["keytest"]
+
+
+@needs_frozen
+def test_webhook_endpoint_validates_and_reports_state(client):
+    assert client.put("/api/testbed/webhook", json=dict(url="ftp://x")).status_code == 422
+    assert client.put("/api/testbed/webhook", json=dict(url="http://127.0.0.1:9/hook")).json() == dict(webhook_configured=True)
+    assert client.get("/api/testbed/state").json()["integration"]["webhook_configured"] is True
+    assert client.put("/api/testbed/webhook", json=dict(url="")).json() == dict(webhook_configured=False)

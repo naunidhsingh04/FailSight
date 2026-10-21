@@ -50,7 +50,23 @@ def register(app):
 
     @app.get("/api/testbed/state")
     async def tb_state(request: Request):
-        return JSONResponse(content=clean(mon(request).state()))
+        from .testbed_monitor import parse_keys
+        m = mon(request)
+        st = m.state()
+        keys = parse_keys(os.environ.get("FAILSIGHT_API_KEYS"))
+        st["integration"] = dict(api_key_required=bool(keys), apps_with_keys=sorted(keys), webhook_configured=bool(m.webhook_url), webhook_host=(m.webhook_url.split("/")[2] if m.webhook_url and "//" in m.webhook_url else None),
+                                 last_webhook=(m.webhook_log[-1] if m.webhook_log else None))
+        return JSONResponse(content=clean(st))
+
+    @app.put("/api/testbed/webhook")
+    async def tb_webhook(request: Request):
+        """set (or clear with an empty url) the Slack-compatible webhook that receives alerts"""
+        b = await request.json()
+        url = (b.get("url") or "").strip()
+        if url and not url.startswith(("http://", "https://")):
+            return JSONResponse(status_code=422, content={"error": "the webhook url must start with http:// or https://"})
+        mon(request).set_webhook(url)
+        return {"webhook_configured": bool(url)}
 
     @app.get("/api/testbed/stream")
     async def tb_stream(request: Request, replay: int = 40, max: int = 0):

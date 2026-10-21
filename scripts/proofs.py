@@ -723,6 +723,103 @@ def main():
                     result=f"detected {int(nf.detected.sum())} of {len(nf)} injected faults, {int(lv.false_alarms.sum())} false alarm(s), {int(lv.missed_fault_windows.sum())} of {int(lv.fault_windows.sum())} fault windows missed")
             sections.append(s12)
 
+    # ------------------------------------------------------------------------------------------------ P18 RCAEval external test (testing only)
+    if want("P18"):
+        s = Section("P18", "EXTERNAL TEST ON RCAEVAL (testing only, nothing tuned): do the testbed detectors find injected faults in other systems?"); header(s)
+        rp = REP / "rcaeval_external_results.csv"
+        if not rp.exists():
+            s.add("RCAEval external test", "REPORTED", ["The external test has not been run (or was blocked): the reason is recorded in report_outputs/FINAL_STATUS.md. No claim about other systems is made from it."], "report_outputs/FINAL_STATUS.md", result="not run")
+        sections.append(s)
+
+    # ------------------------------------------------------------------------------------------------ P19 integration (agent, log tailer, Node middleware, API keys, webhook)
+    if want("P19"):
+        s = Section("P19", "INTEGRATION: connecting another app (agent, log tailer, Node middleware, optional API key, Slack-compatible webhook)"); header(s)
+        import http.server
+        import shutil as _sh
+        import threading as _th
+        sys.path.insert(0, str(ROOT / "agent"))
+        got = []
+
+        class _H(http.server.BaseHTTPRequestHandler):
+            def do_POST(self):
+                n = int(self.headers.get("content-length", 0))
+                got.append((self.path, {k.lower(): v for k, v in self.headers.items()}, json.loads(self.rfile.read(n) or b"{}")))
+                self.send_response(200); self.end_headers(); self.wfile.write(b"{}")
+
+            def log_message(self, *a):
+                pass
+        srv = http.server.HTTPServer(("127.0.0.1", 0), _H)
+        _th.Thread(target=srv.serve_forever, daemon=True).start()
+        url = f"http://127.0.0.1:{srv.server_port}"
+        # 1 Python ASGI agent
+        from failsight_agent import FailSight
+        from fastapi import FastAPI
+        from fastapi.testclient import TestClient
+        fsx = FailSight("p19", url, "key19", send_metrics=False, send_logs=False, flush_interval=0.2)
+        appx = FastAPI()
+        fsx.instrument(appx)
+
+        @appx.get("/ping/{i}")
+        def _ping(i: int):
+            return {"i": i}
+        tc = TestClient(appx)
+        tc.get("/ping/1"); tc.get("/nope")
+        fsx.close()
+        ev1 = [e for p_, h, b in got if p_ == "/ingest/api" for e in b["events"]]
+        ok1 = {e["status_code"] for e in ev1} == {200, 404} and all(b["system"] == "p19" for p_, h, b in got) and got[0][1].get("x-api-key") == "key19" and {"timestamp", "route", "latency_ms"} <= set(ev1[0])
+        s.add("The Python ASGI agent sends one event per request (route, status, latency) with the API key header", "PASS" if ok1 else "FAIL", [f"events received {len(ev1)}; statuses {sorted({e['status_code'] for e in ev1})}; routes {sorted({e['route'] for e in ev1})}"], "agent/failsight_agent/")
+        # 2 log tailer
+        from failsight_agent import tail
+        a_ = tail.parse_line('1.2.3.4 - - [21/Oct/2026:13:55:01 +0000] "GET /search?x=1 HTTP/1.1" 200 1532 "-" "curl"')
+        b_ = tail.parse_line('1.2.3.4 - - [21/Oct/2026:13:55:02 +0000] "POST /pay HTTP/2.0" 502 - "-" "x" 0.250')
+        ok2 = a_["route"] == "/search" and a_["status_code"] == 200 and b_["status_code"] == 502 and abs(b_["latency_ms"] - 250.0) < 1e-9 and tail.parse_line("garbage") is None
+        s.add("The access-log tailer parses nginx combined lines (with and without request time) and ignores other lines", "PASS" if ok2 else "FAIL", [f"parsed: {a_}", f"parsed: {b_}"], "agent/failsight_agent/tail.py")
+        # 3 node middleware
+        if _sh.which("node"):
+            n0 = len(got)
+            js = ("const failsight = require(" + json.dumps(str(ROOT / "agent" / "node" / "failsight-express.js")) + "); const {EventEmitter} = require('events');"
+                  "const mw = failsight({monitorUrl: " + json.dumps(url) + ", appId: 'node19', apiKey: 'k', flushMs: 100000}); const res = new EventEmitter(); res.statusCode = 503; res.get = () => '42';"
+                  "mw({method: 'GET', path: '/pay', url: '/pay'}, res, () => {}); res.emit('finish'); mw.flush().then(() => process.exit(0));")
+            subprocess.run(["node", "-e", js], check=True, timeout=30)
+            nb = [b for p_, h, b in got[n0:] if p_ == "/ingest/api" and b.get("system") == "node19"]
+            ok3 = bool(nb) and nb[0]["events"][0]["status_code"] == 503 and nb[0]["events"][0]["route"] == "/pay"
+            s.add("The Node/Express middleware posts the same fields to /ingest/api", "PASS" if ok3 else "FAIL", [f"event: {nb[0]['events'][0] if nb else None}"], "agent/node/failsight-express.js")
+        else:
+            s.add("The Node/Express middleware posts the same fields to /ingest/api", "SKIP", ["node is not installed on this machine"], "agent/node/failsight-express.js")
+        # 4 API keys
+        from app.backend.testbed_monitor import check_api_key, parse_keys, slack_payload
+        keys = parse_keys("shop:abc,other:xyz")
+        ok4 = check_api_key("shop", None, {}) and check_api_key("shop", "abc", keys) and not check_api_key("shop", "xyz", keys) and not check_api_key("shop", None, keys) and not check_api_key("new", "abc", keys)
+        s.add("The per-app API key check is off by default and enforced per app when keys are configured", "PASS" if ok4 else "FAIL", ["FAILSIGHT_API_KEYS unset: every request is accepted; \"shop:abc,other:xyz\": only the matching key for that app is accepted; the HTTP 401 behaviour is tested in app/backend/tests/test_testbed_api.py"], "app/backend/testbed_monitor.py")
+        # 5 webhook (replay of a recorded testbed run through the monitor)
+        cfgp, modp = REP / "testbed_frozen_config.json", ROOT / "models" / "testbed" / "detector.joblib"
+        rdir = ROOT / "testbed" / "runs" / "r004_s1004"
+        if cfgp.exists() and modp.exists() and (rdir / "DONE").exists():
+            from app.backend import testbed_monitor as TM
+            TM.LIVE_DIR = ROOT / "outputs" / "testbed_live_proof"
+            mon = TM.TestbedMonitor()
+            mon.set_webhook(url + "/hook")
+            meta = json.loads((rdir / "meta.json").read_text(encoding="utf-8"))
+            mon.reset("hooked", meta["start_ts"])
+            for kind in ("api", "logs", "metrics"):
+                evs = [json.loads(line) for line in open(rdir / f"{kind}.jsonl", encoding="utf-8")]
+                for i in range(0, len(evs), 2000):
+                    mon.ingest(kind, "hooked", evs[i:i + 2000])
+            mon.close_ready(meta["start_ts"] + 100000)
+            time.sleep(2)
+            hooks = [b for p_, h, b in got if p_ == "/hook"]
+            n_alerts = sum(1 for w in mon.windows("hooked") if w["new_alert"])
+            ok5 = len(hooks) == n_alerts >= 1 and all(set(h) == {"text"} and "FailSight alert for hooked" in h["text"] and "unvalidated" in h["text"] for h in hooks)
+            s.add("The webhook receives one Slack-compatible message per alert episode, tagged unvalidated for an app other than the testbed shop", "PASS" if ok5 else "FAIL",
+                  [f"recorded run r004_s1004 replayed through the monitor as app 'hooked': {n_alerts} alert episode(s), {len(hooks)} message(s)", f"first message: {hooks[0]['text'] if hooks else None}"], "app/backend/testbed_monitor.py")
+        else:
+            s.add("The webhook receives one Slack-compatible message per alert episode", "SKIP", ["frozen detector or recorded run not present"], "app/backend/testbed_monitor.py")
+        srv.shutdown()
+        s.add("Scope of validation for other apps", "REPORTED", ["The detector was validated only on the testbed shop (one app, one machine, synthetic traffic, injected faults, 12 held-out runs with 15 faults, per-type results unreliable). The monitor labels every other app id 'unvalidated' in the dashboard and in webhook messages.",
+                                                                "Another app needs its own labelled data (faults injected at recorded times, validation on whole runs) or at least the learning period with the unsupervised per-app detector. Transfer to other apps has not been shown (P9 LO2, P11 cross-system).",
+                                                                "docs/INTEGRATION.md and the Connect page say the same."], "docs/INTEGRATION.md", result="integration works; transfer to other apps not shown")
+        sections.append(s)
+
     # ------------------------------------------------------------------------------------------------ P13 missingness and shortcuts
     if want("P13"):
         s = Section("P13", "MISSINGNESS AND SHORTCUTS: do the models rely on missing-data patterns instead of real signals?"); header(s)
@@ -910,7 +1007,7 @@ def main():
     global CUR
     CUR = []
     new_secs = {x.id: dict(id=x.id, title=x.title, status=x.status, items=x.items, lines=x.lines, generated_at=x.generated_at) for x in sections}
-    order = [f"P{i}" for i in range(1, 18)]
+    order = [f"P{i}" for i in range(1, 20)]
     merged = dict(new_secs)
     base_p = REP / "proofs.json"
     if (only or args.quick) and base_p.exists():                      # a partial re-run refreshes only its sections of the existing report
