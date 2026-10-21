@@ -150,7 +150,7 @@ function SimpleResults({ models }: { models: ReturnType<typeof useApi<ModelsResp
                 <ul>
                   <li>Only {list[0]?.metrics['official/ALL']?.support_Normal} of the {list[0]?.metrics['official/ALL']?.n} test windows are healthy ones, so the false-alarm numbers move a lot with a few windows. Switch to Detailed to see the ranges.</li>
                   <li>We picked these three by looking at the test results, so they look slightly better than they would on brand-new data.</li>
-                  <li>On a completely different system (<Term k="lo2">LO2</Term>) none of the models worked. See <Link to="/limits">Limits</Link>.</li>
+                  <li>On a completely different system (<Term k="lo2">LO2</Term>) none of the models worked. See <Link to="/examiners/limits">Limits</Link>.</li>
                 </ul>
               </div>
             </>

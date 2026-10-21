@@ -146,7 +146,7 @@ function Body({ d }: { d: DataResponse }) {
             </div>
           ))}
         </div>
-        <p className="muted">Host-level gauges dominate. Because each class comes from a few runs, such gauges can identify <em>which run</em> a window came from. See <Link to="/limits">Limits</Link>.</p>
+        <p className="muted">Host-level gauges dominate. Because each class comes from a few runs, such gauges can identify <em>which run</em> a window came from. See <Link to="/examiners/limits">Limits</Link>.</p>
       </section>
     </>
   )

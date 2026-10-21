@@ -240,7 +240,7 @@ function TestbedSection() {
           const detected = r.live.filter((x) => x.actual_fault !== 'none' && x.detected).length
           const faulty = r.live.filter((x) => x.actual_fault !== 'none').length
           return (
-            <p><strong>What the testbed shows.</strong> In our own shop, with faults injected at recorded times and whole recordings held out, the best model reached a balanced accuracy of {best ? Number(best.balanced_accuracy).toFixed(3) : '–'} on 12 held-out runs. In the three live demos on new seeds it detected {detected} of {faulty} injected faults{r.live.length ? ` and raised ${r.live.reduce((a, x) => a + Number(x.false_alarms), 0)} false alarm(s) in total` : ''}; see the <Link to="/testbed">Testbed page</Link> for every number, including misses.</p>
+            <p><strong>What the testbed shows.</strong> In our own shop, with faults injected at recorded times and whole recordings held out, the best model reached a balanced accuracy of {best ? Number(best.balanced_accuracy).toFixed(3) : '–'} on 12 held-out runs. In the three live demos on new seeds it detected {detected} of {faulty} injected faults{r.live.length ? ` and raised ${r.live.reduce((a, x) => a + Number(x.false_alarms), 0)} false alarm(s) in total` : ''}; see the <Link to="/examiners/testbed">Testbed page</Link> for every number, including misses.</p>
           )
         }}
       </Async>

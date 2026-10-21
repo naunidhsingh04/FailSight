@@ -134,7 +134,7 @@ export default function ConnectApp() {
         <button type="button" className="btn secondary" onClick={() => saveHook(true)}>Remove</button>
       </div>
       <p className="small muted" role="status" aria-live="polite">{hookMsg || (st?.integration?.webhook_configured ? `A webhook is configured (${st.integration.webhook_host}).` : 'No webhook is configured.')}</p>
-      <p className="small">See also <Link to="/testbed">Testbed</Link> and <Link to="/limits">Limits</Link>.</p>
+      <p className="small">See also <Link to="/examiners/testbed">Testbed</Link> and <Link to="/examiners/limits">Limits</Link>.</p>
     </>
   )
 }
