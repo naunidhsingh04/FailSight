@@ -1,58 +1,37 @@
 import { Link } from 'react-router-dom'
-import Term from '../components/Term'
-import { HowStrip } from './Console'
+import { StepIcon } from '../components/Icons'
 import { Detailed } from '../mode'
 import { usePageTitle } from '../usePageTitle'
 
-function Flow() {
-  const boxes: [string, string][] = [['Collector', 'gathers requests, logs and measurements'], ['Ingestion API', 'checks and stores each event'], ['Window builder', 'every 10 s: sums up the last 30 s'], ['Model', 'estimates failure risk'], ['Alerts', 'shows status and the reasons']]
-  return (
-    <ol className="steps" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(10.5rem, 1fr))' }} aria-label="Architecture: Collector, Ingestion API, Window builder, Model, Alerts">
-      {boxes.map(([h, p], i) => (
-        <li key={h} style={{ flexDirection: 'column', gap: 'var(--space-1)', position: 'relative' }}>
-          <h3>{h}</h3><p>{p}</p>
-          {i < boxes.length - 1 && <span aria-hidden="true" style={{ position: 'absolute', right: '-0.9rem', top: '50%', fontSize: '1.4rem', zIndex: 1 }} className="arrow">&rarr;</span>}
-        </li>
-      ))}
-    </ol>
-  )
-}
+const STEPS: [1 | 2 | 3 | 4, string, string][] = [
+  [1, 'It watches', 'A small helper sits next to the website and passes on what happens: which pages were opened, how long they took, which ones failed.'],
+  [2, 'It learns what normal looks like', 'For the first two minutes it just watches. That is the “normal” it compares everything else with.'],
+  [3, 'It checks every 10 seconds', 'Every 10 seconds it looks at the last 30 seconds and asks a trained program: does this look like a website in trouble?'],
+  [4, 'It says why', 'If two checks out of the last three say yes, it raises an alert and says which numbers went wrong, like “response time went up 4 times”.'],
+]
 
 export default function HowItWorks() {
   usePageTitle('How it works')
   return (
     <>
       <h1>How it works</h1>
-      <p className="lede">FailSight looks at the last 30 seconds of an application’s activity, every 10 seconds, and says how likely it is that something is going wrong <em>right now</em>.</p>
-      <h2>In four steps</h2>
-      <HowStrip />
+      <p className="lede">FailSight is an alarm for websites. It notices when a site starts to go wrong and tells you in plain words what changed.</p>
+      <ol className="steps" aria-label="How it works in four steps">
+        {STEPS.map(([n, h, p]) => <li key={n}><StepIcon n={n} /><div><h2>{n}. {h}</h2><p>{p}</p></div></li>)}
+      </ol>
 
-      <h2>The pipeline</h2>
-      <Flow />
-      <p className="muted" style={{ marginTop: 'var(--space-4)' }}>Everything on the Console page goes through these five stages. The browser receives each new result the moment it is ready (<Term k="sse">live updates</Term>).</p>
+      <h2>What you see in the demo</h2>
+      <p>The <Link to="/">Demo</Link> runs a small ticket shop on this computer with pretend visitors. You break it on purpose. FailSight is <strong>not told</strong> what you broke. It only sees the numbers coming from the shop.</p>
 
-      <h2>What is real and what is a replay</h2>
-      <div className="callout">
-        <span className="label">Be clear about the source</span>
-        <p><strong>Replay of recorded AnoMod data.</strong> The demonstration sends records from the <em>test part</em> of a recorded dataset (<Term k="anomod" />) through the real ingestion, window-building, model and explanation code. A <Term k="replay" /> script plays the part of the collector. There is no live production system behind this page.</p>
-        <p>Because the experiment was recorded, the correct answer for every window is <Term k="recording">known from the recording</Term>, which is how the page can count correct alerts, false alarms and missed failures. A real deployment would not have those answers.</p>
-      </div>
-
-      <h2>What the system does and does not do</h2>
+      <h2>What FailSight does not do</h2>
       <ul>
-        <li>It <strong>detects</strong> whether the last 30 seconds look like a failure. It does <strong>not</strong> predict when a failure will happen in the future.</li>
-        <li>It was trained on two sample applications. It did not work on a third, different system (see <Link to="/limits">Limits</Link>).</li>
-        <li>Every number shown comes from files, saved models or recomputation (see <Link to="/proofs">Proofs</Link>).</li>
+        <li>It says that something is wrong <strong>right now</strong>. It does not predict the future.</li>
+        <li>It has only been proven on one small shop. It did not work on a different kind of system (see <Link to="/proofs">Proof</Link>).</li>
+        <li>It guesses what changed. That is a good clue, not a proven cause.</li>
       </ul>
 
-      <h2>How a real deployment connects</h2>
-      <p className="muted">The ingestion API accepts three kinds of events as JSON. Common tools can feed it:</p>
-      <ul>
-        <li><strong>Requests and responses</strong> (status, response time, size) from an <Term k="otel">OpenTelemetry</Term> collector or from web-server access logs, posted to <code>/ingest/api</code>.</li>
-        <li><strong>Log lines</strong> (time, level, service) forwarded by <Term k="fluentbit">Fluent Bit</Term> to <code>/ingest/logs</code>.</li>
-        <li><strong>Measurements</strong> (CPU, memory, disk and so on) read from <Term k="prometheus">Prometheus</Term> and posted to <code>/ingest/metrics</code>.</li>
-      </ul>
-      <p className="muted">Nothing here is connected to such tools yet; this describes how it would be done. The models were trained on the signals of the two recorded applications, so a new application needs its own recordings and training first.</p>
+      <h2>Plugging in a real website</h2>
+      <p>The helper that watches a site can be added to a Python or Node website, or read a web server’s log file. The steps are on the <Link to="/examiners/connect">Connect page</Link>. A new site needs its own two minutes of learning and its own check, and FailSight marks it “not yet proven”.</p>
 
       <Detailed>
         <h2>Technical details</h2>

@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 import { useApi } from '../api'
 import Term from '../components/Term'
-import { Async } from '../components/States'
+import { Link } from 'react-router-dom'
+import { Async, EmptyState } from '../components/States'
 import { Detailed, Simple } from '../mode'
 import { usePageTitle } from '../usePageTitle'
 
@@ -32,6 +33,63 @@ const PLAIN: Record<string, string> = {
 }
 const QUICK = ['P1', 'P2', 'P3', 'P4', 'P10']
 const badge = (s: string) => <span className={`badge ${s.split(' ')[0].toLowerCase()}`}>{s}</span>
+
+interface TbResults {
+  frozen: { model: string; feature_set: string; alert_rule: string } | null
+  overall: { method: string; balanced_accuracy: number; balanced_accuracy_ci_low: number; balanced_accuracy_ci_high: number; n_test_runs: number }[]
+  instances: { method: string; rule: string; detected: boolean }[]
+  false_alarms: { method: string; rule: string; fault_free_hours: number; false_alarms_per_hour_fault_free: number; false_alarms_per_hour_outside_faults: number }[]
+  live: { actual_fault: string; detected: boolean | null }[]
+}
+
+/** The three numbers an examiner asks for first, read from the saved result files of the held-out test (never typed in here). */
+function Headline() {
+  const res = useApi<TbResults>('/api/testbed/results')
+  return (
+    <Async state={res} rows={3} label="Loading the headline numbers" level={2}>
+      {(r) => {
+        if (!r.frozen) return <EmptyState title="No test results on this computer yet" level={2}><p>The testbed results are missing. Create them with <code>python -m testbed.freeze</code>, or open the full list of checks below.</p></EmptyState>
+        const method = `${r.frozen.model} (${r.frozen.feature_set})`
+        const rule = r.frozen.alert_rule.replace(' windows', '')
+        const o = r.overall.find((x) => x.method === method)
+        const inst = r.instances.filter((x) => x.method === method && x.rule === rule)
+        const caught = inst.filter((x) => x.detected).length
+        const fa = r.false_alarms.find((x) => x.method === method && x.rule === rule)
+        const liveFaults = r.live.filter((x) => x.actual_fault && x.actual_fault !== 'none')
+        const liveCaught = liveFaults.filter((x) => x.detected).length
+        return (
+          <>
+            <p className="proof-sentence">
+              {inst.length ? `On test runs it had never seen, FailSight noticed ${caught} of the ${inst.length} problems we planted` : 'FailSight was checked on test runs it had never seen'}{fa ? `, with ${fa.false_alarms_per_hour_fault_free.toFixed(0)} false alarms per hour on quiet runs` : ''}. But the test is small and covers only one shop.
+            </p>
+            <table className="rt proof-table">
+              <caption className="visually-hidden">The three numbers to know</caption>
+              <thead><tr><th scope="col">Question</th><th scope="col">Answer</th><th scope="col">What it means</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td data-label="Question" className="name-cell">Score on test runs it never saw</td>
+                  <td data-label="Answer" className="big-num">{o ? o.balanced_accuracy.toFixed(2) : '–'}<span className="of"> out of 1</span></td>
+                  <td data-label="What it means">1.00 is perfect and 0.50 is a coin toss. {o ? `Likely between ${o.balanced_accuracy_ci_low.toFixed(2)} and ${o.balanced_accuracy_ci_high.toFixed(2)} (${o.n_test_runs} test runs).` : ''}</td>
+                </tr>
+                <tr>
+                  <td data-label="Question" className="name-cell">Problems caught</td>
+                  <td data-label="Answer" className="big-num">{inst.length ? `${caught} of ${inst.length}` : '–'}</td>
+                  <td data-label="What it means">Planted problems in the test runs.{liveFaults.length ? ` In three live demos on fresh seeds: ${liveCaught} of ${liveFaults.length}.` : ''}</td>
+                </tr>
+                <tr>
+                  <td data-label="Question" className="name-cell">False alarms per hour</td>
+                  <td data-label="Answer" className="big-num">{fa ? fa.false_alarms_per_hour_fault_free.toFixed(0) : '–'}<span className="of"> per hour</span></td>
+                  <td data-label="What it means">{fa ? `Measured on only ${Math.round(fa.fault_free_hours * 60)} minutes of quiet running, so it is rough. In the calm parts of the runs with problems it was ${fa.false_alarms_per_hour_outside_faults.toFixed(1)} per hour.` : ''}</td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="honest"><strong>Honest limits:</strong> one app, {o?.n_test_runs ?? 12} test runs, {inst.length || 15} planted problems. Scores for single problem types are unreliable, and other apps are unproven. <Link to="/examiners/limits">All limits</Link>.</p>
+          </>
+        )
+      }}
+    </Async>
+  )
+}
 
 export default function Proofs() {
   usePageTitle('Proofs')
@@ -69,8 +127,12 @@ export default function Proofs() {
 
   return (
     <>
-      <h1>Proofs</h1>
-      <p className="lede"><Simple>Every number in this app can be checked. These checks recompute them from the data and the saved models. You can run them again here, or in a terminal with <code>python scripts/proofs.py</code>.</Simple><Detailed>Numbered proof report P1–P10 produced by <code>scripts/proofs.py</code>; this page renders <code>report_outputs/proofs.json</code> and shows the same text the terminal prints.</Detailed></p>
+      <h1>Proof</h1>
+      <Headline />
+
+      <details className="acc all-checks" style={{ marginTop: 'var(--space-6)' }}>
+        <summary>Show all the checks behind these numbers (technical)</summary>
+      <p className="lede"><Simple>Every number in this app can be checked. We recompute them from the saved data and models. You can run the checks again here, or in a terminal with <code>python scripts/proofs.py</code>.</Simple><Detailed>Numbered proof report P1–P19 produced by <code>scripts/proofs.py</code>; this page renders <code>report_outputs/proofs.json</code> and shows the same text the terminal prints.</Detailed></p>
 
       <Async state={rep} rows={6} label="Loading the proof report" level={2}>
         {(r) => (
@@ -154,6 +216,7 @@ export default function Proofs() {
           </>
         )}
       </Async>
+      </details>
     </>
   )
 }

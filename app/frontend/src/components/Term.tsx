@@ -7,7 +7,11 @@ import { useMode } from '../mode'
 export default function Term({ k, children }: { k: string; children?: ReactNode }) {
   const e = GLOSSARY[k]
   const id = useId()
-  const [open, setOpen] = useState(false)
+  const [hover, setHover] = useState(false)
+  const [pinned, setPinned] = useState(false)          // a tap or click keeps it open (touch screens have no hover)
+  const [focused, setFocused] = useState(false)
+  const open = hover || pinned || focused
+  const setOpen = (v: boolean) => { if (!v) { setHover(false); setPinned(false); setFocused(false) } }
   const ref = useRef<HTMLSpanElement>(null)
   const { detailed } = useMode()
   useEffect(() => {
@@ -25,10 +29,10 @@ export default function Term({ k, children }: { k: string; children?: ReactNode 
   }, [open])
   if (!e) return <>{children}</>
   return (
-    <span className="term" ref={ref} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+    <span className="term" ref={ref} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
       {children ?? e.term}
       <button type="button" className="term-btn" aria-label={`What does “${e.term}” mean?`} aria-expanded={open} aria-describedby={open ? id : undefined}
-        onClick={() => setOpen((o) => !o)} onFocus={() => setOpen(true)} onBlur={(ev) => { if (!ref.current?.contains(ev.relatedTarget as Node)) setOpen(false) }}>?</button>
+        onClick={(ev) => { if (pinned) { setOpen(false); ev.currentTarget.blur() } else setPinned(true) }} onFocus={() => setFocused(true)} onBlur={(ev) => { if (!ref.current?.contains(ev.relatedTarget as Node)) setFocused(false) }}>?</button>
       {open && (
         <span role="tooltip" id={id} className="term-pop">
           <strong>{e.term}</strong>
