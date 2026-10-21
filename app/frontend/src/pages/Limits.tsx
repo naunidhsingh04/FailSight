@@ -8,6 +8,7 @@ import { Detailed, Simple } from '../mode'
 import Term from '../components/Term'
 import { usePageTitle } from '../usePageTitle'
 import type { DataResponse, Lo2Model, Lo2Response, ModelInfo, ModelsResponse } from '../types'
+import { TESTBED_LIMITS } from '../testbed'
 
 interface Masking { unmasked: number; api70: number; log70: number; metric70: number; all70: number; normal_recall_unmasked: number; normal_recall_metric70: number }
 interface ProofReport { xgb_binary: Masking }
@@ -24,10 +25,12 @@ export default function Limits() {
       <h1>Limits</h1>
       <p className="lede">What FailSight cannot do. Nothing on this page is softened: the numbers come straight from the result files.</p>
       <Simple><PlainLimits models={models} lo2={lo2} proofs={proofs} /></Simple>
+      <Simple><TestbedSection /></Simple>
       <Detailed>
       <Async level={2} state={models} rows={5} label="Loading model results">{(m) => <NormalRecall models={m.models.filter((x) => x.label_version === 'label_binary')} all={m.models} data={data.data} />}</Async>
       <Async level={2} state={lo2} rows={6} label="Loading LO2 results">{(l) => <External l={l} />}</Async>
       <Async level={2} state={proofs} rows={2} label="Loading the masking check">{(p) => <Reliance m={maskingOf(p)} />}</Async>
+      <TestbedSection />
       <Async level={2} state={data} rows={3} label="Loading other limits">{(d) => <Other d={d} />}</Async>
       </Detailed>
     </>
@@ -218,6 +221,32 @@ function Reliance({ m }: { m: Masking | null }) {
         <li>With 70% of the metric values missing, Normal recall falls from {m.normal_recall_unmasked.toFixed(3)} to {m.normal_recall_metric70.toFixed(3)}: missing readings push the call toward Anomaly.</li>
         <li>The was_missing_* indicators alone, and a retrained XGBoost without them and without the system flag, do not explain the result (details and intervals in P13).</li>
       </ul>
+    </section>
+  )
+}
+
+interface TbRes { live: Record<string, any>[]; overall: Record<string, any>[]; frozen: Record<string, any> | null }
+
+function TestbedSection() {
+  const res = useApi<TbRes>('/api/testbed/results')
+  return (
+    <section aria-labelledby="tb-h" style={{ maxWidth: 'var(--measure)' }}>
+      <h2 id="tb-h" style={{ fontSize: '1.2rem' }}>What the testbed shows, and what it does not</h2>
+      <p><strong>What AnoMod could not show.</strong> Its recordings carry one label per run and no fault times, so it cannot say whether failures are really detected, and a model that only recognises which recording a window comes from reproduces the best score (Proofs P14). The cross-system test and the outside test (LO2) did not show transfer to other systems either.</p>
+      <Async level={2} state={res} rows={2} label="Loading the testbed numbers">
+        {(r) => {
+          const sup = r.overall.filter((m) => m.kind === 'supervised')
+          const best = [...sup].sort((a, b) => b.balanced_accuracy - a.balanced_accuracy)[0]
+          const detected = r.live.filter((x) => x.actual_fault !== 'none' && x.detected).length
+          const faulty = r.live.filter((x) => x.actual_fault !== 'none').length
+          return (
+            <p><strong>What the testbed shows.</strong> In our own shop, with faults injected at recorded times and whole recordings held out, the best model reached a balanced accuracy of {best ? Number(best.balanced_accuracy).toFixed(3) : '–'} on 12 held-out runs. In the three live demos on new seeds it detected {detected} of {faulty} injected faults{r.live.length ? ` and raised ${r.live.reduce((a, x) => a + Number(x.false_alarms), 0)} false alarm(s) in total` : ''}; see the <Link to="/testbed">Testbed page</Link> for every number, including misses.</p>
+          )
+        }}
+      </Async>
+      <p><strong>What it still does not show.</strong></p>
+      <ul>{TESTBED_LIMITS.map((t) => <li key={t}>{t}</li>)}</ul>
+      <p className="small muted">A claim that FailSight works on any app is not supported by anything in this project.</p>
     </section>
   )
 }

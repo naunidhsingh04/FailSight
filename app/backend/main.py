@@ -51,10 +51,21 @@ def create_app(registry: Registry | None = None) -> FastAPI:
         app.state.monitor = Monitor(reg, app.state.explainer)
         app.state.monitor.hub.loop = asyncio.get_running_loop()
         app.state.replay = ReplayController()
+        app.state.testbed = None
+        try:                                           # the live testbed monitor needs the frozen detector (python -m testbed.freeze)
+            from . import testbed_monitor
+            if testbed_monitor.CONFIG.exists() and testbed_monitor.MODEL.exists():
+                app.state.testbed = testbed_monitor.TestbedMonitor()
+                app.state.testbed.hub.loop = asyncio.get_running_loop()
+                app.state.testbed.start()
+        except Exception as ex:                        # noqa: BLE001
+            log.warning("testbed monitor not started: %r", ex)
         for (_l, _n) in reg.entries:         # fill the metric cache now so the first page load of Results / Limits is not slow
             results.model_metrics(_l, _n)
         log.info("FailSight: %d model entries, %d available", len(reg.entries), sum(e["available"] for e in reg.entries.values()))
         yield
+        if app.state.testbed is not None:
+            app.state.testbed.stop()
         app.state.replay.stop(wait=True)
 
     app = FastAPI(title="FailSight API", version="1.0", lifespan=lifespan)
@@ -280,6 +291,12 @@ def create_app(registry: Registry | None = None) -> FastAPI:
         body = await read_json(request)
         system = body.get("system")
         events = body["events"] if "events" in body else [{k: v for k, v in body.items() if k != "system"}]
+        tb = getattr(request.app.state, "testbed", None)
+        if tb is not None and system not in ("SN", "TT"):                   # any other app id belongs to the testbed (agent-instrumented apps)
+            try:
+                return JSONResponse(content=await run_in_threadpool(tb.ingest, kind, system, events))
+            except ValueError as ex:
+                raise IngestError(422, str(ex))
         return JSONResponse(content=await run_in_threadpool(mon(request).ingest, kind, system, events))
 
     @app.post("/ingest/api")
@@ -345,6 +362,9 @@ def create_app(registry: Registry | None = None) -> FastAPI:
             finally:
                 m.hub.unsubscribe(q)
         return StreamingResponse(gen(), media_type="text/event-stream", headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+    from . import testbed_api
+    testbed_api.register(app)
 
     # ------------------------------------------------------------------ proofs (report_outputs/proofs.json is written by scripts/proofs.py)
     @app.get("/api/proofs")

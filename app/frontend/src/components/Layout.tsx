@@ -7,6 +7,7 @@ const LINKS: { to: string; label: string; end?: boolean }[] = [
   { to: '/how-it-works', label: 'How it works' },
   { to: '/proofs', label: 'Proofs' },
   { to: '/results', label: 'Results' },
+  { to: '/testbed', label: 'Testbed' },
   { to: '/limits', label: 'Limits' },
   { to: '/glossary', label: 'Glossary' },
 ]

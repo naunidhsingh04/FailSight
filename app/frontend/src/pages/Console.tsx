@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
+import LiveDemo from './LiveDemo'
 import { StatusIcon, StepIcon } from '../components/Icons'
 import { Gauge, RiskTimeline } from '../components/RiskCharts'
 import Term from '../components/Term'
@@ -65,8 +66,7 @@ function SystemCard({ sys, st, threshold }: { sys: Sys; st: SysState; threshold:
   )
 }
 
-export default function Console() {
-  usePageTitle('Console')
+function ReplayConsole() {
   const { systems, alerts, config, models, connected, error, reset } = useMonitor()
   const rep = useReplay()
   const { detailed } = useMode()
@@ -229,6 +229,24 @@ export default function Console() {
         {selected && <WhyPanel ev={selected} onClose={close} />}
       </div>
       {detailed && <p className="small muted">Counters: {systems.SN.counters.events_api + systems.TT.counters.events_api} API, {systems.SN.counters.events_logs + systems.TT.counters.events_logs} log and {systems.SN.counters.events_metrics + systems.TT.counters.events_metrics} metric events ingested.</p>}
+    </>
+  )
+}
+
+export default function Console() {
+  const [params, setParams] = useSearchParams()
+  const tab = params.get('tab') === 'live' ? 'live' : 'replay'
+  usePageTitle(tab === 'live' ? 'Live demo' : 'Console')
+  const pick = (t: 'replay' | 'live') => setParams(t === 'live' ? { tab: 'live' } : {}, { replace: true })
+  return (
+    <>
+      <div className="tabs" role="tablist" aria-label="Console view">
+        <button role="tab" id="tab-replay" aria-selected={tab === 'replay'} aria-controls="panel-main" onClick={() => pick('replay')}>Recorded data (replay)</button>
+        <button role="tab" id="tab-live" aria-selected={tab === 'live'} aria-controls="panel-main" onClick={() => pick('live')}>Live demo app</button>
+      </div>
+      <div id="panel-main" role="tabpanel" aria-labelledby={tab === 'live' ? 'tab-live' : 'tab-replay'}>
+        {tab === 'live' ? <><h1>Is our demo shop healthy right now?</h1><LiveDemo /></> : <ReplayConsole />}
+      </div>
     </>
   )
 }
