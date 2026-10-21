@@ -1,0 +1,10 @@
+horizon_min,run_id,fault_type,severity_level,warned,lead_time_s
+1,r004_s1004,latency_ramp,medium,True,53.99571990966797
+1,r007_s1007,leak,medium,True,56.15920352935791
+1,r020_s1020,pool_exhaustion,mild,False,
+2,r004_s1004,latency_ramp,medium,True,63.99571990966797
+2,r007_s1007,leak,medium,True,76.15920352935791
+2,r020_s1020,pool_exhaustion,mild,False,
+3,r004_s1004,latency_ramp,medium,True,63.99571990966797
+3,r007_s1007,leak,medium,True,166.1592035293579
+3,r020_s1020,pool_exhaustion,mild,True,7.07048773765564

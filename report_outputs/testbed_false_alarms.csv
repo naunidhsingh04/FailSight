@@ -1,0 +1,13 @@
+method,rule,fault_free_runs,fault_free_hours,alert_episodes_fault_free,false_alarms_per_hour_fault_free,alert_episodes_outside_faults_in_fault_runs,hours_outside_faults_in_fault_runs,false_alarms_per_hour_outside_faults
+LR (both),1 window,2,0.25,0,0.0,3,0.65,4.615384615384615
+LR (both),2 of last 3,2,0.25,0,0.0,2,0.65,3.0769230769230766
+RF (both),1 window,2,0.25,0,0.0,1,0.65,1.5384615384615383
+RF (both),2 of last 3,2,0.25,0,0.0,1,0.65,1.5384615384615383
+XGB (raw),1 window,2,0.25,1,4.0,0,0.65,0.0
+XGB (raw),2 of last 3,2,0.25,0,0.0,0,0.65,0.0
+LGBM (raw),1 window,2,0.25,1,4.0,1,0.65,1.5384615384615383
+LGBM (raw),2 of last 3,2,0.25,1,4.0,0,0.65,0.0
+"RobustZ (per-run, first 150 s)",1 window,2,0.25,2,8.0,7,0.65,10.769230769230768
+"RobustZ (per-run, first 150 s)",2 of last 3,2,0.25,1,4.0,4,0.65,6.153846153846153
+"IsoForest (per-run, first 150 s)",1 window,2,0.25,8,32.0,9,0.65,13.846153846153845
+"IsoForest (per-run, first 150 s)",2 of last 3,2,0.25,6,24.0,4,0.65,6.153846153846153

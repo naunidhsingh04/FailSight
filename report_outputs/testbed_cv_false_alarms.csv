@@ -1,0 +1,3 @@
+rule,fault_free_hours,episodes,per_hour
+1 window,1.25,2,1.6
+2 of last 3,1.25,1,0.8

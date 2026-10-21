@@ -1,0 +1,4 @@
+horizon_min,features,threshold,train_positive_windows,test_positive_windows,test_negative_windows,true_positive,false_positive,false_negative,precision,precision_ci_low,precision_ci_high,recall,recall_ci_low,recall_ci_high,gradual_instances,instances_warned,median_lead_time_s
+1,raw,0.372421,64,18,368,12,9,6,0.5714285714285714,0.0,0.9473684210526315,0.6666666666666666,0.0,1.0,3,2,55.07746171951294
+2,raw,0.578537,119,29,362,13,6,16,0.6842105263157895,0.0,1.0,0.4482758620689655,0.0,0.8,3,2,70.07746171951294
+3,raw,0.608273,180,36,360,19,5,17,0.7916666666666666,0.125,0.9693526785714286,0.5277777777777778,0.07142857142857142,0.8461538461538461,3,3,63.99571990966797

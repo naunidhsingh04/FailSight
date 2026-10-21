@@ -1,0 +1,93 @@
+method,rule,run_id,fault_id,fault_type,severity_level,kind,detected,delay_s,warned_before_failure,lead_time_s,failure_s_after_start
+XGB (CV),1 window,r001_s1001,c2857f4a,pool_exhaustion,severe,gradual,True,90.28058171272278,False,,82.69875121116638
+XGB (CV),1 window,r002_s1002,c58233cb,latency_ramp,mild,gradual,True,19.69983148574829,True,106.16721558570862,125.86704707145691
+XGB (CV),1 window,r003_s1003,d80c76b8,cpu_burn,medium,abrupt,True,22.17388892173767,,,
+XGB (CV),1 window,r003_s1003,4daeedc4,latency,mild,abrupt,True,20.607625007629395,,,
+XGB (CV),1 window,r004_s1004,99a189e9,latency_ramp,medium,gradual,True,21.416380882263184,True,63.99571990966797,85.41210079193115
+XGB (CV),1 window,r004_s1004,14df0217,db_lock,medium,abrupt,True,15.390097618103027,,,
+XGB (CV),1 window,r005_s1005,3daa32fc,latency,mild,abrupt,True,20.58910369873047,,,
+XGB (CV),1 window,r005_s1005,87017673,route_500,mild,abrupt,True,18.616806983947754,,,
+XGB (CV),1 window,r006_s1006,65fa8a7f,latency,severe,abrupt,True,21.356391668319702,,,
+XGB (CV),1 window,r007_s1007,8b321520,db_lock,mild,abrupt,True,17.598411083221436,,,
+XGB (CV),1 window,r007_s1007,b3a0295a,leak,medium,gradual,True,21.23361587524414,True,76.15920352935791,97.39281940460205
+XGB (CV),1 window,r008_s1008,864b5c19,route_500,medium,abrupt,True,23.422531843185425,,,
+XGB (CV),1 window,r008_s1008,b162fa69,crash,severe,abrupt,True,31.505793571472168,,,
+XGB (CV),1 window,r009_s1009,624eee0c,route_500,severe,abrupt,True,15.646617650985718,,,
+XGB (CV),1 window,r010_s1010,b2c3d241,pool_exhaustion,mild,gradual,True,116.2279257774353,False,,109.33093738555908
+XGB (CV),1 window,r010_s1010,181dc864,cpu_burn,mild,abrupt,False,,,,
+XGB (CV),1 window,r012_s1012,2459b061,crash,mild,abrupt,True,25.632655382156372,,,
+XGB (CV),1 window,r012_s1012,c9c9a7ad,latency_ramp,severe,gradual,True,19.732537269592285,True,27.19649386405945,46.92903113365173
+XGB (CV),1 window,r014_s1014,2733887b,cpu_burn,severe,abrupt,True,22.999974489212036,,,
+XGB (CV),1 window,r016_s1016,066dfc6a,exception_route,mild,abrupt,True,35.93248414993286,,,
+XGB (CV),1 window,r019_s1019,c8707f3f,db_lock,medium,abrupt,True,15.768266677856445,,,
+XGB (CV),1 window,r019_s1019,5fbf2d25,leak,medium,gradual,True,24.4195556640625,True,103.3824815750122,127.8020372390747
+XGB (CV),1 window,r020_s1020,2ab7fe25,crash,mild,abrupt,True,33.762686014175415,,,
+XGB (CV),1 window,r020_s1020,906e3eda,pool_exhaustion,mild,gradual,True,101.01148700714111,False,,98.08197474479675
+XGB (CV),1 window,r021_s1021,bc9d8bb6,db_slow,severe,abrupt,True,22.4990975856781,,,
+XGB (CV),1 window,r022_s1022,e6c9f096,latency_ramp,medium,gradual,True,17.028388500213623,True,66.22457313537598,83.2529616355896
+XGB (CV),1 window,r023_s1023,0f6b8dd8,leak,severe,gradual,True,21.833648443222046,True,91.04157447814941,112.87522292137146
+XGB (CV),1 window,r023_s1023,77084b0e,crash,severe,abrupt,True,32.93496584892273,,,
+XGB (CV),1 window,r024_s1024,15c524d9,latency,medium,abrupt,True,20.33253765106201,,,
+XGB (CV),1 window,r024_s1024,e7a31d0b,pool_exhaustion,medium,gradual,True,104.51190876960754,False,,100.88616752624512
+XGB (CV),1 window,r025_s1025,74d64705,db_slow,mild,abrupt,True,16.785127639770508,,,
+XGB (CV),1 window,r026_s1026,505e5502,db_slow,mild,abrupt,True,17.50090527534485,,,
+XGB (CV),1 window,r026_s1026,e5797388,latency_ramp,mild,gradual,True,18.3538920879364,True,80.4375855922699,98.7914776802063
+XGB (CV),1 window,r027_s1027,1ebe64d2,latency,medium,abrupt,True,24.289462327957153,,,
+XGB (CV),1 window,r027_s1027,17d6366a,exception_route,severe,abrupt,True,21.167863130569458,,,
+XGB (CV),1 window,r029_s1029,1955bfc5,db_slow,medium,abrupt,True,23.299975156784058,,,
+XGB (CV),1 window,r030_s1030,9c654168,exception_route,mild,abrupt,True,18.65032124519348,,,
+XGB (CV),1 window,r030_s1030,db4ccce1,crash,medium,abrupt,True,27.2673077583313,,,
+XGB (CV),1 window,r032_s1032,9b57e1ec,exception_route,medium,abrupt,True,23.760406017303467,,,
+XGB (CV),1 window,r032_s1032,bb4a490d,cpu_burn,severe,abrupt,True,16.375370264053345,,,
+XGB (CV),1 window,r033_s1033,c66b989d,route_500,severe,abrupt,True,21.55693531036377,,,
+XGB (CV),1 window,r035_s1035,05b78767,route_500,mild,abrupt,True,21.03402280807495,,,
+XGB (CV),1 window,r036_s1036,79910227,latency_ramp,severe,gradual,True,19.279705286026,True,38.13628888130188,57.41599416732788
+XGB (CV),1 window,r037_s1037,dc0f2615,db_lock,severe,abrupt,True,18.666057109832764,,,
+XGB (CV),1 window,r039_s1039,271b9084,leak,mild,gradual,True,22.5400972366333,True,132.38845825195312,154.92855548858643
+XGB (CV),1 window,r039_s1039,d7755bab,route_500,medium,abrupt,True,19.02519702911377,,,
+XGB (CV),2 of last 3,r001_s1001,c2857f4a,pool_exhaustion,severe,gradual,True,100.28058171272278,False,,82.69875121116638
+XGB (CV),2 of last 3,r002_s1002,c58233cb,latency_ramp,mild,gradual,True,29.69983148574829,True,96.16721558570862,125.86704707145691
+XGB (CV),2 of last 3,r003_s1003,d80c76b8,cpu_burn,medium,abrupt,True,32.17388892173767,,,
+XGB (CV),2 of last 3,r003_s1003,4daeedc4,latency,mild,abrupt,True,30.607625007629395,,,
+XGB (CV),2 of last 3,r004_s1004,99a189e9,latency_ramp,medium,gradual,True,31.416380882263184,True,53.99571990966797,85.41210079193115
+XGB (CV),2 of last 3,r004_s1004,14df0217,db_lock,medium,abrupt,True,25.390097618103027,,,
+XGB (CV),2 of last 3,r005_s1005,3daa32fc,latency,mild,abrupt,True,30.58910369873047,,,
+XGB (CV),2 of last 3,r005_s1005,87017673,route_500,mild,abrupt,True,28.616806983947754,,,
+XGB (CV),2 of last 3,r006_s1006,65fa8a7f,latency,severe,abrupt,True,31.356391668319702,,,
+XGB (CV),2 of last 3,r007_s1007,8b321520,db_lock,mild,abrupt,True,27.598411083221436,,,
+XGB (CV),2 of last 3,r007_s1007,b3a0295a,leak,medium,gradual,True,31.23361587524414,True,66.15920352935791,97.39281940460205
+XGB (CV),2 of last 3,r008_s1008,864b5c19,route_500,medium,abrupt,True,33.422531843185425,,,
+XGB (CV),2 of last 3,r008_s1008,b162fa69,crash,severe,abrupt,True,41.50579357147217,,,
+XGB (CV),2 of last 3,r009_s1009,624eee0c,route_500,severe,abrupt,True,25.646617650985718,,,
+XGB (CV),2 of last 3,r010_s1010,b2c3d241,pool_exhaustion,mild,gradual,True,126.2279257774353,False,,109.33093738555908
+XGB (CV),2 of last 3,r010_s1010,181dc864,cpu_burn,mild,abrupt,False,,,,
+XGB (CV),2 of last 3,r012_s1012,2459b061,crash,mild,abrupt,False,,,,
+XGB (CV),2 of last 3,r012_s1012,c9c9a7ad,latency_ramp,severe,gradual,True,29.732537269592285,True,17.19649386405945,46.92903113365173
+XGB (CV),2 of last 3,r014_s1014,2733887b,cpu_burn,severe,abrupt,True,32.999974489212036,,,
+XGB (CV),2 of last 3,r016_s1016,066dfc6a,exception_route,mild,abrupt,True,45.93248414993286,,,
+XGB (CV),2 of last 3,r019_s1019,c8707f3f,db_lock,medium,abrupt,True,25.768266677856445,,,
+XGB (CV),2 of last 3,r019_s1019,5fbf2d25,leak,medium,gradual,True,34.4195556640625,True,93.3824815750122,127.8020372390747
+XGB (CV),2 of last 3,r020_s1020,2ab7fe25,crash,mild,abrupt,False,,,,
+XGB (CV),2 of last 3,r020_s1020,906e3eda,pool_exhaustion,mild,gradual,True,111.01148700714111,False,,98.08197474479675
+XGB (CV),2 of last 3,r021_s1021,bc9d8bb6,db_slow,severe,abrupt,True,32.4990975856781,,,
+XGB (CV),2 of last 3,r022_s1022,e6c9f096,latency_ramp,medium,gradual,True,27.028388500213623,True,56.22457313537598,83.2529616355896
+XGB (CV),2 of last 3,r023_s1023,0f6b8dd8,leak,severe,gradual,True,31.833648443222046,True,81.04157447814941,112.87522292137146
+XGB (CV),2 of last 3,r023_s1023,77084b0e,crash,severe,abrupt,True,42.93496584892273,,,
+XGB (CV),2 of last 3,r024_s1024,15c524d9,latency,medium,abrupt,True,30.33253765106201,,,
+XGB (CV),2 of last 3,r024_s1024,e7a31d0b,pool_exhaustion,medium,gradual,True,114.51190876960754,False,,100.88616752624512
+XGB (CV),2 of last 3,r025_s1025,74d64705,db_slow,mild,abrupt,True,26.785127639770508,,,
+XGB (CV),2 of last 3,r026_s1026,505e5502,db_slow,mild,abrupt,True,27.50090527534485,,,
+XGB (CV),2 of last 3,r026_s1026,e5797388,latency_ramp,mild,gradual,True,28.3538920879364,True,70.4375855922699,98.7914776802063
+XGB (CV),2 of last 3,r027_s1027,1ebe64d2,latency,medium,abrupt,True,34.28946232795715,,,
+XGB (CV),2 of last 3,r027_s1027,17d6366a,exception_route,severe,abrupt,True,31.167863130569458,,,
+XGB (CV),2 of last 3,r029_s1029,1955bfc5,db_slow,medium,abrupt,True,33.29997515678406,,,
+XGB (CV),2 of last 3,r030_s1030,9c654168,exception_route,mild,abrupt,True,28.65032124519348,,,
+XGB (CV),2 of last 3,r030_s1030,db4ccce1,crash,medium,abrupt,True,37.2673077583313,,,
+XGB (CV),2 of last 3,r032_s1032,9b57e1ec,exception_route,medium,abrupt,True,33.76040601730347,,,
+XGB (CV),2 of last 3,r032_s1032,bb4a490d,cpu_burn,severe,abrupt,True,26.375370264053345,,,
+XGB (CV),2 of last 3,r033_s1033,c66b989d,route_500,severe,abrupt,True,31.55693531036377,,,
+XGB (CV),2 of last 3,r035_s1035,05b78767,route_500,mild,abrupt,True,31.03402280807495,,,
+XGB (CV),2 of last 3,r036_s1036,79910227,latency_ramp,severe,gradual,True,29.279705286026,True,28.13628888130188,57.41599416732788
+XGB (CV),2 of last 3,r037_s1037,dc0f2615,db_lock,severe,abrupt,True,28.666057109832764,,,
+XGB (CV),2 of last 3,r039_s1039,271b9084,leak,mild,gradual,True,32.5400972366333,True,122.38845825195312,154.92855548858643
+XGB (CV),2 of last 3,r039_s1039,d7755bab,route_500,medium,abrupt,True,29.02519702911377,,,

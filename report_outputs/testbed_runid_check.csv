@@ -1,0 +1,7 @@
+check,value,chance
+"runs identifiable from the 39 window features (within-run block split, 40 classes)",0.5867768595041323,0.025
+"balanced accuracy of the rule 'predict the run, output that run's majority label'",0.5,0.5
+"balanced accuracy of the rule 'predict the run, call it a fault if the run has any fault'",0.6519251301214466,0.5
+share of fault windows inside the runs that have faults,0.26436781609195403,
+runs in which every window has the same label (a run-identity shortcut would be perfect there),0.25,
+"best held-out model balanced accuracy (unseen runs, so run identity cannot help)",0.9599239130434782,0.5

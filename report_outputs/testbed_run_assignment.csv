@@ -1,0 +1,41 @@
+run_id,split,fold,n_faults,faults
+r000_s1000,train,4,0,none (fault-free)
+r001_s1001,train,5,1,pool_exhaustion[severe]
+r002_s1002,train,6,1,latency_ramp[mild]
+r003_s1003,train,0,2,cpu_burn[medium]; latency[mild]
+r004_s1004,test,,2,latency_ramp[medium]; db_lock[medium]
+r005_s1005,train,4,2,latency[mild]; route_500[mild]
+r006_s1006,train,5,1,latency[severe]
+r007_s1007,test,,2,db_lock[mild]; leak[medium]
+r008_s1008,train,0,2,route_500[medium]; crash[severe]
+r009_s1009,test,,1,route_500[severe]
+r010_s1010,train,3,2,pool_exhaustion[mild]; cpu_burn[mild]
+r011_s1011,train,6,0,none (fault-free)
+r012_s1012,train,3,2,crash[mild]; latency_ramp[severe]
+r013_s1013,train,3,0,none (fault-free)
+r014_s1014,test,,1,cpu_burn[severe]
+r015_s1015,train,0,0,none (fault-free)
+r016_s1016,train,4,1,exception_route[mild]
+r017_s1017,test,,0,none (fault-free)
+r018_s1018,train,2,0,none (fault-free)
+r019_s1019,train,0,2,db_lock[medium]; leak[medium]
+r020_s1020,test,,2,crash[mild]; pool_exhaustion[mild]
+r021_s1021,test,,1,db_slow[severe]
+r022_s1022,train,5,1,latency_ramp[medium]
+r023_s1023,train,1,2,leak[severe]; crash[severe]
+r024_s1024,train,2,2,latency[medium]; pool_exhaustion[medium]
+r025_s1025,train,2,1,db_slow[mild]
+r026_s1026,train,6,2,db_slow[mild]; latency_ramp[mild]
+r027_s1027,test,,2,latency[medium]; exception_route[severe]
+r028_s1028,test,,0,none (fault-free)
+r029_s1029,test,,1,db_slow[medium]
+r030_s1030,test,,2,exception_route[mild]; crash[medium]
+r031_s1031,train,5,0,none (fault-free)
+r032_s1032,train,2,2,exception_route[medium]; cpu_burn[severe]
+r033_s1033,train,1,1,route_500[severe]
+r034_s1034,train,6,0,none (fault-free)
+r035_s1035,train,3,1,route_500[mild]
+r036_s1036,train,1,1,latency_ramp[severe]
+r037_s1037,test,,1,db_lock[severe]
+r038_s1038,train,1,0,none (fault-free)
+r039_s1039,train,4,2,leak[mild]; route_500[medium]

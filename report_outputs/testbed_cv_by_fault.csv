@@ -1,0 +1,16 @@
+method,group,value,windows,instances,recall,ci_low,ci_high,reliable
+"XGB (every run held out once, 8 folds)",fault type,cpu_burn,28,4,0.75,0.25,1.0,False
+"XGB (every run held out once, 8 folds)",fault type,crash,17,5,0.6470588235294118,0.42857142857142855,0.75,True
+"XGB (every run held out once, 8 folds)",fault type,db_lock,23,4,1.0,1.0,1.0,False
+"XGB (every run held out once, 8 folds)",fault type,db_slow,33,4,1.0,1.0,1.0,False
+"XGB (every run held out once, 8 folds)",fault type,exception_route,35,4,0.7714285714285715,0.2727272727272727,1.0,False
+"XGB (every run held out once, 8 folds)",fault type,latency,35,5,1.0,1.0,1.0,True
+"XGB (every run held out once, 8 folds)",fault type,latency_ramp,95,6,1.0,1.0,1.0,True
+"XGB (every run held out once, 8 folds)",fault type,leak,76,4,1.0,1.0,1.0,False
+"XGB (every run held out once, 8 folds)",fault type,pool_exhaustion,71,4,0.5352112676056338,0.38461538461538464,0.6818181818181818,False
+"XGB (every run held out once, 8 folds)",fault type,route_500,47,6,1.0,1.0,1.0,True
+"XGB (every run held out once, 8 folds)",severity level,medium,156,15,0.9423076923076923,0.8508885438233265,1.0,True
+"XGB (every run held out once, 8 folds)",severity level,mild,159,17,0.7735849056603774,0.5507246376811594,0.9803969160479725,True
+"XGB (every run held out once, 8 folds)",severity level,severe,145,14,0.9379310344827586,0.8513292498105582,1.0,True
+"XGB (every run held out once, 8 folds)",fault kind,abrupt,218,32,0.9036697247706422,0.7990500652315721,0.9829805265055895,True
+"XGB (every run held out once, 8 folds)",fault kind,gradual,242,14,0.8636363636363636,0.7248642983230362,0.9685135608048994,True

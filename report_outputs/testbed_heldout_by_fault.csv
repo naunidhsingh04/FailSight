@@ -1,0 +1,97 @@
+method,group,value,windows,instances,recall,ci_low,ci_high,reliable
+LR (both),fault type,cpu_burn,7,1,1.0,1.0,1.0,False
+LR (both),fault type,crash,6,2,1.0,1.0,1.0,False
+LR (both),fault type,db_lock,18,3,1.0,1.0,1.0,False
+LR (both),fault type,db_slow,19,2,1.0,1.0,1.0,False
+LR (both),fault type,exception_route,15,2,0.7333333333333333,0.5,1.0,False
+LR (both),fault type,latency,6,1,1.0,1.0,1.0,False
+LR (both),fault type,latency_ramp,17,1,1.0,1.0,1.0,False
+LR (both),fault type,leak,14,1,1.0,1.0,1.0,False
+LR (both),fault type,pool_exhaustion,13,1,0.38461538461538464,0.38461538461538464,0.38461538461538464,False
+LR (both),fault type,route_500,10,1,1.0,1.0,1.0,False
+LR (both),severity level,medium,58,6,1.0,1.0,1.0,True
+LR (both),severity level,mild,25,4,0.68,0.4666666666666667,1.0,False
+LR (both),severity level,severe,42,5,0.9047619047619048,0.6655797101449276,1.0,True
+LR (both),fault kind,abrupt,81,12,0.9506172839506173,0.8620689655172413,1.0,True
+LR (both),fault kind,gradual,44,3,0.8181818181818182,0.38461538461538464,1.0,False
+LR (both),Normal windows,Normal,368,12,0.9728260869565217,,,True
+RF (both),fault type,cpu_burn,7,1,1.0,1.0,1.0,False
+RF (both),fault type,crash,6,2,0.8333333333333334,0.75,1.0,False
+RF (both),fault type,db_lock,18,3,1.0,1.0,1.0,False
+RF (both),fault type,db_slow,19,2,1.0,1.0,1.0,False
+RF (both),fault type,exception_route,15,2,1.0,1.0,1.0,False
+RF (both),fault type,latency,6,1,1.0,1.0,1.0,False
+RF (both),fault type,latency_ramp,17,1,1.0,1.0,1.0,False
+RF (both),fault type,leak,14,1,1.0,1.0,1.0,False
+RF (both),fault type,pool_exhaustion,13,1,0.38461538461538464,0.38461538461538464,0.38461538461538464,False
+RF (both),fault type,route_500,10,1,1.0,1.0,1.0,False
+RF (both),severity level,medium,58,6,0.9827586206896551,0.9090909090909091,1.0,True
+RF (both),severity level,mild,25,4,0.68,0.4666666666666667,1.0,False
+RF (both),severity level,severe,42,5,1.0,1.0,1.0,True
+RF (both),fault kind,abrupt,81,12,0.9876543209876543,0.9615384615384616,1.0,True
+RF (both),fault kind,gradual,44,3,0.8181818181818182,0.38461538461538464,1.0,False
+RF (both),Normal windows,Normal,368,12,0.9918478260869565,,,True
+XGB (raw),fault type,cpu_burn,7,1,1.0,1.0,1.0,False
+XGB (raw),fault type,crash,6,2,0.6666666666666666,0.5,0.75,False
+XGB (raw),fault type,db_lock,18,3,1.0,1.0,1.0,False
+XGB (raw),fault type,db_slow,19,2,1.0,1.0,1.0,False
+XGB (raw),fault type,exception_route,15,2,1.0,1.0,1.0,False
+XGB (raw),fault type,latency,6,1,1.0,1.0,1.0,False
+XGB (raw),fault type,latency_ramp,17,1,1.0,1.0,1.0,False
+XGB (raw),fault type,leak,14,1,1.0,1.0,1.0,False
+XGB (raw),fault type,pool_exhaustion,13,1,0.38461538461538464,0.38461538461538464,0.38461538461538464,False
+XGB (raw),fault type,route_500,10,1,1.0,1.0,1.0,False
+XGB (raw),severity level,medium,58,6,0.9827586206896551,0.9090909090909091,1.0,True
+XGB (raw),severity level,mild,25,4,0.64,0.4,1.0,False
+XGB (raw),severity level,severe,42,5,1.0,1.0,1.0,True
+XGB (raw),fault kind,abrupt,81,12,0.9753086419753086,0.927536231884058,1.0,True
+XGB (raw),fault kind,gradual,44,3,0.8181818181818182,0.38461538461538464,1.0,False
+XGB (raw),Normal windows,Normal,368,12,0.9972826086956522,,,True
+LGBM (raw),fault type,cpu_burn,7,1,1.0,1.0,1.0,False
+LGBM (raw),fault type,crash,6,2,0.6666666666666666,0.5,0.75,False
+LGBM (raw),fault type,db_lock,18,3,1.0,1.0,1.0,False
+LGBM (raw),fault type,db_slow,19,2,1.0,1.0,1.0,False
+LGBM (raw),fault type,exception_route,15,2,1.0,1.0,1.0,False
+LGBM (raw),fault type,latency,6,1,1.0,1.0,1.0,False
+LGBM (raw),fault type,latency_ramp,17,1,1.0,1.0,1.0,False
+LGBM (raw),fault type,leak,14,1,1.0,1.0,1.0,False
+LGBM (raw),fault type,pool_exhaustion,13,1,0.38461538461538464,0.38461538461538464,0.38461538461538464,False
+LGBM (raw),fault type,route_500,10,1,1.0,1.0,1.0,False
+LGBM (raw),severity level,medium,58,6,0.9827586206896551,0.9090909090909091,1.0,True
+LGBM (raw),severity level,mild,25,4,0.64,0.4,1.0,False
+LGBM (raw),severity level,severe,42,5,1.0,1.0,1.0,True
+LGBM (raw),fault kind,abrupt,81,12,0.9753086419753086,0.927536231884058,1.0,True
+LGBM (raw),fault kind,gradual,44,3,0.8181818181818182,0.38461538461538464,1.0,False
+LGBM (raw),Normal windows,Normal,368,12,0.9891304347826086,,,True
+"RobustZ (per-run, first 150 s)",fault type,cpu_burn,7,1,1.0,1.0,1.0,False
+"RobustZ (per-run, first 150 s)",fault type,crash,6,2,0.0,0.0,0.0,False
+"RobustZ (per-run, first 150 s)",fault type,db_lock,18,3,1.0,1.0,1.0,False
+"RobustZ (per-run, first 150 s)",fault type,db_slow,19,2,1.0,1.0,1.0,False
+"RobustZ (per-run, first 150 s)",fault type,exception_route,15,2,1.0,1.0,1.0,False
+"RobustZ (per-run, first 150 s)",fault type,latency,6,1,1.0,1.0,1.0,False
+"RobustZ (per-run, first 150 s)",fault type,latency_ramp,17,1,1.0,1.0,1.0,False
+"RobustZ (per-run, first 150 s)",fault type,leak,14,1,1.0,1.0,1.0,False
+"RobustZ (per-run, first 150 s)",fault type,pool_exhaustion,13,1,0.38461538461538464,0.38461538461538464,0.38461538461538464,False
+"RobustZ (per-run, first 150 s)",fault type,route_500,10,1,1.0,1.0,1.0,False
+"RobustZ (per-run, first 150 s)",severity level,medium,58,6,0.9310344827586207,0.6363636363636364,1.0,True
+"RobustZ (per-run, first 150 s)",severity level,mild,25,4,0.6,0.3333333333333333,1.0,False
+"RobustZ (per-run, first 150 s)",severity level,severe,42,5,1.0,1.0,1.0,True
+"RobustZ (per-run, first 150 s)",fault kind,abrupt,81,12,0.9259259259259259,0.7910447761194029,1.0,True
+"RobustZ (per-run, first 150 s)",fault kind,gradual,44,3,0.8181818181818182,0.38461538461538464,1.0,False
+"RobustZ (per-run, first 150 s)",Normal windows,Normal,368,12,0.9456521739130435,,,True
+"IsoForest (per-run, first 150 s)",fault type,cpu_burn,7,1,1.0,1.0,1.0,False
+"IsoForest (per-run, first 150 s)",fault type,crash,6,2,0.6666666666666666,0.5,1.0,False
+"IsoForest (per-run, first 150 s)",fault type,db_lock,18,3,0.8888888888888888,0.8571428571428571,1.0,False
+"IsoForest (per-run, first 150 s)",fault type,db_slow,19,2,1.0,1.0,1.0,False
+"IsoForest (per-run, first 150 s)",fault type,exception_route,15,2,0.6666666666666666,0.2857142857142857,1.0,False
+"IsoForest (per-run, first 150 s)",fault type,latency,6,1,1.0,1.0,1.0,False
+"IsoForest (per-run, first 150 s)",fault type,latency_ramp,17,1,0.17647058823529413,0.17647058823529413,0.17647058823529413,False
+"IsoForest (per-run, first 150 s)",fault type,leak,14,1,0.42857142857142855,0.42857142857142855,0.42857142857142855,False
+"IsoForest (per-run, first 150 s)",fault type,pool_exhaustion,13,1,0.38461538461538464,0.38461538461538464,0.38461538461538464,False
+"IsoForest (per-run, first 150 s)",fault type,route_500,10,1,0.0,0.0,0.0,False
+"IsoForest (per-run, first 150 s)",severity level,medium,58,6,0.5689655172413793,0.3939393939393939,0.9565670289855073,True
+"IsoForest (per-run, first 150 s)",severity level,mild,25,4,0.48,0.2857142857142857,1.0,False
+"IsoForest (per-run, first 150 s)",severity level,severe,42,5,0.7380952380952381,0.30943738656987296,1.0,True
+"IsoForest (per-run, first 150 s)",fault kind,abrupt,81,12,0.7654320987654321,0.494938394938395,0.9821506892230576,True
+"IsoForest (per-run, first 150 s)",fault kind,gradual,44,3,0.3181818181818182,0.17647058823529413,0.42857142857142855,False
+"IsoForest (per-run, first 150 s)",Normal windows,Normal,368,12,0.8152173913043479,,,True
