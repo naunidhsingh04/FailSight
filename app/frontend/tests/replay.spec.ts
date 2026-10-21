@@ -10,11 +10,11 @@ for (const width of [375, 768, 1280, 1920]) {
     test('start, pause, an alert appears, its explanation opens, stop', async ({ page, request }) => {
       test.setTimeout(150_000)
       await request.post('/api/replay/control', { data: { stop: true } })
-      await page.goto('/')
-      await expect(page.getByText('Replay of recorded AnoMod data').first()).toBeVisible()
+      await page.goto('/examiners/replay')
+      await expect(page.getByText(/Recorded benchmark data \(cannot prove fault detection\)/).first()).toBeVisible()
       await page.getByRole('button', { name: 'Slow performance' }).click()
       await page.getByRole('button', { name: '60×' }).click()
-      await page.getByRole('button', { name: 'Play' }).click()
+      await page.getByRole('button', { name: 'Start' }).click()
       await expect(page.getByText(/Playing: Slow performance at 60×/)).toBeVisible()
       const first = page.getByRole('list', { name: /Alert feed/ }).getByRole('button').first()
       await expect(first).toBeVisible({ timeout: 90_000 })
@@ -29,13 +29,14 @@ for (const width of [375, 768, 1280, 1920]) {
       await page.keyboard.press('Escape')
       await expect(dlg).toHaveCount(0)
       await page.getByRole('button', { name: 'Stop' }).click()
-      await expect(page.getByText(/Not playing\./)).toBeVisible()
+      await expect(page.getByText(/Ready\. Press Start\./)).toBeVisible()
     })
 
     if (width === 1280) {
       test('Proofs: Re-run the checks streams the terminal output', async ({ page }) => {
         test.setTimeout(300_000)
         await page.goto('/proofs')
+        await page.getByText('Show all the checks behind these numbers').click()
         await page.getByRole('button', { name: 'Re-run the checks' }).click()
         const con = page.getByTestId('proof-console')
         await expect(con).toContainText(/P1/, { timeout: 120_000 })

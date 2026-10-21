@@ -49,6 +49,7 @@ progress { width: 100%; max-width: 32rem; height: 1.1rem; accent-color: var(--ac
 .statusbar li.ok.on { background: var(--ok-bg); color: var(--ok); font-weight: 800; }
 .statusbar li.watch.on { background: var(--watch-bg); color: var(--watch); font-weight: 800; }
 .statusbar li.problem.on { background: var(--fail-bg); color: var(--fail); font-weight: 800; }
+@media (max-width: 520px) { .statusbar li { flex-direction: column; gap: 2px; padding: var(--space-3) 2px; font-size: 1rem; } .answer { padding: var(--space-3); gap: var(--space-3); } .answer .icon { width: 2.2rem; height: 2.2rem; } .step { padding: var(--space-4); } }
 .timeline { list-style: none; padding: 0; margin: var(--space-4) 0 0; max-width: none; }
 .timeline li { margin: 0 0 var(--space-2); padding-left: var(--space-4); border-left: 4px solid var(--border-strong); font-size: 1.15rem; }
 .timeline li.found { border-left-color: var(--ok); }

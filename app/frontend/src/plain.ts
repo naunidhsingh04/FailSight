@@ -18,19 +18,22 @@ const times = (value: number, normal: number | null) => {
   return r >= 1.5 ? Math.round(r) : null
 }
 
-/** Turn the strongest reading behind a window into a short plain sentence ("Response time went up 4 times"). */
+/** Turn the strongest reading behind a window into a short plain sentence ("Response time went up 4 times"). Never shows a feature code. */
 export function plainReason(r: TbReason | undefined): Plain {
   if (!r) return { headline: 'something looks wrong', reason: 'The shop behaves differently from how it did while FailSight was learning.' }
-  const f = r.feature
+  const f = r.feature.replace(/^d_/, '')                       // "d_" marks a change in a reading
   const x = times(r.value, r.normal)
-  if (f.startsWith('api_latency')) return { headline: 'pages are getting slow', reason: x ? `Response time went up ${x} times (from ${Math.round(r.normal as number)} to ${Math.round(r.value)} milliseconds).` : 'Pages take longer to answer than usual.' }
-  if (f === 'api_error_rate' || f === 'log_error_count') return { headline: 'pages are showing errors', reason: 'More visitors than usual are getting an error instead of a page.' }
+  const more = x ? ` (${x} times more than usual)` : ''
+  if (f.startsWith('api_latency')) return { headline: 'pages are getting slow', reason: x && r.normal ? `Response time went up ${x} times (from ${Math.round(r.normal)} to ${Math.round(r.value)} milliseconds).` : 'Pages take longer to answer than usual.' }
+  if (f === 'api_5xx_count' || f === 'api_error_rate' || f.startsWith('log_error') || f === 'api_4xx_count') return { headline: 'pages are showing errors', reason: `More visitors than usual are getting an error instead of a page${more}.` }
   if (f.includes('db_')) return { headline: 'the database is slow', reason: 'The shop waits much longer than usual for its database.' }
-  if (f.includes('cpu')) return { headline: 'the server is working too hard', reason: x ? `The server is using ${x} times more processor power than usual.` : 'The server is using more processor power than usual.' }
+  if (f.includes('cpu')) return { headline: 'the server is working too hard', reason: `The server is using much more processor power than usual${more}.` }
   if (f.includes('rss')) return { headline: 'the server is using too much memory', reason: 'The shop is using much more memory than usual.' }
-  if (f.includes('event_loop')) return { headline: 'the server is slow to react', reason: 'The shop is slow to start work on each request.' }
-  if (f === 'api_request_count') return r.value < (r.normal ?? 0) ? { headline: 'visitors are not getting through', reason: 'Far fewer requests are being answered than usual.' } : { headline: 'there is a rush of visitors', reason: 'Many more requests than usual are arriving.' }
-  return { headline: 'something looks wrong', reason: r.sentence.charAt(0).toUpperCase() + r.sentence.slice(1) + '.' }
+  if (f.includes('threads')) return { headline: 'the server is busier than usual', reason: 'The shop is running more things at the same time than usual.' }
+  if (f.includes('event_loop') || f.includes('inflight')) return { headline: 'the server is slow to react', reason: 'The shop is slow to start work on each request, or requests are piling up.' }
+  if (f === 'api_request_count' || f === 'log_line_count') return r.value < (r.normal ?? 0) ? { headline: 'visitors are not getting through', reason: 'Far fewer requests are being answered than usual.' } : { headline: 'there is a rush of visitors', reason: 'Many more requests than usual are arriving.' }
+  const name = (r.plain_name || 'a reading').replace(/\s*\([^)]*\)/g, '')
+  return { headline: 'something looks wrong', reason: `${name.charAt(0).toUpperCase()}${name.slice(1)} is far from normal.` }
 }
 
 export function levelOf(status: string | undefined | null, shopUp: boolean): Level {

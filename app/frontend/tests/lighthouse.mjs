@@ -8,7 +8,7 @@ import desktopConfig from 'lighthouse/core/config/desktop-config.js'
 import { writeFileSync } from 'node:fs'
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8765'
-const PAGES = ['/', '/?tab=live', '/how-it-works', '/proofs', '/results', '/connect', '/testbed', '/limits', '/glossary']
+const PAGES = ['/', '/how-it-works', '/proofs', '/examiners', '/examiners/replay', '/examiners/results', '/examiners/connect', '/examiners/testbed', '/examiners/limits', '/examiners/glossary']
 const chromePath = chromium.executablePath()
 const out = []
 let failed = false

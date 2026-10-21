@@ -42,16 +42,38 @@ for (const width of [375, 768, 1280, 1920]) {
 
     const LIMITS = ['One app', 'One machine', 'Synthetic traffic and injected faults', 'Small held-out test', 'Per-type results are unreliable', 'Transfer to other apps has not been shown']
 
-    test('Live demo tab: states the six limits, offers real fault switches, and switches back to the replay', async ({ page }) => {
+    test('Demo page: three steps, the three plain limits, and a link to the full limits', async ({ page }) => {
       await page.goto('/?tab=live')
-      await expect(page.getByRole('heading', { level: 1, name: 'Is our demo shop healthy right now?' })).toBeVisible()
-      for (const t of LIMITS) await expect(page.getByText(t).first()).toBeVisible()
-      await expect(page.getByRole('button', { name: 'Slow database queries' })).toBeVisible()
-      await expect(page.getByRole('group', { name: 'How bad' }).getByRole('button', { name: 'Mild' })).toBeVisible()
-      await page.getByRole('tab', { name: 'Recorded data (replay)' }).click()
-      await expect(page.getByRole('heading', { level: 1, name: 'Is the system healthy right now?' })).toBeVisible()
-      await page.getByRole('tab', { name: 'Live demo app' }).click()
-      await expect(page).toHaveURL(/tab=live/)
+      await expect(page.getByRole('heading', { level: 1, name: 'See FailSight catch a broken website' })).toBeVisible()
+      for (const t of [/one app/, /12 test runs with 15 problems/, /Other apps are unproven/]) await expect(page.getByText(t).first()).toBeVisible()
+      await page.getByRole('link', { name: 'Limits', exact: true }).last().click()
+      await expect(page.getByRole('heading', { level: 1, name: 'Limits' })).toBeVisible()
+      await expect(page).toHaveURL(/\/examiners\/limits/)
+    })
+
+    test('For examiners lists every sub-page and each one opens', async ({ page }) => {
+      await page.goto('/examiners')
+      for (const n of ['Results', 'Connect', 'Testbed', 'Limits', 'Glossary', 'Recorded benchmark data']) await expect(page.getByRole('link', { name: new RegExp(`^${n}`) }).first()).toBeVisible()
+      await page.getByRole('link', { name: /^Recorded benchmark data/ }).first().click()
+      await expect(page.getByText(/cannot prove fault detection/).first()).toBeVisible()
+      await expect(page.getByRole('navigation', { name: 'For examiners' })).toBeVisible()
+      await expect(page.getByRole('link', { name: 'For examiners' }).first()).toHaveAttribute('aria-current', 'page')
+    })
+
+    test('Proof page: one sentence, the three numbers read from the result files, honest limits, full list collapsed', async ({ page, request }) => {
+      await page.goto('/proofs')
+      await expect(page.locator('.proof-sentence')).toContainText(/of the 15 problems we planted/)
+      const table = page.getByRole('table', { name: 'The three numbers to know' })
+      await expect(table).toContainText('Score on test runs it never saw')
+      await expect(table).toContainText('Problems caught')
+      await expect(table).toContainText('False alarms per hour')
+      const r = await (await request.get('/api/testbed/results')).json()
+      const o = r.overall.find((x: any) => x.method === `${r.frozen.model} (${r.frozen.feature_set})`)
+      await expect(table).toContainText(o.balanced_accuracy.toFixed(2))
+      await expect(page.locator('.honest')).toContainText(/one app.*test runs.*other apps are unproven/i)
+      await expect(page.locator('details.all-checks')).not.toHaveAttribute('open', '')
+      await page.getByText('Show all the checks behind these numbers').click()
+      await expect(page.getByRole('heading', { name: 'Run the checks again' })).toBeVisible()
     })
 
     test('Connect page: validation scope, three snippets with copy buttons, connection state and webhook form', async ({ page }) => {
@@ -91,6 +113,7 @@ for (const width of [375, 768, 1280, 1920]) {
 
     test('Proofs: checklist, audit table with C3 warning and the C7 baseline note, downloads', async ({ page }) => {
       await page.goto('/proofs')
+      await page.getByText('Show all the checks behind these numbers').click()
       await expect(page.getByText('Passed', { exact: true })).toBeVisible()
       await expect(page.getByText('P7', { exact: true }).first()).toBeVisible()
       await expect(page.getByText('P13', { exact: true }).first()).toBeVisible()

@@ -1,18 +1,90 @@
 {
  "tool": "lighthouse",
- "base": "http://127.0.0.1:8765",
+ "base": "http://127.0.0.1:8000",
  "results": [
   {
    "page": "/",
    "formFactor": "mobile",
-   "performance": 84,
+   "performance": 75,
    "accessibility": 100,
    "bestPractices": 100,
    "seo": 100,
    "failedAccessibilityAudits": []
   },
   {
-   "page": "/?tab=live",
+   "page": "/how-it-works",
+   "formFactor": "mobile",
+   "performance": 89,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/proofs",
+   "formFactor": "mobile",
+   "performance": 61,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/examiners",
+   "formFactor": "mobile",
+   "performance": 79,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/examiners/replay",
+   "formFactor": "mobile",
+   "performance": 76,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/examiners/results",
+   "formFactor": "mobile",
+   "performance": 79,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/examiners/connect",
+   "formFactor": "mobile",
+   "performance": 73,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/examiners/testbed",
+   "formFactor": "mobile",
+   "performance": 79,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/examiners/limits",
+   "formFactor": "mobile",
+   "performance": 64,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/examiners/glossary",
    "formFactor": "mobile",
    "performance": 77,
    "accessibility": 100,
@@ -21,97 +93,7 @@
    "failedAccessibilityAudits": []
   },
   {
-   "page": "/how-it-works",
-   "formFactor": "mobile",
-   "performance": 81,
-   "accessibility": 100,
-   "bestPractices": 100,
-   "seo": 100,
-   "failedAccessibilityAudits": []
-  },
-  {
-   "page": "/proofs",
-   "formFactor": "mobile",
-   "performance": 81,
-   "accessibility": 100,
-   "bestPractices": 100,
-   "seo": 100,
-   "failedAccessibilityAudits": []
-  },
-  {
-   "page": "/results",
-   "formFactor": "mobile",
-   "performance": 85,
-   "accessibility": 100,
-   "bestPractices": 100,
-   "seo": 100,
-   "failedAccessibilityAudits": []
-  },
-  {
-   "page": "/connect",
-   "formFactor": "mobile",
-   "performance": 78,
-   "accessibility": 100,
-   "bestPractices": 100,
-   "seo": 100,
-   "failedAccessibilityAudits": []
-  },
-  {
-   "page": "/testbed",
-   "formFactor": "mobile",
-   "performance": 82,
-   "accessibility": 100,
-   "bestPractices": 100,
-   "seo": 100,
-   "failedAccessibilityAudits": []
-  },
-  {
-   "page": "/limits",
-   "formFactor": "mobile",
-   "performance": 65,
-   "accessibility": 100,
-   "bestPractices": 100,
-   "seo": 100,
-   "failedAccessibilityAudits": []
-  },
-  {
-   "page": "/glossary",
-   "formFactor": "mobile",
-   "performance": 83,
-   "accessibility": 100,
-   "bestPractices": 100,
-   "seo": 100,
-   "failedAccessibilityAudits": []
-  },
-  {
    "page": "/",
-   "formFactor": "desktop",
-   "performance": 100,
-   "accessibility": 100,
-   "bestPractices": 100,
-   "seo": 100,
-   "failedAccessibilityAudits": []
-  },
-  {
-   "page": "/?tab=live",
-   "formFactor": "desktop",
-   "performance": 100,
-   "accessibility": 100,
-   "bestPractices": 100,
-   "seo": 100,
-   "failedAccessibilityAudits": []
-  },
-  {
-   "page": "/how-it-works",
-   "formFactor": "desktop",
-   "performance": 84,
-   "accessibility": 100,
-   "bestPractices": 100,
-   "seo": 100,
-   "failedAccessibilityAudits": []
-  },
-  {
-   "page": "/proofs",
    "formFactor": "desktop",
    "performance": 99,
    "accessibility": 100,
@@ -120,7 +102,7 @@
    "failedAccessibilityAudits": []
   },
   {
-   "page": "/results",
+   "page": "/how-it-works",
    "formFactor": "desktop",
    "performance": 100,
    "accessibility": 100,
@@ -129,7 +111,16 @@
    "failedAccessibilityAudits": []
   },
   {
-   "page": "/connect",
+   "page": "/proofs",
+   "formFactor": "desktop",
+   "performance": 98,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/examiners",
    "formFactor": "desktop",
    "performance": 100,
    "accessibility": 100,
@@ -138,7 +129,7 @@
    "failedAccessibilityAudits": []
   },
   {
-   "page": "/testbed",
+   "page": "/examiners/replay",
    "formFactor": "desktop",
    "performance": 100,
    "accessibility": 100,
@@ -147,16 +138,43 @@
    "failedAccessibilityAudits": []
   },
   {
-   "page": "/limits",
+   "page": "/examiners/results",
    "formFactor": "desktop",
-   "performance": 86,
+   "performance": 100,
    "accessibility": 100,
    "bestPractices": 100,
    "seo": 100,
    "failedAccessibilityAudits": []
   },
   {
-   "page": "/glossary",
+   "page": "/examiners/connect",
+   "formFactor": "desktop",
+   "performance": 100,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/examiners/testbed",
+   "formFactor": "desktop",
+   "performance": 100,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/examiners/limits",
+   "formFactor": "desktop",
+   "performance": 91,
+   "accessibility": 100,
+   "bestPractices": 100,
+   "seo": 100,
+   "failedAccessibilityAudits": []
+  },
+  {
+   "page": "/examiners/glossary",
    "formFactor": "desktop",
    "performance": 100,
    "accessibility": 100,

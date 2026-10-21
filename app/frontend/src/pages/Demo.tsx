@@ -8,7 +8,7 @@ import { BREAKS, clock12, levelOf, plainReason, sentence } from '../plain'
 import { useFaults, useTestbed } from '../testbed'
 import { usePageTitle } from '../usePageTitle'
 
-interface Broke { at: number; label: string; what: string; type: string; seconds: number }
+interface Broke { at: number; label: string; what: string; type: string; seconds: number; alreadyAlerting: boolean }
 
 export function DemoLimits() {
   return (
@@ -39,17 +39,19 @@ export default function Demo() {
   const pct = Math.round(((last?.learning_progress ?? app?.learning.progress) ?? 0) * 100)
   const learned = shopUp && !!app?.learning.done
   const status = !shopUp ? null : (last?.status ?? 'learning')
-  const level = levelOf(status, shopUp)
+  const crashedNow = !!broke && broke.type === 'crash' && !shopUp && Date.now() / 1000 < broke.at + 150     // the shop is down on purpose and restarts by itself
+  const level = crashedNow ? 'problem' : levelOf(status, shopUp)
 
   const notice = useMemo(() => {
     if (!broke) return null
-    return windows.find((w) => w.new_alert && (w.emitted_at ?? w.window_end) >= broke.at) ?? null
+    if (broke.alreadyAlerting) return null                       // the earlier alarm was still on: the delay cannot be measured
+    return windows.find((w) => w.alert && !w.learning && (w.emitted_at ?? w.window_end) >= broke.at) ?? null
   }, [windows, broke])
   const noticedAt = notice ? (notice.emitted_at ?? notice.window_end) : null
   const series: Pt[] = useMemo(() => windows.filter((w) => !w.learning && w.features?.api_latency_p95_ms != null).map((w) => ({ t: w.window_end, ms: w.features.api_latency_p95_ms as number })), [windows])
   const now = Date.now() / 1000
   const faultOn = faults.active.length > 0
-  const missed = !!broke && !notice && !faultOn && now > broke.at + broke.seconds + 45
+  const missed = !!broke && !broke.alreadyAlerting && !notice && !faultOn && now > broke.at + broke.seconds + 45
 
   const why = plainReason((notice ?? (level === 'watch' || level === 'problem' ? last : null))?.reasons?.[0])
 
@@ -73,8 +75,9 @@ export default function Demo() {
     const b = BREAKS.find((x) => x.id === id)
     if (!b) return
     const at = Date.now() / 1000
+    const alreadyAlerting = !!last?.alert
     const ok = await faults.inject(b.type, 'medium', b.duration_s)
-    if (ok) setBroke({ at, label: b.label, what: b.what, type: b.type, seconds: b.duration_s ?? 60 })
+    if (ok || b.type === 'crash') setBroke({ at, label: b.label, what: b.what, type: b.type, seconds: b.duration_s ?? 60, alreadyAlerting })
   }
   const surprise = () => breakIt(BREAKS[Math.floor(Math.random() * BREAKS.length)].id)
   async function fix() { await faults.clear() }
@@ -89,6 +92,7 @@ export default function Demo() {
           <h2 id="s1"><span className="num" aria-hidden="true">1</span> Start the demo shop</h2>
           {error && <p role="alert" className="bad-text">FailSight itself is not answering: {error}. Reload the page, or restart it with start_testbed.bat.</p>}
           {checking ? <p role="status">Checking whether the shop is running…</p>
+            : crashedNow ? <p role="status"><strong>The shop is down, because you crashed it.</strong> It starts again by itself in about 30 seconds. Nothing to do but wait.</p>
             : !shopUp ? (
               <>
                 <button type="button" className="btn big" onClick={start} disabled={starting}>{starting ? 'Starting… about a minute' : 'Start the demo shop'}</button>
@@ -131,15 +135,16 @@ export default function Demo() {
 
         <li className="step" aria-labelledby="s3">
           <h2 id="s3"><span className="num" aria-hidden="true">3</span> What does FailSight say?</h2>
-          <StatusSentence level={level} text={sentence(level, notice ?? last, pct)} />
+          <StatusSentence level={level} text={crashedNow ? 'Something is wrong: the whole shop is down' : sentence(level, notice ?? last, pct)} />
           <StatusBar level={level} />
           {level === 'idle' && <p className="hint">Press <strong>Start the demo shop</strong> in step 1. The answer shows up here.</p>}
           {level === 'learning' && <p className="hint">Nothing can be judged yet. In about 2 minutes this turns into a real answer.</p>}
-          {(level === 'ok' || level === 'watch' || level === 'problem') && !broke && <p className="hint">{level === 'ok' ? 'Now break something in step 2 and watch this change.' : 'This was not caused by you: the shop sometimes has a short bad moment.'}</p>}
+          {(level === 'ok' || level === 'watch' || level === 'problem') && !broke && <p className="hint">{level === 'ok' ? 'Now break something in step 2 and watch this change.' : 'You have not broken anything on this page. Either you broke it earlier, or the shop had a short bad moment.'}</p>}
           {broke && (
             <ul className="timeline" aria-label="What happened, in order">
               <li>You broke it at <strong>{clock12(broke.at)}</strong>.</li>
               {notice && noticedAt ? <li className="found">FailSight noticed at <strong>{clock12(noticedAt)}</strong> ({Math.max(0, Math.round(noticedAt - broke.at))} seconds later).</li>
+                : broke.alreadyAlerting ? <li>FailSight was still on alert from the earlier problem, so we cannot time it. Wait for “Everything looks normal”, then try again.</li>
                 : missed ? <li>FailSight did not raise an alert this time. This can happen: see the limits below.</li>
                   : <li>FailSight has not noticed yet. It looks every 10 seconds and needs about 30 seconds to be sure.</li>}
             </ul>
