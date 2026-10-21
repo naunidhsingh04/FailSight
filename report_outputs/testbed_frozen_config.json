@@ -1,0 +1,166 @@
+{
+ "frozen_at": "2026-10-21 12:26:34",
+ "frozen_at_epoch": 1792565794.4501212,
+ "purpose": "live demo validation: nothing below is changed after a demo has been run",
+ "selection": {
+  "basis": "best cv_balanced_accuracy_tuned over the 4 supervised models x 3 feature sets in run-grouped 7-fold cross-validation on the 28 train runs only",
+  "source": "report_outputs/testbed_train_cv.csv",
+  "chosen": {
+   "model": "RF",
+   "feature_set": "both",
+   "cv_balanced_accuracy_at_0_5": 0.9250692644561624,
+   "tuned_threshold": 0.307137,
+   "cv_balanced_accuracy_tuned": 0.9331128787201716
+  },
+  "all_candidates": [
+   {
+    "model": "LR",
+    "feature_set": "raw",
+    "cv_balanced_accuracy_at_0_5": 0.9045,
+    "tuned_threshold": 0.3414,
+    "cv_balanced_accuracy_tuned": 0.9116
+   },
+   {
+    "model": "RF",
+    "feature_set": "raw",
+    "cv_balanced_accuracy_at_0_5": 0.9263,
+    "tuned_threshold": 0.4372,
+    "cv_balanced_accuracy_tuned": 0.926
+   },
+   {
+    "model": "XGB",
+    "feature_set": "raw",
+    "cv_balanced_accuracy_at_0_5": 0.9236,
+    "tuned_threshold": 0.5949,
+    "cv_balanced_accuracy_tuned": 0.926
+   },
+   {
+    "model": "LGBM",
+    "feature_set": "raw",
+    "cv_balanced_accuracy_at_0_5": 0.934,
+    "tuned_threshold": 0.0687,
+    "cv_balanced_accuracy_tuned": 0.9316
+   },
+   {
+    "model": "LR",
+    "feature_set": "rel",
+    "cv_balanced_accuracy_at_0_5": 0.9101,
+    "tuned_threshold": 0.6254,
+    "cv_balanced_accuracy_tuned": 0.9155
+   },
+   {
+    "model": "RF",
+    "feature_set": "rel",
+    "cv_balanced_accuracy_at_0_5": 0.9281,
+    "tuned_threshold": 0.3588,
+    "cv_balanced_accuracy_tuned": 0.9268
+   },
+   {
+    "model": "XGB",
+    "feature_set": "rel",
+    "cv_balanced_accuracy_at_0_5": 0.9149,
+    "tuned_threshold": 0.3351,
+    "cv_balanced_accuracy_tuned": 0.9185
+   },
+   {
+    "model": "LGBM",
+    "feature_set": "rel",
+    "cv_balanced_accuracy_at_0_5": 0.928,
+    "tuned_threshold": 0.8981,
+    "cv_balanced_accuracy_tuned": 0.9295
+   },
+   {
+    "model": "LR",
+    "feature_set": "both",
+    "cv_balanced_accuracy_at_0_5": 0.9179,
+    "tuned_threshold": 0.5828,
+    "cv_balanced_accuracy_tuned": 0.9191
+   },
+   {
+    "model": "RF",
+    "feature_set": "both",
+    "cv_balanced_accuracy_at_0_5": 0.9251,
+    "tuned_threshold": 0.3071,
+    "cv_balanced_accuracy_tuned": 0.9331
+   },
+   {
+    "model": "XGB",
+    "feature_set": "both",
+    "cv_balanced_accuracy_at_0_5": 0.9206,
+    "tuned_threshold": 0.6555,
+    "cv_balanced_accuracy_tuned": 0.9233
+   },
+   {
+    "model": "LGBM",
+    "feature_set": "both",
+    "cv_balanced_accuracy_at_0_5": 0.9352,
+    "tuned_threshold": 0.1592,
+    "cv_balanced_accuracy_tuned": 0.931
+   }
+  ]
+ },
+ "model": "RF",
+ "feature_set": "both",
+ "n_features": 78,
+ "threshold": 0.307137,
+ "threshold_source": "maximises balanced accuracy of the out-of-fold predictions on the train runs",
+ "alert_rule": {
+  "name": "2 of last 3 windows",
+  "k": 2,
+  "n": 3,
+  "why": "decided before any live demo: it cut false alarms in the held-out validation (fault-free runs) at the cost of about 10 s more delay, and it is the rule the Console already uses"
+ },
+ "learning_period_s": 150,
+ "window_s": 30.0,
+ "step_s": 10.0,
+ "train_runs": [
+  "r000_s1000",
+  "r001_s1001",
+  "r002_s1002",
+  "r003_s1003",
+  "r005_s1005",
+  "r006_s1006",
+  "r008_s1008",
+  "r010_s1010",
+  "r011_s1011",
+  "r012_s1012",
+  "r013_s1013",
+  "r015_s1015",
+  "r016_s1016",
+  "r018_s1018",
+  "r019_s1019",
+  "r022_s1022",
+  "r023_s1023",
+  "r024_s1024",
+  "r025_s1025",
+  "r026_s1026",
+  "r031_s1031",
+  "r032_s1032",
+  "r033_s1033",
+  "r034_s1034",
+  "r035_s1035",
+  "r036_s1036",
+  "r038_s1038",
+  "r039_s1039"
+ ],
+ "train_windows": 1534,
+ "test_runs": [
+  "r004_s1004",
+  "r007_s1007",
+  "r009_s1009",
+  "r014_s1014",
+  "r017_s1017",
+  "r020_s1020",
+  "r021_s1021",
+  "r027_s1027",
+  "r028_s1028",
+  "r029_s1029",
+  "r030_s1030",
+  "r037_s1037"
+ ],
+ "model_file": "models/testbed/detector.joblib (not in git)",
+ "model_sha256": "dc67467f1eb2a50ad2f876c7cdf80fad3bab986195f6090b35393bee1d6668a6",
+ "baseline_rule": "robust z-score against the app's own past (scripts/universal_features.py: last 60 windows that ended before this one began, at least 9)",
+ "live_demo_seeds": "9000 and above; never used for training or selection",
+ "git_commit": "8555ba62c80be2917681cbbd5340bc99b5c3d10f"
+}

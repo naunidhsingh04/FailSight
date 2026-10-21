@@ -35,6 +35,43 @@ def read_jsonl(path):
     return pd.read_json(path, lines=True, convert_dates=False) if path.exists() and path.stat().st_size else pd.DataFrame()
 
 
+def compute_window(ws, at, sc, lat, cl, lt, lv, series):
+    """the 39 window features for [ws, ws + 30): at/sc/lat/cl = sorted request timestamps, status codes, latencies (ms), content lengths; lt/lv = sorted log timestamps and levels;
+    series = {metric: (timestamps, values)}. Shared by the offline dataset builder and the live monitor, so both compute exactly the same numbers."""
+    we = ws + WIN
+    f = {}
+    i, j = np.searchsorted(at, ws, "left"), np.searchsorted(at, we, "left")
+    n = j - i
+    s = sc[i:j]
+    f["api_request_count"] = float(n)
+    f["api_4xx_count"] = float(((s >= 400) & (s < 500)).sum())
+    f["api_5xx_count"] = float((s >= 500).sum())
+    f["api_error_rate"] = float((s >= 500).mean()) if n else 0.0
+    l = lat[i:j]
+    f["api_latency_mean_ms"] = float(l.mean()) if n else 0.0
+    f["api_latency_p95_ms"] = float(np.percentile(l, 95)) if n else 0.0
+    f["api_latency_p99_ms"] = float(np.percentile(l, 99)) if n else 0.0
+    f["api_content_length_mean"] = float(cl[i:j].mean()) if n else 0.0
+    a, b = np.searchsorted(lt, ws, "left"), np.searchsorted(lt, we, "left")
+    lvl = lv[a:b]
+    f["log_line_count"] = float(b - a)
+    f["log_error_count"] = float(np.isin(lvl, ["ERROR", "CRITICAL"]).sum())
+    f["log_warning_count"] = float((lvl == "WARNING").sum())
+    f["log_error_share"] = float(f["log_error_count"] / (b - a)) if b > a else 0.0
+    for name in METRICS:
+        ts, vs = series[name]
+        p, q = np.searchsorted(ts, ws, "left"), np.searchsorted(ts, we, "left")
+        v = vs[p:q]
+        if name == "process_rss_bytes":
+            v = v / 1e6
+        f[f"m_{name}__mean"] = float(v.mean()) if len(v) else np.nan
+        f[f"m_{name}__max"] = float(v.max()) if len(v) else np.nan
+        f[f"m_{name}__std"] = float(v.std()) if len(v) else np.nan
+        if name == "process_rss_bytes":
+            f["m_process_rss_bytes__slope"] = float(np.polyfit(ts[p:q] - ws, v, 1)[0]) if len(v) >= 3 else np.nan      # MB per second inside the window
+    return f
+
+
 def window_features(run_dir):
     m = json.loads((run_dir / "meta.json").read_text(encoding="utf-8"))
     t0, dur = m["start_ts"], m["duration_s"]
@@ -57,36 +94,7 @@ def window_features(run_dir):
         series[name] = (x.timestamp.to_numpy(float), x.value.to_numpy(float)) if len(x) else (np.array([]), np.array([]))
     for k, ws in enumerate(starts):
         we = ws + WIN
-        f = {}
-        i, j = np.searchsorted(at, ws, "left"), np.searchsorted(at, we, "left")
-        n = j - i
-        s = sc[i:j]
-        f["api_request_count"] = float(n)
-        f["api_4xx_count"] = float(((s >= 400) & (s < 500)).sum())
-        f["api_5xx_count"] = float((s >= 500).sum())
-        f["api_error_rate"] = float((s >= 500).mean()) if n else 0.0
-        l = lat[i:j]
-        f["api_latency_mean_ms"] = float(l.mean()) if n else 0.0
-        f["api_latency_p95_ms"] = float(np.percentile(l, 95)) if n else 0.0
-        f["api_latency_p99_ms"] = float(np.percentile(l, 99)) if n else 0.0
-        f["api_content_length_mean"] = float(cl[i:j].mean()) if n else 0.0
-        a, b = np.searchsorted(lt, ws, "left"), np.searchsorted(lt, we, "left")
-        lvl = lv[a:b]
-        f["log_line_count"] = float(b - a)
-        f["log_error_count"] = float(np.isin(lvl, ["ERROR", "CRITICAL"]).sum())
-        f["log_warning_count"] = float((lvl == "WARNING").sum())
-        f["log_error_share"] = float(f["log_error_count"] / (b - a)) if b > a else 0.0
-        for name in METRICS:
-            ts, vs = series[name]
-            p, q = np.searchsorted(ts, ws, "left"), np.searchsorted(ts, we, "left")
-            v = vs[p:q]
-            if name == "process_rss_bytes":
-                v = v / 1e6
-            f[f"m_{name}__mean"] = float(v.mean()) if len(v) else np.nan
-            f[f"m_{name}__max"] = float(v.max()) if len(v) else np.nan
-            f[f"m_{name}__std"] = float(v.std()) if len(v) else np.nan
-            if name == "process_rss_bytes":
-                f["m_process_rss_bytes__slope"] = float(np.polyfit(ts[p:q] - ws, v, 1)[0]) if len(v) >= 3 else np.nan      # MB per second inside the window
+        f = compute_window(ws, at, sc, lat, cl, lt, lv, series)
         f["window_index"], f["window_start"], f["window_end"] = k, ws, we
         rows.append(f)
     df = pd.DataFrame(rows)
