@@ -100,7 +100,7 @@ def test_ingest_single_and_batch_for_every_type(client):
 
 @pytest.mark.parametrize("path,body,status,needle", [
     ("/ingest/api", {"timestamp": T0, "status_code": 200}, 422, "system"),
-    ("/ingest/api", {"system": "XX", "timestamp": T0, "status_code": 200}, 422, "system"),
+    ("/ingest/api", {"system": 123, "timestamp": T0, "status_code": 200}, 422, "system"),      # any other string is an agent app id (testbed monitor); a non-string is invalid
     ("/ingest/logs", {"system": "SN", "events": "nope"}, 422, "list"),
     ("/ingest/logs", [1, 2, 3], 422, "JSON object"),
 ])
