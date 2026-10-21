@@ -297,7 +297,10 @@ def main():
     a = ap.parse_args()
     if a.seed0 + a.runs > 9000:
         sys.exit("seeds >= 9000 are reserved for the live demo")
-    plans = plan_all(a.runs, a.seed0, a.minutes)
+    try:
+        plans = plan_all(a.runs, a.seed0, a.minutes)
+    except RuntimeError:
+        sys.exit(f"{a.runs} runs of {a.minutes:g} minutes are too few to hold every fault type without overlap: use at least 12 runs (the full plan is 40)")
     todo, invalid = [], {}
     for p in plans:
         d = RUNS_DIR / p["run_id"]

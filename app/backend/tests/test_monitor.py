@@ -86,6 +86,7 @@ def test_late_and_early_events_are_counted_not_used():
 
 
 # ------------------------------------------------------------------ HTTP: ingestion and validation
+@needs_models
 def test_ingest_single_and_batch_for_every_type(client):
     reset(client, "SN")
     r = client.post("/ingest/api", json=dict(system="SN", timestamp=T0 + 1, status_code=200, latency_ms=12.5, content_length=300))
@@ -98,6 +99,7 @@ def test_ingest_single_and_batch_for_every_type(client):
     assert st["counters"]["events_api"] == 1 and st["counters"]["events_logs"] == 5 and st["counters"]["events_metrics"] == 2
 
 
+@needs_models
 @pytest.mark.parametrize("path,body,status,needle", [
     ("/ingest/api", {"timestamp": T0, "status_code": 200}, 422, "system"),
     ("/ingest/api", {"system": 123, "timestamp": T0, "status_code": 200}, 422, "system"),      # any other string is an agent app id (testbed monitor); a non-string is invalid
@@ -109,6 +111,7 @@ def test_ingest_rejects_bad_requests(client, path, body, status, needle):
     assert r.status_code == status and needle in json.dumps(r.json())
 
 
+@needs_models
 def test_ingest_rejects_invalid_json_and_oversized_batches(client):
     r = client.post("/ingest/api", content=b"{broken", headers={"content-type": "application/json"})
     assert r.status_code == 400 and "valid JSON" in r.json()["error"]
@@ -118,6 +121,7 @@ def test_ingest_rejects_invalid_json_and_oversized_batches(client):
     assert big.status_code == 413
 
 
+@needs_models
 def test_malformed_events_are_rejected_individually_and_the_rest_accepted(client):
     reset(client, "TT")
     ev = [dict(timestamp=T0, status_code=200, latency_ms=5),                                # ok

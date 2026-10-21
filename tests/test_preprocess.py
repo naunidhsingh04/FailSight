@@ -8,7 +8,10 @@ import preprocess as P
 
 @pytest.fixture(scope="module")
 def data():
-    df = P.load_windows()
+    try:
+        df = P.load_windows()
+    except FileNotFoundError:
+        pytest.skip("the AnoMod window tables (inputs/*.parquet) are not present: they are data and are not stored in git")
     sp = P.make_splits(df)
     d = df.merge(sp[["window_id", "split"]], on="window_id")
     return d, d[d.split == "train"].copy(), d[d.split == "test"].copy()

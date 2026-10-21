@@ -150,6 +150,7 @@ def test_replay_client_end_to_end_through_the_ingestion_api(R, tables, client):
     assert any(("segment" in str(x)) for x in logs)
 
 
+@needs_models
 def test_replay_control_endpoints_validate_input(client):
     assert client.get("/api/replay/control").json()["paused"] in (True, False)
     assert client.post("/api/replay/control", json=dict(speed=5)).status_code == 422
