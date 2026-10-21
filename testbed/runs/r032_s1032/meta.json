@@ -1,0 +1,63 @@
+{
+ "run_id": "r032_s1032",
+ "index": 32,
+ "seed": 1032,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "daily",
+ "rate": 8.84,
+ "mix": {
+  "browse": 0.4282798095004148,
+  "purchase": 0.09336620834764106,
+  "abandon": 0.4395723605356169,
+  "refund": 0.03878162161632727
+ },
+ "faults": [
+  {
+   "type": "exception_route",
+   "klass": "Code",
+   "kind": "abrupt",
+   "u": 0.5845,
+   "level": "medium",
+   "duration": 92.4,
+   "params": {
+    "route": "search",
+    "prob": 0.61
+   },
+   "start": 255.3
+  },
+  {
+   "type": "cpu_burn",
+   "klass": "Performance",
+   "kind": "abrupt",
+   "u": 0.9612,
+   "level": "severe",
+   "duration": 51.7,
+   "params": {
+    "threads": 1,
+    "duty": 0.97
+   },
+   "start": 392.8
+  }
+ ],
+ "start_ts": 1792529902.596377,
+ "end_ts": 1792530503.4768724,
+ "load": {
+  "requests": 3842,
+  "by_status": {
+   "200": 3508,
+   "500": 334
+  },
+  "client_errors": 0,
+  "sessions": 1825,
+  "shed": 0
+ },
+ "events": {
+  "api": 3845,
+  "logs": 3508,
+  "metrics": 1794
+ },
+ "shop_restarts": 0,
+ "faults_recorded": 2,
+ "python": "3.11.9"
+}

@@ -1,0 +1,62 @@
+{
+ "run_id": "r039_s1039",
+ "index": 39,
+ "seed": 1039,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "bursty",
+ "rate": 4.71,
+ "mix": {
+  "browse": 0.22173727021911446,
+  "purchase": 0.5640475529274842,
+  "abandon": 0.04746552018396504,
+  "refund": 0.16674965666943622
+ },
+ "faults": [
+  {
+   "type": "leak",
+   "klass": "Code",
+   "kind": "gradual",
+   "u": 0.1117,
+   "level": "mild",
+   "duration": 183.9,
+   "params": {
+    "mb_per_s": 1.42
+   },
+   "start": 186.6
+  },
+  {
+   "type": "route_500",
+   "klass": "Service",
+   "kind": "abrupt",
+   "u": 0.537,
+   "level": "medium",
+   "duration": 52.4,
+   "params": {
+    "route": "pay",
+    "prob": 0.56
+   },
+   "start": 430.0
+  }
+ ],
+ "start_ts": 1792534184.3360543,
+ "end_ts": 1792534786.1568732,
+ "load": {
+  "requests": 3838,
+  "by_status": {
+   "200": 3706,
+   "500": 132
+  },
+  "client_errors": 0,
+  "sessions": 1354,
+  "shed": 0
+ },
+ "events": {
+  "api": 3841,
+  "logs": 3838,
+  "metrics": 1800
+ },
+ "shop_restarts": 0,
+ "faults_recorded": 2,
+ "python": "3.11.9"
+}

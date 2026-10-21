@@ -1,0 +1,3 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r032_s1032,9b57e1ec,exception_route,Code,abrupt,medium,0.5845,"{""route"": ""search"", ""prob"": 0.61, ""severity"": 0.5845, ""severity_level"": ""medium""}",1792530158.8359709,1792530251.2631068,,92.43
+r032_s1032,bb4a490d,cpu_burn,Performance,abrupt,severe,0.9612,"{""threads"": 1, ""duty"": 0.97, ""severity"": 0.9612, ""severity_level"": ""severe""}",1792530296.2210066,1792530348.0008097,,51.78

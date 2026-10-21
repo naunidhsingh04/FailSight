@@ -1,0 +1,62 @@
+{
+ "run_id": "r026_s1026",
+ "index": 26,
+ "seed": 1026,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "steady",
+ "rate": 11.6,
+ "mix": {
+  "browse": 0.5167190146924039,
+  "purchase": 0.04553337221854692,
+  "abandon": 0.05881824647327413,
+  "refund": 0.3789293666157751
+ },
+ "faults": [
+  {
+   "type": "db_slow",
+   "klass": "Database",
+   "kind": "abrupt",
+   "u": 0.0979,
+   "level": "mild",
+   "duration": 54.0,
+   "params": {
+    "extra_ms": 105
+   },
+   "start": 201.6
+  },
+  {
+   "type": "latency_ramp",
+   "klass": "Performance",
+   "kind": "gradual",
+   "u": 0.0313,
+   "level": "mild",
+   "duration": 143.7,
+   "params": {
+    "ramp_s": 115,
+    "max_ms": 1747
+   },
+   "start": 300.9
+  }
+ ],
+ "start_ts": 1792526226.2988632,
+ "end_ts": 1792526828.2389567,
+ "load": {
+  "requests": 5761,
+  "by_status": {
+   "200": 5617,
+   "504": 144
+  },
+  "client_errors": 0,
+  "sessions": 2096,
+  "shed": 0
+ },
+ "events": {
+  "api": 5764,
+  "logs": 5761,
+  "metrics": 1794
+ },
+ "shop_restarts": 0,
+ "faults_recorded": 2,
+ "python": "3.11.9"
+}

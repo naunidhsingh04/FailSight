@@ -1,0 +1,3 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r030_s1030,9c654168,exception_route,Code,abrupt,mild,0.1934,"{""route"": ""pay"", ""prob"": 0.23, ""severity"": 0.1934, ""severity_level"": ""mild""}",1792528868.0597706,1792528939.8841817,,71.82
+r030_s1030,db4ccce1,crash,Service,abrupt,medium,0.601,"{""down_s"": 35, ""severity"": 0.601, ""severity_level"": ""medium""}",1792528999.442784,1792529038.149759,,38.71

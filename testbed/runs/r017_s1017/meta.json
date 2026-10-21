@@ -1,0 +1,35 @@
+{
+ "run_id": "r017_s1017",
+ "index": 17,
+ "seed": 1017,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "daily",
+ "rate": 11.17,
+ "mix": {
+  "browse": 0.34867241465404597,
+  "purchase": 0.15065250279693673,
+  "abandon": 0.11518349853213561,
+  "refund": 0.3854915840168816
+ },
+ "faults": [],
+ "start_ts": 1792520745.0994525,
+ "end_ts": 1792521346.1472611,
+ "load": {
+  "requests": 5296,
+  "by_status": {
+   "200": 5296
+  },
+  "client_errors": 0,
+  "sessions": 1775,
+  "shed": 0
+ },
+ "events": {
+  "api": 5297,
+  "logs": 5296,
+  "metrics": 1794
+ },
+ "shop_restarts": 0,
+ "faults_recorded": 0,
+ "python": "3.11.9"
+}

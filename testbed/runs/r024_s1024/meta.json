@@ -1,0 +1,61 @@
+{
+ "run_id": "r024_s1024",
+ "index": 24,
+ "seed": 1024,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "steady",
+ "rate": 7.35,
+ "mix": {
+  "browse": 0.1663396146139674,
+  "purchase": 0.11257087106518003,
+  "abandon": 0.4653543668388267,
+  "refund": 0.2557351474820259
+ },
+ "faults": [
+  {
+   "type": "latency",
+   "klass": "Performance",
+   "kind": "abrupt",
+   "u": 0.3892,
+   "level": "medium",
+   "duration": 56.6,
+   "params": {
+    "added_ms": 330
+   },
+   "start": 158.9
+  },
+  {
+   "type": "pool_exhaustion",
+   "klass": "Service",
+   "kind": "gradual",
+   "u": 0.6268,
+   "level": "medium",
+   "duration": 196.5,
+   "params": {
+    "every_s": 14.4
+   },
+   "start": 344.6
+  }
+ ],
+ "start_ts": 1792525000.8630137,
+ "end_ts": 1792525602.9083333,
+ "load": {
+  "requests": 3888,
+  "by_status": {
+   "200": 3637,
+   "503": 251
+  },
+  "client_errors": 0,
+  "sessions": 1616,
+  "shed": 0
+ },
+ "events": {
+  "api": 3891,
+  "logs": 3888,
+  "metrics": 1800
+ },
+ "shop_restarts": 0,
+ "faults_recorded": 2,
+ "python": "3.11.9"
+}

@@ -1,0 +1,3 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r039_s1039,271b9084,leak,Code,gradual,mild,0.1117,"{""mb_per_s"": 1.42, ""severity"": 0.1117, ""severity_level"": ""mild""}",1792534371.7959573,1792534555.881177,1792534526.7245126,184.09
+r039_s1039,d7755bab,route_500,Service,abrupt,medium,0.537,"{""route"": ""pay"", ""prob"": 0.56, ""severity"": 0.537, ""severity_level"": ""medium""}",1792534615.3108573,1792534667.711948,,52.4

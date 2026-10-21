@@ -1,0 +1,2 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r025_s1025,74d64705,db_slow,Database,abrupt,mild,0.2045,"{""extra_ms"": 187, ""severity"": 0.2045, ""severity_level"": ""mild""}",1792525847.065258,1792525921.967086,,74.9

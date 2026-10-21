@@ -1,0 +1,2 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r016_s1016,066dfc6a,exception_route,Code,abrupt,mild,0.0215,"{""route"": ""pay"", ""prob"": 0.07, ""severity"": 0.0215, ""severity_level"": ""mild""}",1792520352.260761,1792520460.5765178,,108.32

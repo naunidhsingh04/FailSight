@@ -13,21 +13,21 @@
   "refund": 0.2597869089535184
  },
  "faults": [],
- "start_ts": 1792494229.2336257,
- "end_ts": 1792516097.562911,
+ "start_ts": 1792517104.6973124,
+ "end_ts": 1792517705.734717,
  "load": {
-  "requests": 2496,
+  "requests": 2800,
   "by_status": {
-   "200": 2496
+   "200": 2800
   },
   "client_errors": 0,
-  "sessions": 845,
+  "sessions": 950,
   "shed": 0
  },
  "events": {
-  "api": 2497,
-  "logs": 2496,
-  "metrics": 1656
+  "api": 2801,
+  "logs": 2800,
+  "metrics": 1794
  },
  "shop_restarts": 0,
  "faults_recorded": 0,

@@ -1,0 +1,3 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r020_s1020,2ab7fe25,crash,Service,abrupt,mild,0.2508,"{""down_s"": 26, ""severity"": 0.2508, ""severity_level"": ""mild""}",1792522791.509961,1792522818.4601362,,26.95
+r020_s1020,906e3eda,pool_exhaustion,Service,gradual,mild,0.0589,"{""every_s"": 14.0, ""severity"": 0.0589, ""severity_level"": ""mild""}",1792522894.2611601,1792523022.638342,1792522992.3431346,128.38

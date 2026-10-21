@@ -1,0 +1,3 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r027_s1027,1ebe64d2,latency,Performance,abrupt,medium,0.644,"{""added_ms"": 526, ""severity"": 0.644, ""severity_level"": ""medium""}",1792527014.7818935,1792527077.302685,,62.52
+r027_s1027,17d6366a,exception_route,Code,abrupt,severe,0.8039,"{""route"": ""book"", ""prob"": 0.81, ""severity"": 0.8039, ""severity_level"": ""severe""}",1792527257.9034927,1792527343.4541936,,85.55

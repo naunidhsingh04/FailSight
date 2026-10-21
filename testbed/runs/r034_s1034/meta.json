@@ -1,0 +1,35 @@
+{
+ "run_id": "r034_s1034",
+ "index": 34,
+ "seed": 1034,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "steady",
+ "rate": 8.69,
+ "mix": {
+  "browse": 0.2208738150221409,
+  "purchase": 0.2271757776011574,
+  "abandon": 0.020555834406515934,
+  "refund": 0.5313945729701857
+ },
+ "faults": [],
+ "start_ts": 1792531126.6281176,
+ "end_ts": 1792531727.9454317,
+ "load": {
+  "requests": 4869,
+  "by_status": {
+   "200": 4869
+  },
+  "client_errors": 0,
+  "sessions": 1481,
+  "shed": 0
+ },
+ "events": {
+  "api": 4870,
+  "logs": 4869,
+  "metrics": 1794
+ },
+ "shop_restarts": 0,
+ "faults_recorded": 0,
+ "python": "3.11.9"
+}

@@ -1,0 +1,3 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r012_s1012,2459b061,crash,Service,abrupt,mild,0.0208,"{""down_s"": 21, ""severity"": 0.0208, ""severity_level"": ""mild""}",1792517895.9917142,1792517917.8760881,,21.88
+r012_s1012,c9c9a7ad,latency_ramp,Performance,gradual,severe,0.9877,"{""ramp_s"": 99, ""max_ms"": 3182, ""severity"": 0.9877, ""severity_level"": ""severe""}",1792518061.8918324,1792518185.9245317,1792518108.8208635,124.03

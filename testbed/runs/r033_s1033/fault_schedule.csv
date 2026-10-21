@@ -1,0 +1,2 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r033_s1033,c66b989d,route_500,Service,abrupt,severe,0.7794,"{""route"": ""search"", ""prob"": 0.79, ""severity"": 0.7794, ""severity_level"": ""severe""}",1792530832.6470075,1792530925.9669294,,93.32

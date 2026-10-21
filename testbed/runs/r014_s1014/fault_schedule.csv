@@ -1,0 +1,2 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r014_s1014,2733887b,cpu_burn,Performance,abrupt,severe,0.7198,"{""threads"": 1, ""duty"": 0.78, ""severity"": 0.7198, ""severity_level"": ""severe""}",1792519142.291335,1792519213.8037314,,71.51

@@ -1,0 +1,3 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r026_s1026,505e5502,db_slow,Database,abrupt,mild,0.0979,"{""extra_ms"": 105, ""severity"": 0.0979, ""severity_level"": ""mild""}",1792526428.797958,1792526482.8192158,,54.02
+r026_s1026,e5797388,latency_ramp,Performance,gradual,mild,0.0313,"{""ramp_s"": 115, ""max_ms"": 1747, ""severity"": 0.0313, ""severity_level"": ""mild""}",1792526527.944971,1792526671.648484,1792526626.7364488,143.7

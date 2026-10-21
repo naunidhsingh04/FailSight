@@ -1,0 +1,62 @@
+{
+ "run_id": "r027_s1027",
+ "index": 27,
+ "seed": 1027,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "steady",
+ "rate": 4.05,
+ "mix": {
+  "browse": 0.5079225667763421,
+  "purchase": 0.2992422361882885,
+  "abandon": 0.039270465690212406,
+  "refund": 0.153564731345157
+ },
+ "faults": [
+  {
+   "type": "latency",
+   "klass": "Performance",
+   "kind": "abrupt",
+   "u": 0.644,
+   "level": "medium",
+   "duration": 62.5,
+   "params": {
+    "added_ms": 526
+   },
+   "start": 174.9
+  },
+  {
+   "type": "exception_route",
+   "klass": "Code",
+   "kind": "abrupt",
+   "u": 0.8039,
+   "level": "severe",
+   "duration": 85.5,
+   "params": {
+    "route": "book",
+    "prob": 0.81
+   },
+   "start": 418.1
+  }
+ ],
+ "start_ts": 1792526839.0713558,
+ "end_ts": 1792527441.3074722,
+ "load": {
+  "requests": 1929,
+  "by_status": {
+   "200": 1886,
+   "500": 43
+  },
+  "client_errors": 0,
+  "sessions": 749,
+  "shed": 0
+ },
+ "events": {
+  "api": 1932,
+  "logs": 1886,
+  "metrics": 1800
+ },
+ "shop_restarts": 0,
+ "faults_recorded": 2,
+ "python": "3.11.9"
+}

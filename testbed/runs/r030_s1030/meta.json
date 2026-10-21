@@ -1,0 +1,62 @@
+{
+ "run_id": "r030_s1030",
+ "index": 30,
+ "seed": 1030,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "steady",
+ "rate": 6.83,
+ "mix": {
+  "browse": 0.05439420314026987,
+  "purchase": 0.4599251554815609,
+  "abandon": 0.4475843629745376,
+  "refund": 0.03809627840363162
+ },
+ "faults": [
+  {
+   "type": "exception_route",
+   "klass": "Code",
+   "kind": "abrupt",
+   "u": 0.1934,
+   "level": "mild",
+   "duration": 71.8,
+   "params": {
+    "route": "pay",
+    "prob": 0.23
+   },
+   "start": 190.5
+  },
+  {
+   "type": "crash",
+   "klass": "Service",
+   "kind": "abrupt",
+   "u": 0.601,
+   "level": "medium",
+   "duration": 43.0,
+   "params": {
+    "down_s": 35
+   },
+   "start": 321.9
+  }
+ ],
+ "start_ts": 1792528676.7100918,
+ "end_ts": 1792529278.4804108,
+ "load": {
+  "requests": 3994,
+  "by_status": {
+   "200": 3890,
+   "500": 19
+  },
+  "client_errors": 85,
+  "sessions": 1602,
+  "shed": 0
+ },
+ "events": {
+  "api": 3911,
+  "logs": 3889,
+  "metrics": 1680
+ },
+ "shop_restarts": 1,
+ "faults_recorded": 2,
+ "python": "3.11.9"
+}

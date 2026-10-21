@@ -1,0 +1,2 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r037_s1037,dc0f2615,db_lock,Database,abrupt,severe,0.7472,"{""lock_s"": 79, ""severity"": 0.7472, ""severity_level"": ""severe""}",1792533240.494809,1792533319.0402806,,78.55

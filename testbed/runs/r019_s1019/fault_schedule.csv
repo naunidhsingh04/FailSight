@@ -1,0 +1,3 @@
+run_id,fault_id,fault_type,klass,kind,severity_level,severity,params,start_ts,end_ts,failure_ts,duration_s
+r019_s1019,c8707f3f,db_lock,Database,abrupt,medium,0.3853,"{""lock_s"": 48, ""severity"": 0.3853, ""severity_level"": ""medium""}",1792522112.5484085,1792522160.3768885,,47.83
+r019_s1019,5fbf2d25,leak,Code,gradual,medium,0.6326,"{""mb_per_s"": 1.72, ""severity"": 0.6326, ""severity_level"": ""medium""}",1792522283.8971195,1792522503.9723592,1792522411.6991568,220.08

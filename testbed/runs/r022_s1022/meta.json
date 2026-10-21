@@ -1,0 +1,50 @@
+{
+ "run_id": "r022_s1022",
+ "index": 22,
+ "seed": 1022,
+ "minutes": 10.0,
+ "duration_s": 600.0,
+ "profile": "bursty",
+ "rate": 6.71,
+ "mix": {
+  "browse": 0.21939794516490302,
+  "purchase": 0.28324005233709565,
+  "abandon": 0.17827505146092495,
+  "refund": 0.3190869510370764
+ },
+ "faults": [
+  {
+   "type": "latency_ramp",
+   "klass": "Performance",
+   "kind": "gradual",
+   "u": 0.4567,
+   "level": "medium",
+   "duration": 165.1,
+   "params": {
+    "ramp_s": 132,
+    "max_ms": 2385
+   },
+   "start": 392.7
+  }
+ ],
+ "start_ts": 1792523777.184053,
+ "end_ts": 1792524378.181074,
+ "load": {
+  "requests": 5488,
+  "by_status": {
+   "200": 5216,
+   "504": 272
+  },
+  "client_errors": 0,
+  "sessions": 2026,
+  "shed": 0
+ },
+ "events": {
+  "api": 5490,
+  "logs": 5488,
+  "metrics": 1794
+ },
+ "shop_restarts": 0,
+ "faults_recorded": 1,
+ "python": "3.11.9"
+}
