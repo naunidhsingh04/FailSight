@@ -1,0 +1,11 @@
+window_id,label_level,fault_type,severity_level,api_request_count,api_error_rate,api_latency_p95_ms,log_error_count,m_process_cpu_percent__mean,m_process_rss_bytes__mean,m_event_loop_lag_ms__mean,m_db_pool_wait_ms__mean
+r016_s1016|49,Normal,,,390.0,0.0,19.54,0.0,4.453,29.957,19.698,0.016
+r014_s1014|39,Normal,,,149.0,0.0,15.122,0.0,4.047,29.357,20.721,0.016
+r003_s1003|41,Performance,latency,mild,272.0,0.0,322.769,0.0,6.72,54.34,21.315,0.066
+r022_s1022|51,Performance,latency_ramp,medium,93.0,1.0,1507.121,97.0,2.964,38.711,14.815,0.0
+r009_s1009|22,Service,route_500,severe,88.0,0.216,26.049,19.0,3.633,55.183,20.454,0.014
+r008_s1008|40,Service,crash,severe,0.0,0.0,0.0,0.0,,,,
+r029_s1029|31,Database,db_slow,medium,293.0,0.0,705.327,0.0,520.36,32.727,20.32,13.105
+r004_s1004|43,Database,db_lock,medium,113.0,0.31,3380.503,37.0,4.14,56.043,18.768,8.134
+r032_s1032|31,Code,exception_route,medium,212.0,0.514,16.004,0.0,8.386,56.82,21.252,0.021
+r019_s1019|51,Code,leak,medium,58.0,1.0,2.67,58.0,3.373,388.47,17.901,0.0
