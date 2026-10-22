@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block main %}
+<h1>Presenter controls</h1>
+<p class="lede">These buttons really break the shop, on purpose. Only this computer can use them.</p>
+<p><a class="btn secondary" href="/" target="_blank" rel="noopener">Open the shop</a> <a class="btn secondary" href="http://127.0.0.1:8000/" target="_blank" rel="noopener">Open the monitor</a></p>
+<div class="break-grid">
+  {% for c in choices %}<button class="btn big" type="button" data-choice="{{ c.id }}">{{ c.label }}</button>{% endfor %}
+</div>
+<p><button class="btn secondary" type="button" data-choice="surprise">Surprise me</button> <button class="btn danger" type="button" id="fix">Fix it</button></p>
+<p id="line" role="status" aria-live="polite">Checking the shop…</p>
+<h2>What each button does</h2>
+<ul>{% for c in choices %}<li><strong>{{ c.label }}</strong>: {{ c.note }}. Real fault: <code>{{ c.type }}</code>, medium strength{% if c.duration_s %}, {{ c.duration_s }} seconds{% endif %}.</li>{% endfor %}</ul>
+<script>
+(function () {
+  var line = document.getElementById('line');
+  function status() {
+    fetch('/ops/api/status').then(function (r) { return r.json(); }).then(function (s) {
+      if (!s.reachable) { line.textContent = 'The shop is not answering right now. If you just crashed it, it restarts by itself in about 30 seconds.'; return; }
+      line.textContent = s.active.length ? 'Broken now: ' + s.active.map(function (f) { return f.type + ' (' + f.seconds_left + ' s left)'; }).join(', ') : 'Nothing is broken.';
+    }).catch(function () { line.textContent = 'Could not reach the controls.'; });
+  }
+  document.querySelectorAll('[data-choice]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      fetch('/ops/api/break', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ choice: b.getAttribute('data-choice') }) })
+        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (x) { line.textContent = x.ok ? 'You broke it: ' + x.j.label + ' (' + x.j.type + '). ' + x.j.note + '.' : (x.j.error || 'That did not work.'); setTimeout(status, 1500); });
+    });
+  });
+  document.getElementById('fix').addEventListener('click', function () {
+    fetch('/ops/api/fix', { method: 'POST' }).then(function () { line.textContent = 'Fixed. Everything is back to normal.'; setTimeout(status, 1500); });
+  });
+  status(); setInterval(status, 5000);
+})();
+</script>
+{% endblock %}

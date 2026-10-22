@@ -16,3 +16,4 @@ httpx
 psutil
 pyarrow
 matplotlib
+jinja2

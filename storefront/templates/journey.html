@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block main %}
+<nav aria-label="Breadcrumb" class="crumbs"><a href="/">Home</a> / <a href="/journeys?origin={{ j.origin|urlencode }}&amp;dest={{ j.dest|urlencode }}">{{ j.origin }} to {{ j.dest }}</a> / <span>{{ j.depart_ts|when }}</span></nav>
+<div class="detail">
+  <div>
+    <h1>{{ j.origin }} to {{ j.dest }}</h1>
+    <p class="lede">Departs {{ j.depart_ts|when }}</p>
+    <dl class="facts-list">
+      <div><dt>Price per seat</dt><dd>{{ j.price|money }}</dd></div>
+      <div><dt>Seats left</dt><dd>{{ j.free }}</dd></div>
+      <div><dt>On board</dt><dd>Power sockets, free luggage, reclining seats</dd></div>
+      <div><dt>Changes</dt><dd>Cancel any time before departure</dd></div>
+    </dl>
+  </div>
+  <form class="card buybox" action="/cart/add" method="post">
+    <h2>Book your seats</h2>
+    <p class="price">{{ j.price|money }} <span class="muted">per seat</span></p>
+    {% if j.free > 0 %}
+    <div class="field"><label for="seats">Seats</label>
+      <select id="seats" name="seats">{% for n in range(1, ([max_seats, j.free]|min) + 1) %}<option value="{{ n }}">{{ n }}</option>{% endfor %}</select></div>
+    <input type="hidden" name="route_id" value="{{ j.id }}"><input type="hidden" name="origin" value="{{ j.origin }}"><input type="hidden" name="dest" value="{{ j.dest }}">
+    <input type="hidden" name="depart_ts" value="{{ j.depart_ts }}"><input type="hidden" name="price" value="{{ j.price }}">
+    <button class="btn" type="submit">Add to cart</button>
+    {% else %}<p class="notice">This departure is sold out.</p>{% endif %}
+  </form>
+</div>
+{% if others %}
+<section aria-labelledby="more"><h2 id="more">Other departures on this route</h2>
+  <ul class="grid">{% for o in others %}
+    <li class="card"><h3><a href="/journey/{{ o.id }}?origin={{ o.origin|urlencode }}&amp;dest={{ o.dest|urlencode }}">{{ o.depart_ts|when }}</a></h3><p class="price">{{ o.price|money }}</p><p class="muted">{{ o.free }} seats left</p></li>
+  {% endfor %}</ul>
+</section>
+{% endif %}
+{% endblock %}

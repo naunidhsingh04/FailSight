@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block main %}
+<h1>Your cart</h1>
+{% if items %}
+<ul class="list">
+  {% for i in items %}
+  <li class="row">
+    <div><h2 class="when">{{ i.origin }} to {{ i.dest }}</h2><p class="muted">{{ i.depart_ts|when }} &middot; {{ i.seats }} seat{{ '' if i.seats == 1 else 's' }} at {{ i.price|money }}</p></div>
+    <div class="buy"><p class="price">{{ (i.price * i.seats)|money }}</p>
+      <form action="/cart/remove" method="post"><input type="hidden" name="route_id" value="{{ i.route_id }}"><button class="btn secondary" type="submit">Remove<span class="visually-hidden"> {{ i.origin }} to {{ i.dest }}</span></button></form></div>
+  </li>
+  {% endfor %}
+</ul>
+<p class="total">Total <strong>{{ total|money }}</strong></p>
+<p><a class="btn" href="/checkout">Go to checkout</a> <a class="btn secondary" href="/journeys">Keep looking</a></p>
+{% else %}
+<p>Your cart is empty. <a href="/journeys">Find a journey</a> and add some seats.</p>
+{% endif %}
+{% endblock %}

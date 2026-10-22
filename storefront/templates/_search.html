@@ -1,0 +1,7 @@
+<form class="search" action="/journeys" method="get" role="search" aria-label="Find a journey">
+  <div class="field"><label for="origin">From</label>
+    <select id="origin" name="origin" required><option value="">Choose a city</option>{% for c in cities %}<option value="{{ c }}" {% if origin == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></div>
+  <div class="field"><label for="dest">To</label>
+    <select id="dest" name="dest" required><option value="">Choose a city</option>{% for c in cities %}<option value="{{ c }}" {% if dest == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></div>
+  <button class="btn" type="submit">Search journeys</button>
+</form>

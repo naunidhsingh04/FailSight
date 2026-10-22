@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block main %}
+<h1>Thank you, your seats are booked</h1>
+<p class="lede">Order <strong>{{ o.id }}</strong> for {{ o.name }}. A confirmation would be sent to {{ o.email }}.</p>
+<ul class="list">
+  {% for i in o['items'] %}
+  <li class="row"><div><h2 class="when">{{ i.origin }} to {{ i.dest }}</h2><p class="muted">{{ i.depart_ts|when }} &middot; {{ i.seats }} seat{{ '' if i.seats == 1 else 's' }} &middot; booking number {{ i.booking_id }}</p></div><div class="buy"><p class="price">{{ (i.price * i.seats)|money }}</p></div></li>
+  {% endfor %}
+</ul>
+<p class="total">Total paid <strong>{{ o.total|money }}</strong></p>
+<p><a class="btn" href="/">Back to the home page</a></p>
+{% endblock %}

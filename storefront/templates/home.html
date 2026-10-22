@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block main %}
+<section class="hero">
+  <h1>Coach journeys across Europe</h1>
+  <p class="lede">Twelve cities, daily departures, and seats you can book in a minute.</p>
+  {% include "_search.html" %}
+</section>
+<section aria-labelledby="pop">
+  <h2 id="pop">Popular journeys</h2>
+  {% if cards %}
+  <ul class="grid">
+    {% for c in cards %}
+    <li class="card">
+      <h3><a href="/journeys?origin={{ c.origin|urlencode }}&amp;dest={{ c.dest|urlencode }}">{{ c.origin }} to {{ c.dest }}</a></h3>
+      <p class="price">from {{ c.from_price|money }}</p>
+      <p class="muted">{{ c.count }} departure{{ '' if c.count == 1 else 's' }}, next on {{ c.next_ts|when }}</p>
+      <a class="btn secondary" href="/journeys?origin={{ c.origin|urlencode }}&amp;dest={{ c.dest|urlencode }}">See departures<span class="visually-hidden"> for {{ c.origin }} to {{ c.dest }}</span></a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No departures are listed for these journeys right now. Use the search above to look for another one.</p>
+  {% endif %}
+</section>
+<section aria-labelledby="why">
+  <h2 id="why">Why travel with us</h2>
+  <ul class="grid three">
+    <li class="card"><h3>Room to relax</h3><p>Wide seats, power sockets and free luggage on every coach.</p></li>
+    <li class="card"><h3>Easy changes</h3><p>Cancel a booking any time before departure.</p></li>
+    <li class="card"><h3>Clear prices</h3><p>The price you see is the price you pay. No booking fees.</p></li>
+  </ul>
+</section>
+{% endblock %}

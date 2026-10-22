@@ -1,0 +1,71 @@
+/* Marigold Coaches: plain, light, responsive. One sans-serif font, one accent colour. */
+:root { --bg: #fbfaf7; --surface: #ffffff; --text: #1d1b16; --muted: #55524a; --border: #d9d5c9; --accent: #9a4700; --accent-ink: #ffffff; --accent-weak: #fdf0df; --bad: #a02419; --bad-bg: #fbe3e0; --focus: 3px solid #1d4f91; }
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 1.125rem; line-height: 1.55; overflow-x: hidden; }
+.wrap { width: 100%; max-width: 72rem; margin: 0 auto; padding: 0 1rem; }
+@media (min-width: 700px) { .wrap { padding: 0 2rem; } }
+a { color: var(--accent); text-underline-offset: 0.18em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: var(--focus); outline-offset: 2px; border-radius: 3px; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.skip { position: absolute; left: 0.75rem; top: -4rem; z-index: 10; background: var(--accent); color: var(--accent-ink); padding: 0.6rem 1rem; border-radius: 6px; }
+.skip:focus { top: 0.75rem; }
+h1 { font-size: clamp(1.9rem, 1.4rem + 2vw, 2.8rem); line-height: 1.15; margin: 1.5rem 0 0.75rem; letter-spacing: -0.01em; }
+h2 { font-size: 1.5rem; line-height: 1.25; margin: 2rem 0 0.75rem; }
+h3 { font-size: 1.2rem; margin: 0 0 0.35rem; }
+p { margin: 0 0 1rem; max-width: 62ch; }
+.lede { font-size: 1.25rem; color: var(--muted); }
+.muted { color: var(--muted); }
+.top { background: var(--surface); border-bottom: 1px solid var(--border); }
+.bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1.5rem; padding-top: 0.6rem; padding-bottom: 0.6rem; }
+.brand { display: inline-flex; align-items: center; gap: 0.6rem; font-weight: 800; font-size: 1.4rem; color: var(--text); text-decoration: none; }
+.sun { width: 1.4rem; height: 1.4rem; border-radius: 50%; background: #f2a30c; box-shadow: 0 0 0 4px #fbe4ad; display: inline-block; }
+nav ul { list-style: none; display: flex; gap: 1.25rem; margin: 0; padding: 0; }
+nav a { display: inline-block; padding: 0.6rem 0.1rem; color: var(--text); text-decoration: none; font-weight: 600; border-bottom: 3px solid transparent; }
+nav a:hover { border-bottom-color: var(--border); }
+nav a[aria-current='page'] { border-bottom-color: var(--accent); }
+.count { display: inline-block; min-width: 1.5rem; padding: 0 0.4rem; text-align: center; background: var(--accent); color: var(--accent-ink); border-radius: 999px; font-size: 0.9rem; }
+main { padding-bottom: 3rem; min-height: 60vh; outline: none; }
+.hero { padding: 1rem 0 0.5rem; }
+.search { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; align-items: flex-end; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; margin: 1rem 0; }
+.field { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; flex: 1 1 12rem; }
+label { font-weight: 650; font-size: 0.95rem; }
+select, input[type='text'], input[type='email'] { font: inherit; color: var(--text); background: var(--surface); border: 1px solid #8a8678; border-radius: 8px; padding: 0.65rem 0.75rem; min-height: 3rem; width: 100%; }
+.btn { display: inline-flex; align-items: center; justify-content: center; font: inherit; font-weight: 700; min-height: 3rem; padding: 0.55rem 1.4rem; border-radius: 8px; border: 2px solid var(--accent); background: var(--accent); color: var(--accent-ink); text-decoration: none; cursor: pointer; }
+.btn:hover { filter: brightness(1.1); }
+.btn.secondary { background: transparent; color: var(--accent); }
+.btn.big { min-height: 3.5rem; font-size: 1.15rem; }
+.btn.danger { background: transparent; color: var(--bad); border-color: var(--bad); }
+.grid { list-style: none; padding: 0; margin: 0 0 1rem; max-width: none; display: grid; gap: 1rem; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.grid li { margin: 0; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; min-width: 0; }
+.card h3 a { color: var(--text); text-decoration: none; }
+.card h3 a:hover { text-decoration: underline; }
+.price { font-size: 1.4rem; font-weight: 800; margin: 0 0 0.25rem; }
+.list { list-style: none; padding: 0; margin: 1rem 0; max-width: none; }
+.row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
+.row .when { margin: 0 0 0.2rem; font-size: 1.2rem; }
+.row p { margin: 0; }
+.buy { text-align: right; }
+.buy form { margin: 0.25rem 0 0; }
+.total { font-size: 1.3rem; }
+.notice { background: var(--bad-bg); border-left: 6px solid var(--bad); padding: 0.75rem 1rem; border-radius: 6px; color: #5e130c; }
+.detail { display: grid; gap: 1.5rem; grid-template-columns: 1fr; align-items: start; }
+@media (min-width: 900px) { .detail { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }
+.crumbs { margin-top: 1rem; font-size: 0.95rem; color: var(--muted); }
+.facts-list { margin: 1rem 0; }
+.facts-list div { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+.facts-list dt { font-weight: 650; flex: 0 0 11rem; }
+.facts-list dd { margin: 0; }
+.plain { list-style: none; padding: 0; }
+.plain li { margin-bottom: 0.9rem; }
+.break-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin: 1rem 0; }
+@media (min-width: 640px) { .break-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .break-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+code { background: #efece3; padding: 0.1em 0.35em; border-radius: 4px; font-size: 0.9em; }
+.foot { border-top: 1px solid var(--border); background: var(--surface); padding: 1.25rem 0 1.5rem; color: var(--muted); font-size: 1rem; }
+.foot p { margin: 0 0 0.4rem; max-width: none; }
+.foot .fine { font-size: 0.95rem; }

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block main %}
+<h1>{% if origin and dest and results is not none %}{{ origin }} to {{ dest }}{% else %}Find a journey{% endif %}</h1>
+{% include "_search.html" %}
+{% if problem %}<p class="notice" role="alert">{{ problem }}</p>{% endif %}
+{% if results is not none %}
+  {% if results %}
+  <p class="muted">{{ results|length }} departure{{ '' if results|length == 1 else 's' }} found.</p>
+  <ul class="list">
+    {% for j in results %}
+    <li class="row">
+      <div><h2 class="when"><a href="/journey/{{ j.id }}?origin={{ origin|urlencode }}&amp;dest={{ dest|urlencode }}">{{ j.depart_ts|when }}</a></h2>
+        <p class="muted">{{ j.origin }} to {{ j.dest }} &middot; {{ j.free }} seat{{ '' if j.free == 1 else 's' }} left</p></div>
+      <div class="buy"><p class="price">{{ j.price|money }}</p>
+        {% if j.free > 0 %}
+        <form action="/cart/add" method="post">
+          <input type="hidden" name="route_id" value="{{ j.id }}"><input type="hidden" name="origin" value="{{ j.origin }}"><input type="hidden" name="dest" value="{{ j.dest }}">
+          <input type="hidden" name="depart_ts" value="{{ j.depart_ts }}"><input type="hidden" name="price" value="{{ j.price }}"><input type="hidden" name="seats" value="1">
+          <button class="btn" type="submit">Add to cart<span class="visually-hidden"> for {{ j.depart_ts|when }}</span></button>
+        </form>
+        {% else %}<p class="muted">Sold out</p>{% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>There are no departures between these cities right now. Try another pair.</p>
+  {% endif %}
+{% endif %}
+{% endblock %}

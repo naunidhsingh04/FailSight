@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }} | {{ brand }}</title>
+  <meta name="description" content="{{ brand }}: comfortable coach journeys between twelve European cities.">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/shop.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="top">
+    <div class="wrap bar">
+      <a class="brand" href="/" aria-label="{{ brand }}, home"><span class="sun" aria-hidden="true"></span>{{ brand }}</a>
+      <nav aria-label="Main">
+        <ul>
+          <li><a href="/journeys" {% if request.url.path.startswith('/journey') %}aria-current="page"{% endif %}>Find a journey</a></li>
+          <li><a href="/cart" {% if request.url.path == '/cart' %}aria-current="page"{% endif %}>Cart <span class="count"><span class="visually-hidden">seats in your cart: </span>{{ cart_count }}</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main id="main" tabindex="-1"><div class="wrap">{% block main %}{% endblock %}</div></main>
+  <footer class="foot">
+    <div class="wrap">
+      <p>&copy; {{ brand }}. Coach travel between Berlin, Paris, Rome, Madrid, Vienna, Prague, Oslo, Lisbon, Athens, Dublin, Warsaw and Zurich.</p>
+      <p class="fine">Fictional shop used to test FailSight</p>
+    </div>
+  </footer>
+</body>
+</html>

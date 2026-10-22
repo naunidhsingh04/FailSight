@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block main %}
+<h1>We cannot load journeys right now</h1>
+<p class="lede">Something is slowing us down. Please wait a moment and try again.</p>
+<p><a class="btn" href="{{ request.url.path }}{% if request.url.query %}?{{ request.url.query }}{% endif %}">Try again</a> <a class="btn secondary" href="/">Home</a></p>
+{% endblock %}
