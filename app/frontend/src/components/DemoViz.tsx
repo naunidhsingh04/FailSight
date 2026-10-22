@@ -72,14 +72,14 @@ export function ResponseChart({ points, brokeAt, noticedAt }: { points: Pt[]; br
   const ticks = [0, max / 2, max].map((v) => Math.round(v / 10) * 10)
   return (
     <div ref={ref} className="resp-wrap">
-      <svg className="chart" width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Response time of the last ${pts.length} checks. Latest ${Math.round(last)} milliseconds.${brokeAt ? ` You broke the shop at ${clock12(brokeAt)}.` : ''}${noticedAt ? ` FailSight noticed at ${clock12(noticedAt)}.` : ''}`}>
+      <svg className="chart" width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Response time of the last ${pts.length} checks. Latest ${Math.round(last)} milliseconds.${brokeAt ? ` A problem started at ${clock12(brokeAt)}.` : ''}${noticedAt ? ` FailSight noticed at ${clock12(noticedAt)}.` : ''}`}>
         {ticks.map((v) => <g key={v}><line x1={L} x2={W - R} y1={y(v)} y2={y(v)} className="grid-line" /><text x={L - 6} y={y(v) + 4} textAnchor="end" className="dim">{v}</text></g>)}
         <text x={L} y={H - 6} className="dim">{clock12(t0)}</text>
         <text x={W - R} y={H - 6} textAnchor="end" className="dim">{clock12(t1)}</text>
         <text x={L - 6} y={T - 10} textAnchor="end" className="dim">ms</text>
         <path d={d} fill="none" stroke="var(--accent)" strokeWidth={2.5} strokeLinejoin="round" />
         <circle cx={x(pts[pts.length - 1].t)} cy={y(last)} r={4} fill="var(--accent)" />
-        {inRange(brokeAt) && <g><line x1={x(brokeAt as number)} x2={x(brokeAt as number)} y1={T - 8} y2={H - B} stroke="var(--fail)" strokeWidth={2} strokeDasharray="5 4" />{lab(brokeAt as number, 'You broke it', 0)}</g>}
+        {inRange(brokeAt) && <g><line x1={x(brokeAt as number)} x2={x(brokeAt as number)} y1={T - 8} y2={H - B} stroke="var(--fail)" strokeWidth={2} strokeDasharray="5 4" />{lab(brokeAt as number, 'Problem started', 0)}</g>}
         {inRange(noticedAt) && <g><line x1={x(noticedAt as number)} x2={x(noticedAt as number)} y1={T - 8} y2={H - B} stroke="var(--text)" strokeWidth={2} />{lab(noticedAt as number, 'FailSight noticed', 1)}</g>}
       </svg>
     </div>

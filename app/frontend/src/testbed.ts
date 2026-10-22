@@ -86,7 +86,7 @@ export function useFaults() {
     try {
       const r = await fetch('/api/testbed/faults')
       const j = await r.json()
-      if (!r.ok || j.reachable === false) { failed = true; setErr(j.error ?? 'the demo shop is not reachable'); setActive([]) } else { setErr(null); setActive(j.active ?? []) }
+      if (!r.ok || j.reachable === false) { failed = true; setErr(j.error ?? 'the shop is not reachable'); setActive([]) } else { setErr(null); setActive(j.active ?? []) }
     } catch (e: any) { failed = true; setErr(String(e?.message ?? e)) }
     if (alive.current) { setReady(true); timer.current = window.setTimeout(refresh, failed ? 4000 : 2000) }       // one request at a time, slower while the shop is unreachable
   }, [])

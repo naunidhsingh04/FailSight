@@ -48,7 +48,7 @@ function Body({ r }: { r: Results }) {
     { key: 'auc', label: 'ROC-AUC', numeric: true, render: (x) => f3(x.roc_auc), sortValue: (x) => x.roc_auc },
   ]
   const liveCols: Column<Row>[] = [
-    { key: 's', label: 'Demo', nameCell: true, render: (x) => `${x.scenario.replace('_', ' ')} (seed ${x.seed})`, sortValue: (x) => x.seed },
+    { key: 's', label: 'Live run', nameCell: true, render: (x) => `${x.scenario.replace('_', ' ')} (seed ${x.seed})`, sortValue: (x) => x.seed },
     { key: 'f', label: 'Fault injected', render: (x) => (x.actual_fault === 'none' ? 'none' : `${x.actual_fault} (${x.planned_severity})`) },
     { key: 'd', label: 'Detected', render: (x) => (x.actual_fault === 'none' ? '–' : x.detected ? 'yes' : 'NO') },
     { key: 'dl', label: 'Delay (s)', numeric: true, render: (x) => f1(x.detection_delay_s), sortValue: (x) => x.detection_delay_s },

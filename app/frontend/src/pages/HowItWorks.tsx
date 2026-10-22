@@ -20,8 +20,8 @@ export default function HowItWorks() {
         {STEPS.map(([n, h, p]) => <li key={n}><StepIcon n={n} /><div><h2>{n}. {h}</h2><p>{p}</p></div></li>)}
       </ol>
 
-      <h2>What you see in the demo</h2>
-      <p>The <Link to="/">Demo</Link> runs a small ticket shop on this computer with pretend visitors. You break it on purpose. FailSight is <strong>not told</strong> what you broke. It only sees the numbers coming from the shop.</p>
+      <h2>What you see in the live monitor</h2>
+      <p>The <Link to="/">Live monitor</Link> watches a fictional ticket shop that runs on this computer with pretend visitors. On a separate presenter page you break the shop on purpose. FailSight is <strong>not told</strong> what you broke. It only sees the numbers coming from the shop.</p>
 
       <h2>What FailSight does not do</h2>
       <ul>

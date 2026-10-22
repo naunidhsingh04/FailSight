@@ -41,7 +41,7 @@ export const GLOSSARY: Record<string, Entry> = {
     more: 'scripts/replay_scenario.py reads record-level events of test-split blocks from AnoMod (read-only) and posts them to the ingestion API at 1x, 10x or 60x.',
   },
   ingestion: { term: 'Ingestion', plain: 'The door through which traffic records, log lines and measurements enter the system.', more: 'POST /ingest/api, /ingest/logs and /ingest/metrics, single events or batches, with validation of every event.' },
-  collector: { term: 'Collector', plain: 'A small program next to your application that gathers its records and forwards them. In this demo the replay script plays that role.' },
+  collector: { term: 'Collector', plain: 'A small program next to your application that gathers its records and forwards them. In the recorded-data replay, the replay script plays that role.' },
   normalrecall: {
     term: 'Normal windows left alone',
     plain: 'Of all the windows that were really normal, the share that did not trigger an alert. 55.6% means that 44.4% of normal windows caused a false alarm.',

@@ -4,7 +4,7 @@ import { JARGON } from './jargon'
 
 const WIDTHS = [375, 768, 1280, 1920]
 const PAGES: { path: string; h1: string; ready: RegExp }[] = [
-  { path: '/', h1: 'See FailSight catch a broken website', ready: /What does FailSight say\?/ },
+  { path: '/', h1: 'Live monitor', ready: /What does FailSight say\?/ },
   { path: '/how-it-works', h1: 'How it works', ready: /It checks every 10 seconds/ },
   { path: '/proofs', h1: 'Proof', ready: /Show all the checks behind these numbers/ },
   { path: '/examiners', h1: 'For examiners', ready: /Recorded benchmark data/ },
@@ -15,7 +15,7 @@ const PAGES: { path: string; h1: string; ready: RegExp }[] = [
   { path: '/examiners/limits', h1: 'Limits', ready: /It did not work on a different system/ },
   { path: '/examiners/glossary', h1: 'Glossary', ready: /Data leakage/ },
   // the addresses used before the redesign must keep working
-  { path: '/?tab=live', h1: 'See FailSight catch a broken website', ready: /What does FailSight say\?/ },
+  { path: '/?tab=live', h1: 'Live monitor', ready: /What does FailSight say\?/ },
   { path: '/?tab=replay', h1: 'Recorded benchmark data', ready: /cannot prove fault detection/ },
   { path: '/console', h1: 'Recorded benchmark data', ready: /cannot prove fault detection/ },
   { path: '/results', h1: 'Results', ready: /Fewest false alarms/ },
@@ -133,25 +133,32 @@ for (const width of WIDTHS) {
   test.describe(`home page at ${width}px`, () => {
     test.use({ viewport: { width, height: 900 } })
 
-    test('opens on our own demo, shows three steps with one big button each, and no jargon', async ({ page }) => {
+    test('opens on the live monitor of our own shop, shows three steps and a link to the shop, and no jargon', async ({ page }) => {
       await page.goto('/')
-      await expect(page.getByRole('heading', { level: 2 }).filter({ hasText: /^1\s*Start the demo shop/ })).toBeVisible()
+      await expect(page.getByRole('heading', { level: 1, name: 'Live monitor' })).toBeVisible()
+      await expect(page.getByRole('heading', { level: 2 }).filter({ hasText: /^1\s*Start the shop/ })).toBeVisible()
       await expect(page.getByRole('heading', { level: 2 }).filter({ hasText: /^2\s*Break something/ })).toBeVisible()
       await expect(page.getByRole('heading', { level: 2 }).filter({ hasText: /^3\s*What does FailSight say\?/ })).toBeVisible()
-      for (const b of ['Make pages slow', 'Make the database slow', 'Make a page crash', 'Make the server crash', 'Surprise me']) await expect(page.getByRole('button', { name: b })).toBeVisible()
-      await expect(page.getByRole('navigation', { name: 'Main' }).getByRole('link')).toHaveCount(4)   // Demo, How it works, Proof, For examiners
+      await expect(page.getByRole('link', { name: 'Open the shop' })).toHaveAttribute('href', /:5000\/$/)
+      await expect(page.getByRole('link', { name: 'Open the presenter controls' })).toHaveAttribute('href', /:5000\/ops$/)
+      await expect(page.getByRole('navigation', { name: 'Main' }).getByRole('link')).toHaveCount(4)
+      await expect(page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Live monitor' })).toBeVisible()
       await expect(page.getByText('Recorded benchmark data')).toHaveCount(0)               // the replay is never on the home page
       await page.waitForLoadState('networkidle')
-      expect((await page.locator('main').innerText()).match(JARGON), 'jargon in Simple mode').toBeNull()
+      const text = await page.locator('main').innerText()
+      expect(text.match(JARGON), 'jargon in Simple mode').toBeNull()
+      expect(text.match(/demo/i), 'the word demo').toBeNull()
+      expect(text.match(/(slow pages|db_slow|latency|exception_route|cpu_burn)/i), 'fault names belong on the presenter page only').toBeNull()
     })
 
     test('an empty state always says what to do, never just Waiting', async ({ page }) => {
-      await page.route('**/api/testbed/faults', (r) => r.fulfill({ json: { active: [], reachable: false, error: 'the demo shop is not reachable' } }))
+      await page.route('**/api/testbed/faults', (r) => r.fulfill({ json: { active: [], reachable: false, error: 'the shop is not reachable' } }))
       await page.goto('/')
       await expect(page.getByText('Ready. Press Start.')).toBeVisible()
-      await expect(page.getByRole('button', { name: 'Start the demo shop' })).toBeVisible()
+      await expect(page.getByRole('button', { name: 'Start the shop' })).toBeVisible()
       await expect(page.getByText(/Start the shop in step 1 first/)).toBeVisible()
-      expect(await page.locator('main').innerText()).not.toMatch(/\bWaiting\b/)
+      await expect(page.getByText('The shop is not running.')).toBeVisible()
+      expect(await page.locator('main').innerText()).not.toMatch(/Waiting/)
     })
   })
 }

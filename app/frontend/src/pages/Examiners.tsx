@@ -26,7 +26,7 @@ export default function Examiners() {
   return (
     <>
       <h1>For examiners</h1>
-      <p className="lede">The detail behind the demo: the full results, the limits, and how the test data was made. Start with <Link to="/proofs">Proof</Link> if you only have a minute.</p>
+      <p className="lede">The detail behind the live monitor: the full results, the limits, and how the test data was made. Start with <Link to="/proofs">Proof</Link> if you only have a minute.</p>
       <ul className="link-grid">
         {EXAMINER_PAGES.map((p) => (
           <li key={p.to}><Link className="link-card" to={p.to}><h2>{p.label}</h2><p>{p.what}</p><span className="go">Open</span></Link></li>

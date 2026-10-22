@@ -42,10 +42,10 @@ for (const width of [375, 768, 1280, 1920]) {
 
     const LIMITS = ['One app', 'One machine', 'Synthetic traffic and injected faults', 'Small held-out test', 'Per-type results are unreliable', 'Transfer to other apps has not been shown']
 
-    test('Demo page: three steps, the three plain limits, and a link to the full limits', async ({ page }) => {
+    test('Live monitor: the three plain limits say the monitored app is our own fictional test shop, and link to the full limits', async ({ page }) => {
       await page.goto('/?tab=live')
-      await expect(page.getByRole('heading', { level: 1, name: 'See FailSight catch a broken website' })).toBeVisible()
-      for (const t of [/one app/, /12 test runs with 15 problems/, /Other apps are unproven/]) await expect(page.getByText(t).first()).toBeVisible()
+      await expect(page.getByRole('heading', { level: 1, name: 'Live monitor' })).toBeVisible()
+      for (const t of [/our own fictional test shop/, /12 test runs with 15 problems/, /Other apps are unproven/]) await expect(page.getByText(t).first()).toBeVisible()
       await page.getByRole('link', { name: 'Limits', exact: true }).last().click()
       await expect(page.getByRole('heading', { level: 1, name: 'Limits' })).toBeVisible()
       await expect(page).toHaveURL(/\/examiners\/limits/)

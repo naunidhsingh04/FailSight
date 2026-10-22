@@ -1,13 +1,5 @@
 import type { TbReason, TbWindow } from './testbed'
 
-/** The four things a visitor can break in the demo shop, in everyday words. `type` is the real fault the shop is given. */
-export const BREAKS: { id: string; type: string; label: string; what: string; duration_s?: number }[] = [
-  { id: 'slow-pages', type: 'latency', label: 'Make pages slow', what: 'every page takes longer to open', duration_s: 90 },
-  { id: 'slow-db', type: 'db_slow', label: 'Make the database slow', what: 'the shop’s database answers slowly', duration_s: 90 },
-  { id: 'page-crash', type: 'exception_route', label: 'Make a page crash', what: 'one page shows an error', duration_s: 90 },
-  { id: 'server-crash', type: 'crash', label: 'Make the server crash', what: 'the whole shop stops for a while' },
-]
-
 export type Level = 'idle' | 'learning' | 'ok' | 'watch' | 'problem'
 
 export interface Plain { headline: string; reason: string }

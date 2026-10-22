@@ -89,3 +89,10 @@ table.proof-table .big-num .of { font-size: 1rem; font-weight: 600; color: var(-
 
 .steps h2 { margin: 0 0 2px; font-size: 1.15rem; }
 .steps p { font-size: 1rem; }
+
+.shopstrip { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3) var(--space-4); border: 2px solid var(--border-strong); border-radius: 12px; padding: var(--space-3) var(--space-4); margin: var(--space-4) 0 0; background: var(--surface); }
+.shopstrip.up { border-color: var(--ok); background: var(--ok-bg); color: var(--ok); }
+.shopstrip.down { border-color: var(--watch); background: var(--watch-bg); color: var(--watch); }
+.shopstrip .small-btn { margin-top: 0; text-decoration: none; display: inline-flex; align-items: center; }
+a.btn { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+a.btn[aria-disabled='true'] { opacity: 0.6; }

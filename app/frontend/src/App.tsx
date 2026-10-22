@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes, useSearchParams } from 'react-router-dom'
 import Layout from './components/Layout'
 import Console from './pages/Console'
-import Demo from './pages/Demo'
+import LiveMonitor from './pages/LiveMonitor'
 import Examiners, { ExaminerLayout } from './pages/Examiners'
 import HowItWorks from './pages/HowItWorks'
 import Proofs from './pages/Proofs'
@@ -22,11 +22,11 @@ function NotFound() {
   )
 }
 
-/** The home page is the demo. The old address "/?tab=replay" (recorded data) now lives under For examiners; "/?tab=live" is the demo itself. */
+/** The home page is the live monitor. The old address "/?tab=replay" (recorded data) now lives under For examiners; "/?tab=live" is the live monitor itself. */
 function Home() {
   const [params] = useSearchParams()
   if (params.get('tab') === 'replay') return <Navigate to="/examiners/replay" replace />
-  return <Demo />
+  return <LiveMonitor />
 }
 
 export default function App() {
