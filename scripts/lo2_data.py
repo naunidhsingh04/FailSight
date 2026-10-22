@@ -240,6 +240,7 @@ class LO2Data:
         # keep only template columns that survived constant-dropping, in the same order as tidx
         raw_tm = {n: i for i, n in enumerate(self.tmpl_names)}
         order = [raw_tm[names[i]] for i in tidx]
+        self.tmpl_order = order
         self.tmpl_emb = self.tmpl_emb[order]
         pres = (self.raw[self.train_pos][:, [self.raw_names.index(names[i]) for i in tidx]] > 0).astype(float)
         inter = pres.T @ pres

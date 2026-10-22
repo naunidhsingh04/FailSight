@@ -130,3 +130,25 @@ table.rt .name-cell { font-weight: 650; }
 .link-card h3 { margin: 0 0 var(--space-2); font-size: 1.15rem; }
 .link-card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
 .link-card .go { display: inline-block; margin-top: var(--space-3); color: var(--accent); font-weight: 650; }
+
+/* ---------- hybrid models page ---------- */
+.hy-grid { display: grid; gap: var(--space-4); grid-template-columns: 1fr; list-style: none; padding: 0; margin: 0; max-width: none; }
+@media (min-width: 760px) { .hy-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1200px) { .hy-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.hy-card { margin: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+.hy-card h3 { margin: 0; font-size: 1.1rem; }
+.hy-card[data-state='pending'] { background: var(--surface-2); border-style: dashed; color: var(--muted); }
+.wire { display: flex; align-items: stretch; gap: var(--space-1); flex-wrap: wrap; font-size: 0.82rem; }
+.wire .box { flex: 1 1 6rem; min-width: 0; border: 1px solid var(--border-strong); border-radius: var(--radius); padding: var(--space-2); background: var(--surface-2); overflow-wrap: anywhere; }
+.wire .box b { display: block; font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.wire .arrow { align-self: center; font-weight: 700; color: var(--muted); }
+.wire .answer { flex: 0 1 4.5rem; background: var(--accent-weak); border-color: var(--accent); }
+.hy-facts { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.2rem var(--space-3); font-size: 0.86rem; }
+.hy-facts dt { color: var(--muted); }
+.hy-facts dd { margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.rel { border-radius: var(--radius); padding: var(--space-2) var(--space-3); font-size: 0.82rem; border: 1px solid var(--border-strong); }
+.rel.amber { background: var(--watch-bg); color: var(--watch); border-color: var(--watch); }
+.rel.grey { background: var(--surface-2); color: var(--muted); }
+.rel.ok { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }
+.show-all { margin-top: var(--space-3); }
+.colab-box { border: 1px solid var(--accent); background: var(--accent-weak); border-radius: var(--radius); padding: var(--space-4) var(--space-5); margin-top: var(--space-5); }

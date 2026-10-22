@@ -1,3 +1,5 @@
 model,label_version,cv_total_seconds,final_model_seconds,final_epochs,total_seconds_incl_screening_and_controls,params
 Transformer_BiLSTM,label_binary,107.98,15.58,9,30.43,9170
+AE_LSTM,label_binary,56.67,8.32,6,194.57,86914
 Transformer_BiLSTM,label_level,119.44,18.48,11,369.90,9221
+AE_LSTM,label_level,76.82,11.65,6,270.22,87109

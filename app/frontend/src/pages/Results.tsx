@@ -10,7 +10,7 @@ import { FAMILY_LABEL, fmt, range } from '../format'
 import { Detailed, Simple } from '../mode'
 import Term from '../components/Term'
 import { usePageTitle } from '../usePageTitle'
-import type { CorrectionRow, Label, ModelDetail, ModelInfo, ModelsResponse, OverfitRow, PairedRow, ResultsResponse, V1Row } from '../types'
+import type { CorrectionRow, HybridResponse, HybridRow, Label, Lo2LeaderboardResponse, ModelDetail, ModelInfo, ModelsResponse, OverfitRow, PairedRow, ResultsResponse, V1Row } from '../types'
 
 type MetricKey = 'balanced_accuracy' | 'macro_f1' | 'normal_recall' | 'roc_auc'
 const METRICS: { key: MetricKey; label: string }[] = [
@@ -20,11 +20,14 @@ const METRICS: { key: MetricKey; label: string }[] = [
   { key: 'roc_auc', label: 'ROC-AUC' },
 ]
 
-const PLAIN_FAMILY: Record<string, string> = { tree: 'Decision-tree model', linear: 'Linear model', deep: 'Neural network', ensemble: 'Combination of models' }
+const PLAIN_FAMILY: Record<string, string> = { tree: 'Decision-tree model', linear: 'Linear model', deep: 'Neural network', ensemble: 'Combination of models', hybrid: 'Hybrid neural network (two learning parts)' }
+const TOP_N = 9
+const HYB = 'hybrid' as ModelInfo['family']
 const PLAIN_PILLS: [string, string][] = [
   ['Decision-tree model', 'many yes/no questions in a row (Tree)'],
   ['Linear model', 'a weighted sum of the readings (Linear)'],
   ['Neural network', 'layers of small calculators (Deep)'],
+  ['Hybrid neural network (two learning parts)', 'two parts trained together, checked with 5 folds (Hybrid)'],
   ['Combination of models', 'several models vote together (Ensemble)'],
   ['Retrained to reduce overfitting', 'the first version memorised its practice data, so it was retrained more gently (corrected)'],
   ['Scored for comparison; cannot run live', 'it needs 40 fold models, so it is only in the table (report only)'],
@@ -58,6 +61,17 @@ function Cell({ m, k }: { m: ModelInfo; k: MetricKey }) {
   return <Score v={m.metrics['official/ALL']?.[k]} low={ci?.low} high={ci?.high} />
 }
 
+/** A hybrid result row (from /api/hybrid) shaped like a ModelInfo so the same table shows it. Numbers are the saved ones; nothing is computed here. */
+function hybridAsModel(r: HybridRow): ModelInfo {
+  const ci = (k: string, point?: number | null, low?: number | null, high?: number | null) => ({ [`ALL/${k}`]: { point: point ?? null, low: low ?? null, high: high ?? null, n_resamples: 1000 } })
+  return {
+    name: `${r.model} (hybrid)`, label_version: r.label_version, family: HYB, kind: 'hybrid', base: null, imbalance_method: r.method ?? null, corrected_variant: r.stage === 'corr', members: [], available: false,
+    unavailable_reason: 'hybrid models are scored for comparison and are not served live', supports_explain: false, decision_rule: null,
+    metrics: { 'official/ALL': { n: 647, support_Normal: 36, balanced_accuracy: r.test_bal_acc ?? undefined, macro_f1: r.test_macro_f1 ?? undefined, normal_recall: r.test_normal_recall ?? undefined, roc_auc: r.test_roc_auc ?? undefined } },
+    ci: { ...ci('balanced_accuracy', r.test_bal_acc, r.test_bal_acc_ci_low, r.test_bal_acc_ci_high), ...ci('macro_f1', r.test_macro_f1, r.macro_f1_ci_low, r.macro_f1_ci_high), ...ci('normal_recall', r.test_normal_recall, r.normal_recall_ci_low, r.normal_recall_ci_high), ...ci('roc_auc', r.test_roc_auc, r.roc_auc_ci_low, r.roc_auc_ci_high) },
+  }
+}
+
 export default function Results() {
   usePageTitle('Results')
   const models = useApi<ModelsResponse>('/api/models')
@@ -65,7 +79,13 @@ export default function Results() {
   const [label, setLabel] = useState<Label>('label_binary')
   const [metric, setMetric] = useState<MetricKey>('balanced_accuracy')
   const [selected, setSelected] = useState<string | null>(null)
-  const list = useMemo(() => (models.data?.models ?? []).filter((m) => m.label_version === label), [models.data, label])
+  const hybrid = useApi<HybridResponse>('/api/hybrid')
+  const [dataset, setDataset] = useState<'anomod' | 'lo2'>('anomod')
+  const [showAll, setShowAll] = useState(false)
+  const hybridModels = useMemo(() => (hybrid.data?.anomod.models ?? []).filter((r) => r.label_version === label && r.status !== 'not completed' && typeof r.test_bal_acc === 'number').map(hybridAsModel), [hybrid.data, label])
+  const list = useMemo(() => [...(models.data?.models ?? []).filter((m) => m.label_version === label), ...hybridModels], [models.data, label, hybridModels])
+  const ranked = useMemo(() => [...list].sort((a, b) => (b.metrics['official/ALL']?.balanced_accuracy ?? 0) - (a.metrics['official/ALL']?.balanced_accuracy ?? 0)), [list])
+  const shown = showAll ? ranked : ranked.slice(0, TOP_N)
   const best = useMemo(() => [...list].sort((a, b) => (b.metrics['official/ALL']?.balanced_accuracy ?? 0) - (a.metrics['official/ALL']?.balanced_accuracy ?? 0))[0], [list])
   const sel = list.find((m) => m.name === (selected ?? best?.name))
 
@@ -77,7 +97,8 @@ export default function Results() {
         <>
           <button type="button" className="btn secondary" style={{ minHeight: '2.25rem', padding: '0.15rem 0.6rem', fontWeight: 650 }} aria-pressed={sel?.name === m.name} onClick={() => setSelected(m.name)}>{m.name}</button>{' '}
           {m.name === best?.name && <span className="badge solid">Best overall score</span>}
-          <span className="pills"><span className="badge">{PLAIN_FAMILY[m.family] ?? FAMILY_LABEL[m.family]}</span> {m.corrected_variant && <span className="badge accent">Retrained to reduce overfitting</span>} {!m.available && <span className="badge">Scored for comparison; cannot run live</span>}</span>
+          {m.family === HYB && <span className="badge accent">Hybrid</span>}
+          <span className="pills"><span className="badge">{PLAIN_FAMILY[m.family] ?? FAMILY_LABEL[m.family]}</span> {m.corrected_variant && <span className="badge accent">Retrained to reduce overfitting</span>} {!m.available && m.family !== HYB && <span className="badge">Scored for comparison; cannot run live</span>}{!m.available && m.family === HYB && <span className="badge">Scored for comparison; 5-fold checking; cannot run live</span>}</span>
         </>
       ),
     },
@@ -95,8 +116,15 @@ export default function Results() {
       <Detailed>
       <p className="lede">Every model was scored once on the 647 untouched test windows. Intervals are 95% block-bootstrap ranges, and they are wide: with few Normal windows, small differences between models are not reliable.</p>
       <div className="row" style={{ marginBottom: 'var(--space-5)' }}>
+        <div className="field"><span className="label" id="ds-l">Data set</span>
+          <div className="segmented" role="group" aria-labelledby="ds-l">
+            <button type="button" aria-pressed={dataset === 'anomod'} onClick={() => setDataset('anomod')}>Benchmark (AnoMod)</button>
+            <button type="button" aria-pressed={dataset === 'lo2'} onClick={() => setDataset('lo2')}>LO2 slice (own data)</button>
+          </div></div>
         <LabelToggle value={label} onChange={(l) => { setLabel(l); setSelected(null) }} />
       </div>
+      {dataset === 'lo2' && <Lo2Leaderboard label={label} />}
+      {dataset === 'anomod' && <>
 
       <section aria-labelledby="lb">
         <h2 id="lb" style={{ marginTop: 0 }}>Leaderboard</h2>
@@ -117,8 +145,12 @@ export default function Results() {
               </dl>
               <ResponsiveTable<ModelInfo>
                 caption={`Test-set results, ${label === 'label_binary' ? 'binary' : 'five-class'} labels (decision = argmax, all test windows). Click a column to sort, a model name to inspect it.`}
-                columns={columns} rows={list} rowKey={(r) => r.name} initialSort={{ key: 'ba', dir: 'desc' }} activeKey={sel?.name ?? null} highlightKey={best?.name ?? null}
+                columns={columns} rows={shown} rowKey={(r) => r.name} initialSort={{ key: 'ba', dir: 'desc' }} activeKey={sel?.name ?? null} highlightKey={best?.name ?? null}
               />
+              <div className="show-all">
+                <button type="button" className="btn secondary" aria-expanded={showAll} data-testid="show-all" onClick={() => setShowAll((v) => !v)}>{showAll ? `Show only the top ${TOP_N}` : `Show all models (${ranked.length})`}</button>
+                <p className="small muted" style={{ margin: 'var(--space-2) 0 0' }} data-testid="top-note">{showAll ? `All ${ranked.length} models are shown.` : `Showing the top ${Math.min(TOP_N, ranked.length)} of ${ranked.length} models by overall score; the others are kept under \u201cShow all models\u201d.`} The ranking uses the test set, so the lead is optimistic. Hybrid models were checked with 5 folds, the original AnoMod models with 10.</p>
+              </div>
               <p className="small muted">{m.ci_note} The best model per label was identified on the test set itself, so its lead is optimistic. &ldquo;Report only&rdquo; = soft voting needs 40 fold models and cannot be served live.</p>
               <div className="card">
                 <div className="row" style={{ marginBottom: 'var(--space-3)' }}>
@@ -137,7 +169,7 @@ export default function Results() {
         </Async>
       </section>
 
-      {sel && <Detail model={sel} label={label} best={best?.name ?? ''} paired={results.data?.paired_bootstrap ?? []} />}
+      {sel && sel.family !== HYB && <Detail model={sel} label={label} best={best?.name ?? ''} paired={results.data?.paired_bootstrap ?? []} />}
 
       <Async state={results} rows={5} label="Loading comparison tables">
         {(r) => (
@@ -147,8 +179,58 @@ export default function Results() {
           </>
         )}
       </Async>
+      </>}
       </Detailed>
     </>
+  )
+}
+
+/** The LO2 leaderboard: hybrids first, then the other families in priority order; unfinished ones are listed as not completed. Every LO2 row is marked unreliable (very small sample). */
+function Lo2Leaderboard({ label }: { label: Label }) {
+  const api = useApi<Lo2LeaderboardResponse>('/api/lo2/leaderboard')
+  const [showAll, setShowAll] = useState(false)
+  return (
+    <section aria-labelledby="lo2-lb">
+      <h2 id="lo2-lb" style={{ marginTop: 0 }}>LO2 slice leaderboard</h2>
+      <div className="callout" role="note"><span className="label">Read this first</span>
+        <ul>
+          <li><strong>Unreliable: very small sample.</strong> 5 whole runs, a test part of one run (172 windows, only 13 healthy).</li>
+          <li>These models were trained on LO2&rsquo;s own data. The results say nothing about transfer from AnoMod.</li>
+          <li>The ranking uses the test set, so the lead is optimistic.</li>
+        </ul>
+      </div>
+      <Async state={api} rows={5} label="Loading the LO2 leaderboard">
+        {(d) => {
+          if (!d.available) return <div className="state"><h3>No LO2 leaderboard yet</h3><p>{d.note}</p></div>
+          const rows = d.rows.filter((r) => r.label_version === label)
+          const done = rows.filter((r) => r.status !== 'not completed').sort((a, b) => (b.test_bal_acc ?? 0) - (a.test_bal_acc ?? 0))
+          const nc = rows.filter((r) => r.status === 'not completed')
+          const shown = showAll ? done : done.slice(0, TOP_N)
+          return (
+            <div className="stack">
+              <ResponsiveTable<HybridRow>
+                caption={`LO2 test results, ${label === 'label_binary' ? 'binary' : 'four-class (Normal, HTTP 400, 401, 404)'} labels, test part = one whole run`}
+                rows={shown} rowKey={(r) => r.model} initialSort={{ key: 'ba', dir: 'desc' }} highlightKey={done[0]?.model ?? null}
+                columns={[
+                  { key: 'name', label: 'Model', nameCell: true, sortValue: (r) => r.model, render: (r) => <><strong>{r.model}</strong> <span className="pills"><span className="badge">{(r.family ?? '').replace(/^\([a-e]\) /, '')}</span> <span className="badge" style={{ background: 'var(--watch-bg)', color: 'var(--watch)' }}>unreliable: very small sample</span></span></> },
+                  { key: 'ba', label: 'Overall score', header: <Head plain="Overall score" meaning="0.5 = coin flip, 1.0 = perfect" tech="Balanced accuracy" />, numeric: true, sortValue: (r) => r.test_bal_acc ?? null, render: (r) => <Score v={r.test_bal_acc} low={r.test_bal_acc_ci_low} high={r.test_bal_acc_ci_high} /> },
+                  { key: 'f1', label: 'Fairness across both classes', header: <Head plain="Fairness across classes" meaning="higher is better" tech="Macro-F1" />, numeric: true, sortValue: (r) => r.test_macro_f1 ?? null, render: (r) => <Score v={r.test_macro_f1} /> },
+                  { key: 'nr', label: 'Healthy windows left alone', header: <Head plain="Healthy windows left alone" meaning="out of 13 healthy windows" tech="Normal recall" />, numeric: true, sortValue: (r) => r.test_normal_recall ?? null, render: (r) => <Score v={r.test_normal_recall} /> },
+                  { key: 'auc', label: 'Ranks risky above safe', header: <Head plain="Ranks risky above safe" meaning="1.0 = perfect ranking" tech="ROC-AUC" />, numeric: true, sortValue: (r) => r.test_roc_auc ?? null, render: (r) => <Score v={r.test_roc_auc} /> },
+                ]}
+              />
+              {done.length > TOP_N && (
+                <div className="show-all">
+                  <button type="button" className="btn secondary" aria-expanded={showAll} data-testid="lo2-show-all" onClick={() => setShowAll((v) => !v)}>{showAll ? `Show only the top ${TOP_N}` : `Show all models (${done.length})`}</button>
+                </div>
+              )}
+              {nc.length > 0 && <div className="rel grey" data-testid="lo2-not-completed"><strong>Not completed because of the time limit:</strong> {Array.from(new Set(nc.map((r) => r.model))).join(', ')}.</div>}
+              <p className="small muted">{d.note}</p>
+            </div>
+          )
+        }}
+      </Async>
+    </section>
   )
 }
 

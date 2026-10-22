@@ -23,6 +23,9 @@ export default function HowItWorks() {
       <h2>What you see in the live monitor</h2>
       <p>The <Link to="/">Live monitor</Link> watches a fictional ticket shop that runs on this computer with pretend visitors. On a separate presenter page you break the shop on purpose. FailSight is <strong>not told</strong> what you broke. It only sees the numbers coming from the shop.</p>
 
+      <h2>Newer, more complex models</h2>
+      <p>Besides the models that run live, we tried ten &ldquo;hybrid&rdquo; neural networks made of two learning parts, five on the benchmark data and five on a slice of a second data set. They are scored on the <Link to="/examiners/hybrids">Hybrid models</Link> page; on this small data they are not clearly better than the simpler ones.</p>
+
       <h2>What FailSight does not do</h2>
       <ul>
         <li>It says that something is wrong <strong>right now</strong>. It does not predict the future.</li>

@@ -7,6 +7,7 @@ import HowItWorks from './pages/HowItWorks'
 import Proofs from './pages/Proofs'
 import Results from './pages/Results'
 import Limits from './pages/Limits'
+import Hybrids from './pages/Hybrids'
 import Testbed from './pages/Testbed'
 import ConnectApp from './pages/ConnectApp'
 import Glossary from './pages/Glossary'
@@ -42,6 +43,7 @@ export default function App() {
           <Route path="examiners/results" element={<Results />} />
           <Route path="examiners/connect" element={<ConnectApp />} />
           <Route path="examiners/testbed" element={<Testbed />} />
+          <Route path="examiners/hybrids" element={<Hybrids />} />
           <Route path="examiners/limits" element={<Limits />} />
           <Route path="examiners/glossary" element={<Glossary />} />
           {/* the addresses used before the redesign keep working */}
@@ -49,6 +51,7 @@ export default function App() {
           <Route path="results" element={<Results />} />
           <Route path="connect" element={<ConnectApp />} />
           <Route path="testbed" element={<Testbed />} />
+          <Route path="hybrids" element={<Hybrids />} />
           <Route path="limits" element={<Limits />} />
           <Route path="glossary" element={<Glossary />} />
         </Route>

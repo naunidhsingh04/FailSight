@@ -78,3 +78,47 @@ export interface Lo2Response {
   log_volume_check: { raw_log_line_count_auc: number; raw_log_error_count_auc: number; high_auc_models: string[]; rank_correlation_with_log_line_count: number[]; n_high_auc_tracking_log_volume: number }
   summary_markdown: string
 }
+
+/* ---------------------------------------------------------------- hybrid deep-learning models and the LO2 leaderboard (from /api/hybrid and /api/lo2/leaderboard) */
+export interface HybridRow {
+  model: string
+  label_version: Label
+  status: 'done' | 'did not learn' | 'not completed'
+  test_bal_acc?: number | null
+  test_bal_acc_ci_low?: number | null
+  test_bal_acc_ci_high?: number | null
+  test_macro_f1?: number | null
+  macro_f1_ci_low?: number | null
+  macro_f1_ci_high?: number | null
+  test_normal_recall?: number | null
+  normal_recall_ci_low?: number | null
+  normal_recall_ci_high?: number | null
+  test_roc_auc?: number | null
+  roc_auc_ci_low?: number | null
+  roc_auc_ci_high?: number | null
+  cv_val_bal_acc?: number | null
+  train_secs?: number | null
+  train_seconds_total?: number | null
+  folds?: number | null
+  hidden?: number | null
+  method?: string | null
+  stage?: string | null
+  shuffled_balanced_accuracy?: number | null
+  shuffled_verdict?: string | null
+  family?: string | null
+  reliability?: string | null
+}
+export interface HybridComparison { best_hybrid: string; best_hybrid_ba: number; best_hybrid_low: number | null; best_hybrid_high: number | null; best_existing: string; best_existing_ba: number; best_existing_low: number | null; best_existing_high: number | null; hybrid_beats_best_existing: boolean; ranges_overlap: boolean }
+export interface HybridResponse {
+  available: boolean
+  fold_note: string
+  notes: string[]
+  anomod: { available: boolean; models: HybridRow[]; facts?: { windows: number; train: number; test: number; runs: number; folds: number; healthy_test_windows: number; window_seconds: number }; comparison?: Record<string, HybridComparison> }
+  lo2: {
+    available: boolean
+    models: HybridRow[]
+    facts?: { runs: number; megabytes: number; cap_megabytes: number; share_of_download_percent: number; folds: number; windows?: number; train?: number; test?: number; class_counts?: Record<string, number>; test_class_counts?: Record<string, number>; healthy_test_windows?: number; unreliable: boolean; embedding: string }
+    logvolume_baseline?: { label_version: Label; balanced_accuracy: number; ba_ci_low: number; ba_ci_high: number; roc_auc: number }[]
+  }
+}
+export interface Lo2LeaderboardResponse { available: boolean; rows: HybridRow[]; not_completed: { model: string; label_version: Label; family: string; reason: string }[]; note: string }

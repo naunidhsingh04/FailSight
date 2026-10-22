@@ -7,7 +7,7 @@ import { fmt, int, pct, range } from '../format'
 import { Detailed, Simple } from '../mode'
 import Term from '../components/Term'
 import { usePageTitle } from '../usePageTitle'
-import type { DataResponse, Lo2Model, Lo2Response, ModelInfo, ModelsResponse } from '../types'
+import type { DataResponse, HybridResponse, Lo2LeaderboardResponse, Lo2Model, Lo2Response, ModelInfo, ModelsResponse } from '../types'
 import { TESTBED_LIMITS } from '../testbed'
 
 interface Masking { unmasked: number; api70: number; log70: number; metric70: number; all70: number; normal_recall_unmasked: number; normal_recall_metric70: number }
@@ -26,6 +26,7 @@ export default function Limits() {
       <p className="lede">What FailSight cannot do. Nothing on this page is softened: the numbers come straight from the result files.</p>
       <Simple><PlainLimits models={models} lo2={lo2} proofs={proofs} /></Simple>
       <Simple><TestbedSection /></Simple>
+      <HybridLimits />
       <Detailed>
       <Async level={2} state={models} rows={5} label="Loading model results">{(m) => <NormalRecall models={m.models.filter((x) => x.label_version === 'label_binary')} all={m.models} data={data.data} />}</Async>
       <Async level={2} state={lo2} rows={6} label="Loading LO2 results">{(l) => <External l={l} />}</Async>
@@ -259,5 +260,32 @@ function TestbedSection() {
       <ul>{TESTBED_LIMITS.map((t) => <li key={t}>{t}</li>)}</ul>
       <p className="small muted">A claim that FailSight works on any app is not supported by anything in this project.</p>
     </section>
+  )
+}
+
+/** Limits of the hybrid-model and LO2-slice work, read from the saved result files (never typed in). */
+function HybridLimits() {
+  const hy = useApi<HybridResponse>('/api/hybrid')
+  const lb = useApi<Lo2LeaderboardResponse>('/api/lo2/leaderboard')
+  return (
+    <Async level={2} state={hy} rows={2} label="Loading the hybrid-model limits">
+      {(h) => {
+        if (!h.available) return null
+        const f = h.lo2.facts
+        const nc = Array.from(new Set((lb.data?.not_completed ?? []).map((x) => x.model)))
+        return (
+          <section aria-labelledby="hy-lim" data-testid="hybrid-limits">
+            <h2 id="hy-lim" style={{ fontSize: '1.2rem' }}>The ten hybrid models and the LO2 slice</h2>
+            <ul>
+              <li><strong>Sample sizes.</strong> The five AnoMod hybrids use {int(h.anomod.facts?.windows)} windows from {h.anomod.facts?.runs} runs and are scored on {h.anomod.facts?.test} test windows, only {h.anomod.facts?.healthy_test_windows} of them healthy. The five LO2 hybrids use {int(f?.windows)} windows from {f?.runs} whole runs ({fmt(f?.megabytes, 1)} MB, about {f?.share_of_download_percent}% of the download, under a 150 MB cap) and are scored on {f?.test} windows from one run, only {f?.healthy_test_windows} healthy. Every LO2 result is marked unreliable (very small sample).</li>
+              <li><strong>Folds.</strong> {h.fold_note}</li>
+              <li><strong>Not completed.</strong> {nc.length ? `Because of the time limit these LO2 models were not completed: ${nc.join(', ')}.` : 'Every planned LO2 model family was completed.'}</li>
+              <li><strong>No transfer claim.</strong> The LO2 models were trained on LO2&rsquo;s own data. Nothing shows that anything learned on AnoMod works on LO2, on the testbed shop or on any other system.</li>
+              <li><strong>No forecasting.</strong> FailSight notices a problem that has started. It cannot forecast a failure and it gives no time-until-failure; that is future work and was not built.</li>
+            </ul>
+          </section>
+        )
+      }}
+    </Async>
   )
 }

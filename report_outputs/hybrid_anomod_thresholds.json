@@ -6,6 +6,13 @@
    "oof_balanced_accuracy": 0.8527211136661474,
    "oof_normal_recall": 0.7529411764705882,
    "oof_balanced_accuracy_default_argmax": 0.8491543654031599
+  },
+  "AE_LSTM": {
+   "type": "threshold",
+   "threshold": 0.92,
+   "oof_balanced_accuracy": 0.8275078505551022,
+   "oof_normal_recall": 0.7176470588235294,
+   "oof_balanced_accuracy_default_argmax": 0.811131716242613
   }
  },
  "label_level": {
@@ -20,6 +27,18 @@
    ],
    "oof_balanced_accuracy": 0.7776703382995507,
    "oof_balanced_accuracy_default_argmax": 0.7682558264637281
+  },
+  "AE_LSTM": {
+   "type": "class_multipliers",
+   "weights": [
+    0.36787944117144233,
+    0.36787944117144233,
+    1.2840254166877414,
+    2.718281828459045,
+    0.36787944117144233
+   ],
+   "oof_balanced_accuracy": 0.7981410340193811,
+   "oof_balanced_accuracy_default_argmax": 0.7850786994682502
   }
  }
 }

@@ -5,13 +5,14 @@ import { useMode } from '../mode'
 /** Everything that used to be a top-level tab now lives under "For examiners". Old addresses still work. */
 export const EXAMINER_PAGES: { to: string; label: string; what: string }[] = [
   { to: '/examiners/results', label: 'Results', what: 'The scores of every model on the recorded benchmark data.' },
+  { to: '/examiners/hybrids', label: 'Hybrid models', what: 'Ten models made of two learning parts: five on the benchmark data, five on a slice of a second data set.' },
   { to: '/examiners/connect', label: 'Connect', what: 'How to plug another app into FailSight.' },
   { to: '/examiners/testbed', label: 'Testbed', what: 'Our own fictional shop: how the test data was made and the held-out results.' },
   { to: '/examiners/limits', label: 'Limits', what: 'Everything FailSight cannot do or has not shown, in full.' },
   { to: '/examiners/glossary', label: 'Glossary', what: 'Every technical word, in plain language.' },
   { to: '/examiners/replay', label: 'Recorded benchmark data', what: 'Replay of the recorded data. It cannot prove that faults are detected.' },
 ]
-const LEGACY = ['/results', '/connect', '/testbed', '/limits', '/glossary', '/console']
+const LEGACY = ['/results', '/connect', '/testbed', '/limits', '/glossary', '/console', '/hybrids']
 
 const LINKS: { to: string; label: string; end?: boolean }[] = [
   { to: '/', label: 'Live monitor', end: true },

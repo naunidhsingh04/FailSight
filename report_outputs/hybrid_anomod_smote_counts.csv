@@ -10,6 +10,12 @@ Transformer_BiLSTM,label_binary,cv,3,130/1905,130/1905,40/474
 Transformer_BiLSTM,label_binary,cv,4,130/1905,130/1905,40/474
 Transformer_BiLSTM,label_binary,cv,5,140/1904,140/1904,30/475
 Transformer_BiLSTM,label_binary,final,final(80% train),170/2379,170/2379,"36/611 (test, untouched)"
+AE_LSTM,label_binary,cv,1,140/1901,140/1901,30/478
+AE_LSTM,label_binary,cv,2,140/1901,140/1901,30/478
+AE_LSTM,label_binary,cv,3,130/1905,130/1905,40/474
+AE_LSTM,label_binary,cv,4,130/1905,130/1905,40/474
+AE_LSTM,label_binary,cv,5,140/1904,140/1904,30/475
+AE_LSTM,label_binary,final,final(80% train),170/2379,170/2379,"36/611 (test, untouched)"
 Transformer_BiLSTM,label_level,corr,1,140/474/488/462/477,488/488/488/488/488,30/117/125/116/120
 Transformer_BiLSTM,label_level,corr,2,140/469/493/461/478,493/493/493/493/493,30/122/120/117/119
 Transformer_BiLSTM,label_level,corr,3,130/475/489/464/477,489/489/489/489/489,40/116/124/114/120
@@ -21,3 +27,9 @@ Transformer_BiLSTM,label_level,cv,3,130/475/489/464/477,489/489/489/489/489,40/1
 Transformer_BiLSTM,label_level,cv,4,130/473/489/463/480,489/489/489/489/489,40/118/124/115/117
 Transformer_BiLSTM,label_level,cv,5,140/473/493/462/476,493/493/493/493/493,30/118/120/116/121
 Transformer_BiLSTM,label_level,final,final(80% train),170/591/613/578/597,613/613/613/613/613,"36/130/160/154/167 (test, untouched)"
+AE_LSTM,label_level,cv,1,140/474/488/462/477,140/474/488/462/477,30/117/125/116/120
+AE_LSTM,label_level,cv,2,140/469/493/461/478,140/469/493/461/478,30/122/120/117/119
+AE_LSTM,label_level,cv,3,130/475/489/464/477,130/475/489/464/477,40/116/124/114/120
+AE_LSTM,label_level,cv,4,130/473/489/463/480,130/473/489/463/480,40/118/124/115/117
+AE_LSTM,label_level,cv,5,140/473/493/462/476,140/473/493/462/476,30/118/120/116/121
+AE_LSTM,label_level,final,final(80% train),170/591/613/578/597,170/591/613/578/597,"36/130/160/154/167 (test, untouched)"

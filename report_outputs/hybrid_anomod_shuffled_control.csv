@@ -1,3 +1,5 @@
 model,label_version,shuffled_balanced_accuracy,shuffled_macro_f1,shuffled_normal_recall,shuffled_roc_auc,real_balanced_accuracy,verdict
 Transformer_BiLSTM,label_binary,0.506751,0.258778,0.750000,0.505319,0.650300,PASS (shuffled labels score near chance)
+AE_LSTM,label_binary,0.536097,0.210495,0.888889,0.450627,0.631478,PASS (shuffled labels score near chance)
 Transformer_BiLSTM,label_level,0.209776,0.195737,0.250000,0.498853,0.717016,PASS (shuffled labels score near chance)
+AE_LSTM,label_level,0.189287,0.143012,0.361111,0.496730,0.771555,PASS (shuffled labels score near chance)

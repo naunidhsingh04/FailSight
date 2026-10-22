@@ -32,6 +32,11 @@ export default function Examiners() {
           <li key={p.to}><Link className="link-card" to={p.to}><h2>{p.label}</h2><p>{p.what}</p><span className="go">Open</span></Link></li>
         ))}
       </ul>
+      <div className="colab-box" data-testid="colab-box">
+        <h2 style={{ marginTop: 0, fontSize: '1.15rem' }}>Run it yourself in Colab</h2>
+        <p style={{ margin: '0 0 var(--space-2)' }}>A notebook walks through the whole workflow step by step, with the proofs, in your browser. No installation. It takes about 20 to 30 minutes on a fresh Google Colab session.</p>
+        <p style={{ margin: 0 }}><a href="https://colab.research.google.com/github/naunidhsingh04/FailSight/blob/main/notebooks/FailSight_Workflow.ipynb" target="_blank" rel="noreferrer">Open the notebook in Google Colab</a> (Runtime &rarr; Run all). Steps are in <code>docs/COLAB.md</code>.</p>
+      </div>
     </>
   )
 }
