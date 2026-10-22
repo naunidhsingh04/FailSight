@@ -5,8 +5,8 @@
   <form class="card" action="/checkout" method="post" novalidate>
     <h2>Who is travelling?</h2>
     {% if error %}<p class="notice" role="alert">{{ error }}</p>{% endif %}
-    <div class="field"><label for="name">Name for the booking</label><input id="name" name="name" type="text" autocomplete="off" placeholder="For example: A. Traveller" value="{{ name }}" required></div>
-    <div class="field"><label for="email">Email for the confirmation</label><input id="email" name="email" type="email" autocomplete="off" placeholder="name@example.com" value="{{ email }}" required></div>
+    <div class="field"><label for="name">Name for the booking</label><input id="name" name="name" type="text" autocomplete="off" placeholder="For example: A. Traveller" value="{{ form_name }}" required></div>
+    <div class="field"><label for="email">Email for the confirmation</label><input id="email" name="email" type="email" autocomplete="off" placeholder="name@example.com" value="{{ form_email }}" required></div>
     <p class="muted">No card is needed and nothing is charged: every booking in this shop is made up.</p>
     <button class="btn" type="submit">Place order for {{ total|money }}</button>
   </form>

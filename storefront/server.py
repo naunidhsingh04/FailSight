@@ -170,7 +170,7 @@ def create_app() -> FastAPI:
         items = read_cart(request)
         if not items:
             return RedirectResponse("/cart", status_code=303)
-        return render(request, "checkout.html", title="Checkout", items=items, total=sum(i["price"] * i["seats"] for i in items), error=None, name="", email="")
+        return render(request, "checkout.html", title="Checkout", items=items, total=sum(i["price"] * i["seats"] for i in items), error=None, form_name="", form_email="")
 
     @app.post("/checkout", response_class=HTMLResponse)
     async def checkout(request: Request, name: str = Form(""), email: str = Form("")):
@@ -185,18 +185,18 @@ def create_app() -> FastAPI:
         elif "@" not in email or "." not in email.split("@")[-1]:
             err = "Please enter an email address like name@example.com."
         if err:
-            return render(request, "checkout.html", status=422, title="Checkout", items=items, total=total, error=err, name=name, email=email)
+            return render(request, "checkout.html", status=422, title="Checkout", items=items, total=total, error=err, form_name=name, form_email=email)
         booked = []
         try:
             for i in items:
                 r = await shop(client(), "POST", "/book", json=dict(route_id=i["route_id"], user=name, seats=i["seats"]))
                 if r.status_code != 200:
                     why = "is sold out" if r.status_code == 409 else "is no longer available"
-                    return render(request, "checkout.html", status=409, title="Checkout", items=items, total=total, error=f"The {i['origin']} to {i['dest']} departure {why}. Remove it from your cart and pick another.", name=name, email=email)
+                    return render(request, "checkout.html", status=409, title="Checkout", items=items, total=total, error=f"The {i['origin']} to {i['dest']} departure {why}. Remove it from your cart and pick another.", form_name=name, form_email=email)
                 bid = r.json()["booking_id"]
                 p = await shop(client(), "POST", "/pay", json=dict(booking_id=bid, amount=round(i["price"] * i["seats"], 2)))
                 if p.status_code != 200:
-                    return render(request, "checkout.html", status=409, title="Checkout", items=items, total=total, error="The payment step did not go through. Nothing was charged. Please try again.", name=name, email=email)
+                    return render(request, "checkout.html", status=409, title="Checkout", items=items, total=total, error="The payment step did not go through. Nothing was charged. Please try again.", form_name=name, form_email=email)
                 booked.append(dict(i, booking_id=bid))
         except ShopDown:
             return unavailable(request)
