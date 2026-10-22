@@ -52,3 +52,7 @@ From a cold start (`python -m testbed.launcher --no-browser`, same as start_test
 - The detector was trained on one made-up shop; we do not claim it works on any other application, and we do not claim it can forecast a failure or tell how long until one. It notices a problem that has started.
 - The test sets are small (647 AnoMod windows, only 36 healthy ones), so every score comes with a range.
 
+
+## New results to show (overnight run)
+
+Open http://127.0.0.1:8000/examiners/hybrids (Hybrid models: ten two-part models, five on the benchmark data and five on a slice of LO2) and /examiners/results (hybrid tags, LO2 tab, top 9 with Show all). Say plainly: the hybrids did not beat the best simpler models; LO2 is a very small sample (5 runs) and its binary task is almost trivial; nothing shows transfer, forecasting or a time-until-failure. Every number is in docs/NUMBERS_FOR_VIVA.md. Colab: docs/COLAB.md.

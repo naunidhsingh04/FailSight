@@ -36,7 +36,7 @@ test.describe('results page', () => {
     await page.goto('/examiners/results')
     await expect(page.getByTestId('top-note')).toContainText(/top 9/)
     await expect(page.getByTestId('top-note')).toContainText(/ranking uses the test set/)
-    const rows = page.locator('table.rt tbody tr')
+    const rows = page.locator('table.rt').first().locator('tbody tr')
     await expect(rows).toHaveCount(9)
     await page.getByTestId('show-all').click()
     expect(await rows.count()).toBeGreaterThan(9)
@@ -58,3 +58,4 @@ test('limits page states the hybrid and LO2 limits', async ({ page }) => {
   await expect(page.getByTestId('hybrid-limits')).toContainText(/No forecasting/)
   await expect(page.getByTestId('hybrid-limits')).toContainText(/No transfer claim/)
 })
+

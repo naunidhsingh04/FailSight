@@ -80,7 +80,6 @@ def hybrids() -> dict:
                                  hybrid_beats_best_existing=bool(b["test_bal_acc"] > float(top.test_bal_acc)),
                                  ranges_overlap=bool(lo is not None and b.get("test_bal_acc_ci_low") is not None and b["test_bal_acc_ci_low"] <= hi and lo <= b["test_bal_acc_ci_high"]))
         out["anomod"]["comparison"] = cmp_
-        out["anomod"]["integrity"] = dict(smote_counts=records((_read("hybrid_anomod_smote_counts.csv") or pd.DataFrame()).head(0)))
     # ---- LO2
     lm = _models("hybrid_lo2_")
     out["lo2"] = dict(models=lm, available=bool(lm))
@@ -96,7 +95,8 @@ def hybrids() -> dict:
         facts["unreliable"] = bool(facts["runs"] < 6 or facts.get("windows", 0) < 150)
         facts["embedding"] = "TF-IDF + truncated SVD (a downloadable BERT-style encoder was not available)"
         out["lo2"]["facts"] = facts
-        out["lo2"]["logvolume_baseline"] = records(_read("hybrid_lo2_logvolume_baseline.csv") if _read("hybrid_lo2_logvolume_baseline.csv") is not None else pd.DataFrame())
+        lv = _read("hybrid_lo2_logvolume_baseline.csv")
+        out["lo2"]["logvolume_baseline"] = records(lv) if lv is not None else []
     out["notes"] = [FOLD_NOTE,
                     "LO2 results are about training on LO2's own data. They say nothing about transfer from AnoMod or to any other system.",
                     "Nothing here forecasts failures or the time until a failure; that is future work."]

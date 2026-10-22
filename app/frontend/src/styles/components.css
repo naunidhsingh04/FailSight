@@ -142,7 +142,7 @@ table.rt .name-cell { font-weight: 650; }
 .wire .box { flex: 1 1 6rem; min-width: 0; border: 1px solid var(--border-strong); border-radius: var(--radius); padding: var(--space-2); background: var(--surface-2); overflow-wrap: anywhere; }
 .wire .box b { display: block; font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
 .wire .arrow { align-self: center; font-weight: 700; color: var(--muted); }
-.wire .answer { flex: 0 1 4.5rem; background: var(--accent-weak); border-color: var(--accent); }
+.wire .ans { flex: 0 1 4.5rem; background: var(--accent-weak); border-color: var(--accent); }
 .hy-facts { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.2rem var(--space-3); font-size: 0.86rem; }
 .hy-facts dt { color: var(--muted); }
 .hy-facts dd { margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
@@ -152,3 +152,9 @@ table.rt .name-cell { font-weight: 650; }
 .rel.ok { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }
 .show-all { margin-top: var(--space-3); }
 .colab-box { border: 1px solid var(--accent); background: var(--accent-weak); border-radius: var(--radius); padding: var(--space-4) var(--space-5); margin-top: var(--space-5); }
+
+.small.muted, .small { overflow-wrap: anywhere; }
+.card, .callout, li { overflow-wrap: anywhere; }
+.wire .box, .wire .box * { overflow-wrap: normal; word-break: normal; }
+.wire .ans { flex: 0 0 5.5rem; }
+

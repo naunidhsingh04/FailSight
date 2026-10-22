@@ -1,0 +1,49 @@
+﻿{
+    "failures":  [
+
+                 ],
+    "steps":  [
+                  {
+                      "time":  "23:40-23:50",
+                      "step":  "1 Storefront",
+                      "status":  "done",
+                      "notes":  "cold start OK, break detected in 17 s, ports freed, docs/PRESENT_NOW.md extended; no code changed"
+                  },
+                  {
+                      "time":  "23:56-01:01",
+                      "step":  "2 Five AnoMod hybrids",
+                      "status":  "done",
+                      "notes":  "5 hybrids x binary/five-class, 5-fold; no hybrid beats the best earlier model; P20 PASS. Five hybrid classes share one file instead of five"
+                  },
+                  {
+                      "time":  "00:04-01:36",
+                      "step":  "3 LO2 slice + five LO2 hybrids",
+                      "status":  "done",
+                      "notes":  "5 whole runs, 131.8 MB (6 runs would exceed 150 MB cap); split by whole runs first; P21 four checks PASS; binary LO2 almost trivial (shortcut diagnostic); TF-IDF+SVD instead of BERT"
+                  },
+                  {
+                      "time":  "01:36-02:15",
+                      "step":  "4 LO2 families b-e",
+                      "status":  "done",
+                      "notes":  "all 23 models completed, none cut (Optuna 40 trials each)"
+                  },
+                  {
+                      "time":  "02:17-02:23",
+                      "step":  "5 Colab notebook",
+                      "status":  "done",
+                      "notes":  "executed in a fresh venv from a clean clone with the bundle: 0 errors, 0 soft failures, 8 numbers equal proofs; P23 PASS. FAST mode only"
+                  },
+                  {
+                      "time":  "02:25-03:45",
+                      "step":  "6 Front end, back end, docs, checks",
+                      "status":  "done",
+                      "notes":  "new Hybrid models page, Results top-9/Show all + LO2 tab, Limits/How it works lines, Colab box; pytest 146 passed; Playwright chromium 101 passed; screenshots in docs/screenshots"
+                  },
+                  {
+                      "time":  "",
+                      "step":  "7 Final",
+                      "status":  "see log",
+                      "notes":  "final rebuild, quick start check, status"
+                  }
+              ]
+}

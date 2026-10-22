@@ -45,7 +45,7 @@ function Card({ ds, name, row, facts, reliab }: { ds: 'anomod' | 'lo2'; name: st
         <span className="arrow" aria-hidden="true">&rarr;</span>
         <div className="box"><b>Second part</b>{info.second}</div>
         <span className="arrow" aria-hidden="true">&rarr;</span>
-        <div className="box answer"><b>Answer</b>healthy or not</div>
+        <div className="box ans"><b>Answer</b>healthy or not</div>
       </div>
       {done ? (
         <dl className="hy-facts">
@@ -90,7 +90,7 @@ function DatasetBlock({ ds, data }: { ds: 'anomod' | 'lo2'; data: HybridResponse
       {done.length > 0 && (
         <div className="card" style={{ marginTop: 'var(--space-4)' }}>
           <RangePlot ariaLabel={`Test balanced accuracy with 95% range for the hybrid models on ${ds === 'anomod' ? 'AnoMod' : 'LO2'}`} title="Overall score on the test windows (dot) with its 95% range (line). 0.5 is a coin flip, 1.0 is perfect."
-            items={[...done].sort((a, b) => (b.test_bal_acc ?? 0) - (a.test_bal_acc ?? 0)).map((r) => ({ label: HYBRID_INFO[r.model]?.tech ?? r.model, point: r.test_bal_acc ?? null, low: r.test_bal_acc_ci_low ?? null, high: r.test_bal_acc_ci_high ?? null }))} />
+            items={[...done].sort((a, b) => (b.test_bal_acc ?? 0) - (a.test_bal_acc ?? 0)).map((r) => ({ label: r.model.replace(/_/g, ' + ').replace('Multimodal + Transformer + MLP', 'Multimodal Transformer + MLP'), point: r.test_bal_acc ?? null, low: r.test_bal_acc_ci_low ?? null, high: r.test_bal_acc_ci_high ?? null }))} />
         </div>
       )}
       {best && (
@@ -154,3 +154,5 @@ export default function Hybrids() {
     </>
   )
 }
+
+

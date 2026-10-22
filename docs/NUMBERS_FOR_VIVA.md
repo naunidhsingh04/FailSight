@@ -23,7 +23,7 @@ Written for: the person answering questions after the presentation. Every number
 | LO2 slice | 5 whole runs, 131.8 MB (cap 150 MB), 860 windows | `lo2_slice_manifest.csv` |
 | LO2 best model of all families (binary) | BERT_GNN: 1.000 (95% range 1.000-1.000) | `lo2_full_leaderboard.csv` |
 | LO2 families not completed (time limit) | none | `lo2_full_not_completed.csv` |
-| Proof report totals | {"PASS": 76, "WARN": 4, "REPORTED ACCURATELY": 13} | `proofs.json` |
+| Proof report totals | {"PASS": 78, "WARN": 4, "REPORTED ACCURATELY": 13} | `proofs.json` |
 
 ## Things to say if asked
 
