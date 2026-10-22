@@ -42,3 +42,13 @@ To return `main` to it (this throws away the storefront work on this branch; do 
 - Nothing on port 5000: run `python -m storefront.server` in a second window, or run `.\start_testbed.bat` again (it reuses whatever already runs).
 - The monitor says *FailSight itself is not answering*: wait 40 seconds and reload; if it stays, see `outputs\launcher_backend.log`.
 - A port is busy: `Get-NetTCPConnection -LocalPort 8000,8802,5000 -State Listen` shows who; stop that process and start again.
+
+## Cold-start re-check (overnight run, 22 Oct 2026, 23:45 IST)
+
+From a cold start (`python -m testbed.launcher --no-browser`, same as start_testbed.bat): the shop, /ops and the monitor all answered with HTTP 200 within 60 s; learning finished in about 150 s; *Make pages slow* was detected as an alert 17 s later ('failing'); *Fix it* worked. No code changed. The monitor may stay in 'watch' for about 2.5 minutes after a fix: wait before the next break.
+
+## What to say about limits
+
+- The detector was trained on one made-up shop; we do not claim it works on any other application, and we do not claim it can forecast a failure or tell how long until one. It notices a problem that has started.
+- The test sets are small (647 AnoMod windows, only 36 healthy ones), so every score comes with a range.
+
