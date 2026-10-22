@@ -1,0 +1,10 @@
+23:56:08 AnoMod data: train 2549, test 647, features 128, 5 folds [508, 508, 514, 514, 505], graph nodes ['api', 'logs', 'socialnet_containers', 'host_system', 'containers', 'http_server', 'node_exporter', 'process', 'other_services', 'flags']
+23:58:58 AnoMod data: train 2549, test 647, features 128, 5 folds [508, 508, 514, 514, 505], graph nodes ['api', 'logs', 'socialnet_containers', 'host_system', 'containers', 'http_server', 'node_exporter', 'process', 'other_services', 'flags']
+23:58:58 === anomod label_binary Transformer_BiLSTM  (memory in use 0.4 GB)
+23:59:21     anomod label_binary Transformer_BiLSTM/screen_h32_smote fold 1: 10 ep (best 5), 20s, val BA 0.717 F1 0.794, train F1 0.989  SMOTE b:140/1901 a:1901/1901 hold:30/478
+23:59:36     anomod label_binary Transformer_BiLSTM/screen_h32_cw fold 1: 10 ep (best 6), 14s, val BA 0.747 F1 0.803, train F1 0.957  SMOTE b:140/1901 a:140/1901 hold:30/478
+00:00:01     anomod label_binary Transformer_BiLSTM/screen_h64_smote fold 1: 10 ep (best 6), 23s, val BA 0.667 F1 0.740, train F1 0.996  SMOTE b:140/1901 a:1901/1901 hold:30/478
+00:00:17     anomod label_binary Transformer_BiLSTM/screen_h64_cw fold 1: 8 ep (best 2), 15s, val BA 0.667 F1 0.740, train F1 0.954  SMOTE b:140/1901 a:140/1901 hold:30/478
+00:00:35     anomod label_binary Transformer_BiLSTM/cv fold 1: 12 ep (best 6), 16s, val BA 0.747 F1 0.803, train F1 0.957  SMOTE b:140/1901 a:140/1901 hold:30/478
+00:00:53     anomod label_binary Transformer_BiLSTM/cv fold 2: 12 ep (best 6), 17s, val BA 0.985 F1 0.898, train F1 0.919  SMOTE b:140/1901 a:140/1901 hold:30/478
+00:01:22     anomod label_binary Transformer_BiLSTM/cv fold 3: 26 ep (best 20), 28s, val BA 0.816 F1 0.835, train F1 0.996  SMOTE b:130/1905 a:130/1905 hold:40/474

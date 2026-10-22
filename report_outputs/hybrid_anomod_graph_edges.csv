@@ -1,0 +1,25 @@
+node_a,node_b,reason
+api,logs,api/log view of the system
+api,host_system,api/log view of the system
+api,flags,flags are linked to every node
+logs,host_system,api/log view of the system
+logs,flags,flags are linked to every node
+socialnet_containers,host_system,"same resource: cpu, memory, network"
+socialnet_containers,containers,"same resource: cpu, memory"
+socialnet_containers,node_exporter,"same resource: cpu, memory, network"
+socialnet_containers,process,"same resource: cpu, memory"
+socialnet_containers,flags,flags are linked to every node
+host_system,containers,"same resource: cpu, memory"
+host_system,node_exporter,"same resource: cpu, disk, load, memory, network"
+host_system,process,"same resource: cpu, memory"
+host_system,other_services,same resource: disk
+host_system,flags,flags are linked to every node
+containers,node_exporter,"same resource: cpu, memory"
+containers,process,"same resource: cpu, memory"
+containers,flags,flags are linked to every node
+http_server,flags,flags are linked to every node
+node_exporter,process,"same resource: cpu, memory"
+node_exporter,other_services,same resource: disk
+node_exporter,flags,flags are linked to every node
+process,flags,flags are linked to every node
+other_services,flags,flags are linked to every node

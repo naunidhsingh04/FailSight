@@ -1,0 +1,3 @@
+label_version,original,smote_after,adasyn_after,class_weights,smote_total,original_total,skipped_classes,note
+label_binary,170/2379,2379/2379,2390/2379,7.50 / 0.54,4758,2549,[],ADASYN is a size comparison only; it is never used to train
+label_level,170/591/613/578/597,613/613/613/613/613,ADASYN not possible: No samples will be generated with the provided ratio setting,3.00 / 0.86 / 0.83 / 0.88 / 0.85,3065,2549,[],ADASYN is a size comparison only; it is never used to train
