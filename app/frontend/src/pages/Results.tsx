@@ -20,14 +20,42 @@ const METRICS: { key: MetricKey; label: string }[] = [
   { key: 'roc_auc', label: 'ROC-AUC' },
 ]
 
+const PLAIN_FAMILY: Record<string, string> = { tree: 'Decision-tree model', linear: 'Linear model', deep: 'Neural network', ensemble: 'Combination of models' }
+const PLAIN_PILLS: [string, string][] = [
+  ['Decision-tree model', 'many yes/no questions in a row (Tree)'],
+  ['Linear model', 'a weighted sum of the readings (Linear)'],
+  ['Neural network', 'layers of small calculators (Deep)'],
+  ['Combination of models', 'several models vote together (Ensemble)'],
+  ['Retrained to reduce overfitting', 'the first version memorised its practice data, so it was retrained more gently (corrected)'],
+  ['Scored for comparison; cannot run live', 'it needs 40 fold models, so it is only in the table (report only)'],
+]
+
+/** Column header in two lines (plain name + what it means) with the technical name in small grey text underneath. */
+function Head({ plain, meaning, tech }: { plain: string; meaning: string; tech: string }) {
+  return <span className="th-plain"><strong>{plain}</strong><span className="th-mean">{meaning}</span><span className="th-tech">{tech}</span></span>
+}
+const Help = ({ k }: { k: string }) => <Term k={k}><></></Term>
+
+/** The number, and under it a thin bar from 0 to 1 with the 95% range as a lighter band. The number is always there: the bar is only a help. */
+function Score({ v, low, high }: { v: number | null | undefined; low?: number | null; high?: number | null }) {
+  const has = typeof v === 'number'
+  const clamp = (x: number) => Math.max(0, Math.min(1, x))
+  return (
+    <div className="score">
+      <div className="score-num"><strong>{fmt(v)}</strong>{low != null && high != null && <span className="muted small"> ({range(low, high)})</span>}</div>
+      {has && (
+        <div className="sbar" aria-hidden="true">
+          {low != null && high != null && <span className="sbar-ci" style={{ left: `${clamp(low) * 100}%`, width: `${Math.max(0, clamp(high) - clamp(low)) * 100}%` }} />}
+          <span className="sbar-fill" style={{ width: `${clamp(v as number) * 100}%` }} />
+        </div>
+      )}
+    </div>
+  )
+}
+
 function Cell({ m, k }: { m: ModelInfo; k: MetricKey }) {
   const ci = m.ci[`ALL/${k}`]
-  return (
-    <>
-      <strong>{fmt(m.metrics['official/ALL']?.[k])}</strong>
-      <span className="muted small"> ({ci ? range(ci.low, ci.high) : '–'})</span>
-    </>
-  )
+  return <Score v={m.metrics['official/ALL']?.[k]} low={ci?.low} high={ci?.high} />
 }
 
 export default function Results() {
@@ -41,21 +69,23 @@ export default function Results() {
   const best = useMemo(() => [...list].sort((a, b) => (b.metrics['official/ALL']?.balanced_accuracy ?? 0) - (a.metrics['official/ALL']?.balanced_accuracy ?? 0))[0], [list])
   const sel = list.find((m) => m.name === (selected ?? best?.name))
 
+  const support = list[0]?.metrics['official/ALL']?.support_Normal ?? 36
   const columns: Column<ModelInfo>[] = [
     {
       key: 'name', label: 'Model', nameCell: true, sortValue: (m) => m.name,
       render: (m) => (
         <>
           <button type="button" className="btn secondary" style={{ minHeight: '2.25rem', padding: '0.15rem 0.6rem', fontWeight: 650 }} aria-pressed={sel?.name === m.name} onClick={() => setSelected(m.name)}>{m.name}</button>{' '}
-          <span className="badge">{FAMILY_LABEL[m.family]}</span> {m.corrected_variant && <span className="badge accent">corrected</span>} {!m.available && <span className="badge">report only</span>}
+          {m.name === best?.name && <span className="badge solid">Best overall score</span>}
+          <span className="pills"><span className="badge">{PLAIN_FAMILY[m.family] ?? FAMILY_LABEL[m.family]}</span> {m.corrected_variant && <span className="badge accent">Retrained to reduce overfitting</span>} {!m.available && <span className="badge">Scored for comparison; cannot run live</span>}</span>
         </>
       ),
     },
-    { key: 'ba', label: 'Balanced acc. (95% CI)', numeric: true, sortValue: (m) => m.metrics['official/ALL']?.balanced_accuracy ?? null, render: (m) => <Cell m={m} k="balanced_accuracy" /> },
-    { key: 'f1', label: 'Macro-F1 (95% CI)', numeric: true, sortValue: (m) => m.metrics['official/ALL']?.macro_f1 ?? null, render: (m) => <Cell m={m} k="macro_f1" /> },
-    { key: 'nr', label: 'Normal recall (95% CI)', numeric: true, sortValue: (m) => m.metrics['official/ALL']?.normal_recall ?? null, render: (m) => <Cell m={m} k="normal_recall" /> },
-    { key: 'auc', label: 'ROC-AUC (95% CI)', numeric: true, sortValue: (m) => m.metrics['official/ALL']?.roc_auc ?? null, render: (m) => <Cell m={m} k="roc_auc" /> },
-    { key: 'pr', label: 'PR-AUC', numeric: true, sortValue: (m) => m.metrics['official/ALL']?.pr_auc ?? null, render: (m) => fmt(m.metrics['official/ALL']?.pr_auc) },
+    { key: 'ba', label: 'Overall score', header: <Head plain="Overall score" meaning="0.5 = coin flip, 1.0 = perfect" tech="Balanced accuracy" />, help: <Help k="lb_ba" />, numeric: true, sortValue: (m) => m.metrics['official/ALL']?.balanced_accuracy ?? null, render: (m) => <Cell m={m} k="balanced_accuracy" /> },
+    { key: 'f1', label: 'Fairness across both classes', header: <Head plain="Fairness across both classes" meaning="higher is better" tech="Macro-F1" />, help: <Help k="lb_f1" />, numeric: true, sortValue: (m) => m.metrics['official/ALL']?.macro_f1 ?? null, render: (m) => <Cell m={m} k="macro_f1" /> },
+    { key: 'nr', label: 'Healthy windows left alone', header: <Head plain="Healthy windows left alone" meaning={`out of ${support} healthy windows`} tech="Normal recall" />, help: <Help k="lb_nr" />, numeric: true, sortValue: (m) => m.metrics['official/ALL']?.normal_recall ?? null, render: (m) => <Cell m={m} k="normal_recall" /> },
+    { key: 'auc', label: 'Ranks risky above safe', header: <Head plain="Ranks risky above safe" meaning="1.0 = perfect ranking" tech="ROC-AUC" />, help: <Help k="lb_roc" />, numeric: true, sortValue: (m) => m.metrics['official/ALL']?.roc_auc ?? null, render: (m) => <Cell m={m} k="roc_auc" /> },
+    { key: 'pr', label: 'Catches problems cleanly', header: <Head plain="Catches problems cleanly" meaning="1.0 = perfect" tech="PR-AUC" />, help: <Help k="lb_pr" />, numeric: true, sortValue: (m) => m.metrics['official/ALL']?.pr_auc ?? null, render: (m) => <Score v={m.metrics['official/ALL']?.pr_auc} /> },
   ]
 
   return (
@@ -70,12 +100,24 @@ export default function Results() {
 
       <section aria-labelledby="lb">
         <h2 id="lb" style={{ marginTop: 0 }}>Leaderboard</h2>
+        <div className="callout accent how-to-read" role="note">
+          <span className="label">How to read this table</span>
+          <ul>
+            <li><strong>Overall score</strong> is the one to look at first: 0.5 means no better than a coin flip, 1.0 means perfect.</li>
+            <li><strong>Healthy windows left alone</strong> shows how many healthy moments did not cause a false alarm. A low number means many false alarms (only {support} windows are healthy ones).</li>
+            <li><strong>Wide ranges mean differences are not reliable.</strong> The lighter band behind each bar, and the brackets, are the 95% range (95% CI): if two models&rsquo; ranges overlap a lot, one is not clearly better than the other.</li>
+            <li><strong>The best model was picked on the test set</strong>, so its lead is optimistic.</li>
+          </ul>
+        </div>
         <Async state={models} rows={6} label="Loading leaderboard">
           {(m) => (
             <div className="stack">
+              <dl className="pill-legend" aria-label="What the labels next to each model mean">
+                {PLAIN_PILLS.map(([a, b]) => <div key={a}><dt><span className="badge">{a}</span></dt><dd>{b}</dd></div>)}
+              </dl>
               <ResponsiveTable<ModelInfo>
                 caption={`Test-set results, ${label === 'label_binary' ? 'binary' : 'five-class'} labels (decision = argmax, all test windows). Click a column to sort, a model name to inspect it.`}
-                columns={columns} rows={list} rowKey={(r) => r.name} initialSort={{ key: 'ba', dir: 'desc' }} activeKey={sel?.name ?? null}
+                columns={columns} rows={list} rowKey={(r) => r.name} initialSort={{ key: 'ba', dir: 'desc' }} activeKey={sel?.name ?? null} highlightKey={best?.name ?? null}
               />
               <p className="small muted">{m.ci_note} The best model per label was identified on the test set itself, so its lead is optimistic. &ldquo;Report only&rdquo; = soft voting needs 40 fold models and cannot be served live.</p>
               <div className="card">

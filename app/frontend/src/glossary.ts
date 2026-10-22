@@ -2,6 +2,11 @@
 export interface Entry { term: string; plain: string; more?: string }
 
 export const GLOSSARY: Record<string, Entry> = {
+  lb_ba: { term: 'Overall score', plain: 'It averages two things: how many real problems the model caught, and how many healthy windows it left alone. 0.5 is no better than a coin flip and 1.0 is perfect.', more: 'Balanced accuracy = mean recall over the two classes.' },
+  lb_f1: { term: 'Fairness across both classes', plain: 'It checks that the model does well on the healthy windows and on the failing windows, not just on the larger group. Higher is better, and 1.0 is perfect.', more: 'Macro-F1: the F1 score of each class, averaged with equal weight.' },
+  lb_nr: { term: 'Healthy windows left alone', plain: 'Of the windows that were really healthy, this is the share that did not cause an alert. A low number means many false alarms.', more: 'Normal recall (specificity), computed on the Normal test windows.' },
+  lb_roc: { term: 'Ranks risky above safe', plain: 'If you pick one failing window and one healthy window at random, this is how often the model gives the failing one the higher risk. It ignores where the alert line is, so 1.0 means a perfect ranking and 0.5 a coin flip.', more: 'ROC-AUC (area under the receiver operating characteristic curve).' },
+  lb_pr: { term: 'Catches problems cleanly', plain: 'It rewards a model that finds the failing windows without raising many false alarms on the way. 1.0 is perfect.', more: 'PR-AUC (area under the precision-recall curve); it depends on how common failures are.' },
   learning: {
     term: 'Learning what normal looks like',
     plain: 'When it starts, FailSight just watches the shop for about two minutes to see what a normal day looks like. Later, anything very different counts as a sign of trouble.',

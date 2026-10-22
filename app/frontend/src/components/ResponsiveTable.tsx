@@ -8,6 +8,8 @@ export interface Column<R> {
   sortValue?: (row: R) => number | string | null
   numeric?: boolean
   nameCell?: boolean
+  header?: ReactNode   // richer content for the sort button (e.g. a plain name, its meaning and the technical name); `label` stays the accessible name and the card label
+  help?: ReactNode     // a help control placed next to the sort button (never inside it)
 }
 
 interface Props<R> {
@@ -17,10 +19,11 @@ interface Props<R> {
   rowKey: (row: R) => string
   initialSort?: { key: string; dir: 'asc' | 'desc' }
   activeKey?: string | null
+  highlightKey?: string | null   // the best row
 }
 
 /** Sortable table; below 640px every row becomes a stacked card (the labels come from data-label). */
-export default function ResponsiveTable<R>({ caption, columns, rows, rowKey, initialSort, activeKey }: Props<R>) {
+export default function ResponsiveTable<R>({ caption, columns, rows, rowKey, initialSort, activeKey, highlightKey }: Props<R>) {
   const [sort, setSort] = useState(initialSort ?? null)
   const sorted = useMemo(() => {
     if (!sort) return rows
@@ -45,14 +48,19 @@ export default function ResponsiveTable<R>({ caption, columns, rows, rowKey, ini
           <tr>
             {columns.map((c) => (
               <th key={c.key} scope="col" aria-sort={sort?.key === c.key ? (sort.dir === 'asc' ? 'ascending' : 'descending') : undefined} className={c.numeric ? 'num-cell' : undefined}>
-                {c.sortValue ? <button type="button" onClick={() => toggle(c.key)}>{c.label}</button> : c.label}
+                {c.header || c.help ? (
+                  <div className="th-rich">
+                    {c.sortValue ? <button type="button" aria-label={`${c.label}: sort`} onClick={() => toggle(c.key)}>{c.header ?? c.label}</button> : (c.header ?? c.label)}
+                    {c.help}
+                  </div>
+                ) : c.sortValue ? <button type="button" onClick={() => toggle(c.key)}>{c.label}</button> : c.label}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
           {sorted.map((r) => (
-            <tr key={rowKey(r)} data-active={activeKey === rowKey(r) ? 'true' : undefined}>
+            <tr key={rowKey(r)} data-active={activeKey === rowKey(r) ? 'true' : undefined} data-best={highlightKey === rowKey(r) ? 'true' : undefined}>
               {columns.map((c) => (
                 <td key={c.key} data-label={c.label} className={[c.numeric ? 'num-cell' : '', c.nameCell ? 'name-cell' : ''].join(' ').trim() || undefined}>{c.render(r)}</td>
               ))}

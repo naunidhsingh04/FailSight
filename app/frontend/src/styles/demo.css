@@ -96,3 +96,34 @@ table.proof-table .big-num .of { font-size: 1rem; font-weight: 600; color: var(-
 .shopstrip .small-btn { margin-top: 0; text-decoration: none; display: inline-flex; align-items: center; }
 a.btn { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
 a.btn[aria-disabled='true'] { opacity: 0.6; }
+
+/* ---------- results leaderboard: plain headers, bars, legend ---------- */
+.how-to-read { margin: 0 0 var(--space-4); max-width: 60rem; }
+.how-to-read ul { max-width: none; }
+.pill-legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--space-2) var(--space-4); margin: 0 0 var(--space-3); font-size: 0.9rem; }
+.pill-legend div { display: flex; flex-direction: column; gap: 2px; }
+.pill-legend dt { margin: 0; }
+.pill-legend dd { margin: 0; color: var(--muted); }
+table.rt thead th { white-space: normal; vertical-align: bottom; }
+table.rt thead th .th-rich { display: flex; align-items: flex-start; gap: var(--space-1); }
+table.rt th button { text-align: left; }
+.th-plain { display: flex; flex-direction: column; gap: 1px; min-width: 7.5rem; }
+.th-plain strong { font-size: 0.95rem; color: var(--text); line-height: 1.25; }
+.th-mean { font-size: 0.8rem; font-weight: 500; color: var(--text); line-height: 1.25; }
+.th-tech { font-size: 0.72rem; font-weight: 500; color: var(--muted); }
+.pills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.pills .badge { white-space: normal; font-size: 0.72rem; }
+.score { min-width: 7rem; }
+.score-num { white-space: nowrap; }
+.sbar { position: relative; height: 10px; margin-top: 5px; background: var(--surface-2); border-radius: 5px; overflow: hidden; }
+.sbar-ci { position: absolute; top: 0; bottom: 0; background: var(--ink-4); border-radius: 5px; }
+.sbar-fill { position: absolute; left: 0; top: 3px; height: 4px; background: var(--ink-2); border-radius: 2px; }
+table.rt tbody tr[data-best='true'] { background: var(--accent-weak); box-shadow: inset 5px 0 0 var(--accent); }
+table.rt th[aria-sort] .th-rich button { display: flex; gap: 4px; align-items: flex-start; }
+@media (max-width: 899px) {
+  table.rt caption { display: block; width: 100%; }
+  table.rt td:has(> .score) { flex-direction: column; align-items: stretch; justify-content: flex-start; text-align: left; gap: 2px; }
+  table.rt td:has(> .score)::before { flex: none; }
+  table.rt td .score { min-width: 0; width: 100%; text-align: left; }
+  table.rt td .score-num { white-space: normal; }
+}
