@@ -1,0 +1,30 @@
+{
+ "dataset": "lo2",
+ "label": "label_level",
+ "model": "XGB",
+ "seed": 42,
+ "params": {
+  "n_estimators": 100,
+  "max_depth": 3,
+  "learning_rate": 0.1,
+  "subsample": 0.7,
+  "colsample_bytree": 0.6,
+  "reg_lambda": 5.0,
+  "min_child_weight": 3
+ },
+ "method": "smote",
+ "thresholds": {
+  "type": "class_multipliers",
+  "weights": [
+   1.0,
+   0.4723665527410147,
+   2.117000016612675,
+   1.0
+  ],
+  "oof_balanced_accuracy": 0.6393518518518518,
+  "oof_balanced_accuracy_default_argmax": 0.5988425925925925
+ },
+ "chosen_stage": "corr",
+ "frozen_at": "2026-10-23 01:37:10",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

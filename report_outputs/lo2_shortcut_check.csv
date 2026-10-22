@@ -1,0 +1,6 @@
+inputs,n_inputs,balanced_accuracy,roc_auc,n_test,note
+all inputs,132,1.0000,1.0000,172,"diagnostic only; test part scored, nothing chosen from it"
+log counts and rates only,48,0.9937,0.9995,172,"diagnostic only; test part scored, nothing chosen from it"
+log-template counts only,49,0.9615,0.9995,172,"diagnostic only; test part scored, nothing chosen from it"
+metric components only,32,0.9969,1.0000,172,"diagnostic only; test part scored, nothing chosen from it"
+log volume only,1,0.7126,0.8428,172,"diagnostic only; test part scored, nothing chosen from it"

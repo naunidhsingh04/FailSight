@@ -1,0 +1,29 @@
+{
+ "dataset": "lo2",
+ "label": "label_level",
+ "model": "CNN_BiLSTM_Att",
+ "seed": 42,
+ "config": {
+  "hidden": 32,
+  "dropout": 0.5,
+  "wd": 0.002,
+  "lr": 0.001
+ },
+ "method": "smote",
+ "final_epochs": 6,
+ "lr_scale": 1.0,
+ "thresholds": {
+  "type": "class_multipliers",
+  "weights": [
+   0.1353352832366127,
+   1.0,
+   2.718281828459045,
+   1.0
+  ],
+  "oof_balanced_accuracy": 0.6405092592592593,
+  "oof_balanced_accuracy_default_argmax": 0.6175925925925926
+ },
+ "chosen_stage": "corr",
+ "frozen_at": "2026-10-23 01:58:49",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

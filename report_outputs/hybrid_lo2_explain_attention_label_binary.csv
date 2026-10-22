@@ -1,0 +1,16 @@
+template_source,template,mean_attention
+service,c.n.openapi.ApiNormalisedPath path = <*> base path is set to: null,0.0338546
+service,c.n.openapi.ApiNormalisedPath normalised = <*>,0.0338546
+service,"com.networknt.schema.TypeValidator validate( <S>, <*> <*>",0.0338546
+service,c.n.openapi.ApiNormalisedPath path <*>,0.0338546
+client,"com.networknt.schema.TypeValidator validate( <J>, requestBody)",0.0227455
+user,"com.networknt.schema.FormatValidator validate( <S>, <*> <*>",0.0223841
+user,c.n.openapi.ApiNormalisedPath path = <*> base path is set to: null,0.0223841
+user,c.n.openapi.ApiNormalisedPath normalised = <*>,0.0223841
+client,"c.n.schema.PropertiesValidator validate( <J>, requestBody)",0.0223048
+client,c.n.openapi.ApiNormalisedPath path <*>,0.0220617
+client,c.n.openapi.ApiNormalisedPath normalised = <*>,0.0213858
+client,"com.networknt.schema.EnumValidator validate( <S>, <J>, <*>",0.0210005
+client,"c.networknt.schema.RequiredValidator validate( <J>, requestBody)",0.0209173
+user,c.n.openapi.ApiNormalisedPath path <*>,0.0203894
+user,"com.networknt.schema.TypeValidator validate( <S>, <*> <*>",0.0203894

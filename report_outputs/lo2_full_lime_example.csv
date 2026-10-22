@@ -1,0 +1,11 @@
+feature_rule,weight,model,window_id,true_class
+-12.09 < m_pc1 <= -8.81,-0.14582376152993534,RF,LO2|1724303680|correct|0,Normal
+-4.08 < m_pc4 <= 1.28,0.13149361737128437,RF,LO2|1724303680|correct|0,Normal
+m_pc2 <= -4.09,-0.05729022238739805,RF,LO2|1724303680|correct|0,Normal
+log_locust_ERROR <= -0.70,-0.04595577736832715,RF,LO2|1724303680|correct|0,Normal
+tmpl_service_8 <= -0.70,-0.026659391698555156,RF,LO2|1724303680|correct|0,Normal
+log_token_INFO <= -0.67,0.02645576956688722,RF,LO2|1724303680|correct|0,Normal
+tmpl_client_3 <= -0.77,-0.024920856432758137,RF,LO2|1724303680|correct|0,Normal
+log_locust_error_rate <= -0.52,-0.024063612868205166,RF,LO2|1724303680|correct|0,Normal
+-1.94 < m_pc3 <= 1.58,0.023402400757753686,RF,LO2|1724303680|correct|0,Normal
+log_service_ERROR <= -0.54,0.020574249800413485,RF,LO2|1724303680|correct|0,Normal

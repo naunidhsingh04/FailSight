@@ -338,3 +338,150 @@
 7                     AE_LSTM   label_level   done      0.587963             0.464268              0.693988       0.470588                 1.0      0.746014        0.608016   89.910245      5      16  smote  corr
 8                    GNN_LSTM   label_level   done      0.583333             0.442962              0.722964       0.536057                 1.0      0.753857        0.559663   97.019884      5      32  smote    cv
 9  Multimodal_Transformer_MLP   label_level   done      0.573148             0.460470              0.700640       0.519553                 1.0      0.735105        0.577758  197.287733      5      64     cw    cv
+01:36:23 === lo2 label_binary LR
+01:36:24 === done LR label_binary in 2 s | CV val BA 0.999 | method smote | stage cv
+01:36:24 === lo2 label_level LR
+01:36:27 === done LR label_level in 3 s | CV val BA 0.637 | method cw | stage corr
+01:36:27 === lo2 label_binary RF
+01:36:31 === done RF label_binary in 4 s | CV val BA 0.999 | method smote | stage cv
+01:36:31 === lo2 label_level RF
+01:36:37 === done RF label_level in 6 s | CV val BA 0.581 | method cw | stage corr
+01:36:37 === lo2 label_binary ET
+01:36:40 === done ET label_binary in 3 s | CV val BA 0.990 | method smote | stage cv
+01:36:40 === lo2 label_level ET
+01:36:45 === done ET label_level in 5 s | CV val BA 0.544 | method smote | stage corr
+01:36:45 === lo2 label_binary XGB
+01:36:47 === done XGB label_binary in 2 s | CV val BA 0.998 | method smote | stage cv
+01:36:47 === lo2 label_level XGB
+01:37:12 === done XGB label_level in 25 s | CV val BA 0.572 | method smote | stage corr
+01:37:12 === lo2 label_binary LGBM
+01:37:16 === done LGBM label_binary in 4 s | CV val BA 0.999 | method cw | stage cv
+01:37:16 === lo2 label_level LGBM
+01:37:38 === done LGBM label_level in 21 s | CV val BA 0.576 | method smote | stage corr
+01:39:13 optuna RF_tuned label_binary: 40 trials, best CV balanced accuracy 0.998
+01:39:13 === lo2 label_binary RF_tuned
+01:39:17 === done RF_tuned label_binary in 4 s | CV val BA 0.998 | method smote | stage cv
+01:41:52 optuna RF_tuned label_level: 40 trials, best CV balanced accuracy 0.621
+01:41:52 === lo2 label_level RF_tuned
+01:42:02 === done RF_tuned label_level in 10 s | CV val BA 0.633 | method cw | stage cv
+01:42:28 optuna XGB_tuned label_binary: 40 trials, best CV balanced accuracy 0.998
+01:42:28 === lo2 label_binary XGB_tuned
+01:42:30 === done XGB_tuned label_binary in 2 s | CV val BA 0.998 | method smote | stage cv
+01:46:49 optuna XGB_tuned label_level: 40 trials, best CV balanced accuracy 0.620
+01:46:49 === lo2 label_level XGB_tuned
+01:46:58 === done XGB_tuned label_level in 9 s | CV val BA 0.620 | method smote | stage cv
+01:47:12 optuna LGBM_tuned label_binary: 40 trials, best CV balanced accuracy 0.998
+01:47:12 === lo2 label_binary LGBM_tuned
+01:47:14 === done LGBM_tuned label_binary in 1 s | CV val BA 0.999 | method cw | stage cv
+01:48:39 optuna LGBM_tuned label_level: 40 trials, best CV balanced accuracy 0.633
+01:48:39 === lo2 label_level LGBM_tuned
+01:48:42 === done LGBM_tuned label_level in 3 s | CV val BA 0.633 | method smote | stage cv
+01:48:42 === lo2 label_binary CNN_BiGRU_Att  (memory in use 0.4 GB)
+01:48:54     lo2 label_binary CNN_BiGRU_Att/screen_h32_smote fold 1: 10 ep (best 9), 8s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:507/507 hold:12/129
+01:49:02     lo2 label_binary CNN_BiGRU_Att/screen_h32_cw fold 1: 9 ep (best 3), 7s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:40/507 hold:12/129
+01:49:13     lo2 label_binary CNN_BiGRU_Att/screen_h64_smote fold 1: 10 ep (best 9), 8s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:507/507 hold:12/129
+01:49:22     lo2 label_binary CNN_BiGRU_Att/screen_h64_cw fold 1: 8 ep (best 2), 7s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:40/507 hold:12/129
+01:49:37     lo2 label_binary CNN_BiGRU_Att/cv fold 1: 27 ep (best 21), 13s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:507/507 hold:12/129
+01:49:52     lo2 label_binary CNN_BiGRU_Att/cv fold 2: 26 ep (best 20), 13s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/510 a:510/510 hold:10/126
+01:50:04     lo2 label_binary CNN_BiGRU_Att/cv fold 3: 20 ep (best 14), 11s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/507 a:507/507 hold:10/129
+01:50:20     lo2 label_binary CNN_BiGRU_Att/cv fold 4: 27 ep (best 21), 13s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/510 a:510/510 hold:10/126
+01:50:32     lo2 label_binary CNN_BiGRU_Att/cv fold 5: 17 ep (best 11), 10s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/510 a:510/510 hold:10/126
+01:50:57 === done CNN_BiGRU_Att label_binary in 2.2 min | CV val BA 1.000 | test BA 1.000 (reported, not used for any choice)
+01:50:57 === lo2 label_level CNN_BiGRU_Att  (memory in use 1.0 GB)
+01:51:07     lo2 label_level CNN_BiGRU_Att/screen_h32_smote fold 1: 10 ep (best 5), 7s, val BA 0.673 F1 0.628, train F1 0.776  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+01:51:17     lo2 label_level CNN_BiGRU_Att/screen_h32_cw fold 1: 10 ep (best 7), 7s, val BA 0.553 F1 0.538, train F1 0.738  SMOTE b:40/288/48/171 a:40/288/48/171 hold:12/72/12/45
+01:51:28     lo2 label_level CNN_BiGRU_Att/screen_h64_smote fold 1: 8 ep (best 2), 7s, val BA 0.613 F1 0.562, train F1 0.662  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+01:51:38     lo2 label_level CNN_BiGRU_Att/screen_h64_cw fold 1: 10 ep (best 9), 7s, val BA 0.623 F1 0.610, train F1 0.813  SMOTE b:40/288/48/171 a:40/288/48/171 hold:12/72/12/45
+01:51:49     lo2 label_level CNN_BiGRU_Att/cv fold 1: 11 ep (best 5), 8s, val BA 0.673 F1 0.628, train F1 0.776  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+01:51:59     lo2 label_level CNN_BiGRU_Att/cv fold 2: 8 ep (best 2), 7s, val BA 0.597 F1 0.470, train F1 0.620  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+01:52:09     lo2 label_level CNN_BiGRU_Att/cv fold 3: 9 ep (best 3), 7s, val BA 0.487 F1 0.476, train F1 0.715  SMOTE b:42/288/48/171 a:288/288/288/288 hold:10/72/12/45
+01:52:20     lo2 label_level CNN_BiGRU_Att/cv fold 4: 12 ep (best 6), 8s, val BA 0.582 F1 0.577, train F1 0.758  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+01:52:30     lo2 label_level CNN_BiGRU_Att/cv fold 5: 9 ep (best 3), 7s, val BA 0.712 F1 0.606, train F1 0.653  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+01:52:44     lo2 label_level CNN_BiGRU_Att/corr fold 1: 22 ep (best 16), 10s, val BA 0.656 F1 0.640, train F1 0.784  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+01:52:55     lo2 label_level CNN_BiGRU_Att/corr fold 2: 15 ep (best 9), 9s, val BA 0.629 F1 0.438, train F1 0.535  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+01:53:07     lo2 label_level CNN_BiGRU_Att/corr fold 3: 17 ep (best 11), 9s, val BA 0.602 F1 0.588, train F1 0.702  SMOTE b:42/288/48/171 a:288/288/288/288 hold:10/72/12/45
+01:53:18     lo2 label_level CNN_BiGRU_Att/corr fold 4: 13 ep (best 7), 8s, val BA 0.518 F1 0.508, train F1 0.671  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+01:53:31     lo2 label_level CNN_BiGRU_Att/corr fold 5: 20 ep (best 14), 10s, val BA 0.651 F1 0.613, train F1 0.746  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+01:53:51 === done CNN_BiGRU_Att label_level in 2.9 min | CV val BA 0.610 | test BA 0.580 (reported, not used for any choice)
+01:53:51 === lo2 label_binary CNN_BiLSTM_Att  (memory in use 1.2 GB)
+01:54:01     lo2 label_binary CNN_BiLSTM_Att/screen_h32_smote fold 1: 10 ep (best 9), 7s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:507/507 hold:12/129
+01:54:11     lo2 label_binary CNN_BiLSTM_Att/screen_h32_cw fold 1: 10 ep (best 5), 7s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:40/507 hold:12/129
+01:54:22     lo2 label_binary CNN_BiLSTM_Att/screen_h64_smote fold 1: 10 ep (best 10), 8s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:507/507 hold:12/129
+01:54:32     lo2 label_binary CNN_BiLSTM_Att/screen_h64_cw fold 1: 10 ep (best 10), 7s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:40/507 hold:12/129
+01:54:43     lo2 label_binary CNN_BiLSTM_Att/cv fold 1: 15 ep (best 9), 9s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:507/507 hold:12/129
+01:54:58     lo2 label_binary CNN_BiLSTM_Att/cv fold 2: 24 ep (best 18), 11s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/510 a:510/510 hold:10/126
+01:55:11     lo2 label_binary CNN_BiLSTM_Att/cv fold 3: 18 ep (best 12), 10s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/507 a:507/507 hold:10/129
+01:55:26     lo2 label_binary CNN_BiLSTM_Att/cv fold 4: 25 ep (best 19), 12s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/510 a:510/510 hold:10/126
+01:55:40     lo2 label_binary CNN_BiLSTM_Att/cv fold 5: 22 ep (best 16), 11s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/510 a:510/510 hold:10/126
+01:56:03 === done CNN_BiLSTM_Att label_binary in 2.2 min | CV val BA 1.000 | test BA 1.000 (reported, not used for any choice)
+01:56:03 === lo2 label_level CNN_BiLSTM_Att  (memory in use 1.4 GB)
+01:56:14     lo2 label_level CNN_BiLSTM_Att/screen_h32_smote fold 1: 10 ep (best 5), 7s, val BA 0.649 F1 0.614, train F1 0.773  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+01:56:25     lo2 label_level CNN_BiLSTM_Att/screen_h32_cw fold 1: 10 ep (best 10), 7s, val BA 0.590 F1 0.568, train F1 0.767  SMOTE b:40/288/48/171 a:40/288/48/171 hold:12/72/12/45
+01:56:37     lo2 label_level CNN_BiLSTM_Att/screen_h64_smote fold 1: 10 ep (best 4), 8s, val BA 0.662 F1 0.607, train F1 0.762  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+01:56:48     lo2 label_level CNN_BiLSTM_Att/screen_h64_cw fold 1: 10 ep (best 7), 7s, val BA 0.633 F1 0.613, train F1 0.775  SMOTE b:40/288/48/171 a:40/288/48/171 hold:12/72/12/45
+01:57:00     lo2 label_level CNN_BiLSTM_Att/cv fold 1: 10 ep (best 4), 8s, val BA 0.662 F1 0.607, train F1 0.762  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+01:57:12     lo2 label_level CNN_BiLSTM_Att/cv fold 2: 7 ep (best 1), 7s, val BA 0.589 F1 0.392, train F1 0.500  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+01:57:24     lo2 label_level CNN_BiLSTM_Att/cv fold 3: 9 ep (best 3), 8s, val BA 0.483 F1 0.483, train F1 0.737  SMOTE b:42/288/48/171 a:288/288/288/288 hold:10/72/12/45
+01:57:36     lo2 label_level CNN_BiLSTM_Att/cv fold 4: 8 ep (best 2), 7s, val BA 0.582 F1 0.512, train F1 0.655  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+01:57:48     lo2 label_level CNN_BiLSTM_Att/cv fold 5: 8 ep (best 2), 7s, val BA 0.672 F1 0.645, train F1 0.680  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+01:58:00     lo2 label_level CNN_BiLSTM_Att/corr fold 1: 11 ep (best 5), 7s, val BA 0.644 F1 0.593, train F1 0.700  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+01:58:13     lo2 label_level CNN_BiLSTM_Att/corr fold 2: 13 ep (best 7), 9s, val BA 0.685 F1 0.594, train F1 0.753  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+01:58:25     lo2 label_level CNN_BiLSTM_Att/corr fold 3: 12 ep (best 6), 8s, val BA 0.552 F1 0.527, train F1 0.710  SMOTE b:42/288/48/171 a:288/288/288/288 hold:10/72/12/45
+01:58:37     lo2 label_level CNN_BiLSTM_Att/corr fold 4: 10 ep (best 4), 7s, val BA 0.544 F1 0.523, train F1 0.670  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+01:58:49     lo2 label_level CNN_BiLSTM_Att/corr fold 5: 12 ep (best 6), 8s, val BA 0.663 F1 0.557, train F1 0.626  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+01:59:09 === done CNN_BiLSTM_Att label_level in 3.1 min | CV val BA 0.597 | test BA 0.623 (reported, not used for any choice)
+01:59:09 === lo2 label_binary Fusion  (memory in use 1.5 GB)
+01:59:18     lo2 label_binary Fusion/screen_h32_smote fold 1: 10 ep (best 10), 5s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:507/507 hold:12/129
+01:59:27     lo2 label_binary Fusion/screen_h32_cw fold 1: 10 ep (best 10), 5s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:40/507 hold:12/129
+01:59:36     lo2 label_binary Fusion/screen_h64_smote fold 1: 10 ep (best 10), 6s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:507/507 hold:12/129
+01:59:45     lo2 label_binary Fusion/screen_h64_cw fold 1: 10 ep (best 10), 5s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:40/507 hold:12/129
+02:00:00     lo2 label_binary Fusion/cv fold 1: 34 ep (best 28), 10s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:507/507 hold:12/129
+02:00:15     lo2 label_binary Fusion/cv fold 2: 40 ep (best 38), 12s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/510 a:510/510 hold:10/126
+02:00:31     lo2 label_binary Fusion/cv fold 3: 39 ep (best 33), 11s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/507 a:507/507 hold:10/129
+02:00:45     lo2 label_binary Fusion/cv fold 4: 31 ep (best 25), 10s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/510 a:510/510 hold:10/126
+02:00:58     lo2 label_binary Fusion/cv fold 5: 27 ep (best 21), 9s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/510 a:510/510 hold:10/126
+02:01:21 === done Fusion label_binary in 2.2 min | CV val BA 1.000 | test BA 1.000 (reported, not used for any choice)
+02:01:22 === lo2 label_level Fusion  (memory in use 1.5 GB)
+02:01:31     lo2 label_level Fusion/screen_h32_smote fold 1: 10 ep (best 5), 5s, val BA 0.613 F1 0.578, train F1 0.710  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+02:01:40     lo2 label_level Fusion/screen_h32_cw fold 1: 10 ep (best 9), 5s, val BA 0.598 F1 0.556, train F1 0.651  SMOTE b:40/288/48/171 a:40/288/48/171 hold:12/72/12/45
+02:01:50     lo2 label_level Fusion/screen_h64_smote fold 1: 8 ep (best 2), 5s, val BA 0.605 F1 0.576, train F1 0.706  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+02:01:59     lo2 label_level Fusion/screen_h64_cw fold 1: 10 ep (best 7), 5s, val BA 0.601 F1 0.566, train F1 0.750  SMOTE b:40/288/48/171 a:40/288/48/171 hold:12/72/12/45
+02:02:09     lo2 label_level Fusion/cv fold 1: 11 ep (best 5), 5s, val BA 0.613 F1 0.578, train F1 0.710  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+02:02:19     lo2 label_level Fusion/cv fold 2: 11 ep (best 5), 5s, val BA 0.658 F1 0.544, train F1 0.706  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+02:02:29     lo2 label_level Fusion/cv fold 3: 12 ep (best 6), 5s, val BA 0.542 F1 0.532, train F1 0.751  SMOTE b:42/288/48/171 a:288/288/288/288 hold:10/72/12/45
+02:02:39     lo2 label_level Fusion/cv fold 4: 10 ep (best 4), 5s, val BA 0.538 F1 0.492, train F1 0.633  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+02:02:50     lo2 label_level Fusion/cv fold 5: 14 ep (best 8), 6s, val BA 0.673 F1 0.653, train F1 0.820  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+02:03:00     lo2 label_level Fusion/corr fold 1: 15 ep (best 9), 6s, val BA 0.608 F1 0.545, train F1 0.628  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+02:03:11     lo2 label_level Fusion/corr fold 2: 16 ep (best 10), 6s, val BA 0.661 F1 0.508, train F1 0.643  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+02:03:23     lo2 label_level Fusion/corr fold 3: 25 ep (best 19), 8s, val BA 0.534 F1 0.505, train F1 0.756  SMOTE b:42/288/48/171 a:288/288/288/288 hold:10/72/12/45
+02:03:34     lo2 label_level Fusion/corr fold 4: 14 ep (best 8), 6s, val BA 0.556 F1 0.483, train F1 0.574  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+02:03:45     lo2 label_level Fusion/corr fold 5: 20 ep (best 14), 7s, val BA 0.723 F1 0.640, train F1 0.701  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+02:04:02 === done Fusion label_level in 2.7 min | CV val BA 0.605 | test BA 0.649 (reported, not used for any choice)
+02:05:56 === lo2 label_binary Transformer  (memory in use 1.4 GB)
+02:06:07     lo2 label_binary Transformer/screen_h32_smote fold 1: 10 ep (best 9), 7s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:507/507 hold:12/129
+02:06:18     lo2 label_binary Transformer/screen_h32_cw fold 1: 10 ep (best 10), 6s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:40/507 hold:12/129
+02:06:30     lo2 label_binary Transformer/screen_h64_smote fold 1: 10 ep (best 8), 8s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:507/507 hold:12/129
+02:06:41     lo2 label_binary Transformer/screen_h64_cw fold 1: 10 ep (best 10), 6s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:40/507 hold:12/129
+02:06:56     lo2 label_binary Transformer/cv fold 1: 24 ep (best 18), 10s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:40/507 a:507/507 hold:12/129
+02:07:11     lo2 label_binary Transformer/cv fold 2: 28 ep (best 22), 11s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/510 a:510/510 hold:10/126
+02:07:26     lo2 label_binary Transformer/cv fold 3: 25 ep (best 19), 10s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/507 a:507/507 hold:10/129
+02:07:42     lo2 label_binary Transformer/cv fold 4: 24 ep (best 18), 10s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/510 a:510/510 hold:10/126
+02:07:55     lo2 label_binary Transformer/cv fold 5: 15 ep (best 9), 9s, val BA 1.000 F1 1.000, train F1 1.000  SMOTE b:42/510 a:510/510 hold:10/126
+02:08:21 === done Transformer label_binary in 2.4 min | CV val BA 1.000 | test BA 1.000 (reported, not used for any choice)
+02:08:21 === lo2 label_level Transformer  (memory in use 1.3 GB)
+02:08:33     lo2 label_level Transformer/screen_h32_smote fold 1: 10 ep (best 6), 7s, val BA 0.685 F1 0.631, train F1 0.768  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+02:08:44     lo2 label_level Transformer/screen_h32_cw fold 1: 10 ep (best 8), 6s, val BA 0.655 F1 0.588, train F1 0.695  SMOTE b:40/288/48/171 a:40/288/48/171 hold:12/72/12/45
+02:08:56     lo2 label_level Transformer/screen_h64_smote fold 1: 8 ep (best 2), 7s, val BA 0.590 F1 0.518, train F1 0.672  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+02:09:07     lo2 label_level Transformer/screen_h64_cw fold 1: 10 ep (best 5), 6s, val BA 0.613 F1 0.558, train F1 0.714  SMOTE b:40/288/48/171 a:40/288/48/171 hold:12/72/12/45
+02:09:19     lo2 label_level Transformer/cv fold 1: 12 ep (best 6), 7s, val BA 0.685 F1 0.631, train F1 0.768  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+02:09:30     lo2 label_level Transformer/cv fold 2: 8 ep (best 2), 6s, val BA 0.574 F1 0.491, train F1 0.621  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+02:09:42     lo2 label_level Transformer/cv fold 3: 8 ep (best 2), 6s, val BA 0.535 F1 0.500, train F1 0.670  SMOTE b:42/288/48/171 a:288/288/288/288 hold:10/72/12/45
+02:09:53     lo2 label_level Transformer/cv fold 4: 8 ep (best 2), 6s, val BA 0.534 F1 0.463, train F1 0.588  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+02:10:04     lo2 label_level Transformer/cv fold 5: 10 ep (best 4), 6s, val BA 0.684 F1 0.632, train F1 0.709  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+02:10:17     lo2 label_level Transformer/corr fold 1: 19 ep (best 13), 8s, val BA 0.610 F1 0.536, train F1 0.610  SMOTE b:40/288/48/171 a:288/288/288/288 hold:12/72/12/45
+02:10:30     lo2 label_level Transformer/corr fold 2: 18 ep (best 12), 8s, val BA 0.641 F1 0.504, train F1 0.634  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+02:10:44     lo2 label_level Transformer/corr fold 3: 19 ep (best 13), 8s, val BA 0.560 F1 0.528, train F1 0.589  SMOTE b:42/288/48/171 a:288/288/288/288 hold:10/72/12/45
+02:10:55     lo2 label_level Transformer/corr fold 4: 13 ep (best 7), 7s, val BA 0.534 F1 0.492, train F1 0.626  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+02:11:10     lo2 label_level Transformer/corr fold 5: 22 ep (best 16), 10s, val BA 0.670 F1 0.619, train F1 0.727  SMOTE b:42/288/48/174 a:288/288/288/288 hold:10/72/12/42
+02:11:31 === done Transformer label_level in 3.2 min | CV val BA 0.602 | test BA 0.599 (reported, not used for any choice)
+02:15:19 LO2 leaderboard written; not completed: none

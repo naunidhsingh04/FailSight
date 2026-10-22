@@ -1,0 +1,24 @@
+{
+ "dataset": "lo2",
+ "label": "label_level",
+ "model": "LR",
+ "seed": 42,
+ "params": {
+  "C": 0.1
+ },
+ "method": "cw",
+ "thresholds": {
+  "type": "class_multipliers",
+  "weights": [
+   0.22313016014842982,
+   1.0,
+   2.718281828459045,
+   1.0
+  ],
+  "oof_balanced_accuracy": 0.6796296296296297,
+  "oof_balanced_accuracy_default_argmax": 0.6782407407407407
+ },
+ "chosen_stage": "corr",
+ "frozen_at": "2026-10-23 01:36:27",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

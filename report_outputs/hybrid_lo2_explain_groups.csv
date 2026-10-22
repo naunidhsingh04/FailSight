@@ -1,0 +1,9 @@
+model,label_version,group,share_of_total
+BERT_GNN,label_binary,flag,0
+BERT_GNN,label_binary,log,0.407613
+BERT_GNN,label_binary,log template,0.0457834
+BERT_GNN,label_binary,metric,0.546604
+BERT_GNN,label_level,flag,0
+BERT_GNN,label_level,log,0.400974
+BERT_GNN,label_level,log template,0.0193054
+BERT_GNN,label_level,metric,0.57972

@@ -1,0 +1,27 @@
+{
+ "dataset": "lo2",
+ "label": "label_level",
+ "model": "ET",
+ "seed": 42,
+ "params": {
+  "n_estimators": 100,
+  "max_depth": 6,
+  "min_samples_leaf": 3,
+  "max_features": "sqrt"
+ },
+ "method": "smote",
+ "thresholds": {
+  "type": "class_multipliers",
+  "weights": [
+   0.7788007830714049,
+   1.0,
+   1.2840254166877414,
+   1.0
+  ],
+  "oof_balanced_accuracy": 0.6101851851851853,
+  "oof_balanced_accuracy_default_argmax": 0.5921296296296297
+ },
+ "chosen_stage": "corr",
+ "frozen_at": "2026-10-23 01:36:44",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

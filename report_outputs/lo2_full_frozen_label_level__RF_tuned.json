@@ -1,0 +1,27 @@
+{
+ "dataset": "lo2",
+ "label": "label_level",
+ "model": "RF_tuned",
+ "seed": 42,
+ "params": {
+  "n_estimators": 146,
+  "max_depth": 5,
+  "min_samples_leaf": 4,
+  "max_features": 0.5
+ },
+ "method": "cw",
+ "thresholds": {
+  "type": "class_multipliers",
+  "weights": [
+   0.2865047968601901,
+   1.0,
+   1.2840254166877414,
+   1.0
+  ],
+  "oof_balanced_accuracy": 0.6449074074074074,
+  "oof_balanced_accuracy_default_argmax": 0.6331018518518519
+ },
+ "chosen_stage": "cv",
+ "frozen_at": "2026-10-23 01:42:01",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

@@ -1,0 +1,27 @@
+{
+ "dataset": "lo2",
+ "label": "label_binary",
+ "model": "LGBM_tuned",
+ "seed": 42,
+ "params": {
+  "n_estimators": 106,
+  "num_leaves": 39,
+  "learning_rate": 0.1618509290001068,
+  "min_child_samples": 19,
+  "reg_lambda": 0.20513382630874505,
+  "subsample": 0.5779972601681014,
+  "colsample_bytree": 0.4348501673009197,
+  "subsample_freq": 1
+ },
+ "method": "cw",
+ "thresholds": {
+  "type": "threshold",
+  "threshold": 0.06,
+  "oof_balanced_accuracy": 0.9992138364779874,
+  "oof_normal_recall": 1.0,
+  "oof_balanced_accuracy_default_argmax": 0.9992138364779874
+ },
+ "chosen_stage": "cv",
+ "frozen_at": "2026-10-23 01:47:13",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

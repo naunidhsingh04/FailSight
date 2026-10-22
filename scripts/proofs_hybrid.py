@@ -215,10 +215,15 @@ def p21(s, table):
     shuf = pd.read_csv(REP / "hybrid_lo2_shuffled_control.csv")
     lines = ["Log volume alone (logistic regression on the number of log lines in a window):"] + table([[r.label_version[6:], f"{r.balanced_accuracy:.3f} ({r.ba_ci_low:.3f}-{r.ba_ci_high:.3f})", f"{r.roc_auc:.3f}"] for r in lv.itertuples()], ["labels", "balanced accuracy (95%)", "ROC-AUC"])
     lines += ["", "Shuffled-label control for each LO2 hybrid:"] + table([[r.model, r.label_version[6:], f"{r.shuffled_balanced_accuracy:.3f}", f"{r.real_balanced_accuracy:.3f}"] for r in shuf.itertuples()], ["model", "labels", "shuffled BA", "real BA"])
+    sc_p = REP / "lo2_shortcut_check.csv"
+    lines_sc = []
+    if sc_p.exists():
+        sc_ = pd.read_csv(sc_p)
+        lines_sc = ["", "why the binary labels are so easy (diagnostic, scripts/lo2_shortcut_check.py): the same random forest scored on subsets of the LO2 inputs (test = one whole run):"] + table([[r.inputs, int(r.n_inputs), f"{r.balanced_accuracy:.3f}", f"{r.roc_auc:.3f}"] for r in sc_.itertuples()], ["inputs", "features", "balanced accuracy", "ROC-AUC"]) +                    ["reading: log counts, log-template counts or metric components alone each separate the normal scenario almost perfectly, while log volume alone does not; the normal scenario ('correct') is always the first scenario of a run and runs 60 s instead of 10 s, so LO2's binary task is nearly trivial and a perfect score is NOT strong evidence of fault detection."]
     ri = pd.read_csv(REP / "hybrid_lo2_run_identification.csv")
     rid = ri[ri.kind == "run_identification"].iloc[0]
     lines += ["", f"run identification: the test part is a whole run that is not in the training data, so no model can recognise it (identification accuracy {rid.accuracy:.3f} by construction); the 'predict the run' rule gets balanced accuracy 0.5 (it can only output the label of a training run)."]
-    s.add("LO2 controls: log-volume-only baseline, shuffled labels, run identification", "REPORTED", lines + ["LO2 results are about training on LO2's own data and say nothing about transfer from AnoMod.", f"sample: {len(sp)} windows from {sp.run_id.nunique()} runs (fewer than 6 runs, so every LO2 result is marked: unreliable, very small sample)"],
+    s.add("LO2 controls: log-volume-only baseline, shuffled labels, run identification", "REPORTED", lines + lines_sc + ["LO2 results are about training on LO2's own data and say nothing about transfer from AnoMod.", f"sample: {len(sp)} windows from {sp.run_id.nunique()} runs (fewer than 6 runs, so every LO2 result is marked: unreliable, very small sample)"],
           "report_outputs/hybrid_lo2_logvolume_baseline.csv, hybrid_lo2_shuffled_control.csv, hybrid_lo2_run_identification.csv", result="reported as it is; very small sample")
     full = REP / "lo2_full_leaderboard.csv"
     if full.exists():

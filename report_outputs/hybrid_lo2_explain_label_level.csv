@@ -1,0 +1,133 @@
+model,label_version,feature,group,mean_abs_gradient_x_input,rank
+BERT_GNN,label_level,m_pc8,metric,0.0341242,1
+BERT_GNN,label_level,m_pc1,metric,0.0311075,2
+BERT_GNN,label_level,m_pc4,metric,0.030657,3
+BERT_GNN,label_level,m_pc2,metric,0.0290586,4
+BERT_GNN,label_level,m_pc0,metric,0.0289877,5
+BERT_GNN,label_level,m_pc11,metric,0.0218565,6
+BERT_GNN,label_level,m_pc12,metric,0.0189986,7
+BERT_GNN,label_level,m_pc24,metric,0.0182094,8
+BERT_GNN,label_level,m_pc22,metric,0.0178507,9
+BERT_GNN,label_level,m_pc20,metric,0.0171408,10
+BERT_GNN,label_level,m_pc13,metric,0.01689,11
+BERT_GNN,label_level,m_pc25,metric,0.0164191,12
+BERT_GNN,label_level,m_pc21,metric,0.0163014,13
+BERT_GNN,label_level,m_pc6,metric,0.0161316,14
+BERT_GNN,label_level,m_pc29,metric,0.0155173,15
+BERT_GNN,label_level,log_user_DEBUG,log,0.015509,16
+BERT_GNN,label_level,log_service_DEBUG,log,0.0152742,17
+BERT_GNN,label_level,m_pc9,metric,0.0152702,18
+BERT_GNN,label_level,m_pc26,metric,0.0144394,19
+BERT_GNN,label_level,m_pc15,metric,0.0142436,20
+BERT_GNN,label_level,log_client_error_rate,log,0.0141296,21
+BERT_GNN,label_level,m_pc18,metric,0.0132209,22
+BERT_GNN,label_level,log_refresh-token_error_rate,log,0.0127347,23
+BERT_GNN,label_level,m_pc3,metric,0.0126451,24
+BERT_GNN,label_level,log_token_cont,log,0.0125093,25
+BERT_GNN,label_level,log_client_DEBUG,log,0.0123657,26
+BERT_GNN,label_level,log_token_ERROR,log,0.0119332,27
+BERT_GNN,label_level,m_pc16,metric,0.0114188,28
+BERT_GNN,label_level,log_code_n,log,0.0113698,29
+BERT_GNN,label_level,log_locust_WARN,log,0.0113282,30
+BERT_GNN,label_level,log_user_n,log,0.0107428,31
+BERT_GNN,label_level,m_pc27,metric,0.0107409,32
+BERT_GNN,label_level,log_refresh-token_cont,log,0.0107244,33
+BERT_GNN,label_level,log_locust_ERROR,log,0.0107203,34
+BERT_GNN,label_level,m_pc17,metric,0.0105325,35
+BERT_GNN,label_level,m_pc10,metric,0.0104689,36
+BERT_GNN,label_level,m_pc14,metric,0.0103409,37
+BERT_GNN,label_level,log_code_error_rate,log,0.0100242,38
+BERT_GNN,label_level,log_service_n,log,0.0100184,39
+BERT_GNN,label_level,m_pc7,metric,0.00962858,40
+BERT_GNN,label_level,log_service_cont,log,0.00957046,41
+BERT_GNN,label_level,m_pc23,metric,0.00876438,42
+BERT_GNN,label_level,log_code_ERROR,log,0.00864702,43
+BERT_GNN,label_level,tmpl_other,log template,0.00854032,44
+BERT_GNN,label_level,log_total_volume,log,0.00849587,45
+BERT_GNN,label_level,log_client_cont,log,0.0081365,46
+BERT_GNN,label_level,log_user_cont,log,0.0068216,47
+BERT_GNN,label_level,m_pc19,metric,0.00676397,48
+BERT_GNN,label_level,log_service_ERROR,log,0.00658916,49
+BERT_GNN,label_level,m_pc28,metric,0.00658571,50
+BERT_GNN,label_level,log_locust_warn_rate,log,0.006484,51
+BERT_GNN,label_level,log_user_ERROR,log,0.00624488,52
+BERT_GNN,label_level,log_code_DEBUG,log,0.0062375,53
+BERT_GNN,label_level,log_token_DEBUG,log,0.00617803,54
+BERT_GNN,label_level,log_locust_error_rate,log,0.00615058,55
+BERT_GNN,label_level,log_refresh-token_DEBUG,log,0.00614649,56
+BERT_GNN,label_level,log_locust_INFO,log,0.00610167,57
+BERT_GNN,label_level,log_locust_n,log,0.00604026,58
+BERT_GNN,label_level,log_token_n,log,0.00588713,59
+BERT_GNN,label_level,log_refresh-token_ERROR,log,0.00582009,60
+BERT_GNN,label_level,log_client_n,log,0.00575963,61
+BERT_GNN,label_level,log_service_error_rate,log,0.0056553,62
+BERT_GNN,label_level,m_pc30,metric,0.00553393,63
+BERT_GNN,label_level,log_token_error_rate,log,0.00534526,64
+BERT_GNN,label_level,log_token_INFO,log,0.00533666,65
+BERT_GNN,label_level,log_key_DEBUG,log,0.00530299,66
+BERT_GNN,label_level,log_refresh-token_n,log,0.00526714,67
+BERT_GNN,label_level,log_key_error_rate,log,0.00516623,68
+BERT_GNN,label_level,log_client_ERROR,log,0.00516345,69
+BERT_GNN,label_level,log_key_n,log,0.00469117,70
+BERT_GNN,label_level,log_key_ERROR,log,0.00457613,71
+BERT_GNN,label_level,log_code_cont,log,0.00445896,72
+BERT_GNN,label_level,m_pc5,metric,0.00417523,73
+BERT_GNN,label_level,m_pc31,metric,0.00403101,74
+BERT_GNN,label_level,log_user_error_rate,log,0.00388198,75
+BERT_GNN,label_level,log_key_cont,log,0.00380642,76
+BERT_GNN,label_level,log_refresh-token_INFO,log,0.00114198,77
+BERT_GNN,label_level,tmpl_client_15,log template,0.000427611,78
+BERT_GNN,label_level,tmpl_client_14,log template,0.000414017,79
+BERT_GNN,label_level,tmpl_client_16,log template,0.000393578,80
+BERT_GNN,label_level,tmpl_client_0,log template,0.000360024,81
+BERT_GNN,label_level,tmpl_client_2,log template,0.000330017,82
+BERT_GNN,label_level,tmpl_service_3,log template,0.000327444,83
+BERT_GNN,label_level,tmpl_service_4,log template,0.000326291,84
+BERT_GNN,label_level,tmpl_service_1,log template,0.000312202,85
+BERT_GNN,label_level,tmpl_service_10,log template,0.000236781,86
+BERT_GNN,label_level,tmpl_locust_8,log template,0.000193104,87
+BERT_GNN,label_level,tmpl_locust_4,log template,0.000192591,88
+BERT_GNN,label_level,tmpl_locust_2,log template,0.000191626,89
+BERT_GNN,label_level,tmpl_user_0,log template,0.000191476,90
+BERT_GNN,label_level,tmpl_locust_3,log template,0.000190853,91
+BERT_GNN,label_level,tmpl_user_5,log template,0.000164416,92
+BERT_GNN,label_level,tmpl_user_9,log template,0.000160229,93
+BERT_GNN,label_level,tmpl_service_7,log template,0.000154042,94
+BERT_GNN,label_level,tmpl_service_2,log template,0.000152109,95
+BERT_GNN,label_level,tmpl_user_10,log template,0.000134443,96
+BERT_GNN,label_level,tmpl_client_17,log template,0.000133809,97
+BERT_GNN,label_level,tmpl_service_6,log template,0.000132991,98
+BERT_GNN,label_level,tmpl_user_1,log template,0.000132516,99
+BERT_GNN,label_level,tmpl_client_3,log template,0.000132032,100
+BERT_GNN,label_level,tmpl_locust_6,log template,0.000128326,101
+BERT_GNN,label_level,tmpl_service_8,log template,0.000128087,102
+BERT_GNN,label_level,tmpl_service_9,log template,0.000127733,103
+BERT_GNN,label_level,tmpl_client_7,log template,0.000127004,104
+BERT_GNN,label_level,tmpl_locust_7,log template,0.000124971,105
+BERT_GNN,label_level,tmpl_client_1,log template,0.000123793,106
+BERT_GNN,label_level,tmpl_locust_10,log template,0.000123761,107
+BERT_GNN,label_level,tmpl_locust_16,log template,0.000121912,108
+BERT_GNN,label_level,tmpl_locust_14,log template,0.000121445,109
+BERT_GNN,label_level,tmpl_locust_17,log template,0.00012095,110
+BERT_GNN,label_level,tmpl_client_8,log template,0.000117431,111
+BERT_GNN,label_level,tmpl_locust_9,log template,0.000116922,112
+BERT_GNN,label_level,tmpl_locust_5,log template,0.000116307,113
+BERT_GNN,label_level,tmpl_client_12,log template,0.000113854,114
+BERT_GNN,label_level,tmpl_locust_15,log template,0.000110809,115
+BERT_GNN,label_level,tmpl_locust_13,log template,0.000104576,116
+BERT_GNN,label_level,tmpl_service_0,log template,0.000104327,117
+BERT_GNN,label_level,tmpl_client_5,log template,0.000104284,118
+BERT_GNN,label_level,tmpl_client_6,log template,9.23335e-05,119
+BERT_GNN,label_level,tmpl_user_3,log template,8.4402e-05,120
+BERT_GNN,label_level,tmpl_service_5,log template,8.12924e-05,121
+BERT_GNN,label_level,tmpl_client_4,log template,7.74968e-05,122
+BERT_GNN,label_level,tmpl_locust_1,log template,7.0906e-05,123
+BERT_GNN,label_level,tmpl_user_2,log template,6.16851e-05,124
+BERT_GNN,label_level,tmpl_locust_0,log template,5.66528e-05,125
+BERT_GNN,label_level,log_client_INFO,log,0,126
+BERT_GNN,label_level,log_code_INFO,log,0,127
+BERT_GNN,label_level,log_service_INFO,log,0,128
+BERT_GNN,label_level,log_user_INFO,log,0,129
+BERT_GNN,label_level,was_missing_logs,flag,0,130
+BERT_GNN,label_level,was_missing_templates,flag,0,131
+BERT_GNN,label_level,was_missing_metrics,flag,0,132

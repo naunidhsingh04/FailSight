@@ -85,11 +85,30 @@ def hybrid_doc():
             b = h.iloc[0]
             L.append(f"* **{lab[6:]} labels:** best hybrid {b.model} {f3(b.test_bal_acc)} (95% range {f3(b.test_bal_acc_ci_low)}-{f3(b.test_bal_acc_ci_high)}) versus the best of the 36 earlier models, {top.model}, {f3(top.test_bal_acc)} (95% range {f3(x.ci95_low)}-{f3(x.ci95_high)}): "
                      f"**{'a hybrid scores higher' if b.test_bal_acc > top.test_bal_acc else 'no hybrid beats the best earlier model'}**; the ranges {'overlap' if (b.test_bal_acc_ci_low <= x.ci95_high and x.ci95_low <= b.test_bal_acc_ci_high) else 'do not overlap'}.")
-        L += ["", "Why the hybrids are not expected to beat the tree models here: the data are small and table-like (2,549 training windows, about 128 numbers each), and the test part has only 36 healthy windows, so every range is wide. Tree models are strong on small tabular data; neural networks need more data. If the hybrids end up below the tree models, that is what is reported.", ""]
+        _s = rd("split_ids.csv")
+        L += ["", f"Why the hybrids are not expected to beat the tree models here: the data are small and table-like ({int((_s.split == 'train').sum()):,} training windows, about 128 numbers each), and the test part has only {int(rd('hybrid_anomod_test_metrics.csv').support_Normal.iloc[0])} healthy windows, so every range is wide. Tree models are strong on small tabular data; neural networks need more data. If the hybrids end up below the tree models, that is what is reported.", ""]
     L += ["## Results: LO2 hybrids (very small sample)", ""] + lb_table("hybrid_lo2_")
-    L += ["LO2 results are about training on LO2's own data (5 whole runs, 172 test windows of one run, 13 healthy) and are marked *unreliable: very small sample*. They say nothing about transfer from AnoMod.", "",
-          "The template encoder is TF-IDF + truncated SVD of the template text, because a downloadable BERT-style encoder (and the `transformers` library) was not available here; this is stated on every page that shows BERT + GNN.", "",
-          "## Limits", "", "* " + FOLD_NOTE, "* Small samples, wide ranges; the best model on any list was picked on the test set.", "* No claim of transfer to other systems, no forecasting, no time-until-failure (not built; future work).", ""]
+    _sp, _man = rd("lo2_split_ids.csv", dtype={"run_id": str}), rd("lo2_slice_manifest.csv")
+    _facts = (f"{len(_man)} whole runs, {int((_sp.split == 'test').sum())} test windows of one run, {int(((_sp.split == 'test') & (_sp.label_level == 'Normal')).sum())} healthy"
+              if _sp is not None and _man is not None and 'window_id' in _sp.columns else "a very small sample")
+    L += [f"LO2 results are about training on LO2's own data ({_facts}) and are marked *unreliable: very small sample*. They say nothing about transfer from AnoMod. On the binary labels LO2 is almost trivially separable (every hybrid ties at the top); compare the log-volume-only baseline in `hybrid_lo2_logvolume_baseline.csv`.", "",
+          "The template encoder is TF-IDF + truncated SVD of the template text, because a downloadable BERT-style encoder (and the `transformers` library) was not available here; this is stated on every page that shows BERT + GNN.", ""]
+    ex_lines = []
+    for ds, pre in (("AnoMod", "hybrid_anomod_"), ("LO2", "hybrid_lo2_")):
+        for lab in ("label_binary", "label_level"):
+            d = rd(f"{pre}explain_{lab}.csv")
+            if d is None:
+                continue
+            g = rd(f"{pre}explain_groups.csv")
+            gs = g[(g.label_version == lab)] if g is not None else None
+            ex_lines.append(f"* {ds}, {lab[6:]} labels, best hybrid by cross-validation score = **{d.model.iloc[0]}**: top inputs by gradient x input: " + ", ".join(f"`{r.feature}`" for r in d.head(5).itertuples()) +
+                            ("; share by group: " + ", ".join(f"{r.group} {r.share_of_total:.0%}" for r in gs.itertuples()) if gs is not None and len(gs) else ""))
+    if ex_lines:
+        L += ["## Explanations of the best hybrid on each data set", "", "The best hybrid is chosen by its cross-validation validation score (never by test scores). Method: gradient x input attribution on real test windows (`scripts/hybrid_explain.py`; `hybrid_*_explain_*.csv`); BERT + GNN also reports its attention over log templates when it is the best. These explain the model, not the real cause of a fault.", ""] + ex_lines + [""]
+        sh = rd("lo2_full_shap_global.csv")
+        if sh is not None:
+            L += [f"* LO2, best classical tree model by cross-validation (**{sh.model.iloc[0]}**): SHAP (TreeExplainer) on the real test windows, top inputs " + ", ".join(f"`{r.feature}`" for r in sh.head(5).itertuples()) + "; LIME for one window in `lo2_full_lime_example.csv`.", ""]
+    L += ["## Limits", "", "* " + FOLD_NOTE, "* Small samples, wide ranges; the best model on any list was picked on the test set.", "* No claim of transfer to other systems, no forecasting, no time-until-failure (not built; future work).", ""]
     (DOCS / "HYBRID_MODELS.md").write_text("\n".join(L), encoding="utf-8")
 
 
@@ -116,6 +135,10 @@ def lo2_doc():
             L.append(f"| {c} | {int(((sp.split == 'train') & (sp.label_level == c)).sum())} | {int(((sp.split == 'test') & (sp.label_level == c)).sum())} |")
         L += ["", f"Total {len(sp)} windows: {int((sp.split == 'train').sum())} train, {int((sp.split == 'test').sum())} test. Binary label: Normal (the `correct` scenario) versus Anomaly; the multi-class label is Normal / HTTP 400 / 401 / 404 (from the scenario name).", "",
               "## Folds", "", "Four training runs cannot give five whole-run folds. The 5 folds are therefore block-aware inside the training runs: a group is a run + scenario + 3-window block; no group is shared across folds; every class is in every validation fold; the overlap of context windows is measured and reported in proof P22. The test part is a whole run that no fold has seen, so it has no overlap with the training data.", ""]
+    sc = rd("lo2_shortcut_check.csv")
+    if sc is not None:
+        L += ["## Why the binary labels are almost trivial here", "", "In every LO2 run the normal (`correct`) scenario is the first of the 54 scenarios and lasts 60 s instead of 10 s. The same random forest (100 trees) was scored on subsets of the inputs (trained on the training runs, scored on the test run; `report_outputs/lo2_shortcut_check.csv`; a diagnostic that changed nothing):", "",
+              "| inputs | features | balanced accuracy | ROC-AUC |", "|---|---|---|---|"] + [f"| {r.inputs} | {int(r.n_inputs)} | {r.balanced_accuracy:.3f} | {r.roc_auc:.3f} |" for r in sc.itertuples()] +              ["", "Log counts, template counts or metric components alone each separate the normal scenario almost perfectly, so the binary LO2 task is nearly trivial and a perfect score is **not** strong evidence of fault detection. The multi-class (HTTP 400 / 401 / 404) task is much harder and is the more informative LO2 result; with 13 healthy windows and one test run it is still a very small sample.", ""]
     L += ["## Separation from AnoMod", "", "LO2 is trained completely separately: its own windows (`scripts/lo2_hybrid_data.py`, `scripts/lo2_data.py`), its own preprocessing fitted on LO2's training part, its own models (`models/hybrid/lo2/`) and results (`report_outputs/hybrid_lo2_*`, `lo2_full_*`). No AnoMod weight, scaler, threshold or feature is used, and no AnoMod and LO2 window is ever mixed in a split or training set. Proof P21 has four explicit PASS / FAIL checks (no window or run in both parts, natural test counts, SMOTE before/after per fold, physical separation and a grep for AnoMod artefacts in the LO2 scripts).", "",
           "## What this says and does not say", "", "* These results are about training on LO2's own data. They say nothing about transfer from AnoMod to LO2.", "* Controls: shuffled labels, a log-volume-only baseline and a run-identification check (the test run is never in the training data, so run identity cannot help).", "* The earlier external test (`lo2_results_summary.md`: saved AnoMod models applied unchanged to one LO2 run) is separate and unchanged.", ""]
     (DOCS / "LO2_SLICE.md").write_text("\n".join(L), encoding="utf-8")
@@ -159,7 +182,8 @@ def viva_doc():
             h = lh[(lh.label_version == lab) & (lh.status != "not completed")].sort_values("test_bal_acc", ascending=False)
             if not h.empty:
                 b = h.iloc[0]
-                add(f"LO2 best hybrid {lab[6:]}: {b.model}", f"balanced accuracy {f3(b.test_bal_acc)} (95% range {f3(b.test_bal_acc_ci_low)}-{f3(b.test_bal_acc_ci_high)}); unreliable: very small sample", "hybrid_lo2_leaderboard.csv")
+                ties = int((h.test_bal_acc.round(6) == round(b.test_bal_acc, 6)).sum()) - 1
+                add(f"LO2 best hybrid {lab[6:]}: {b.model}" + (f" (tied with {ties} other hybrid{'s' if ties > 1 else ''})" if ties else ""), f"balanced accuracy {f3(b.test_bal_acc)} (95% range {f3(b.test_bal_acc_ci_low)}-{f3(b.test_bal_acc_ci_high)}); unreliable: very small sample", "hybrid_lo2_leaderboard.csv")
     man = rd("lo2_slice_manifest.csv")
     if man is not None:
         add("LO2 slice", f"{len(man)} whole runs, {man.size_mb.sum():.1f} MB (cap 150 MB), {int(man.scrape_rows.sum())} windows", "lo2_slice_manifest.csv")

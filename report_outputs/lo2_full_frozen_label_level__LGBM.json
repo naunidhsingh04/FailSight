@@ -1,0 +1,31 @@
+{
+ "dataset": "lo2",
+ "label": "label_level",
+ "model": "LGBM",
+ "seed": 42,
+ "params": {
+  "n_estimators": 100,
+  "num_leaves": 8,
+  "learning_rate": 0.1,
+  "min_child_samples": 10,
+  "reg_lambda": 5.0,
+  "subsample": 0.7,
+  "subsample_freq": 1,
+  "colsample_bytree": 0.6
+ },
+ "method": "smote",
+ "thresholds": {
+  "type": "class_multipliers",
+  "weights": [
+   1.0,
+   0.17377394345044514,
+   1.2840254166877414,
+   1.0
+  ],
+  "oof_balanced_accuracy": 0.6337962962962963,
+  "oof_balanced_accuracy_default_argmax": 0.5662037037037038
+ },
+ "chosen_stage": "corr",
+ "frozen_at": "2026-10-23 01:37:37",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

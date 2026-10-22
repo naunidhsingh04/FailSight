@@ -1,0 +1,262 @@
+model,label_version,stage,fold,before,after,held_out_fold
+LR,label_binary,cv,1,40/507,507/507,12/129
+LR,label_binary,cv,2,42/510,510/510,10/126
+LR,label_binary,cv,3,42/507,507/507,10/129
+LR,label_binary,cv,4,42/510,510/510,10/126
+LR,label_binary,cv,5,42/510,510/510,10/126
+LR,label_binary,final,final(80% train),52/636,636/636,"13/159 (test, untouched)"
+RF,label_binary,cv,1,40/507,507/507,12/129
+RF,label_binary,cv,2,42/510,510/510,10/126
+RF,label_binary,cv,3,42/507,507/507,10/129
+RF,label_binary,cv,4,42/510,510/510,10/126
+RF,label_binary,cv,5,42/510,510/510,10/126
+RF,label_binary,final,final(80% train),52/636,636/636,"13/159 (test, untouched)"
+ET,label_binary,cv,1,40/507,507/507,12/129
+ET,label_binary,cv,2,42/510,510/510,10/126
+ET,label_binary,cv,3,42/507,507/507,10/129
+ET,label_binary,cv,4,42/510,510/510,10/126
+ET,label_binary,cv,5,42/510,510/510,10/126
+ET,label_binary,final,final(80% train),52/636,636/636,"13/159 (test, untouched)"
+XGB,label_binary,cv,1,40/507,507/507,12/129
+XGB,label_binary,cv,2,42/510,510/510,10/126
+XGB,label_binary,cv,3,42/507,507/507,10/129
+XGB,label_binary,cv,4,42/510,510/510,10/126
+XGB,label_binary,cv,5,42/510,510/510,10/126
+XGB,label_binary,final,final(80% train),52/636,636/636,"13/159 (test, untouched)"
+LGBM,label_binary,cv,1,40/507,40/507,12/129
+LGBM,label_binary,cv,2,42/510,42/510,10/126
+LGBM,label_binary,cv,3,42/507,42/507,10/129
+LGBM,label_binary,cv,4,42/510,42/510,10/126
+LGBM,label_binary,cv,5,42/510,42/510,10/126
+LGBM,label_binary,final,final(80% train),52/636,52/636,"13/159 (test, untouched)"
+RF_tuned,label_binary,cv,1,40/507,507/507,12/129
+RF_tuned,label_binary,cv,2,42/510,510/510,10/126
+RF_tuned,label_binary,cv,3,42/507,507/507,10/129
+RF_tuned,label_binary,cv,4,42/510,510/510,10/126
+RF_tuned,label_binary,cv,5,42/510,510/510,10/126
+RF_tuned,label_binary,final,final(80% train),52/636,636/636,"13/159 (test, untouched)"
+XGB_tuned,label_binary,cv,1,40/507,507/507,12/129
+XGB_tuned,label_binary,cv,2,42/510,510/510,10/126
+XGB_tuned,label_binary,cv,3,42/507,507/507,10/129
+XGB_tuned,label_binary,cv,4,42/510,510/510,10/126
+XGB_tuned,label_binary,cv,5,42/510,510/510,10/126
+XGB_tuned,label_binary,final,final(80% train),52/636,636/636,"13/159 (test, untouched)"
+LGBM_tuned,label_binary,cv,1,40/507,40/507,12/129
+LGBM_tuned,label_binary,cv,2,42/510,42/510,10/126
+LGBM_tuned,label_binary,cv,3,42/507,42/507,10/129
+LGBM_tuned,label_binary,cv,4,42/510,42/510,10/126
+LGBM_tuned,label_binary,cv,5,42/510,42/510,10/126
+LGBM_tuned,label_binary,final,final(80% train),52/636,52/636,"13/159 (test, untouched)"
+CNN_BiGRU_Att,label_binary,cv,1,40/507,507/507,12/129
+CNN_BiGRU_Att,label_binary,cv,2,42/510,510/510,10/126
+CNN_BiGRU_Att,label_binary,cv,3,42/507,507/507,10/129
+CNN_BiGRU_Att,label_binary,cv,4,42/510,510/510,10/126
+CNN_BiGRU_Att,label_binary,cv,5,42/510,510/510,10/126
+CNN_BiGRU_Att,label_binary,final,final(80% train),52/636,636/636,"13/159 (test, untouched)"
+CNN_BiLSTM_Att,label_binary,cv,1,40/507,507/507,12/129
+CNN_BiLSTM_Att,label_binary,cv,2,42/510,510/510,10/126
+CNN_BiLSTM_Att,label_binary,cv,3,42/507,507/507,10/129
+CNN_BiLSTM_Att,label_binary,cv,4,42/510,510/510,10/126
+CNN_BiLSTM_Att,label_binary,cv,5,42/510,510/510,10/126
+CNN_BiLSTM_Att,label_binary,final,final(80% train),52/636,636/636,"13/159 (test, untouched)"
+Fusion,label_binary,cv,1,40/507,507/507,12/129
+Fusion,label_binary,cv,2,42/510,510/510,10/126
+Fusion,label_binary,cv,3,42/507,507/507,10/129
+Fusion,label_binary,cv,4,42/510,510/510,10/126
+Fusion,label_binary,cv,5,42/510,510/510,10/126
+Fusion,label_binary,final,final(80% train),52/636,636/636,"13/159 (test, untouched)"
+Transformer,label_binary,cv,1,40/507,507/507,12/129
+Transformer,label_binary,cv,2,42/510,510/510,10/126
+Transformer,label_binary,cv,3,42/507,507/507,10/129
+Transformer,label_binary,cv,4,42/510,510/510,10/126
+Transformer,label_binary,cv,5,42/510,510/510,10/126
+Transformer,label_binary,final,final(80% train),52/636,636/636,"13/159 (test, untouched)"
+CNN_BiGRU_Att_XGBhead,label_binary,cv,1,40/507,507/507,12/129
+CNN_BiGRU_Att_XGBhead,label_binary,cv,2,42/510,510/510,10/126
+CNN_BiGRU_Att_XGBhead,label_binary,cv,3,42/507,507/507,10/129
+CNN_BiGRU_Att_XGBhead,label_binary,cv,4,42/510,510/510,10/126
+CNN_BiGRU_Att_XGBhead,label_binary,cv,5,42/510,510/510,10/126
+CNN_BiGRU_Att_XGBhead,label_binary,final,final(80% train),52/636,636/636,"13/159 (test, untouched)"
+CNN_BiLSTM_Att_XGBhead,label_binary,cv,1,40/507,507/507,12/129
+CNN_BiLSTM_Att_XGBhead,label_binary,cv,2,42/510,510/510,10/126
+CNN_BiLSTM_Att_XGBhead,label_binary,cv,3,42/507,507/507,10/129
+CNN_BiLSTM_Att_XGBhead,label_binary,cv,4,42/510,510/510,10/126
+CNN_BiLSTM_Att_XGBhead,label_binary,cv,5,42/510,510/510,10/126
+CNN_BiLSTM_Att_XGBhead,label_binary,final,final(80% train),52/636,636/636,"13/159 (test, untouched)"
+Fusion_XGBhead,label_binary,cv,1,40/507,507/507,12/129
+Fusion_XGBhead,label_binary,cv,2,42/510,510/510,10/126
+Fusion_XGBhead,label_binary,cv,3,42/507,507/507,10/129
+Fusion_XGBhead,label_binary,cv,4,42/510,510/510,10/126
+Fusion_XGBhead,label_binary,cv,5,42/510,510/510,10/126
+Fusion_XGBhead,label_binary,final,final(80% train),52/636,636/636,"13/159 (test, untouched)"
+Transformer_XGBhead,label_binary,cv,1,40/507,507/507,12/129
+Transformer_XGBhead,label_binary,cv,2,42/510,510/510,10/126
+Transformer_XGBhead,label_binary,cv,3,42/507,507/507,10/129
+Transformer_XGBhead,label_binary,cv,4,42/510,510/510,10/126
+Transformer_XGBhead,label_binary,cv,5,42/510,510/510,10/126
+Transformer_XGBhead,label_binary,final,final(80% train),52/636,636/636,"13/159 (test, untouched)"
+Stacking,label_binary,cv,1,(built from the base models' out-of-fold probabilities),-,12/129
+Stacking,label_binary,cv,2,(built from the base models' out-of-fold probabilities),-,10/126
+Stacking,label_binary,cv,3,(built from the base models' out-of-fold probabilities),-,10/129
+Stacking,label_binary,cv,4,(built from the base models' out-of-fold probabilities),-,10/126
+Stacking,label_binary,cv,5,(built from the base models' out-of-fold probabilities),-,10/126
+Stacking,label_binary,final,final(80% train),-,-,"13/159 (test, untouched)"
+SoftVote,label_binary,cv,1,(built from the base models' out-of-fold probabilities),-,12/129
+SoftVote,label_binary,cv,2,(built from the base models' out-of-fold probabilities),-,10/126
+SoftVote,label_binary,cv,3,(built from the base models' out-of-fold probabilities),-,10/129
+SoftVote,label_binary,cv,4,(built from the base models' out-of-fold probabilities),-,10/126
+SoftVote,label_binary,cv,5,(built from the base models' out-of-fold probabilities),-,10/126
+SoftVote,label_binary,final,final(80% train),-,-,"13/159 (test, untouched)"
+LR,label_level,corr,1,40/288/48/171,40/288/48/171,12/72/12/45
+LR,label_level,corr,2,42/288/48/174,42/288/48/174,10/72/12/42
+LR,label_level,corr,3,42/288/48/171,42/288/48/171,10/72/12/45
+LR,label_level,corr,4,42/288/48/174,42/288/48/174,10/72/12/42
+LR,label_level,corr,5,42/288/48/174,42/288/48/174,10/72/12/42
+LR,label_level,cv,1,40/288/48/171,40/288/48/171,12/72/12/45
+LR,label_level,cv,2,42/288/48/174,42/288/48/174,10/72/12/42
+LR,label_level,cv,3,42/288/48/171,42/288/48/171,10/72/12/45
+LR,label_level,cv,4,42/288/48/174,42/288/48/174,10/72/12/42
+LR,label_level,cv,5,42/288/48/174,42/288/48/174,10/72/12/42
+LR,label_level,final,final(80% train),52/360/60/216,52/360/60/216,"13/90/15/54 (test, untouched)"
+RF,label_level,corr,1,40/288/48/171,40/288/48/171,12/72/12/45
+RF,label_level,corr,2,42/288/48/174,42/288/48/174,10/72/12/42
+RF,label_level,corr,3,42/288/48/171,42/288/48/171,10/72/12/45
+RF,label_level,corr,4,42/288/48/174,42/288/48/174,10/72/12/42
+RF,label_level,corr,5,42/288/48/174,42/288/48/174,10/72/12/42
+RF,label_level,cv,1,40/288/48/171,40/288/48/171,12/72/12/45
+RF,label_level,cv,2,42/288/48/174,42/288/48/174,10/72/12/42
+RF,label_level,cv,3,42/288/48/171,42/288/48/171,10/72/12/45
+RF,label_level,cv,4,42/288/48/174,42/288/48/174,10/72/12/42
+RF,label_level,cv,5,42/288/48/174,42/288/48/174,10/72/12/42
+RF,label_level,final,final(80% train),52/360/60/216,52/360/60/216,"13/90/15/54 (test, untouched)"
+ET,label_level,corr,1,40/288/48/171,288/288/288/288,12/72/12/45
+ET,label_level,corr,2,42/288/48/174,288/288/288/288,10/72/12/42
+ET,label_level,corr,3,42/288/48/171,288/288/288/288,10/72/12/45
+ET,label_level,corr,4,42/288/48/174,288/288/288/288,10/72/12/42
+ET,label_level,corr,5,42/288/48/174,288/288/288/288,10/72/12/42
+ET,label_level,cv,1,40/288/48/171,288/288/288/288,12/72/12/45
+ET,label_level,cv,2,42/288/48/174,288/288/288/288,10/72/12/42
+ET,label_level,cv,3,42/288/48/171,288/288/288/288,10/72/12/45
+ET,label_level,cv,4,42/288/48/174,288/288/288/288,10/72/12/42
+ET,label_level,cv,5,42/288/48/174,288/288/288/288,10/72/12/42
+ET,label_level,final,final(80% train),52/360/60/216,360/360/360/360,"13/90/15/54 (test, untouched)"
+XGB,label_level,corr,1,40/288/48/171,288/288/288/288,12/72/12/45
+XGB,label_level,corr,2,42/288/48/174,288/288/288/288,10/72/12/42
+XGB,label_level,corr,3,42/288/48/171,288/288/288/288,10/72/12/45
+XGB,label_level,corr,4,42/288/48/174,288/288/288/288,10/72/12/42
+XGB,label_level,corr,5,42/288/48/174,288/288/288/288,10/72/12/42
+XGB,label_level,cv,1,40/288/48/171,288/288/288/288,12/72/12/45
+XGB,label_level,cv,2,42/288/48/174,288/288/288/288,10/72/12/42
+XGB,label_level,cv,3,42/288/48/171,288/288/288/288,10/72/12/45
+XGB,label_level,cv,4,42/288/48/174,288/288/288/288,10/72/12/42
+XGB,label_level,cv,5,42/288/48/174,288/288/288/288,10/72/12/42
+XGB,label_level,final,final(80% train),52/360/60/216,360/360/360/360,"13/90/15/54 (test, untouched)"
+LGBM,label_level,corr,1,40/288/48/171,288/288/288/288,12/72/12/45
+LGBM,label_level,corr,2,42/288/48/174,288/288/288/288,10/72/12/42
+LGBM,label_level,corr,3,42/288/48/171,288/288/288/288,10/72/12/45
+LGBM,label_level,corr,4,42/288/48/174,288/288/288/288,10/72/12/42
+LGBM,label_level,corr,5,42/288/48/174,288/288/288/288,10/72/12/42
+LGBM,label_level,cv,1,40/288/48/171,288/288/288/288,12/72/12/45
+LGBM,label_level,cv,2,42/288/48/174,288/288/288/288,10/72/12/42
+LGBM,label_level,cv,3,42/288/48/171,288/288/288/288,10/72/12/45
+LGBM,label_level,cv,4,42/288/48/174,288/288/288/288,10/72/12/42
+LGBM,label_level,cv,5,42/288/48/174,288/288/288/288,10/72/12/42
+LGBM,label_level,final,final(80% train),52/360/60/216,360/360/360/360,"13/90/15/54 (test, untouched)"
+RF_tuned,label_level,cv,1,40/288/48/171,40/288/48/171,12/72/12/45
+RF_tuned,label_level,cv,2,42/288/48/174,42/288/48/174,10/72/12/42
+RF_tuned,label_level,cv,3,42/288/48/171,42/288/48/171,10/72/12/45
+RF_tuned,label_level,cv,4,42/288/48/174,42/288/48/174,10/72/12/42
+RF_tuned,label_level,cv,5,42/288/48/174,42/288/48/174,10/72/12/42
+RF_tuned,label_level,final,final(80% train),52/360/60/216,52/360/60/216,"13/90/15/54 (test, untouched)"
+XGB_tuned,label_level,cv,1,40/288/48/171,288/288/288/288,12/72/12/45
+XGB_tuned,label_level,cv,2,42/288/48/174,288/288/288/288,10/72/12/42
+XGB_tuned,label_level,cv,3,42/288/48/171,288/288/288/288,10/72/12/45
+XGB_tuned,label_level,cv,4,42/288/48/174,288/288/288/288,10/72/12/42
+XGB_tuned,label_level,cv,5,42/288/48/174,288/288/288/288,10/72/12/42
+XGB_tuned,label_level,final,final(80% train),52/360/60/216,360/360/360/360,"13/90/15/54 (test, untouched)"
+LGBM_tuned,label_level,cv,1,40/288/48/171,288/288/288/288,12/72/12/45
+LGBM_tuned,label_level,cv,2,42/288/48/174,288/288/288/288,10/72/12/42
+LGBM_tuned,label_level,cv,3,42/288/48/171,288/288/288/288,10/72/12/45
+LGBM_tuned,label_level,cv,4,42/288/48/174,288/288/288/288,10/72/12/42
+LGBM_tuned,label_level,cv,5,42/288/48/174,288/288/288/288,10/72/12/42
+LGBM_tuned,label_level,final,final(80% train),52/360/60/216,360/360/360/360,"13/90/15/54 (test, untouched)"
+CNN_BiGRU_Att,label_level,corr,1,40/288/48/171,288/288/288/288,12/72/12/45
+CNN_BiGRU_Att,label_level,corr,2,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiGRU_Att,label_level,corr,3,42/288/48/171,288/288/288/288,10/72/12/45
+CNN_BiGRU_Att,label_level,corr,4,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiGRU_Att,label_level,corr,5,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiGRU_Att,label_level,cv,1,40/288/48/171,288/288/288/288,12/72/12/45
+CNN_BiGRU_Att,label_level,cv,2,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiGRU_Att,label_level,cv,3,42/288/48/171,288/288/288/288,10/72/12/45
+CNN_BiGRU_Att,label_level,cv,4,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiGRU_Att,label_level,cv,5,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiGRU_Att,label_level,final,final(80% train),52/360/60/216,360/360/360/360,"13/90/15/54 (test, untouched)"
+CNN_BiLSTM_Att,label_level,corr,1,40/288/48/171,288/288/288/288,12/72/12/45
+CNN_BiLSTM_Att,label_level,corr,2,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiLSTM_Att,label_level,corr,3,42/288/48/171,288/288/288/288,10/72/12/45
+CNN_BiLSTM_Att,label_level,corr,4,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiLSTM_Att,label_level,corr,5,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiLSTM_Att,label_level,cv,1,40/288/48/171,288/288/288/288,12/72/12/45
+CNN_BiLSTM_Att,label_level,cv,2,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiLSTM_Att,label_level,cv,3,42/288/48/171,288/288/288/288,10/72/12/45
+CNN_BiLSTM_Att,label_level,cv,4,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiLSTM_Att,label_level,cv,5,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiLSTM_Att,label_level,final,final(80% train),52/360/60/216,360/360/360/360,"13/90/15/54 (test, untouched)"
+Fusion,label_level,corr,1,40/288/48/171,288/288/288/288,12/72/12/45
+Fusion,label_level,corr,2,42/288/48/174,288/288/288/288,10/72/12/42
+Fusion,label_level,corr,3,42/288/48/171,288/288/288/288,10/72/12/45
+Fusion,label_level,corr,4,42/288/48/174,288/288/288/288,10/72/12/42
+Fusion,label_level,corr,5,42/288/48/174,288/288/288/288,10/72/12/42
+Fusion,label_level,cv,1,40/288/48/171,288/288/288/288,12/72/12/45
+Fusion,label_level,cv,2,42/288/48/174,288/288/288/288,10/72/12/42
+Fusion,label_level,cv,3,42/288/48/171,288/288/288/288,10/72/12/45
+Fusion,label_level,cv,4,42/288/48/174,288/288/288/288,10/72/12/42
+Fusion,label_level,cv,5,42/288/48/174,288/288/288/288,10/72/12/42
+Fusion,label_level,final,final(80% train),52/360/60/216,360/360/360/360,"13/90/15/54 (test, untouched)"
+Transformer,label_level,corr,1,40/288/48/171,288/288/288/288,12/72/12/45
+Transformer,label_level,corr,2,42/288/48/174,288/288/288/288,10/72/12/42
+Transformer,label_level,corr,3,42/288/48/171,288/288/288/288,10/72/12/45
+Transformer,label_level,corr,4,42/288/48/174,288/288/288/288,10/72/12/42
+Transformer,label_level,corr,5,42/288/48/174,288/288/288/288,10/72/12/42
+Transformer,label_level,cv,1,40/288/48/171,288/288/288/288,12/72/12/45
+Transformer,label_level,cv,2,42/288/48/174,288/288/288/288,10/72/12/42
+Transformer,label_level,cv,3,42/288/48/171,288/288/288/288,10/72/12/45
+Transformer,label_level,cv,4,42/288/48/174,288/288/288/288,10/72/12/42
+Transformer,label_level,cv,5,42/288/48/174,288/288/288/288,10/72/12/42
+Transformer,label_level,final,final(80% train),52/360/60/216,360/360/360/360,"13/90/15/54 (test, untouched)"
+CNN_BiGRU_Att_XGBhead,label_level,cv,1,40/288/48/171,288/288/288/288,12/72/12/45
+CNN_BiGRU_Att_XGBhead,label_level,cv,2,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiGRU_Att_XGBhead,label_level,cv,3,42/288/48/171,288/288/288/288,10/72/12/45
+CNN_BiGRU_Att_XGBhead,label_level,cv,4,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiGRU_Att_XGBhead,label_level,cv,5,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiGRU_Att_XGBhead,label_level,final,final(80% train),52/360/60/216,360/360/360/360,"13/90/15/54 (test, untouched)"
+CNN_BiLSTM_Att_XGBhead,label_level,cv,1,40/288/48/171,288/288/288/288,12/72/12/45
+CNN_BiLSTM_Att_XGBhead,label_level,cv,2,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiLSTM_Att_XGBhead,label_level,cv,3,42/288/48/171,288/288/288/288,10/72/12/45
+CNN_BiLSTM_Att_XGBhead,label_level,cv,4,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiLSTM_Att_XGBhead,label_level,cv,5,42/288/48/174,288/288/288/288,10/72/12/42
+CNN_BiLSTM_Att_XGBhead,label_level,final,final(80% train),52/360/60/216,360/360/360/360,"13/90/15/54 (test, untouched)"
+Fusion_XGBhead,label_level,cv,1,40/288/48/171,288/288/288/288,12/72/12/45
+Fusion_XGBhead,label_level,cv,2,42/288/48/174,288/288/288/288,10/72/12/42
+Fusion_XGBhead,label_level,cv,3,42/288/48/171,288/288/288/288,10/72/12/45
+Fusion_XGBhead,label_level,cv,4,42/288/48/174,288/288/288/288,10/72/12/42
+Fusion_XGBhead,label_level,cv,5,42/288/48/174,288/288/288/288,10/72/12/42
+Fusion_XGBhead,label_level,final,final(80% train),52/360/60/216,360/360/360/360,"13/90/15/54 (test, untouched)"
+Transformer_XGBhead,label_level,cv,1,40/288/48/171,288/288/288/288,12/72/12/45
+Transformer_XGBhead,label_level,cv,2,42/288/48/174,288/288/288/288,10/72/12/42
+Transformer_XGBhead,label_level,cv,3,42/288/48/171,288/288/288/288,10/72/12/45
+Transformer_XGBhead,label_level,cv,4,42/288/48/174,288/288/288/288,10/72/12/42
+Transformer_XGBhead,label_level,cv,5,42/288/48/174,288/288/288/288,10/72/12/42
+Transformer_XGBhead,label_level,final,final(80% train),52/360/60/216,360/360/360/360,"13/90/15/54 (test, untouched)"
+Stacking,label_level,cv,1,(built from the base models' out-of-fold probabilities),-,12/72/12/45
+Stacking,label_level,cv,2,(built from the base models' out-of-fold probabilities),-,10/72/12/42
+Stacking,label_level,cv,3,(built from the base models' out-of-fold probabilities),-,10/72/12/45
+Stacking,label_level,cv,4,(built from the base models' out-of-fold probabilities),-,10/72/12/42
+Stacking,label_level,cv,5,(built from the base models' out-of-fold probabilities),-,10/72/12/42
+Stacking,label_level,final,final(80% train),-,-,"13/90/15/54 (test, untouched)"
+SoftVote,label_level,cv,1,(built from the base models' out-of-fold probabilities),-,12/72/12/45
+SoftVote,label_level,cv,2,(built from the base models' out-of-fold probabilities),-,10/72/12/42
+SoftVote,label_level,cv,3,(built from the base models' out-of-fold probabilities),-,10/72/12/45
+SoftVote,label_level,cv,4,(built from the base models' out-of-fold probabilities),-,10/72/12/42
+SoftVote,label_level,cv,5,(built from the base models' out-of-fold probabilities),-,10/72/12/42
+SoftVote,label_level,final,final(80% train),-,-,"13/90/15/54 (test, untouched)"
