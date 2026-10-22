@@ -19,3 +19,4 @@
 - 00:08:58 windows 860 (5 runs), metric families 478, templates 210; class counts {'HTTP400': 450, 'HTTP404': 270, 'HTTP401': 75, 'Normal': 65}
 - 00:08:59 LO2 raw files unchanged (SHA-256 before == after): True
 - 01:03 Step 2 done: five AnoMod hybrids x binary/five-class finished (5-fold, SMOTE/class-weight chosen by validation, correction stage run where gap > 0.10). No hybrid beats the best earlier model. Step 3: starting LO2 hybrids (slice already built at 00:09; raw data hashes unchanged).
+- 01:36 Step 3 done (five LO2 hybrids x 2 label versions; binary labels are almost trivially separable: every hybrid scores 1.000 on the 172-window test run, the four-class labels score 0.57-0.66). Step 4 started: scripts/lo2_full.py (families b-e).

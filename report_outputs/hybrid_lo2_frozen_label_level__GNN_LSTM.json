@@ -1,0 +1,29 @@
+{
+ "dataset": "lo2",
+ "label": "label_level",
+ "model": "GNN_LSTM",
+ "seed": 42,
+ "config": {
+  "hidden": 32,
+  "dropout": 0.3,
+  "wd": 0.0001,
+  "lr": 0.001
+ },
+ "method": "smote",
+ "final_epochs": 5,
+ "lr_scale": 1.0,
+ "thresholds": {
+  "type": "class_multipliers",
+  "weights": [
+   1.0,
+   1.0,
+   0.7788007830714049,
+   1.0
+  ],
+  "oof_balanced_accuracy": 0.5650462962962963,
+  "oof_balanced_accuracy_default_argmax": 0.5599537037037038
+ },
+ "chosen_stage": "cv",
+ "frozen_at": "2026-10-23 01:25:11",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

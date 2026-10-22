@@ -26,7 +26,7 @@ CLASS_NAMES = {"label_binary": ["Normal", "Anomaly"], "label_level": LEVELS}
 
 
 class LO2Prep:
-    def fit(self, X, groups):
+    def fit(self, X, groups, ref=None):
         """X: raw feature matrix (n, f) of TRAINING rows only; groups: array of 'logs'/'templates'/'metrics' per column"""
         X = np.array(X, dtype=np.float64, copy=True)
         X[~np.isfinite(X)] = np.nan
@@ -43,13 +43,15 @@ class LO2Prep:
         self.median = np.where(np.isnan(self.median), 0.0, self.median)
         Xi = np.where(np.isnan(Xl), self.median, Xl)
         self.keep = Xi.std(0) > 1e-12                                   # constant columns dropped
+        if ref is not None:                                             # a CV fold uses the column set of the final preprocessor (same model input width in every fold)
+            self.keep = ref.keep
         self.lo, self.hi = np.percentile(Xi, 0.5, axis=0), np.percentile(Xi, 99.5, axis=0)
         Xc = np.clip(Xi, self.lo, self.hi)
         self.mean, self.scale = Xc.mean(0), np.where(Xc.std(0) < 1e-12, 1.0, Xc.std(0))
         Z = ((Xc - self.mean) / self.scale)[:, self.keep]
         self.kept_groups = self.groups[self.keep]
         mi = np.where(self.kept_groups == "metrics")[0]
-        self.pca = PCA(n_components=min(N_PC, len(mi), Z.shape[0] - 1), random_state=SEED).fit(Z[:, mi]) if len(mi) else None
+        self.pca = PCA(n_components=(ref.n_pc if ref is not None else min(N_PC, len(mi), Z.shape[0] - 1)), random_state=SEED).fit(Z[:, mi]) if len(mi) else None
         self.n_pc = self.pca.n_components_ if self.pca is not None else 0
         return self
 
@@ -176,7 +178,8 @@ class LO2Data:
     def prep(self, k):
         if k not in self._p:
             rows = self.train_pos if k == "final" else self.folds[k - 1][0]
-            self._p[k] = LO2Prep().fit(self.raw[rows], self.raw_groups)
+            ref = None if k == "final" else self.prep("final")
+            self._p[k] = LO2Prep().fit(self.raw[rows], self.raw_groups, ref=ref)
         return self._p[k]
 
     def W(self, k):

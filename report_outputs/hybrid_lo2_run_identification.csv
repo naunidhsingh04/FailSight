@@ -1,0 +1,12 @@
+kind,model,accuracy,chance,n_runs,label_version,agreement,model_accuracy,rule_accuracy,rule_balanced_accuracy,model_balanced_accuracy,share_of_correct_also_correct_by_rule
+run_identification,(throw-away XGBoost),0.000000,0.200000,5.000000,,,,,,,
+hybrid_vs_rule,BERT_GNN,,,,label_binary,0.924419,1.000000,0.924419,0.500000,1.000000,0.924419
+hybrid_vs_rule,Transformer_LSTM,,,,label_binary,0.924419,1.000000,0.924419,0.500000,1.000000,0.924419
+hybrid_vs_rule,AE_LSTM,,,,label_binary,0.924419,1.000000,0.924419,0.500000,1.000000,0.924419
+hybrid_vs_rule,GNN_LSTM,,,,label_binary,0.924419,1.000000,0.924419,0.500000,1.000000,0.924419
+hybrid_vs_rule,Multimodal_Transformer_MLP,,,,label_binary,0.924419,1.000000,0.924419,0.500000,1.000000,0.924419
+hybrid_vs_rule,BERT_GNN,,,,label_level,0.284884,0.569767,0.523256,0.250000,0.662963,0.357143
+hybrid_vs_rule,Transformer_LSTM,,,,label_level,0.110465,0.308140,0.523256,0.250000,0.576852,0.150943
+hybrid_vs_rule,AE_LSTM,,,,label_level,0.069767,0.377907,0.523256,0.250000,0.587963,0.092308
+hybrid_vs_rule,GNN_LSTM,,,,label_level,0.296512,0.453488,0.523256,0.250000,0.583333,0.358974
+hybrid_vs_rule,Multimodal_Transformer_MLP,,,,label_level,0.395349,0.453488,0.523256,0.250000,0.573148,0.512821

@@ -1,0 +1,11 @@
+model,label_version,shuffled_balanced_accuracy,shuffled_macro_f1,shuffled_normal_recall,shuffled_roc_auc,real_balanced_accuracy,verdict
+BERT_GNN,label_binary,0.529028,0.535888,0.076923,0.435897,1.000000,PASS (shuffled labels score near chance)
+Transformer_LSTM,label_binary,0.449686,0.453968,0.000000,0.238994,1.000000,PASS (shuffled labels score near chance)
+AE_LSTM,label_binary,0.468553,0.464174,0.000000,0.365747,1.000000,PASS (shuffled labels score near chance)
+GNN_LSTM,label_binary,0.532172,0.541159,0.076923,0.639574,1.000000,PASS (shuffled labels score near chance)
+Multimodal_Transformer_MLP,label_binary,0.481132,0.470769,0.000000,0.496855,1.000000,PASS (shuffled labels score near chance)
+BERT_GNN,label_level,0.225000,0.211824,0.000000,0.509965,0.662963,PASS (shuffled labels score near chance)
+Transformer_LSTM,label_level,0.334117,0.272055,0.384615,0.548516,0.576852,PASS (shuffled labels score near chance)
+AE_LSTM,label_level,0.299573,0.206824,0.153846,0.626182,0.587963,PASS (shuffled labels score near chance)
+GNN_LSTM,label_level,0.196296,0.193164,0.000000,0.451225,0.583333,PASS (shuffled labels score near chance)
+Multimodal_Transformer_MLP,label_level,0.253704,0.205846,0.000000,0.362865,0.573148,PASS (shuffled labels score near chance)
