@@ -124,6 +124,7 @@ D.update({
     "lo2_full_not_completed.csv": ("LO2 model families not completed because of the time limit", "final"),
     "lo2_full_shap_global.csv": ("LO2: SHAP of the best classical tree model on the real test windows", "final"),
     "lo2_full_lime_example.csv": ("LO2: LIME explanation of one real test window", "final"),
+    "lo2_shortcut_check.csv": ("LO2 diagnostic: why the binary labels are almost trivial (same forest on subsets of inputs)", "final"),
     "hybrid_engine_log.txt": ("Log of the hybrid training engine (AnoMod and LO2)", "log"),
     "notebook_check.json": ("Result of executing the Colab notebook in a fresh environment (proof P23)", "final"),
     "overnight_log.md": ("Timestamped log of decisions and steps of the overnight run", "log"),
@@ -205,3 +206,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

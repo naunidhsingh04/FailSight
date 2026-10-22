@@ -1,0 +1,28 @@
+{
+ "runs": [
+  {
+   "command": "python -m pytest tests app/backend/tests",
+   "result": "146 passed"
+  },
+  {
+   "command": "npm run build (app/frontend)",
+   "result": "built, tsc clean"
+  },
+  {
+   "command": "npx playwright test --project=chromium hybrids.spec.ts pages.spec.ts (all pages at 375/768/1280/1920 incl. Results, Proof, Hybrid models, Demo, jargon check)",
+   "result": "101 passed"
+  },
+  {
+   "command": "python scripts/proofs.py --only P20,P21,P22,P23 (P1-P19 untouched)",
+   "result": "new sections PASS / REPORTED ACCURATELY; totals 78 PASS / 4 WARN / 0 FAIL / 13 REPORTED ACCURATELY"
+  },
+  {
+   "command": "python scripts/run_notebook_check.py",
+   "result": "0 errors, 0 soft failures, 8 numbers equal"
+  },
+  {
+   "command": "cold start (testbed launcher) and break slow pages",
+   "result": "storefront 200, monitor 200, alert after 21 s, ports freed"
+  }
+ ]
+}

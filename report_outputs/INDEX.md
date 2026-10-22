@@ -1,6 +1,6 @@
 # Results index
 
-Every result file in `report_outputs/` (203 files plus the sub-folders below). Nothing was moved or renamed. *final* = a result that is reported or shown; *intermediate* = needed to produce or check a final result; *log* = run log. 'Used by' lists the proof sections (`scripts/proofs.py`) and whether the web app reads the file; 'report only' means it is a stand-alone result file.
+Every result file in `report_outputs/` (205 files plus the sub-folders below). Nothing was moved or renamed. *final* = a result that is reported or shown; *intermediate* = needed to produce or check a final result; *log* = run log. 'Used by' lists the proof sections (`scripts/proofs.py`) and whether the web app reads the file; 'report only' means it is a stand-alone result file.
 
 | file | what it is | used by | status |
 |---|---|---|---|
@@ -137,7 +137,7 @@ Every result file in `report_outputs/` (203 files plus the sub-folders below). N
 | `lo2_log.txt` | Log of the LO2 evaluation | proofs P9; app | log |
 | `lo2_results_summary.md` | Plain-language summary of the LO2 external test (models did not transfer) | app | final |
 | `lo2_sample_manifest.csv` | Manifest of the LO2 scenarios sampled (read-only data) | proofs P9; app | intermediate |
-| `lo2_shortcut_check.csv` | (undocumented) | report only | intermediate |
+| `lo2_shortcut_check.csv` | LO2 diagnostic: why the binary labels are almost trivial (same forest on subsets of inputs) | report only | final |
 | `lo2_slice_manifest.csv` | LO2 slice: the whole runs chosen (size in MB, role, window counts, reason) | app | final |
 | `lo2_split_ids.csv` | LO2 slice: run-level split written before any window existed, then the window-level split | app | final |
 | `lo2_test_metrics.csv` | LO2 external test: metrics of every saved model per feature variant and system flag (balanced accuracy 0.500) | proofs P9; app | final |
@@ -153,6 +153,8 @@ Every result file in `report_outputs/` (203 files plus the sub-folders below). N
 | `oof_predictions.parquet` | Out-of-fold predictions of the AnoMod models (used to choose decision rules; not tracked: parquet is git-ignored) | report only | intermediate |
 | `optuna_trials.csv` | All Optuna trials of the AnoMod tuning | report only | intermediate |
 | `overnight_log.md` | Timestamped log of decisions and steps of the overnight run | report only | log |
+| `overnight_steps.json` | (undocumented) | report only | intermediate |
+| `overnight_tests.json` | (undocumented) | report only | intermediate |
 | `paired_bootstrap.csv` | Paired bootstrap comparison of each AnoMod model with the best one (Holm-adjusted) | app | final |
 | `preprocess_log.txt` | Log of preprocessing | report only | log |
 | `proofs.json` | The proof report P1-P23 (statuses, evidence, terminal text); shown on the Proofs page | proofs P8, P9, P10; app | final |
@@ -208,7 +210,7 @@ Every result file in `report_outputs/` (203 files plus the sub-folders below). N
 | `training_time.csv` | Training time of the AnoMod models | app | intermediate |
 | `underfit_overfit.csv` | Train / cross-validation / test macro-F1 and the overfitting diagnosis per AnoMod model | proofs P6; app | final |
 
-203 files: 163 final, 31 intermediate, 9 logs.
+205 files: 164 final, 32 intermediate, 9 logs.
 
 ## Sub-folders
 
