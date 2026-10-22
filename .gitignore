@@ -30,3 +30,7 @@ testbed/runs/_live_*
 testbed/runs/_invalid/
 outputs/
 external/
+
+processed/lo2_hybrid/
+failsight_bundle.zip
+colab_venv_test/
