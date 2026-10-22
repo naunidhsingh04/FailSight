@@ -2,3 +2,19 @@
 - 2026-10-22 23:40 Started. Tag pre-overnight created. Power timeouts set to 0.
 - 23:49 Step 1 done: cold start OK, break detected in 17 s, ports freed. PRESENT_NOW.md extended.
 - 23:56 Step 2 started: models_src/hybrid + scripts/hybrid_engine.py + hybrid_anomod.py written, 8 unit tests pass. Deviation: the five AnoMod hybrid classes live in one file (anomod_hybrids.py) instead of five files.
+- 00:04:13 LO2 folder found: C:\Users\Lenovo\Documents\AI PROJECT\LO2 (33 runs, 887.4 MB of downloaded run files)
+- 00:04:15 slice: 5 whole runs, 131.8 MB (cap 150 MB, 14.9% of the downloaded run files); test run 1724303680; 6 runs would need 156.9 MB, over the cap, so fewer than 6 runs is forced
+- 00:04:24 metric series read: 1352 stable series x 860 scrape rows of the 5 chosen runs
+- 00:04:44 parsed run 1719592986 (train): 172 windows in 20 s; templates so far 194
+- 00:05:03 parsed run 1721157245 (train): 172 windows in 19 s; templates so far 197
+- 00:05:23 parsed run 1722741254 (train): 172 windows in 20 s; templates so far 207
+- 00:05:42 parsed run 1725869703 (train): 172 windows in 19 s; templates so far 210
+- 00:06:04 parsed run 1724303680 (test): 172 windows in 21 s; templates so far 210
+- 00:07:06 metric series read: 1352 stable series x 860 scrape rows of the 5 chosen runs
+- 00:07:28 parsed run 1719592986 (train): 172 windows in 22 s; templates so far 194
+- 00:07:50 parsed run 1721157245 (train): 172 windows in 22 s; templates so far 197
+- 00:08:13 parsed run 1722741254 (train): 172 windows in 23 s; templates so far 207
+- 00:08:34 parsed run 1725869703 (train): 172 windows in 21 s; templates so far 210
+- 00:08:56 parsed run 1724303680 (test): 172 windows in 22 s; templates so far 210
+- 00:08:58 windows 860 (5 runs), metric families 478, templates 210; class counts {'HTTP400': 450, 'HTTP404': 270, 'HTTP401': 75, 'Normal': 65}
+- 00:08:59 LO2 raw files unchanged (SHA-256 before == after): True

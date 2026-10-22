@@ -1,0 +1,5 @@
+model,label_version,scope,variant,n,accuracy,balanced_accuracy,macro_f1,normal_recall,support_normal,recall_Normal,support_Normal,recall_Anomaly,support_Anomaly,roc_auc,pr_auc,recall_Performance,support_Performance,recall_Service,support_Service,recall_Database,support_Database,recall_Code,support_Code
+Transformer_BiLSTM,label_binary,ALL,official,647,0.931994,0.650300,0.658526,0.333333,36,0.333333,36,0.967267,611.000000,0.800918,0.986008,,,,,,,,
+Transformer_BiLSTM,label_binary,ALL,tuned_threshold,647,0.904173,0.635570,0.613873,0.333333,36,0.333333,36,0.937807,611.000000,0.800918,0.986008,,,,,,,,
+Transformer_BiLSTM,label_level,ALL,official,647,0.782071,0.717016,0.719784,0.388889,36,0.388889,36,,,0.953693,0.811142,0.692308,130.000000,0.787500,160.000000,0.818182,154.000000,0.898204,167.000000
+Transformer_BiLSTM,label_level,ALL,tuned_threshold,647,0.786708,0.718675,0.724549,0.361111,36,0.361111,36,,,0.953693,0.811142,0.746154,130.000000,0.743750,160.000000,0.844156,154.000000,0.898204,167.000000

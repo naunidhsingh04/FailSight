@@ -8,3 +8,36 @@
 00:00:35     anomod label_binary Transformer_BiLSTM/cv fold 1: 12 ep (best 6), 16s, val BA 0.747 F1 0.803, train F1 0.957  SMOTE b:140/1901 a:140/1901 hold:30/478
 00:00:53     anomod label_binary Transformer_BiLSTM/cv fold 2: 12 ep (best 6), 17s, val BA 0.985 F1 0.898, train F1 0.919  SMOTE b:140/1901 a:140/1901 hold:30/478
 00:01:22     anomod label_binary Transformer_BiLSTM/cv fold 3: 26 ep (best 20), 28s, val BA 0.816 F1 0.835, train F1 0.996  SMOTE b:130/1905 a:130/1905 hold:40/474
+00:01:41     anomod label_binary Transformer_BiLSTM/cv fold 4: 12 ep (best 6), 17s, val BA 0.937 F1 0.852, train F1 0.958  SMOTE b:130/1905 a:130/1905 hold:40/474
+00:01:59     anomod label_binary Transformer_BiLSTM/cv fold 5: 11 ep (best 5), 16s, val BA 0.683 F1 0.758, train F1 0.971  SMOTE b:140/1904 a:140/1904 hold:30/475
+00:02:17     anomod label_binary Transformer_BiLSTM/corr fold 1: 14 ep (best 8), 17s, val BA 0.711 F1 0.759, train F1 0.976  SMOTE b:140/1901 a:140/1901 hold:30/478
+00:02:37     anomod label_binary Transformer_BiLSTM/corr fold 2: 15 ep (best 9), 18s, val BA 0.999 F1 0.991, train F1 0.947  SMOTE b:140/1901 a:140/1901 hold:30/478
+00:03:14     anomod label_binary Transformer_BiLSTM/corr fold 3: 37 ep (best 31), 34s, val BA 0.812 F1 0.777, train F1 0.976  SMOTE b:130/1905 a:130/1905 hold:40/474
+00:03:37     anomod label_binary Transformer_BiLSTM/corr fold 4: 20 ep (best 14), 22s, val BA 0.980 F1 0.894, train F1 0.949  SMOTE b:130/1905 a:130/1905 hold:40/474
+00:03:55     anomod label_binary Transformer_BiLSTM/corr fold 5: 12 ep (best 6), 16s, val BA 0.705 F1 0.726, train F1 0.954  SMOTE b:140/1904 a:140/1904 hold:30/475
+00:07:32 AnoMod data: train 2549, test 647, features 128, 5 folds [508, 508, 514, 514, 505], graph nodes ['api', 'logs', 'socialnet_containers', 'host_system', 'containers', 'http_server', 'node_exporter', 'process', 'other_services', 'flags']
+00:07:32 === anomod label_binary Transformer_BiLSTM  (memory in use 0.4 GB)
+00:08:03 === done Transformer_BiLSTM label_binary in 0.5 min | CV val BA 0.834 | test BA 0.650 (reported, not used for any choice)
+00:08:04 === anomod label_level Transformer_BiLSTM  (memory in use 0.5 GB)
+00:08:21     anomod label_level Transformer_BiLSTM/screen_h32_smote fold 1: 10 ep (best 10), 16s, val BA 0.790 F1 0.809, train F1 0.997  SMOTE b:140/474/488/462/477 a:488/488/488/488/488 hold:30/117/125/116/120
+00:08:37     anomod label_level Transformer_BiLSTM/screen_h32_cw fold 1: 10 ep (best 8), 14s, val BA 0.753 F1 0.757, train F1 0.972  SMOTE b:140/474/488/462/477 a:140/474/488/462/477 hold:30/117/125/116/120
+00:08:57     anomod label_level Transformer_BiLSTM/screen_h64_smote fold 1: 10 ep (best 7), 18s, val BA 0.744 F1 0.758, train F1 0.983  SMOTE b:140/474/488/462/477 a:488/488/488/488/488 hold:30/117/125/116/120
+00:09:16     anomod label_level Transformer_BiLSTM/screen_h64_cw fold 1: 10 ep (best 5), 18s, val BA 0.732 F1 0.749, train F1 0.981  SMOTE b:140/474/488/462/477 a:140/474/488/462/477 hold:30/117/125/116/120
+00:09:51     anomod label_level Transformer_BiLSTM/cv fold 1: 28 ep (best 22), 33s, val BA 0.796 F1 0.814, train F1 0.998  SMOTE b:140/474/488/462/477 a:488/488/488/488/488 hold:30/117/125/116/120
+00:10:27     anomod label_level Transformer_BiLSTM/cv fold 2: 29 ep (best 23), 35s, val BA 0.945 F1 0.929, train F1 0.999  SMOTE b:140/469/493/461/478 a:493/493/493/493/493 hold:30/122/120/117/119
+00:10:43     anomod label_level Transformer_BiLSTM/cv fold 3: 7 ep (best 1), 14s, val BA 0.491 F1 0.478, train F1 0.742  SMOTE b:130/475/489/464/477 a:489/489/489/489/489 hold:40/116/124/114/120
+00:11:05     anomod label_level Transformer_BiLSTM/cv fold 4: 15 ep (best 9), 21s, val BA 0.859 F1 0.841, train F1 0.990  SMOTE b:130/473/489/463/480 a:489/489/489/489/489 hold:40/118/124/115/117
+00:11:27     anomod label_level Transformer_BiLSTM/cv fold 5: 11 ep (best 5), 20s, val BA 0.781 F1 0.793, train F1 0.948  SMOTE b:140/473/493/462/476 a:493/493/493/493/493 hold:30/118/120/116/121
+00:11:49     anomod label_level Transformer_BiLSTM/corr fold 1: 17 ep (best 11), 21s, val BA 0.728 F1 0.743, train F1 0.974  SMOTE b:140/474/488/462/477 a:488/488/488/488/488 hold:30/117/125/116/120
+00:12:18     anomod label_level Transformer_BiLSTM/corr fold 2: 24 ep (best 18), 27s, val BA 0.885 F1 0.863, train F1 0.978  SMOTE b:140/469/493/461/478 a:493/493/493/493/493 hold:30/122/120/117/119
+00:12:37     anomod label_level Transformer_BiLSTM/corr fold 3: 12 ep (best 6), 17s, val BA 0.615 F1 0.606, train F1 0.885  SMOTE b:130/475/489/464/477 a:489/489/489/489/489 hold:40/116/124/114/120
+00:13:12     anomod label_level Transformer_BiLSTM/corr fold 4: 28 ep (best 22), 33s, val BA 0.866 F1 0.836, train F1 0.986  SMOTE b:130/473/489/463/480 a:489/489/489/489/489 hold:40/118/124/115/117
+00:13:35     anomod label_level Transformer_BiLSTM/corr fold 5: 16 ep (best 10), 21s, val BA 0.738 F1 0.755, train F1 0.942  SMOTE b:140/473/493/462/476 a:493/493/493/493/493 hold:30/118/120/116/121
+00:14:14 === done Transformer_BiLSTM label_level in 6.2 min | CV val BA 0.775 | test BA 0.717 (reported, not used for any choice)
+00:14:58 === anomod label_binary AE_LSTM  (memory in use 0.6 GB)
+00:15:11     anomod label_binary AE_LSTM/screen_h32_smote fold 1: 10 ep (best 9), 12s, val BA 0.667 F1 0.740, train F1 0.991  SMOTE b:140/1901 a:1901/1901 hold:30/478
+00:15:20     anomod label_binary AE_LSTM/screen_h32_cw fold 1: 10 ep (best 5), 9s, val BA 0.667 F1 0.740, train F1 0.974  SMOTE b:140/1901 a:140/1901 hold:30/478
+00:15:36     anomod label_binary AE_LSTM/screen_h64_smote fold 1: 10 ep (best 6), 14s, val BA 0.667 F1 0.740, train F1 0.996  SMOTE b:140/1901 a:1901/1901 hold:30/478
+00:15:47     anomod label_binary AE_LSTM/screen_h64_cw fold 1: 10 ep (best 4), 10s, val BA 0.733 F1 0.810, train F1 0.985  SMOTE b:140/1901 a:140/1901 hold:30/478
+00:15:59     anomod label_binary AE_LSTM/cv fold 1: 10 ep (best 4), 10s, val BA 0.733 F1 0.810, train F1 0.985  SMOTE b:140/1901 a:140/1901 hold:30/478
+00:16:13     anomod label_binary AE_LSTM/cv fold 2: 13 ep (best 7), 12s, val BA 0.996 F1 0.967, train F1 0.958  SMOTE b:140/1901 a:140/1901 hold:30/478

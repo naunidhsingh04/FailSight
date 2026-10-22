@@ -18,7 +18,7 @@ from .explain import Explainer
 from .features import InputError, missing_report, sequence_context, to_frame
 from .monitor import IngestError, Monitor
 from .registry import Registry, RegistryError
-from . import proofs_api
+from . import proofs_api, hybrid_results
 from .replay_ctl import ReplayController
 
 log = logging.getLogger("failsight")
@@ -282,6 +282,15 @@ def create_app(registry: Registry | None = None) -> FastAPI:
     @app.get("/api/lo2")
     async def get_lo2():
         return JSONResponse(content=results.lo2())
+
+    @app.get("/api/hybrid")
+    async def get_hybrid():
+        """the ten hybrid deep-learning models (five on AnoMod, five on the LO2 slice), read from report_outputs/hybrid_*.csv"""
+        return JSONResponse(content=hybrid_results.hybrids())
+
+    @app.get("/api/lo2/leaderboard")
+    async def get_lo2_leaderboard():
+        return JSONResponse(content=hybrid_results.lo2_leaderboard())
 
     # ------------------------------------------------------------------ live monitoring: ingestion, control, SSE
     async def read_json(request: Request) -> dict:

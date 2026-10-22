@@ -1,0 +1,25 @@
+{
+ "label_binary": {
+  "Transformer_BiLSTM": {
+   "type": "threshold",
+   "threshold": 0.84,
+   "oof_balanced_accuracy": 0.8527211136661474,
+   "oof_normal_recall": 0.7529411764705882,
+   "oof_balanced_accuracy_default_argmax": 0.8491543654031599
+  }
+ },
+ "label_level": {
+  "Transformer_BiLSTM": {
+   "type": "class_multipliers",
+   "weights": [
+    0.4723665527410147,
+    1.0,
+    0.7788007830714049,
+    2.718281828459045,
+    1.0
+   ],
+   "oof_balanced_accuracy": 0.7776703382995507,
+   "oof_balanced_accuracy_default_argmax": 0.7682558264637281
+  }
+ }
+}

@@ -160,6 +160,7 @@ class Runner:
         self.state.mkdir(parents=True, exist_ok=True)
         self.mdir.mkdir(parents=True, exist_ok=True)
         self.deadline, self.budget = deadline, model_budget_s
+        self.hook_fold = self.hook_final = None          # optional hooks (the XGBoost-head versions of the deep-learning models use them)
 
     def sp(self, *parts):
         return self.state / ("__".join(str(p) for p in parts))
@@ -183,7 +184,8 @@ class Runner:
         hold = np.bincount(yva, minlength=len(b))
         m, info = fit_hybrid(self.reg[name], D.spec(label), cfg, Xs, ys, Xva, yva, method, max_epochs, SEED + 7 * k, lr_scale=lr_scale)
         ptr, pva = predict(m, Xtr), predict(m, Xva)
-        r = dict(k=k, train_rows=tr, val_rows=va, train_proba=ptr, val_proba=pva, b=cnt_str(b), a=cnt_str(a), hold=cnt_str(hold), skipped=sk, **info)
+        extra = self.hook_fold(m, Xs, ys, Xtr, Xva, method) if self.hook_fold else {}
+        r = dict(**extra, k=k, train_rows=tr, val_rows=va, train_proba=ptr, val_proba=pva, b=cnt_str(b), a=cnt_str(a), hold=cnt_str(hold), skipped=sk, **info)
         del m, Xs, Xtr, Xva
         keras.backend.clear_session()
         gc.collect()
@@ -309,8 +311,10 @@ class Runner:
         rec["final_smote"] = dict(b=cnt_str(b), a=cnt_str(a), skipped=sk, hold_test=cnt_str(np.bincount(D.y[label][D.test_pos], minlength=C)))
         m, info = fit_hybrid(self.reg[name], spec, chosen, Xs, ys, None, None, method, 0, SEED, fixed_epochs=epochs_final, lr_scale=lr_scale)
         pte, ptr_final = predict(m, Xte), predict(m, Xtr)
-        m.save(self.mdir / f"{label}__{name}.keras")
+        m.save_weights(self.mdir / f"{label}__{name}.weights.h5")          # sub-classed models: weights are saved, the architecture is rebuilt from the spec + frozen config
         np.save(self.sp("test_proba", label, f"{name}.npy"), pte)
+        if self.hook_final:
+            self.hook_final(m, Xs, ys, Xtr, Xte, "real", name, label, method)
         rec["final"] = dict(epochs=epochs_final, secs=time.time() - t0, params=info["params"], train_ba=bal_f1(ytr, ptr_final)[0], train_f1=bal_f1(ytr, ptr_final)[1])
         del m
         keras.backend.clear_session()
@@ -322,6 +326,8 @@ class Runner:
             Xs2, ys2 = Xtr, yshuf
         m, _ = fit_hybrid(self.reg[name], spec, chosen, Xs2, ys2, None, None, method, 0, SEED, fixed_epochs=epochs_final, lr_scale=lr_scale)
         np.save(self.sp("shuf_proba", label, f"{name}.npy"), predict(m, Xte))
+        if self.hook_final:
+            self.hook_final(m, Xs2, ys2, Xtr, Xte, "shuf", name, label, method)
         del m, Xs2, Xs, Xtr, Xte
         keras.backend.clear_session()
         gc.collect()

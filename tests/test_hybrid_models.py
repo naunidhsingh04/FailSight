@@ -14,17 +14,16 @@ from models_src.hybrid import REGISTRY  # noqa: E402
 
 T, F, C = 6, 24, 3
 SPEC = dict(T=T, F=F, C=C, node_idx=[list(range(0, 8)), list(range(8, 16)), list(range(16, 24))], adj=np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]]),
-            modal_idx=[list(range(0, 12)), list(range(12, 24))], n_templates=10, tmpl_dim=8)
+            modal_idx=[list(range(0, 12)), list(range(12, 24))], tmpl_idx=list(range(0, 8)), side_idx=list(range(8, 24)),
+            tmpl_emb=np.random.RandomState(3).randn(8, 6).astype("float32"), tmpl_adj=np.roll(np.eye(8, dtype=int), 1, 0) + np.roll(np.eye(8, dtype=int), -1, 0))
 CFG = dict(hidden=16, dropout=0.1, wd=1e-4, lr=1e-3)
 
 
 def build(name):
-    if name in ("BERT_GNN",):
-        pytest.skip("needs template embeddings; tested in test_lo2_hybrids")
     return REGISTRY[name](SPEC, CFG)
 
 
-@pytest.mark.parametrize("name", [n for n in REGISTRY if n not in ("BERT_GNN",)])
+@pytest.mark.parametrize("name", list(REGISTRY))
 def test_shape_and_gradients_reach_both_parts(name):
     keras.utils.set_random_seed(42)
     m = build(name)
@@ -42,6 +41,9 @@ def test_shape_and_gradients_reach_both_parts(name):
     grads_all = dict(zip([id(w) for w in allw], tape.gradient(loss, allw)))
     for part_name, part in parts.items():
         ws = part.trainable_weights
+        if name == "BERT_GNN" and part_name == "first":
+            assert not ws, "the BERT-style template encoder is frozen by design"
+            continue
         assert ws, part_name
         grads = [grads_all[id(w)] for w in ws]
         assert any(g is not None and float(tf.reduce_max(tf.abs(g))) > 0 for g in grads), f"no gradient reaches the {part_name} part of {name}"

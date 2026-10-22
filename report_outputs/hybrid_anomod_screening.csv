@@ -1,0 +1,9 @@
+model,label_version,hidden,method,val_ba,val_f1,epochs,loss_first,loss_last,secs
+Transformer_BiLSTM,label_binary,32,smote,0.716667,0.793590,10,0.271421,0.125473,19.500585
+Transformer_BiLSTM,label_binary,32,cw,0.746862,0.803202,10,0.461017,0.140881,14.208640
+Transformer_BiLSTM,label_binary,64,smote,0.666667,0.739754,10,0.222930,0.120522,22.829290
+Transformer_BiLSTM,label_binary,64,cw,0.666667,0.739754,8,0.379396,0.142636,14.648946
+Transformer_BiLSTM,label_level,32,smote,0.789710,0.809003,10,1.253385,0.288179,15.776156
+Transformer_BiLSTM,label_level,32,cw,0.753393,0.757106,10,1.339628,0.329168,14.420755
+Transformer_BiLSTM,label_level,64,smote,0.744221,0.758010,10,1.061646,0.266136,17.700576
+Transformer_BiLSTM,label_level,64,cw,0.731574,0.748679,10,1.215317,0.260492,17.840821

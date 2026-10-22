@@ -1059,11 +1059,25 @@ def main():
         s.add("Run time of this report", "PASS", [f"{time.time() - T0:.0f} s so far (see the total in the summary)"], "this run")
         sections.append(s)
 
+    # ------------------------------------------------------------------------------------------------ P20-P23 hybrids, LO2, folds, notebook (added sections; P1-P19 untouched)
+    import proofs_hybrid as PH
+    for sid, title, fn in (("P20", "HYBRID DEEP-LEARNING MODELS ON ANOMOD: five models reloaded, re-scored and checked", PH.p20),
+                           ("P21", "LO2 SLICE: separation from AnoMod, split and SMOTE integrity, hybrids and controls", PH.p21),
+                           ("P22", "FOLDS OF THE NEW 5-FOLD WORK: block-aware, every class covered, no group shared", PH.p22),
+                           ("P23", "COLAB NOTEBOOK: executes end to end and its numbers equal the proof numbers", PH.p23)):
+        if want(sid):
+            s = Section(sid, title); header(s)
+            try:
+                fn(s, table)
+            except Exception as ex:                                         # a missing file must show up as a failed/skipped item, never crash the whole report
+                s.add(f"{sid} could not be computed", "FAIL", [f"{type(ex).__name__}: {str(ex)[:300]}"], "scripts/proofs_hybrid.py")
+            sections.append(s)
+
     # ------------------------------------------------------------------------------------------------ summary / report assembly
     global CUR
     CUR = []
     new_secs = {x.id: dict(id=x.id, title=x.title, status=x.status, items=x.items, lines=x.lines, generated_at=x.generated_at) for x in sections}
-    order = [f"P{i}" for i in range(1, 20)]
+    order = [f"P{i}" for i in range(1, 24)]
     merged = dict(new_secs)
     base_p = REP / "proofs.json"
     if (only or args.quick) and base_p.exists():                      # a partial re-run refreshes only its sections of the existing report

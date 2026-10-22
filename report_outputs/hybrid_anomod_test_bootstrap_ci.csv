@@ -1,0 +1,9 @@
+model,label_version,scope,metric,point_estimate,ci95_low,ci95_high,n_resamples,n_valid_resamples,n_blocks
+Transformer_BiLSTM,label_binary,ALL,balanced_accuracy,0.650300,0.475425,0.938503,200,200,66
+Transformer_BiLSTM,label_binary,ALL,macro_f1,0.658526,0.476608,0.892675,200,200,66
+Transformer_BiLSTM,label_binary,ALL,normal_recall,0.333333,0.000000,0.900000,200,198,66
+Transformer_BiLSTM,label_binary,ALL,roc_auc,0.800918,0.667754,0.966496,200,198,66
+Transformer_BiLSTM,label_level,ALL,balanced_accuracy,0.717016,0.625761,0.827628,200,200,66
+Transformer_BiLSTM,label_level,ALL,macro_f1,0.719784,0.620006,0.830401,200,200,66
+Transformer_BiLSTM,label_level,ALL,normal_recall,0.388889,0.099107,0.800000,200,198,66
+Transformer_BiLSTM,label_level,ALL,roc_auc,0.953693,0.921746,0.981817,200,198,66

@@ -1,0 +1,6 @@
+run_id,raw_file,size_mb,tar_read_from,scenarios,scrape_rows,normal_rows,anomalous_rows,role,reason
+1719592986,lo2_raw/light-oauth2-data-1719592986.tar.deflate,26.61,lo2_tar/light-oauth2-data-1719592986.tar,54,172,13,159,train,whole run; one of 5 evenly spread over the 33 runs; both normal ('correct') and error scenarios; training part
+1721157245,lo2_raw/light-oauth2-data-1721157245.tar.deflate,26.15,lo2_tar/light-oauth2-data-1721157245.tar,54,172,13,159,train,whole run; one of 5 evenly spread over the 33 runs; both normal ('correct') and error scenarios; training part
+1722741254,lo2_raw/light-oauth2-data-1722741254.tar.deflate,27.15,lo2_tar/light-oauth2-data-1722741254.tar,54,172,13,159,train,whole run; one of 5 evenly spread over the 33 runs; both normal ('correct') and error scenarios; training part
+1724303680,lo2_raw/light-oauth2-data-1724303680.tar.deflate,26.58,lo2_tar/light-oauth2-data-1724303680.tar,54,172,13,159,test,"whole run; one of 5 evenly spread over the 33 runs; both normal ('correct') and error scenarios; held out as the 20% test part (whole run, chosen by seed 42)"
+1725869703,lo2_raw/light-oauth2-data-1725869703.tar.deflate,25.33,lo2_tar/light-oauth2-data-1725869703.tar,54,172,13,159,train,whole run; one of 5 evenly spread over the 33 runs; both normal ('correct') and error scenarios; training part
