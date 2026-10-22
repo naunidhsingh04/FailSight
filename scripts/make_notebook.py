@@ -100,6 +100,11 @@ def section(name):
     except Exception as e:
         print(f"[section {name}] could not run: {type(e).__name__}: {str(e)[:300]}")
 
+def quiet():
+    # some project modules switch warnings back on when imported; the sklearn / tensorflow notices are not part of the results
+    warnings.showwarning = lambda *a, **k: None
+    warnings.simplefilter("ignore")
+
 def jload(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
@@ -261,6 +266,7 @@ with section("4 imbalance"):
     import matplotlib.pyplot as plt
     from v2_data import DataV2, smote_resample
     from imblearn.over_sampling import ADASYN
+    quiet()
     D10 = DataV2()
     names5 = ["Normal", "Performance", "Service", "Database", "Code"]
     rows = []
@@ -335,6 +341,7 @@ with section("6 classical"):
     from lightgbm import LGBMClassifier
     from imblearn.over_sampling import SMOTE
     import hybrid_anomod as HA
+    quiet()
     D5 = HA.AnoModData()                                       # the same data, split ids and preprocessing as every AnoMod model; 5 folds for the new work
     ybin = D5.y["label_binary"]; yte = ybin[D5.test_pos]; blocks_te = D5.group_of(D5.test_pos)
     def smote_fit(X, y):
@@ -391,6 +398,7 @@ with section("7 hybrids live"):
     import hybrid_engine as E
     from models_src.hybrid import ANOMOD_HYBRIDS
     import keras
+    quiet()
     label = "label_binary"; spec = D5.spec(label); cfg = dict(hidden=32, dropout=0.3, wd=1e-4, lr=1e-3)
     Wf = D5.W("final"); Xtr, Xte = D5.seq(Wf, D5.train_pos), D5.seq(Wf, D5.test_pos); ytr_ = D5.y[label][D5.train_pos]
     Xs, ys, b_, a_, sk = E.smote_seq(Xtr, ytr_, D5.binary_cols)
@@ -461,6 +469,7 @@ md("""
 code(r"""
 with section("9 explain"):
     import shap, matplotlib.pyplot as plt
+    quiet()
     names = D5.gprep.output_names
     Xs_f, ys_f = smote_fit(Wf[D5.train_pos], ybin[D5.train_pos])
     xgb = XGBClassifier(n_estimators=100, max_depth=6, tree_method="hist", n_jobs=-1, random_state=SEED, verbosity=0).fit(Xs_f, ys_f)
@@ -486,7 +495,7 @@ with section("9 explain"):
         print("attention is not available for this model here:", str(e)[:150])
 """
      )
-md("""**What you should see:** a list and bar chart of the features that moved the XGBoost answer most (SHAP), a short LIME list for one real test window, and a small table of attention weights from the live hybrid. The top features are system readings; the explanation says what the model used, not what caused the fault.""")
+md("""**What you should see:** a list and bar chart of the features that moved the XGBoost answer most (SHAP), a short LIME list for one real test window, and a small table of attention weights from the live hybrid (after only 3 epochs they are close to equal). The top features are system readings; the explanation says what the model used, not what caused the fault.""")
 
 # ------------------------------------------------------------------------------------------------ 10 testbed
 md("""
@@ -536,22 +545,28 @@ with section("10 replay one recorded run"):
     if tw is None or not det_path.exists():
         print("the testbed window table or the frozen detector is not in the bundle; this replay is skipped"); raise RuntimeError("bundle missing")
     det = joblib.load(det_path); ra = pd.read_csv(REP / "testbed_run_assignment.csv")
-    test_runs = ra[(ra.split == "test") & (ra.n_faults > 0)].run_id.tolist(); run = test_runs[0]
-    w = tw[tw.run_id == run].sort_values("window_start").reset_index(drop=True) if "run_id" in tw.columns else None
-    cols = det["columns"]; thr = float(jload(REP / "testbed_frozen_config.json")["selection"]["chosen"]["tuned_threshold"])
-    risk = det["model"].predict_proba(w[cols].to_numpy(float))[:, 1] if hasattr(det["model"], "predict_proba") else None
-    flag = risk >= thr; alert = np.array([flag[max(0, i - 2):i + 1].sum() >= 2 for i in range(len(flag))])
-    first = int(np.argmax(alert)) if alert.any() else None
-    fs = w[w.fault_type.notna() & (w.fault_type != "")] if "fault_type" in w else w.iloc[0:0]
-    t0 = pd.to_datetime(w.window_start.iloc[0]).value / 1e9 if np.issubdtype(w.window_start.dtype, np.datetime64) else float(w.window_start.iloc[0])
-    print("replaying recorded run", run, "(a held-out run) through the frozen detector, one 30 s window every 10 s; alert rule: 2 of the last 3 windows above the threshold")
-    print("first alert at window", first, "| windows with a fault:", len(fs))
-    if first is not None and len(fs):
-        ws = lambda x: pd.to_datetime(x).value / 1e9 if np.issubdtype(type(x), np.datetime64) or hasattr(x, "value") else float(x)
-        print("detection delay = (end of the alert window) - (start of the first fault window) =", round(ws(w.window_end.iloc[first]) - ws(fs.window_start.iloc[0]), 1), "seconds")
-    src("processed/testbed_windows.parquet, models/testbed/detector.joblib, report_outputs/testbed_frozen_config.json")
-"""
-     )
+    run = ra[(ra.split == "test") & (ra.n_faults > 0)].run_id.iloc[0]                       # the first held-out run that has a fault
+    sch = pd.read_csv(REPO / "testbed" / "runs" / run / "fault_schedule.csv"); fstart = float(sch.start_ts.min()); ftype = sch.fault_type.iloc[0]
+    thr = float(jload(REP / "testbed_frozen_config.json")["selection"]["chosen"]["tuned_threshold"])
+    w = tw[tw.run_id == run].sort_values("window_start").reset_index(drop=True)
+    sc = w[w.in_learning == 0].reset_index(drop=True)                                          # the first 150 s are the learning period: nothing is scored there
+    risk = det["model"].predict_proba(sc[det["columns"]].to_numpy(float))[:, 1]; flag = risk >= thr
+    alert = np.array([flag[max(0, i - 2):i + 1].sum() >= 2 for i in range(len(flag))])        # alert rule: 2 of the last 3 windows above the threshold
+    print(f"replaying recorded run {run} (held out; never used for training) window by window through the frozen detector (threshold {thr:.3f}); first injected fault: {ftype}")
+    print("scored windows:", len(sc), "| alerts raised before the fault started:", int((alert & (sc.window_end.to_numpy() < fstart)).sum()))
+    hit = np.where(alert & (sc.window_end.to_numpy() >= fstart))[0]
+    if len(hit):
+        print(f"first alert at the end of window {int(sc.window_index.iloc[hit[0]])}: detection delay = alert time - fault start = {sc.window_end.iloc[hit[0]] - fstart:.1f} seconds")
+        NUMBERS.update(replay_delay_s=round(float(sc.window_end.iloc[hit[0]] - fstart), 2))
+    else:
+        print("no alert was raised for this fault")
+    import matplotlib.pyplot as plt
+    fig, ax = plt.subplots(figsize=(9, 2.8)); t = sc.window_end.to_numpy() - float(w.window_start.iloc[0])
+    ax.plot(t, risk, color="#1d5a8a", label="risk"); ax.axhline(thr, color="#a02419", ls="--", label="threshold"); ax.axvline(fstart - float(w.window_start.iloc[0]), color="#7d5200", label="fault starts")
+    if len(hit): ax.axvline(t[hit[0]], color="#1d6b40", label="first alert")
+    ax.set_xlabel("seconds since the run started"); ax.legend(fontsize=8); plt.tight_layout(); plt.show()
+    src("processed/testbed_windows.parquet, models/testbed/detector.joblib, testbed/runs/<run>/fault_schedule.csv, report_outputs/testbed_frozen_config.json")
+""")
 md("""**What you should see:** tables for the testbed data set, the whole-run split, the held-out results with ranges (about 12 test runs, so the ranges are wide), the shuffled-label control (near chance) and the run-identification check; the three live demos; a figure of one run showing the risk rising when the fault starts and the first alert; and a replay of one recorded run through the frozen detector with the detection delay in seconds. If the bundle does not contain the detector, the replay says so.""")
 
 # ------------------------------------------------------------------------------------------------ 11 LO2
