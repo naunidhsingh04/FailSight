@@ -101,6 +101,34 @@ Dataset description: [docs/TESTBED_DATASET.md](docs/TESTBED_DATASET.md). Present
 
 [docs/INTEGRATION.md](docs/INTEGRATION.md) ("Connect your app in 15 minutes") has copy-paste snippets for a Python ASGI middleware (`agent/failsight_agent`), a Node/Express middleware (`agent/node/failsight-express.js`) and tailing an nginx or application access log (`python -m failsight_agent.tail`); the web app has a **Connect** page with the same snippets, the connection state (events received, last event, learning or live), an optional webhook form, and Simple/Detailed modes. Optional and off by default: a per-app API key on the ingestion endpoints (`FAILSIGHT_API_KEYS="app:key,..."`) and a Slack-compatible alert webhook (`FAILSIGHT_WEBHOOK_URL`). Flow: collect, send, learning period (150 s), scoring every 10 s, alerts with reasons. **The detector was validated only on the testbed shop; every other app is labelled unvalidated, and transfer to other apps has not been shown.** Checks: proofs P19.
 
+## Hybrid deep-learning models, the LO2 slice and the Colab notebook (overnight run, 22-23 Oct 2026)
+
+Ten hybrid deep-learning models (TensorFlow / Keras; each is ONE model class whose first part feeds its second part, trained end to end): five on AnoMod (Transformer + BiLSTM, Autoencoder + LSTM, GNN + Transformer, CNN + LSTM, VAE + Transformer) and five on a slice of LO2 (BERT-style encoder + GNN, Transformer + LSTM, Autoencoder + LSTM, GNN + LSTM, Multimodal Transformer + MLP). Both data sets use the SAME protocol (80:20 split first, preprocessing fitted on training parts only, SMOTE only inside training folds, 5-fold block-aware cross-validation, threshold tuning on out-of-fold predictions only, overfitting diagnosis and correction, bootstrap 95% intervals, shuffled-label, run-identification and (LO2) log-volume controls, configuration frozen before the test part is scored once). LO2 is trained completely separately from AnoMod and is a very small sample (fewer than 6 whole runs under a 150 MB cap), so every LO2 result is marked *unreliable: very small sample*; it says nothing about transfer.
+
+> Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, chosen because of the time limit. All AnoMod models are scored on the same 647 test windows.
+
+| What | Where |
+|---|---|
+| What each hybrid is, how it is wired, settings, results | [docs/HYBRID_MODELS.md](docs/HYBRID_MODELS.md) |
+| Which LO2 files were used and why | [docs/LO2_SLICE.md](docs/LO2_SLICE.md) |
+| Every key number with its source file | [docs/NUMBERS_FOR_VIVA.md](docs/NUMBERS_FOR_VIVA.md) |
+| Run the whole workflow step by step in Google Colab | [docs/COLAB.md](docs/COLAB.md) and `notebooks/FailSight_Workflow.ipynb` (pre-executed copy: `notebooks/FailSight_Workflow_executed.html`) |
+| Present now (exact start steps, fallback) | [docs/PRESENT_NOW.md](docs/PRESENT_NOW.md) |
+| The website | **Hybrid models** page under *For examiners*; the **Results** page has hybrid tags and a LO2 tab; proofs **P20 to P23** |
+| Status of the overnight run | [report_outputs/OVERNIGHT_STATUS.md](report_outputs/OVERNIGHT_STATUS.md) |
+
+```powershell
+python scripts\hybrid_anomod.py              # five AnoMod hybrids (resumable; models -> models\hybrid\anomod, git-ignored)
+python scripts\lo2_hybrid_data.py select     # choose the LO2 whole runs, write the run-level split FIRST
+python scripts\lo2_hybrid_data.py parse      # windows from LO2's own logs and metrics (raw data are only read)
+python scripts\hybrid_lo2.py                 # five LO2 hybrids
+python scripts\lo2_full.py                   # LO2 families (b) classical, (c) Optuna, (d) deep + XGBoost head, (e) stacking, soft voting
+python scripts\hybrid_explain.py anomod      # explanations of the best hybrid (and: ... lo2)
+python scripts\proofs.py --only P20,P21,P22,P23
+python scripts\make_colab_bundle.py          # failsight_bundle.zip for Google Drive (docs\COLAB.md)
+python -m pytest tests\test_hybrid_models.py app\backend\tests\test_hybrid_api.py
+```
+
 ## Architecture
 
 ```

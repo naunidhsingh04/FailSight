@@ -1,0 +1,30 @@
+{
+ "dataset": "anomod",
+ "label": "label_level",
+ "model": "VAE_Transformer",
+ "seed": 42,
+ "config": {
+  "hidden": 64,
+  "dropout": 0.3,
+  "wd": 0.0001,
+  "lr": 0.001
+ },
+ "method": "cw",
+ "final_epochs": 13,
+ "lr_scale": 1.0,
+ "thresholds": {
+  "type": "class_multipliers",
+  "weights": [
+   1.2840254166877414,
+   0.36787944117144233,
+   0.7788007830714049,
+   3.4903429574618414,
+   1.0
+  ],
+  "oof_balanced_accuracy": 0.7952529061182192,
+  "oof_balanced_accuracy_default_argmax": 0.772649092846136
+ },
+ "chosen_stage": "cv",
+ "frozen_at": "2026-10-23 00:59:03",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

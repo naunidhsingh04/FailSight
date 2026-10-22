@@ -441,6 +441,15 @@ def run_id_rule(D, label_of_run, n_boot=1000):
     return out
 
 
+def fold_seconds(state, label, name):
+    """training seconds of every fold fit of a model (screening, cross-validation, correction), summed from the saved fold files (so a resumed run keeps its earlier time)"""
+    tot = 0.0
+    for p in Path(state).glob(f"fold__{label}__{name}__*.pkl"):
+        r = load_pkl(p)
+        tot += float(r.get("secs", 0.0)) if isinstance(r, dict) else 0.0
+    return tot
+
+
 def assemble(D, names, prefix, state_dir, runid=None, n_boot=1000):
     """build every csv from the saved per-model records and saved test probabilities"""
     state = Path(state_dir)
@@ -468,14 +477,15 @@ def assemble(D, names, prefix, state_dir, runid=None, n_boot=1000):
                         ci.append(dict(model=name, label_version=label, scope="ALL", metric=k, point_estimate=m[k], ci95_low=lo, ci95_high=hi, n_resamples=n_boot, n_valid_resamples=nv, n_blocks=len(np.unique(blocks))))
                     lead.append(dict(model=name, label_version=label, status="did not learn" if r["did_not_learn"] else "done", test_bal_acc=m["balanced_accuracy"],
                                      test_bal_acc_ci_low=b["balanced_accuracy"][0], test_bal_acc_ci_high=b["balanced_accuracy"][1], test_macro_f1=m["macro_f1"], test_normal_recall=m["normal_recall"],
-                                     test_roc_auc=m["roc_auc"], cv_val_bal_acc=r["cv_before"]["val_ba"] if r["chosen_tag"] == "cv" else r["cv_after"]["val_ba"], train_secs=r["secs_total"],
+                                     test_roc_auc=m["roc_auc"], cv_val_bal_acc=r["cv_before"]["val_ba"] if r["chosen_tag"] == "cv" else r["cv_after"]["val_ba"],
+                                     train_secs=(fold_seconds(state, label, name) + r["final"]["secs"]) or r["secs_total"],
                                      folds=r["n_folds"], hidden=r["chosen_cfg"]["hidden"], method=r["chosen_method"], stage=r["chosen_tag"]))
             for row in r["cv_rows"]:
                 cvr.append(dict(model=name, label_version=label, **row))
                 smo.append(dict(model=name, label_version=label, stage=row["stage"], fold=row["fold"], before=row["smote_b"], after=row["smote_a"], held_out_fold=row["hold"]))
             smo.append(dict(model=name, label_version=label, stage="final", fold="final(80% train)", before=r["final_smote"]["b"], after=r["final_smote"]["a"], held_out_fold=r["final_smote"]["hold_test"] + " (test, untouched)"))
             tt.append(dict(model=name, label_version=label, cv_total_seconds=sum(x["secs"] for x in r["cv_rows"] if x["stage"] == r["chosen_tag"]), final_model_seconds=r["final"]["secs"],
-                           final_epochs=r["final"]["epochs"], total_seconds_incl_screening_and_controls=r["secs_total"], params=r["final"]["params"]))
+                           final_epochs=r["final"]["epochs"], total_seconds_incl_screening_and_controls=(fold_seconds(state, label, name) + r["final"]["secs"]) or r["secs_total"], params=r["final"]["params"]))
             for stage, key in (("before_correction", "cv_before"), ("after_correction", "cv_after")):
                 if key in r:
                     d = r[key]

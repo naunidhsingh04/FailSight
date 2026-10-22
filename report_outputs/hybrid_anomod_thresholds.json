@@ -13,6 +13,27 @@
    "oof_balanced_accuracy": 0.8275078505551022,
    "oof_normal_recall": 0.7176470588235294,
    "oof_balanced_accuracy_default_argmax": 0.811131716242613
+  },
+  "GNN_Transformer": {
+   "type": "threshold",
+   "threshold": 0.23,
+   "oof_balanced_accuracy": 0.7823504685606903,
+   "oof_normal_recall": 0.5764705882352941,
+   "oof_balanced_accuracy_default_argmax": 0.7802487451474915
+  },
+  "CNN_LSTM": {
+   "type": "threshold",
+   "threshold": 0.55,
+   "oof_balanced_accuracy": 0.8296169918156417,
+   "oof_normal_recall": 0.6823529411764706,
+   "oof_balanced_accuracy_default_argmax": 0.8218443241104765
+  },
+  "VAE_Transformer": {
+   "type": "threshold",
+   "threshold": 0.72,
+   "oof_balanced_accuracy": 0.8279368493929729,
+   "oof_normal_recall": 0.6764705882352942,
+   "oof_balanced_accuracy_default_argmax": 0.8159632074771901
   }
  },
  "label_level": {
@@ -39,6 +60,42 @@
    ],
    "oof_balanced_accuracy": 0.7981410340193811,
    "oof_balanced_accuracy_default_argmax": 0.7850786994682502
+  },
+  "GNN_Transformer": {
+   "type": "class_multipliers",
+   "weights": [
+    5.754602676005731,
+    1.2840254166877414,
+    0.36787944117144233,
+    0.36787944117144233,
+    1.2840254166877414
+   ],
+   "oof_balanced_accuracy": 0.8338074680478395,
+   "oof_balanced_accuracy_default_argmax": 0.8110910985970154
+  },
+  "CNN_LSTM": {
+   "type": "class_multipliers",
+   "weights": [
+    1.0,
+    1.0,
+    0.7788007830714049,
+    4.4816890703380645,
+    1.0
+   ],
+   "oof_balanced_accuracy": 0.8029528049579582,
+   "oof_balanced_accuracy_default_argmax": 0.796064728646847
+  },
+  "VAE_Transformer": {
+   "type": "class_multipliers",
+   "weights": [
+    1.2840254166877414,
+    0.36787944117144233,
+    0.7788007830714049,
+    3.4903429574618414,
+    1.0
+   ],
+   "oof_balanced_accuracy": 0.7952529061182192,
+   "oof_balanced_accuracy_default_argmax": 0.772649092846136
   }
  }
 }

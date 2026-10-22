@@ -80,7 +80,7 @@ D = {
     "rcaeval_case_results.csv": ("RCAEval external test: per-case results", "intermediate"),
     "rcaeval_feature_mapping.csv": ("RCAEval: which generic aggregates exist per system", "final"),
     "rcaeval_summary.md": ("RCAEval external test summary (every number read from the CSVs)", "final"),
-    "proofs.json": ("The proof report P1-P19 (statuses, evidence, terminal text); shown on the Proofs page", "final"),
+    "proofs.json": ("The proof report P1-P23 (statuses, evidence, terminal text); shown on the Proofs page", "final"),
     "results_summary.md": ("Plain-language summary of the AnoMod results", "final"),
     "INDEX.md": ("This index", "final"),
     "FINAL_STATUS.md": ("Status of the final task list, key result files and every stated limitation", "final"),
@@ -90,6 +90,45 @@ D = {
     "environment_v2.txt": ("Library versions of the AnoMod retraining run", "log"),
     "time_estimate.txt": ("Time estimate of the AnoMod training", "log"),
 }
+
+# new work (overnight run): hybrid deep-learning models, the LO2 slice and its other families, the Colab notebook
+SUFFIX = {
+    "test_metrics.csv": "test metrics (official argmax and tuned-threshold decisions) on the test part",
+    "test_bootstrap_ci.csv": "1000 block-bootstrap 95% intervals of the test metrics",
+    "cv_results.csv": "5-fold cross-validation results per fold (train / validation scores, epochs, SMOTE b: / a: / hold: counts)",
+    "smote_counts.csv": "SMOTE before / after / held-out class counts per fold and for the final model (b: / a: / hold:)",
+    "thresholds.json": "decision thresholds / class multipliers chosen on out-of-fold predictions only",
+    "training_time.csv": "training times and parameter counts",
+    "overfit.csv": "overfitting diagnosis (train minus validation macro-F1) before and after the correction stage",
+    "shuffled_control.csv": "shuffled-label control for every model",
+    "screening.csv": "screening on one training fold (validation scores only): hidden size x imbalance method",
+    "run_identification.csv": "run-identification check ('predict the run' rule) for every model",
+    "leaderboard.csv": "leaderboard with 95% ranges, status ('not completed' where unfinished), reliability",
+    "imbalance.csv": "class-weight and ADASYN dataset-size comparison (never used to train)",
+    "folds5.csv": "the 5 block-aware cross-validation folds of the training part",
+    "graph_nodes.csv": "nodes of the component graph used by the GNN hybrid and the features in each",
+    "graph_edges.csv": "edges of the component graph with the reason for each edge",
+    "logvolume_baseline.csv": "control: logistic regression on log volume alone",
+    "explain_groups.csv": "share of each feature group in the best hybrid's gradient x input attribution",
+}
+for _pre, _what in (("hybrid_anomod_", "AnoMod hybrids"), ("hybrid_lo2_", "LO2 hybrids"), ("lo2_full_", "LO2 other families (b)-(e)")):
+    for _suf, _d in SUFFIX.items():
+        D[_pre + _suf] = (f"{_what}: {_d}", "final")
+    D[_pre + "frozen_"] = (f"{_what}: frozen configuration of one model, written before its test scoring", "final")
+    D[_pre + "explain_"] = (f"{_what}: explanation of the best model (gradient x input / attention / SHAP)", "final")
+    D[_pre + "optuna_trials_"] = (f"{_what}: Optuna trials of one tuned model", "intermediate")
+D.update({
+    "lo2_slice_manifest.csv": ("LO2 slice: the whole runs chosen (size in MB, role, window counts, reason)", "final"),
+    "lo2_split_ids.csv": ("LO2 slice: run-level split written before any window existed, then the window-level split", "final"),
+    "lo2_full_leaderboard.csv": ("LO2 leaderboard of all families: hybrids first, then (b)-(e); 'not completed' rows; every row marked unreliable (very small sample)", "final"),
+    "lo2_full_not_completed.csv": ("LO2 model families not completed because of the time limit", "final"),
+    "lo2_full_shap_global.csv": ("LO2: SHAP of the best classical tree model on the real test windows", "final"),
+    "lo2_full_lime_example.csv": ("LO2: LIME explanation of one real test window", "final"),
+    "hybrid_engine_log.txt": ("Log of the hybrid training engine (AnoMod and LO2)", "log"),
+    "notebook_check.json": ("Result of executing the Colab notebook in a fresh environment (proof P23)", "final"),
+    "overnight_log.md": ("Timestamped log of decisions and steps of the overnight run", "log"),
+    "OVERNIGHT_STATUS.md": ("Status of the overnight run: every step, the ten hybrids, LO2, tests, limits", "final"),
+})
 
 
 def describe(name):
@@ -141,6 +180,22 @@ def main():
           "## Sub-folders", "", "| folder | what it is | status |", "|---|---|---|",
           f"| `figures/` | {len(list((REP / 'figures').rglob('*.*')))} figures and per-figure CSVs of the AnoMod analysis (confusion matrices, curves, SHAP/LIME plots); the confusion-matrix and curve files are read by the app's Results page | final |",
           f"| `old_pipeline/` | {len(list((REP / 'old_pipeline').rglob('*.*')))} files of the first (16-epoch) AnoMod run, kept for the first-run-versus-retrain comparison (proofs P6) | intermediate |", "",
+          "## New in the overnight run (code, documents, notebook)", "",
+          "| path | what it is |", "|---|---|",
+          "| `models_src/hybrid/` | the ten hybrid model classes (`anomod_hybrids.py`, `lo2_hybrids.py`, shared `base.py`) and the four single deep models (`dl_models.py`) |",
+          "| `scripts/hybrid_engine.py` | the shared training protocol (SMOTE inside folds, screening, 5-fold CV, correction stage, frozen config, controls, assembling the result files) |",
+          "| `scripts/hybrid_anomod.py`, `scripts/hybrid_lo2.py` | run the five hybrids on AnoMod / on the LO2 slice |",
+          "| `scripts/lo2_hybrid_data.py`, `scripts/lo2_data.py` | build the LO2 slice windows from the raw logs (Drain-style templates) and prepare model inputs |",
+          "| `scripts/lo2_full.py`, `scripts/lo2_deep.py` | LO2 families (b) classical, (c) Optuna-tuned, (d) deep + XGBoost head, (e) stacking and soft voting |",
+          "| `scripts/hybrid_explain.py` | explanations of the best hybrid and of the best LO2 tree model |",
+          "| `scripts/proofs_hybrid.py` | proof sections P20 to P23 (called by `scripts/proofs.py`) |",
+          "| `scripts/make_notebook.py`, `scripts/make_colab_bundle.py`, `scripts/run_notebook_check.py` | build the Colab notebook, zip the data bundle, execute the notebook in a fresh environment |",
+          "| `scripts/build_docs.py` | writes `docs/HYBRID_MODELS.md`, `docs/LO2_SLICE.md`, `docs/NUMBERS_FOR_VIVA.md` from the result files |",
+          "| `notebooks/FailSight_Workflow.ipynb` (+ `_executed.ipynb` / `.html`) | the Colab workflow notebook and its executed copy |",
+          "| `docs/HYBRID_MODELS.md`, `docs/LO2_SLICE.md`, `docs/COLAB.md`, `docs/NUMBERS_FOR_VIVA.md`, `docs/PRESENT_NOW.md` | documents of the new work |",
+          "| `app/backend/hybrid_results.py` | read-only API for the hybrid results (`/api/hybrid`, `/api/lo2/leaderboard`) |",
+          "| `app/frontend/src/pages/Hybrids.tsx` | the Hybrid models page |",
+          "| `tests/test_hybrid_models.py`, `app/backend/tests/test_hybrid_api.py`, `app/frontend/tests/hybrids.spec.ts` | tests of the new work |", "",
           "## Where to start", "",
           "- The proof report: `proofs.json` (also the Proofs page); the testbed: `testbed_run_assignment.csv`, `testbed_heldout_overall.csv`, `testbed_live_validation.csv`, `docs/TESTBED_DATASET.md`; the external test: `rcaeval_summary.md`; the AnoMod results: `test_metrics.csv`, `leakage_audit.csv`, `run_identification.csv`, `lo2_results_summary.md`.", ""]
     (REP / "INDEX.md").write_text("\n".join(L), encoding="utf-8")

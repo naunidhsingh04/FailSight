@@ -18,3 +18,4 @@
 - 00:08:56 parsed run 1724303680 (test): 172 windows in 22 s; templates so far 210
 - 00:08:58 windows 860 (5 runs), metric families 478, templates 210; class counts {'HTTP400': 450, 'HTTP404': 270, 'HTTP401': 75, 'Normal': 65}
 - 00:08:59 LO2 raw files unchanged (SHA-256 before == after): True
+- 01:03 Step 2 done: five AnoMod hybrids x binary/five-class finished (5-fold, SMOTE/class-weight chosen by validation, correction stage run where gap > 0.10). No hybrid beats the best earlier model. Step 3: starting LO2 hybrids (slice already built at 00:09; raw data hashes unchanged).

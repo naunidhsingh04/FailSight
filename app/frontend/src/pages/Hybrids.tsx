@@ -9,7 +9,7 @@ import { Detailed, Simple } from '../mode'
 import { usePageTitle } from '../usePageTitle'
 import type { HybridResponse, HybridRow, Label } from '../types'
 
-interface Info { plain: string; tech: string; first: string; second: string; line: string }
+interface Info { plain: string; tech: string; first: string; second: string; line: string; note?: string }
 
 /** Plain-language description of each hybrid: what its first part does, what its second part does, and the one-line idea. Numbers never come from here. */
 export const HYBRID_INFO: Record<string, Info> = {
@@ -18,7 +18,7 @@ export const HYBRID_INFO: Record<string, Info> = {
   GNN_Transformer: { plain: 'Parts-map + look-around reader', tech: 'GNN + Transformer', first: 'Treats the system as a map of connected parts and lets neighbours share readings', second: 'Looks across six windows to see how the map changes', line: 'It knows which readings belong together (cpu with cpu, network with network).' },
   CNN_LSTM: { plain: 'Pattern spotter + memory', tech: 'CNN + LSTM', first: 'Spots short patterns such as a sudden jump between windows', second: 'Reads the patterns in time order', line: 'A small pattern detector feeds a model that remembers what came before.' },
   VAE_Transformer: { plain: 'Smooth squeezer + look-around reader', tech: 'VAE + Transformer', first: 'Squeezes each window into a smooth, slightly fuzzy summary', second: 'Lets the six summaries compare notes', line: 'The fuzziness keeps the summary from memorising small details.' },
-  BERT_GNN: { plain: 'Meaning of log lines + pattern map', tech: 'BERT-style text encoder (frozen) + GNN', first: 'Turns each kind of log message into a fixed list of numbers (frozen, never trained)', second: 'A map of log messages that appear together; it learns from the map', line: 'Here the text encoder is TF-IDF + SVD because a downloadable BERT was not available.' },
+  BERT_GNN: { plain: 'Meaning of log lines + pattern map', tech: 'BERT-style text encoder (frozen) + GNN', first: 'Turns each kind of log message into a fixed list of numbers (frozen, never trained)', second: 'A map of log messages that appear together; it learns from the map', line: 'The text meaning comes from a simple word-statistics method, because a downloadable BERT model was not available.', note: 'The text encoder is TF-IDF + truncated SVD (frozen), not a real BERT.' },
   Transformer_LSTM: { plain: 'Look-around reader + memory', tech: 'Transformer + LSTM', first: 'Looks at the last three windows at once', second: 'Reads them in order', line: 'The same idea as the AnoMod one, on LO2’s own signals.' },
   GNN_LSTM: { plain: 'Parts-map + memory', tech: 'GNN + LSTM', first: 'A map of the logs of the seven services, the database and the load generator; connected when their activity moves together', second: 'Reads the map summaries in order', line: 'It learns which sources of log lines behave together.' },
   Multimodal_Transformer_MLP: { plain: 'Two readers (logs and metrics) + a mixer', tech: 'Multimodal Transformer + MLP', first: 'One reader for log numbers and one for machine metrics', second: 'A small mixer that joins what both readers found', line: 'Logs and metrics are looked at separately first, then combined.' },
@@ -32,14 +32,14 @@ function secs(s?: number | null) {
   return s >= 90 ? `${(s / 60).toFixed(1)} min` : `${Math.round(s)} s`
 }
 
-function Card({ ds, name, row, facts }: { ds: 'anomod' | 'lo2'; name: string; row?: HybridRow; facts: string }) {
+function Card({ ds, name, row, facts, reliab }: { ds: 'anomod' | 'lo2'; name: string; row?: HybridRow; facts: string; reliab: string }) {
   const info = ds === 'lo2' && name === 'AE_LSTM' ? AE_LSTM_LO2 : HYBRID_INFO[name]
   const done = row && row.status !== 'not completed' && typeof row.test_bal_acc === 'number'
   const small = ds === 'lo2'
   return (
     <li className="card hy-card" data-state={done ? 'done' : 'pending'} data-testid={`hybrid-${ds}-${name}`}>
       <h3>{info.plain}</h3>
-      <p className="small muted" style={{ margin: 0 }}><Detailed><>{info.tech}. </></Detailed>{info.line}</p>
+      <p className="small muted" style={{ margin: 0 }}><Detailed><>{info.tech}. {info.note ? `${info.note} ` : ''}</></Detailed>{info.line}</p>
       <div className="wire" role="img" aria-label={`First part: ${info.first}. Second part: ${info.second}. Then the answer.`}>
         <div className="box"><b>First part</b>{info.first}</div>
         <span className="arrow" aria-hidden="true">&rarr;</span>
@@ -59,8 +59,8 @@ function Card({ ds, name, row, facts }: { ds: 'anomod' | 'lo2'; name: string; ro
       ) : <p className="small" style={{ margin: 0 }}>Not completed because of the time limit.</p>}
       {done && row.status === 'did not learn' && <div className="rel amber">This model did not learn (its validation score stayed near chance). Reported as it is.</div>}
       {!done && <div className="rel grey">Not completed: no result is shown because none was produced in the time available.</div>}
-      {done && small && <div className="rel amber">Unreliable: very small sample (5 runs, only 13 healthy test windows).</div>}
-      {done && !small && <div className="rel ok">Only 36 healthy test windows, so the range is wide.</div>}
+      {done && small && <div className="rel amber">Unreliable: very small sample ({reliab}).</div>}
+      {done && !small && <div className="rel ok">{reliab}, so the range is wide.</div>}
     </li>
   )
 }
@@ -77,6 +77,7 @@ function DatasetBlock({ ds, data }: { ds: 'anomod' | 'lo2'; data: HybridResponse
   const done = rows.filter((r) => r.status !== 'not completed' && typeof r.test_bal_acc === 'number')
   const best = [...done].sort((a, b) => (b.test_bal_acc ?? 0) - (a.test_bal_acc ?? 0))[0]
   const cmp = (data.anomod.comparison ?? {})[label]
+  const reliab = ds === 'anomod' ? `Only ${f?.healthy_test_windows} healthy test windows` : `${f?.runs} runs, only ${f?.healthy_test_windows} healthy test windows`
   return (
     <section aria-labelledby={`h-${ds}`}>
       <h2 id={`h-${ds}`}>{ds === 'anomod' ? 'On the recorded benchmark data (AnoMod)' : 'On a slice of a second data set (LO2)'}</h2>
@@ -84,7 +85,7 @@ function DatasetBlock({ ds, data }: { ds: 'anomod' | 'lo2'; data: HybridResponse
       <div className="row" style={{ marginBottom: 'var(--space-4)' }}><LabelToggle value={label} onChange={setLabel} /></div>
       {!d.available && <div className="state"><h3>No hybrid results yet</h3><p>The result files for this data set are not on this computer.</p></div>}
       <ul className="hy-grid" aria-label={`Five hybrid models on ${ds === 'anomod' ? 'AnoMod' : 'LO2'}`}>
-        {order.map((n) => <Card key={n} ds={ds} name={n} row={rows.find((r) => r.model === n)} facts={factsText} />)}
+        {order.map((n) => <Card key={n} ds={ds} name={n} row={rows.find((r) => r.model === n)} facts={factsText} reliab={reliab} />)}
       </ul>
       {done.length > 0 && (
         <div className="card" style={{ marginTop: 'var(--space-4)' }}>

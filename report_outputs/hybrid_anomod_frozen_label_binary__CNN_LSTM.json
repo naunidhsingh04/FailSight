@@ -1,0 +1,25 @@
+{
+ "dataset": "anomod",
+ "label": "label_binary",
+ "model": "CNN_LSTM",
+ "seed": 42,
+ "config": {
+  "hidden": 32,
+  "dropout": 0.3,
+  "wd": 0.0001,
+  "lr": 0.001
+ },
+ "method": "cw",
+ "final_epochs": 5,
+ "lr_scale": 1.0,
+ "thresholds": {
+  "type": "threshold",
+  "threshold": 0.55,
+  "oof_balanced_accuracy": 0.8296169918156417,
+  "oof_normal_recall": 0.6823529411764706,
+  "oof_balanced_accuracy_default_argmax": 0.8218443241104765
+ },
+ "chosen_stage": "cv",
+ "frozen_at": "2026-10-23 00:42:38",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

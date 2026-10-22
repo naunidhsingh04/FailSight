@@ -188,13 +188,15 @@ export default function Results() {
 /** The LO2 leaderboard: hybrids first, then the other families in priority order; unfinished ones are listed as not completed. Every LO2 row is marked unreliable (very small sample). */
 function Lo2Leaderboard({ label }: { label: Label }) {
   const api = useApi<Lo2LeaderboardResponse>('/api/lo2/leaderboard')
+  const hy = useApi<HybridResponse>('/api/hybrid')
+  const f = hy.data?.lo2.facts
   const [showAll, setShowAll] = useState(false)
   return (
     <section aria-labelledby="lo2-lb">
       <h2 id="lo2-lb" style={{ marginTop: 0 }}>LO2 slice leaderboard</h2>
       <div className="callout" role="note"><span className="label">Read this first</span>
         <ul>
-          <li><strong>Unreliable: very small sample.</strong> 5 whole runs, a test part of one run (172 windows, only 13 healthy).</li>
+          <li><strong>Unreliable: very small sample.</strong> {f ? `${f.runs} whole runs, a test part of one run (${f.test} windows, only ${f.healthy_test_windows} healthy).` : 'A handful of whole runs and a test part of one run.'}</li>
           <li>These models were trained on LO2&rsquo;s own data. The results say nothing about transfer from AnoMod.</li>
           <li>The ranking uses the test set, so the lead is optimistic.</li>
         </ul>
@@ -215,7 +217,7 @@ function Lo2Leaderboard({ label }: { label: Label }) {
                   { key: 'name', label: 'Model', nameCell: true, sortValue: (r) => r.model, render: (r) => <><strong>{r.model}</strong> <span className="pills"><span className="badge">{(r.family ?? '').replace(/^\([a-e]\) /, '')}</span> <span className="badge" style={{ background: 'var(--watch-bg)', color: 'var(--watch)' }}>unreliable: very small sample</span></span></> },
                   { key: 'ba', label: 'Overall score', header: <Head plain="Overall score" meaning="0.5 = coin flip, 1.0 = perfect" tech="Balanced accuracy" />, numeric: true, sortValue: (r) => r.test_bal_acc ?? null, render: (r) => <Score v={r.test_bal_acc} low={r.test_bal_acc_ci_low} high={r.test_bal_acc_ci_high} /> },
                   { key: 'f1', label: 'Fairness across both classes', header: <Head plain="Fairness across classes" meaning="higher is better" tech="Macro-F1" />, numeric: true, sortValue: (r) => r.test_macro_f1 ?? null, render: (r) => <Score v={r.test_macro_f1} /> },
-                  { key: 'nr', label: 'Healthy windows left alone', header: <Head plain="Healthy windows left alone" meaning="out of 13 healthy windows" tech="Normal recall" />, numeric: true, sortValue: (r) => r.test_normal_recall ?? null, render: (r) => <Score v={r.test_normal_recall} /> },
+                  { key: 'nr', label: 'Healthy windows left alone', header: <Head plain="Healthy windows left alone" meaning={f ? `out of ${f.healthy_test_windows} healthy windows` : 'share of healthy windows'} tech="Normal recall" />, numeric: true, sortValue: (r) => r.test_normal_recall ?? null, render: (r) => <Score v={r.test_normal_recall} /> },
                   { key: 'auc', label: 'Ranks risky above safe', header: <Head plain="Ranks risky above safe" meaning="1.0 = perfect ranking" tech="ROC-AUC" />, numeric: true, sortValue: (r) => r.test_roc_auc ?? null, render: (r) => <Score v={r.test_roc_auc} /> },
                 ]}
               />
