@@ -73,8 +73,18 @@ python -m testbed.dataset ; python -m testbed.dataset_doc # windows, labels, doc
 python -m testbed.validate                               # run-held-out validation -> report_outputs\testbed_*.csv
 python -m testbed.freeze                                 # freeze the detector and the alert rule BEFORE the live demos
 python -m testbed.live_demo --scenario all               # three 12-minute live demos on new seeds (9001-9003), schedule written first
-start_testbed.bat                                        # one command: monitor + shop + load generator + dashboard (Console > Live demo app)
+start_testbed.bat                                        # one command: shop + storefront + monitor + load generator, opens the shop and the monitor
 ```
+
+**The shop, its storefront and the monitor (three addresses).** `start_testbed.bat` (or `python -m testbed.launcher`) starts everything and opens two browser tabs. Anything that is already running on its port is reused.
+
+| Address | What it is |
+|---|---|
+| http://127.0.0.1:5000 | **The shop**: *Marigold Coaches*, a fictional coach-ticket site (home, search, journey page, cart, checkout, confirmation). It only uses the shop's own endpoints; the shop's code, timings and telemetry are unchanged. The only mention of FailSight is the footer line "Fictional shop used to test FailSight". |
+| http://127.0.0.1:5000/ops | **Presenter controls**, only reachable from this computer: plain buttons that really break the shop (slow pages, slow database, page crash, server crash, surprise me) and **Fix it**. The only place where the fault names appear. |
+| http://127.0.0.1:8000 | **The live monitor** (FailSight): shop status in plain words, a link "Open the shop", the answer and a response-time chart. Also *Start the shop* if the shop is not running. |
+
+Presenter flow (5 steps): 1. open the shop; 2. open the monitor; 3. wait about 2 minutes while the monitor learns what normal looks like; 4. break something on `/ops`; 5. watch the monitor raise an alert and say why. The full script is in [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md); the decisions behind the storefront are in [report_outputs/storefront_log.md](report_outputs/storefront_log.md), and `python scripts\smoke_storefront.py` repeats the 3-minute check that the storefront left the shop's telemetry unchanged ([report_outputs/storefront_smoke_comparison.md](report_outputs/storefront_smoke_comparison.md)).
 
 - **Validation by whole runs.** 12 test runs (fixed seed; every fault type appears, 2 are fault-free), the rest train/validation folds by run. Best supervised model, chosen on the train runs only: RF (both), balanced accuracy 0.960 (95% run-bootstrap CI 0.893-1.000) on windows after each run's 150 s learning period. Shuffled labels give 0.50; recognising the run explains nothing here (P17).
 - **Live demos (P12).** The detector (RF on raw + baseline-relative features, alert when 2 of the last 3 windows are flagged) was frozen first. In three new 12-minute runs the schedule was written before each run: detected 2 of 2 injected faults, 1 false alarm(s) in total, 0 of 24 fault windows missed. This is a demonstration, not a statistic.
