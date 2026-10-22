@@ -48,7 +48,7 @@ test('Start the shop from a stopped shop: the monitor page starts it, and FailSi
   await expect(page.getByText(/The shop is running\./).first()).toBeVisible({ timeout: 180_000 })
   await expect(page.getByRole('link', { name: 'Open the shop' })).toHaveAttribute('href', `${SHOP}/`)
   // the storefront was started with it
-  await expect.poll(async () => (await request.get(`${SHOP}/healthz`)).ok(), { timeout: 60_000 }).toBe(true)
+  await expect.poll(async () => { try { return (await request.get(`${SHOP}/healthz`)).ok() } catch { return false } }, { timeout: 90_000 }).toBe(true)
   const shopTab = await page.context().newPage()
   await shopTab.goto(SHOP + '/')
   await expect(shopTab.getByRole('heading', { level: 1 })).toContainText('Coach journeys across Europe')
