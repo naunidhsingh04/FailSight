@@ -100,6 +100,9 @@ def section(name):
     except Exception as e:
         print(f"[section {name}] could not run: {type(e).__name__}: {str(e)[:300]}")
 
+def jload(path):
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
 def need(*paths):
     miss = [p for p in paths if not (REPO / p).exists()]
     if miss:
@@ -113,9 +116,10 @@ def src(name):
 code(r"""
 import sklearn, matplotlib
 vers = {"python": platform.python_version(), "numpy": np.__version__, "pandas": pd.__version__, "scikit-learn": sklearn.__version__, "matplotlib": matplotlib.__version__}
-for m in ("tensorflow", "keras", "xgboost", "lightgbm", "imblearn", "shap", "optuna", "lime"):
+from importlib import metadata
+for m in ("tensorflow", "keras", "xgboost", "lightgbm", "imbalanced-learn", "shap", "optuna", "lime"):
     try:
-        vers[m] = importlib.import_module(m).__version__
+        vers[m] = metadata.version(m)
     except Exception:
         vers[m] = "not installed"
 print(vers)
@@ -131,7 +135,7 @@ DESC = {
  "testbed/": "the testbed: shop, load generator, fault injector, recorder, frozen detector", "agent/": "the small helper that sits next to a website and reports what happens",
  "scripts/": "every analysis, training and proof script", "models_src/": "the hybrid deep-learning model classes (TensorFlow / Keras)",
  "report_outputs/": "every saved result file (CSV / JSON), the proof report and figures", "docs/": "written documentation, screenshots, Colab steps",
- "tests/": "unit tests (hybrid models)", "notebooks/": "this notebook", "processed/": "processed window tables (large ones come from the data bundle)",
+ "tests/": "unit tests (hybrid models)", "models/": "saved models (not in git; only the 1 MB frozen testbed detector comes from the bundle)", "results/": "results of the first, 16-epoch AnoMod run", "notebooks/": "this notebook", "processed/": "processed window tables (large ones come from the data bundle)",
  "inputs/": "the window tables made from the raw recordings (from the data bundle)", "scripts/proofs.py": "the proof report (P1 to P23)",
  "scripts/hybrid_engine.py": "the training protocol shared by AnoMod and LO2 hybrids", "scripts/preprocess.py": "the preprocessing used by every AnoMod model",
  "report_outputs/proofs.json": "the proof report as data", "docs/HYBRID_MODELS.md": "what each hybrid is and how it is wired", "docs/LO2_SLICE.md": "how the LO2 slice was chosen",
@@ -171,9 +175,10 @@ with section("1 data"):
     print(); print("windows per class and system (label_level):"); print(tab)
     print(); print("binary labels (0 = Normal, 1 = Anomaly):", df.label_binary.value_counts().sort_index().to_dict())
     NUMBERS.update(windows_total=int(len(df)), runs_total=int(df.run_id.nunique()), normal_windows_total=int((df.label_binary == 0).sum()))
-    types = pd.DataFrame([["API answers", "requests, error rate, latency mean / p95 / p99", int((groups == "api").sum()), "used"],
-                          ["Logs", "line, error and warning counts per window", int((groups == "log").sum()), "used"],
-                          ["Metrics", "CPU, memory, network, disk (mean / max / std)", int((groups == "metrics").sum()) if "metrics" in set(groups) else int((groups == "metric").sum()), "used"],
+    gc = groups.value_counts().to_dict()
+    types = pd.DataFrame([["API answers", "requests, error rate, latency mean / p95 / p99", int(gc.get("api", 0)), "used"],
+                          ["Logs", "line, error and warning counts per window", int(gc.get("logs", 0)), "used"],
+                          ["Metrics", "CPU, memory, network, disk (mean / max / std)", int(gc.get("metrics", 0)), "used"],
                           ["Code coverage files", "which code ran", 0, "NOT used"], ["Images / screenshots", "pictures of the user interface", 0, "NOT used"]],
                          columns=["data type", "what it holds", "features in the window table", "status"])
     print(); print(types.to_string(index=False))
@@ -196,7 +201,9 @@ with section("2 preprocessing"):
     print("preprocessor fitted on", prep.n_fit_rows, "training windows;", "kept features:", prep.n_out, "| dropped constant:", len(prep.const_cols), "| log1p features:", int(prep.log_mask.sum()))
     counters = [c for c in feats if c.startswith("m_") and c[2:].rsplit("__", 1)[0].endswith("_total")]
     print("step 1, rates: the smallest value among", len(counters), "counter features is", float(np.nanmin(df[counters].to_numpy(float))) if counters else "n/a", "(no negative rates)")
-    rows = df[df.window_id.isin(list(test_ids)[:3] + list(train_ids)[:2])]
+    show_cols = ["api_latency_p95_ms", "log_error_count", "m_system_cpu_usage__mean"]
+    fin = df[np.isfinite(df[show_cols].to_numpy(float)).all(1)]                # windows where all three example features have a value
+    rows = pd.concat([fin[fin.window_id.isin(test_ids)].head(3), fin[fin.window_id.isin(train_ids)].head(2)])
     X = prep.transform(rows)
     names = prep.output_names
     show = [n for n in ("api_latency_p95_ms", "log_error_count", "m_system_cpu_usage__mean", "was_missing_metrics") if n in names]
@@ -267,13 +274,19 @@ with section("4 imbalance"):
         print(f"  fold {r['fold']}:  b: {r['b']}   a: {r['a']}   hold: {r['hold']}")
     W = D10.W("final"); ytr = D10.y["label_level"][D10.train_pos]
     Xs, ys = smote_resample(W[D10.train_pos], ytr)
-    ada = ADASYN(random_state=SEED, n_neighbors=5).fit_resample(W[D10.train_pos], ytr)[1]
+    try:
+        ada = ADASYN(random_state=SEED, n_neighbors=5).fit_resample(W[D10.train_pos], ytr)[1]
+    except ValueError as e:                                                    # with 5 classes ADASYN can fail to place any new sample; show the binary comparison instead
+        print("ADASYN on the five-class labels is not possible here (" + str(e)[:60] + "); using the binary labels for the size comparison")
+        yb = D10.y["label_binary"][D10.train_pos]; ada = ADASYN(random_state=SEED, n_neighbors=5).fit_resample(W[D10.train_pos], yb)[1]
+        print("binary labels: original", np.bincount(yb).tolist(), "| ADASYN", np.bincount(ada).tolist())
+        ada = np.concatenate([ada, np.full(0, 0)])
     cw = len(ytr) / (5 * np.bincount(ytr))
     print(); print("full training part: original", np.bincount(ytr).tolist(), "| SMOTE", np.bincount(ys).tolist(), "| ADASYN (size comparison only)", np.bincount(ada).tolist())
     print("class weights (balanced):", dict(zip(names5, np.round(cw, 2))))
     fig, ax = plt.subplots(1, 3, figsize=(13, 3.2))
     for a_, (t, v) in zip(ax, (("original", np.bincount(ytr)), ("SMOTE (training only)", np.bincount(ys)), ("ADASYN (comparison only)", np.bincount(ada)))):
-        a_.bar(names5, v, color="#1d5a8a"); a_.set_title(t); a_.tick_params(axis="x", rotation=30)
+        a_.bar([names5[i] if len(v) == 5 else ["Normal", "Anomaly"][i] for i in range(len(v))], v, color="#1d5a8a"); a_.set_title(t); a_.tick_params(axis="x", rotation=30)
     plt.tight_layout(); plt.show()
     fig, ax = plt.subplots(figsize=(5.5, 3)); ax.bar(names5, cw, color="#7d5200"); ax.set_title("class weights"); ax.tick_params(axis="x", rotation=30); plt.tight_layout(); plt.show()
     NUMBERS.update(smote_total_after=int(len(ys)), adasyn_total_after=int(len(ada)))
@@ -340,7 +353,7 @@ with section("6 classical"):
             W = D5.W(k); Xs, ys = smote_fit(W[trk], ybin[trk]); m = mk().fit(Xs, ys); cv.append(balanced_accuracy_score(ybin[vak], m.predict(W[vak]))); D5.drop_W(k)
         Xs, ys = smote_fit(Wf[D5.train_pos], ybin[D5.train_pos]); m = mk().fit(Xs, ys)
         P_ = m.predict_proba(Wf[D5.test_pos])[:, 1]; pred = (P_ >= 0.5).astype(int); lo, hi = boot(yte, pred, blocks_te)
-        live.append(dict(model=name, cv5_val_BA=np.mean(cv), test_BA=balanced_accuracy_score(yte, pred), BA_low=lo, BA_high=hi, healthy_recall=float((pred[yte == 0] == 0).mean()), ROC_AUC=roc_auc_score(yte, P_))))
+        live.append(dict(model=name, cv5_val_BA=np.mean(cv), test_BA=balanced_accuracy_score(yte, pred), BA_low=lo, BA_high=hi, healthy_recall=float((pred[yte == 0] == 0).mean()), ROC_AUC=roc_auc_score(yte, P_)))
     live = pd.DataFrame(live)
     saved = pd.read_csv(REP / "leaderboard_label_binary.csv").set_index("model")
     live["saved_full_test_BA"] = live.model.map(saved.test_bal_acc)
@@ -421,7 +434,7 @@ md("""
 """)
 code(r"""
 with section("8 honesty"):
-    prf = json.load(open(REP / "proofs.json", encoding="utf-8")) if (REP / "proofs.json").exists() else None
+    prf = jload(REP / "proofs.json") if (REP / "proofs.json").exists() else None
     stat = {s["id"]: s["status"] for s in prf["sections"]} if prf else {}
     badge = lambda i: f"[{stat.get(i, 'not available')}]"
     print("Overfitting (P6)", badge("P6"), "| Leakage audit (P7)", badge("P7"), "| Missingness check (P13)", badge("P13"), "| Run identification (P14)", badge("P14"), "| Hybrids incl. shuffled control (P20)", badge("P20"))
@@ -487,7 +500,7 @@ with section("10 testbed tables"):
     ra = pd.read_csv(REP / "testbed_run_assignment.csv"); print(); print("whole-run split:", ra.split.value_counts().to_dict(), "| runs with a fault:", int((ra.n_faults > 0).sum()), "of", len(ra)); print("fault types:", sorted({f.split("[")[0] for x in ra.faults for f in str(x).split("; ") if "fault-free" not in f})); src("report_outputs/testbed_run_assignment.csv")
     ho = pd.read_csv(REP / "testbed_heldout_overall.csv"); cols = ["method", "n_test_runs", "n_windows", "balanced_accuracy", "balanced_accuracy_ci_low", "balanced_accuracy_ci_high", "normal_recall", "roc_auc"]
     print(); print("held-out results (whole runs the models never saw):"); print(ho[cols].round(3).to_string(index=False)); src("report_outputs/testbed_heldout_overall.csv")
-    fz = json.load(open(REP / "testbed_frozen_config.json")); ch = fz["selection"]["chosen"]; print(); print("frozen choice (made on training runs only):", ch["model"], ch["feature_set"], "| threshold", ch["tuned_threshold"])
+    fz = jload(REP / "testbed_frozen_config.json"); ch = fz["selection"]["chosen"]; print(); print("frozen choice (made on training runs only):", ch["model"], ch["feature_set"], "| threshold", ch["tuned_threshold"])
     NUMBERS.update(testbed_frozen_cv_ba=round(float(ch["cv_balanced_accuracy_tuned"]), 4))
     sc = pd.read_csv(REP / "testbed_shuffled_control.csv"); print(); print("shuffled-label control:"); print(sc.round(3).to_string(index=False)); src("report_outputs/testbed_shuffled_control.csv")
     rc = pd.read_csv(REP / "testbed_runid_check.csv"); print(); print("run-identification check:"); print(rc.round(3).to_string(index=False)); src("report_outputs/testbed_runid_check.csv")
@@ -525,7 +538,7 @@ with section("10 replay one recorded run"):
     det = joblib.load(det_path); ra = pd.read_csv(REP / "testbed_run_assignment.csv")
     test_runs = ra[(ra.split == "test") & (ra.n_faults > 0)].run_id.tolist(); run = test_runs[0]
     w = tw[tw.run_id == run].sort_values("window_start").reset_index(drop=True) if "run_id" in tw.columns else None
-    cols = det["columns"]; thr = float(json.load(open(REP / "testbed_frozen_config.json"))["selection"]["chosen"]["tuned_threshold"])
+    cols = det["columns"]; thr = float(jload(REP / "testbed_frozen_config.json")["selection"]["chosen"]["tuned_threshold"])
     risk = det["model"].predict_proba(w[cols].to_numpy(float))[:, 1] if hasattr(det["model"], "predict_proba") else None
     flag = risk >= thr; alert = np.array([flag[max(0, i - 2):i + 1].sum() >= 2 for i in range(len(flag))])
     first = int(np.argmax(alert)) if alert.any() else None
@@ -595,7 +608,7 @@ md("""
 """)
 code(r"""
 with section("13 proofs"):
-    prf = json.load(open(REP / "proofs.json", encoding="utf-8"))
+    prf = jload(REP / "proofs.json")
     print("generated:", prf["generated_at"], "| commit:", prf["git_commit"][:10], "| totals:", prf["totals"], "| partial:", prf["partial"])
     rows = [dict(section=s["id"], status=s["status"], items=len(s["items"]), title=s["title"][:85]) for s in prf["sections"]]
     print(pd.DataFrame(rows).to_string(index=False)); src("report_outputs/proofs.json")

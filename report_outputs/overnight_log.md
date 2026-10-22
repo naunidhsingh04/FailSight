@@ -21,3 +21,4 @@
 - 01:03 Step 2 done: five AnoMod hybrids x binary/five-class finished (5-fold, SMOTE/class-weight chosen by validation, correction stage run where gap > 0.10). No hybrid beats the best earlier model. Step 3: starting LO2 hybrids (slice already built at 00:09; raw data hashes unchanged).
 - 01:36 Step 3 done (five LO2 hybrids x 2 label versions; binary labels are almost trivially separable: every hybrid scores 1.000 on the 172-window test run, the four-class labels score 0.57-0.66). Step 4 started: scripts/lo2_full.py (families b-e).
 - 02:16 Step 4 done: all LO2 families (b)-(e) completed, none cut. Running proofs P20-P22.
+- 02:17 Step 5 started: bundle made (5.7 MB), notebook generated; running scripts/run_notebook_check.py in the fresh venv.

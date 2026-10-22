@@ -1,0 +1,64 @@
+{
+ "executed_ok": false,
+ "executed_at": "2026-10-23 02:18:31",
+ "n_cells": 52,
+ "n_errors": 1,
+ "soft_failures": [
+  "[section 4 imbalance] could not run: ValueError: No samples will be generated with the provided ratio settings.",
+  "[section 7 hybrids live] could not run: NameError: name 'D5' is not defined",
+  "[section 9 explain] could not run: NameError: name 'D5' is not defined"
+ ],
+ "seconds": 52.502596855163574,
+ "environment": "fresh virtual environment (numpy, pandas, scikit-learn, matplotlib, tensorflow, xgboost, lightgbm + the notebook's own pip install of imbalanced-learn, shap, optuna, lime); clean clone of the committed repository; data bundle unzipped; no AnoMod raw folders, no models folder",
+ "comparisons": [
+  {
+   "name": "training windows (split file)",
+   "notebook": 2549,
+   "reference": 2549,
+   "equal": true
+  },
+  {
+   "name": "test windows (split file)",
+   "notebook": 647,
+   "reference": 647,
+   "equal": true
+  },
+  {
+   "name": "windows in the window tables",
+   "notebook": 3196,
+   "reference": 3196,
+   "equal": true
+  },
+  {
+   "name": "blocks shared across the new 5 folds",
+   "notebook": 0,
+   "reference": 0,
+   "equal": true
+  },
+  {
+   "name": "best hybrid test balanced accuracy (binary)",
+   "notebook": 0.6519,
+   "reference": 0.6519,
+   "equal": true
+  },
+  {
+   "name": "LO2 windows",
+   "notebook": 860,
+   "reference": 860,
+   "equal": true
+  },
+  {
+   "name": "healthy test windows appear in proof P20 (test class counts)",
+   "notebook": true,
+   "reference": true,
+   "equal": true
+  },
+  {
+   "name": "training and test counts appear in proof P2",
+   "notebook": true,
+   "reference": true,
+   "equal": true
+  }
+ ],
+ "outputs_trimmed": 0
+}
