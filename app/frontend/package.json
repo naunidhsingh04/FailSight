@@ -10,7 +10,8 @@
     "typecheck": "tsc -b --noEmit",
     "test:e2e": "playwright test",
     "lighthouse": "node tests/lighthouse.mjs",
-    "test:demo": "node -e \"process.env.DEMO_ONLY='1';require('child_process').spawnSync('npx',['playwright','test'],{stdio:'inherit',shell:true,env:process.env})\"",
+    "test:monitor": "node -e \"process.env.MONITOR_ONLY='1';require('child_process').spawnSync('npx',['playwright','test'],{stdio:'inherit',shell:true,env:process.env})\"",
+    "test:shop": "node -e \"process.env.SHOP_ONLY='1';require('child_process').spawnSync('npx',['playwright','test'],{stdio:'inherit',shell:true,env:process.env})\"",
     "test:replay": "node -e \"process.env.REPLAY_ONLY='1';require('child_process').spawnSync('npx',['playwright','test'],{stdio:'inherit',shell:true,env:process.env})\""
   },
   "dependencies": {

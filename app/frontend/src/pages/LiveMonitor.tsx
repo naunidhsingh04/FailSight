@@ -48,7 +48,7 @@ export default function LiveMonitor() {
   const pct = Math.round(((last?.learning_progress ?? app?.learning.progress) ?? 0) * 100)
   const learned = shopUp && !!app?.learning.done
   const status = !shopUp ? null : (last?.status ?? 'learning')
-  const downNow = !!problem && problem.stopped && !shopUp && Date.now() / 1000 < problem.at + 150     // the shop stopped and restarts by itself
+  const downNow = !!problem && problem.stopped && !shopUp && Date.now() / 1000 < problem.at + 60      // the shop stopped and restarts by itself (a crash lasts about 30 s); after that it is simply not running
   const level = downNow ? 'problem' : levelOf(status, shopUp)
 
   // notice a problem from the shop's own state
