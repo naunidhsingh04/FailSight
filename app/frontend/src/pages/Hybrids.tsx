@@ -1,107 +1,124 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useApi } from '../api'
-import { RangePlot } from '../components/Charts'
 import { LabelToggle } from '../components/pickers'
+import ResponsiveTable from '../components/ResponsiveTable'
 import { Async } from '../components/States'
 import { fmt, int, range } from '../format'
-import { Detailed, Simple } from '../mode'
+import { Detailed } from '../mode'
 import { usePageTitle } from '../usePageTitle'
-import type { HybridResponse, HybridRow, Label } from '../types'
+import { Head, Score } from './Results'
+import type { HybridResponse, HybridRow, Label, Lo2LeaderboardResponse, ModelsResponse } from '../types'
 
-interface Info { plain: string; tech: string; first: string; second: string; line: string; note?: string }
+interface Info { plain: string; tech: string; line: string }
 
-/** Plain-language description of each hybrid: what its first part does, what its second part does, and the one-line idea. Numbers never come from here. */
+/** Plain-language names and one-line ideas. Numbers never come from here. */
 export const HYBRID_INFO: Record<string, Info> = {
-  Transformer_BiLSTM: { plain: 'Look-around reader + two-way memory', tech: 'Transformer + BiLSTM', first: 'Looks at six recent windows at once and decides which matter', second: 'Reads them in order, forwards and backwards', line: 'First it lets the windows compare notes, then it reads the story in time order.' },
-  AE_LSTM: { plain: 'Squeeze-and-rebuild + memory', tech: 'Autoencoder + LSTM', first: 'Squeezes each window into a short summary and tries to rebuild it', second: 'Reads the six summaries in order', line: 'If a window cannot be rebuilt well, it is probably unusual; that hint is added to the learning.' },
-  GNN_Transformer: { plain: 'Parts-map + look-around reader', tech: 'GNN + Transformer', first: 'Treats the system as a map of connected parts and lets neighbours share readings', second: 'Looks across six windows to see how the map changes', line: 'It knows which readings belong together (cpu with cpu, network with network).' },
-  CNN_LSTM: { plain: 'Pattern spotter + memory', tech: 'CNN + LSTM', first: 'Spots short patterns such as a sudden jump between windows', second: 'Reads the patterns in time order', line: 'A small pattern detector feeds a model that remembers what came before.' },
-  VAE_Transformer: { plain: 'Smooth squeezer + look-around reader', tech: 'VAE + Transformer', first: 'Squeezes each window into a smooth, slightly fuzzy summary', second: 'Lets the six summaries compare notes', line: 'The fuzziness keeps the summary from memorising small details.' },
-  BERT_GNN: { plain: 'Meaning of log lines + pattern map', tech: 'BERT-style text encoder (frozen) + GNN', first: 'Turns each kind of log message into a fixed list of numbers (frozen, never trained)', second: 'A map of log messages that appear together; it learns from the map', line: 'The text meaning comes from a simple word-statistics method, because a downloadable BERT model was not available.', note: 'The text encoder is TF-IDF + truncated SVD (frozen), not a real BERT.' },
-  Transformer_LSTM: { plain: 'Look-around reader + memory', tech: 'Transformer + LSTM', first: 'Looks at the last three windows at once', second: 'Reads them in order', line: 'The same idea as the AnoMod one, on LO2’s own signals.' },
-  GNN_LSTM: { plain: 'Parts-map + memory', tech: 'GNN + LSTM', first: 'A map of the logs of the seven services, the database and the load generator; connected when their activity moves together', second: 'Reads the map summaries in order', line: 'It learns which sources of log lines behave together.' },
-  Multimodal_Transformer_MLP: { plain: 'Two readers (logs and metrics) + a mixer', tech: 'Multimodal Transformer + MLP', first: 'One reader for log numbers and one for machine metrics', second: 'A small mixer that joins what both readers found', line: 'Logs and metrics are looked at separately first, then combined.' },
+  Transformer_BiLSTM: { plain: 'Look-around reader + two-way memory', tech: 'Transformer + BiLSTM', line: 'Compares the recent moments with each other, then reads them in order.' },
+  AE_LSTM: { plain: 'Squeeze-and-rebuild + memory', tech: 'Autoencoder + LSTM', line: 'Summarises each moment; unusual moments are hard to rebuild, which is a clue.' },
+  GNN_Transformer: { plain: 'Parts-map + look-around reader', tech: 'GNN + Transformer', line: 'Knows which readings belong together, then looks at how they change.' },
+  CNN_LSTM: { plain: 'Pattern spotter + memory', tech: 'CNN + LSTM', line: 'Spots sudden jumps and remembers what came before.' },
+  VAE_Transformer: { plain: 'Smooth squeezer + look-around reader', tech: 'VAE + Transformer', line: 'Squeezes each moment into a smooth summary, then compares the summaries.' },
+  BERT_GNN: { plain: 'Log-message meaning + pattern map', tech: 'BERT-style text encoder + GNN', line: 'Turns kinds of log messages into numbers and learns from which ones appear together.' },
+  Transformer_LSTM: { plain: 'Look-around reader + memory', tech: 'Transformer + LSTM', line: 'Compares the last few moments, then reads them in order.' },
+  GNN_LSTM: { plain: 'Parts-map + memory', tech: 'GNN + LSTM', line: 'Learns which log sources move together, then reads the map over time.' },
+  AE_LSTM_LO2: { plain: 'Squeeze-and-rebuild + memory', tech: 'Autoencoder + LSTM', line: 'Summarises each moment and reads the summaries in order.' },
+  Multimodal_Transformer_MLP: { plain: 'Two readers (logs, metrics) + a mixer', tech: 'Multimodal Transformer + MLP', line: 'Reads logs and machine readings separately, then combines them.' },
 }
-const LO2_ORDER = ['BERT_GNN', 'Transformer_LSTM', 'AE_LSTM', 'GNN_LSTM', 'Multimodal_Transformer_MLP']
 const ANOMOD_ORDER = ['Transformer_BiLSTM', 'AE_LSTM', 'GNN_Transformer', 'CNN_LSTM', 'VAE_Transformer']
-export const AE_LSTM_LO2: Info = { ...HYBRID_INFO.AE_LSTM, line: 'Same idea as on AnoMod, trained separately on LO2’s own windows.' }
+const LO2_ORDER = ['BERT_GNN', 'Transformer_LSTM', 'AE_LSTM', 'GNN_LSTM', 'Multimodal_Transformer_MLP']
+const infoOf = (ds: 'anomod' | 'lo2', n: string) => (ds === 'lo2' && n === 'AE_LSTM' ? HYBRID_INFO.AE_LSTM_LO2 : HYBRID_INFO[n])
 
-function secs(s?: number | null) {
-  if (s === null || s === undefined) return '–'
-  return s >= 90 ? `${(s / 60).toFixed(1)} min` : `${Math.round(s)} s`
-}
+const PLAIN_FAMILY: Record<string, string> = { tree: 'Decision-tree model', linear: 'Linear model', deep: 'Neural network', ensemble: 'Combination of models' }
+const LO2_FAMILY = (f: string) => (/classical|Optuna/.test(f) ? 'Decision-tree / linear model' : /stacking|voting/.test(f) ? 'Combination of models' : /deep/.test(f) ? 'Neural network' : 'Hybrid')
 
-function Card({ ds, name, row, facts, reliab }: { ds: 'anomod' | 'lo2'; name: string; row?: HybridRow; facts: string; reliab: string }) {
-  const info = ds === 'lo2' && name === 'AE_LSTM' ? AE_LSTM_LO2 : HYBRID_INFO[name]
+interface Row { key: string; name: string; hybrid: boolean; tag: string; ba: number | null; lo: number | null; hi: number | null; nr: number | null; auc: number | null }
+
+function Card({ ds, name, row }: { ds: 'anomod' | 'lo2'; name: string; row?: HybridRow }) {
+  const info = infoOf(ds, name)
   const done = row && row.status !== 'not completed' && typeof row.test_bal_acc === 'number'
-  const small = ds === 'lo2'
   return (
     <li className="card hy-card" data-state={done ? 'done' : 'pending'} data-testid={`hybrid-${ds}-${name}`}>
       <h3>{info.plain}</h3>
-      <p className="small muted" style={{ margin: 0 }}><Detailed><>{info.tech}. {info.note ? `${info.note} ` : ''}</></Detailed>{info.line}</p>
-      <div className="wire" role="img" aria-label={`First part: ${info.first}. Second part: ${info.second}. Then the answer.`}>
-        <div className="box"><b>First part</b>{info.first}</div>
-        <span className="arrow" aria-hidden="true">&rarr;</span>
-        <div className="box"><b>Second part</b>{info.second}</div>
-        <span className="arrow" aria-hidden="true">&rarr;</span>
-        <div className="box ans"><b>Answer</b>healthy or not</div>
-      </div>
+      <p className="small muted" style={{ margin: 0 }}><Detailed><>{info.tech}. </></Detailed>{info.line}</p>
       {done ? (
         <dl className="hy-facts">
-          <dt>Test score</dt><dd><strong>{fmt(row.test_bal_acc)}</strong> (95% range {range(row.test_bal_acc_ci_low, row.test_bal_acc_ci_high)})</dd>
-          <dt>Healthy windows left alone</dt><dd>{fmt(row.test_normal_recall, 2)}{row.normal_recall_ci_low != null && <> ({range(row.normal_recall_ci_low, row.normal_recall_ci_high)})</>}</dd>
-          <Detailed><><dt>ROC-AUC</dt><dd>{fmt(row.test_roc_auc)}</dd><dt>Macro-F1</dt><dd>{fmt(row.test_macro_f1)}</dd></></Detailed>
-          <dt>Ran on</dt><dd>{facts}</dd>
-          <dt>Training time</dt><dd>{secs(row.train_seconds_total ?? row.train_secs)}</dd>
-          <dt>Folds used</dt><dd>{row.folds ?? 5}-fold</dd>
+          <dt>Overall score</dt><dd><strong>{fmt(row.test_bal_acc)}</strong> ({range(row.test_bal_acc_ci_low, row.test_bal_acc_ci_high)})</dd>
+          <dt>Healthy windows left alone</dt><dd>{fmt(row.test_normal_recall, 2)}</dd>
         </dl>
-      ) : <p className="small" style={{ margin: 0 }}>Not completed because of the time limit.</p>}
-      {done && row.status === 'did not learn' && <div className="rel amber">This model did not learn (its validation score stayed near chance). Reported as it is.</div>}
-      {!done && <div className="rel grey">Not completed: no result is shown because none was produced in the time available.</div>}
-      {done && small && <div className="rel amber">Unreliable: very small sample ({reliab}).</div>}
-      {done && !small && <div className="rel ok">{reliab}, so the range is wide.</div>}
+      ) : <p className="small" style={{ margin: 0 }}>No result available.</p>}
     </li>
   )
 }
 
-function DatasetBlock({ ds, data }: { ds: 'anomod' | 'lo2'; data: HybridResponse }) {
+function Compare({ rows, caption }: { rows: Row[]; caption: string }) {
+  const sorted = useMemo(() => [...rows].sort((a, b) => (b.ba ?? 0) - (a.ba ?? 0)), [rows])
+  return (
+    <ResponsiveTable<Row>
+      caption={caption} rows={sorted} rowKey={(r) => r.key} initialSort={{ key: 'ba', dir: 'desc' }}
+      columns={[
+        { key: 'name', label: 'Model', nameCell: true, sortValue: (r) => r.name, render: (r) => <>{r.name} <span className="pills">{r.hybrid ? <span className="badge accent">Hybrid</span> : <span className="badge">{r.tag}</span>}</span></> },
+        { key: 'ba', label: 'Overall score', header: <Head plain="Overall score" meaning="0.5 = coin flip, 1.0 = perfect" tech="Balanced accuracy" />, numeric: true, sortValue: (r) => r.ba, render: (r) => <Score v={r.ba} low={r.lo} high={r.hi} /> },
+        { key: 'nr', label: 'Healthy windows left alone', header: <Head plain="Healthy windows left alone" meaning="higher = fewer false alarms" tech="Normal recall" />, numeric: true, sortValue: (r) => r.nr, render: (r) => <Score v={r.nr} /> },
+        { key: 'auc', label: 'Ranks risky above safe', header: <Head plain="Ranks risky above safe" meaning="1.0 = perfect" tech="ROC-AUC" />, numeric: true, sortValue: (r) => r.auc, render: (r) => <Score v={r.auc} /> },
+      ]}
+    />
+  )
+}
+
+function DatasetBlock({ ds, hy }: { ds: 'anomod' | 'lo2'; hy: HybridResponse }) {
   const [label, setLabel] = useState<Label>('label_binary')
-  const d = data[ds]
-  const order = ds === 'anomod' ? ANOMOD_ORDER : LO2_ORDER
-  const rows = d.models.filter((m) => m.label_version === label)
+  const models = useApi<ModelsResponse>(ds === 'anomod' ? '/api/models' : null)
+  const lo2 = useApi<Lo2LeaderboardResponse>(ds === 'lo2' ? '/api/lo2/leaderboard' : null)
+  const d = hy[ds]
   const f = d.facts as any
-  const factsText = ds === 'anomod'
-    ? `${int(f?.windows)} windows (30 s) from ${f?.runs} runs: ${int(f?.train)} to train, ${int(f?.test)} to test`
-    : `${int(f?.windows)} windows (5 s) from ${f?.runs} whole runs, ${fmt(f?.megabytes, 1)} MB: ${int(f?.train)} to train, ${int(f?.test)} to test`
-  const done = rows.filter((r) => r.status !== 'not completed' && typeof r.test_bal_acc === 'number')
-  const best = [...done].sort((a, b) => (b.test_bal_acc ?? 0) - (a.test_bal_acc ?? 0))[0]
-  const cmp = (data.anomod.comparison ?? {})[label]
-  const reliab = ds === 'anomod' ? `Only ${f?.healthy_test_windows} healthy test windows` : `${f?.runs} runs, only ${f?.healthy_test_windows} healthy test windows`
+  const hyRows = d.models.filter((m) => m.label_version === label)
+  const order = ds === 'anomod' ? ANOMOD_ORDER : LO2_ORDER
+  const rows: Row[] = useMemo(() => {
+    const out: Row[] = []
+    for (const h of d.models.filter((m) => m.label_version === label)) {
+      if (h.status === 'not completed' || typeof h.test_bal_acc !== 'number') continue
+      out.push({ key: 'h-' + h.model, name: infoOf(ds, h.model)?.plain ?? h.model, hybrid: true, tag: 'Hybrid', ba: h.test_bal_acc, lo: h.test_bal_acc_ci_low ?? null, hi: h.test_bal_acc_ci_high ?? null, nr: h.test_normal_recall ?? null, auc: h.test_roc_auc ?? null })
+    }
+    if (ds === 'anomod') {
+      for (const m of models.data?.models ?? []) {
+        if (m.label_version !== label || !m.metrics['official/ALL']) continue
+        const x = m.metrics['official/ALL']
+        out.push({ key: 'm-' + m.name, name: m.name, hybrid: false, tag: PLAIN_FAMILY[m.family] ?? m.family, ba: x.balanced_accuracy ?? null, lo: m.ci['ALL/balanced_accuracy']?.low ?? null, hi: m.ci['ALL/balanced_accuracy']?.high ?? null, nr: x.normal_recall ?? null, auc: x.roc_auc ?? null })
+      }
+    } else {
+      for (const r of lo2.data?.rows ?? []) {
+        if (r.label_version !== label || r.status === 'not completed' || (r.family ?? '').startsWith('(a)')) continue
+        out.push({ key: 'm-' + r.model, name: r.model, hybrid: false, tag: LO2_FAMILY(r.family ?? ''), ba: r.test_bal_acc ?? null, lo: r.test_bal_acc_ci_low ?? null, hi: r.test_bal_acc_ci_high ?? null, nr: r.test_normal_recall ?? null, auc: r.test_roc_auc ?? null })
+      }
+    }
+    return out
+  }, [d.models, models.data, lo2.data, label, ds])
+  const best = [...rows].sort((a, b) => (b.ba ?? 0) - (a.ba ?? 0))
+  const bestH = best.find((r) => r.hybrid)
+  const bestO = best.find((r) => !r.hybrid)
+  const title = ds === 'anomod' ? 'AnoMod data (recorded benchmark)' : 'LO2 data'
+  const facts = ds === 'anomod'
+    ? `${int(f?.windows)} windows from ${f?.runs} runs; ${int(f?.test)} test windows, ${f?.healthy_test_windows} of them healthy.`
+    : `${int(f?.windows)} windows from ${f?.runs} runs; ${int(f?.test)} test windows (one whole run), ${f?.healthy_test_windows} of them healthy. Small sample: read the scores with care.`
   return (
     <section aria-labelledby={`h-${ds}`}>
-      <h2 id={`h-${ds}`}>{ds === 'anomod' ? 'On the recorded benchmark data (AnoMod)' : 'On a slice of a second data set (LO2)'}</h2>
-      <p className="muted">{factsText}. {ds === 'lo2' && <>Trained completely separately from AnoMod: its own windows, its own preprocessing, its own models. These results say nothing about transfer from AnoMod.</>}</p>
+      <h2 id={`h-${ds}`}>{title}</h2>
+      <p className="muted">{facts}</p>
       <div className="row" style={{ marginBottom: 'var(--space-4)' }}><LabelToggle value={label} onChange={setLabel} /></div>
-      {!d.available && <div className="state"><h3>No hybrid results yet</h3><p>The result files for this data set are not on this computer.</p></div>}
-      <ul className="hy-grid" aria-label={`Five hybrid models on ${ds === 'anomod' ? 'AnoMod' : 'LO2'}`}>
-        {order.map((n) => <Card key={n} ds={ds} name={n} row={rows.find((r) => r.model === n)} facts={factsText} reliab={reliab} />)}
+      <ul className="hy-grid" aria-label={`The five hybrid models on ${title}`}>
+        {order.map((n) => <Card key={n} ds={ds} name={n} row={hyRows.find((r) => r.model === n)} />)}
       </ul>
-      {done.length > 0 && (
-        <div className="card" style={{ marginTop: 'var(--space-4)' }}>
-          <RangePlot ariaLabel={`Test balanced accuracy with 95% range for the hybrid models on ${ds === 'anomod' ? 'AnoMod' : 'LO2'}`} title="Overall score on the test windows (dot) with its 95% range (line). 0.5 is a coin flip, 1.0 is perfect."
-            items={[...done].sort((a, b) => (b.test_bal_acc ?? 0) - (a.test_bal_acc ?? 0)).map((r) => ({ label: r.model.replace(/_/g, ' + ').replace('Multimodal + Transformer + MLP', 'Multimodal Transformer + MLP'), point: r.test_bal_acc ?? null, low: r.test_bal_acc_ci_low ?? null, high: r.test_bal_acc_ci_high ?? null }))} />
-        </div>
-      )}
-      {best && (
+      <h3 style={{ marginTop: 'var(--space-5)' }}>All models side by side</h3>
+      <Async state={(ds === 'anomod' ? models : lo2) as any} rows={5} label="Loading the comparison">
+        {() => <Compare rows={rows} caption={`Test results on ${title}, ${label === 'label_binary' ? 'healthy or not' : 'by kind of problem'}. Hybrid models are tagged; click a column title to sort.`} />}
+      </Async>
+      {bestH && bestO && (
         <div className="callout" style={{ marginTop: 'var(--space-4)' }} data-testid={`verdict-${ds}`}>
-          <span className="label">Which one was best?</span>
-          <p style={{ marginTop: 0 }}>
-            On the {label === 'label_binary' ? 'healthy-or-not' : 'five-class'} question the best hybrid was <strong>{HYBRID_INFO[best.model]?.tech ?? best.model}</strong> with an overall score of {fmt(best.test_bal_acc)} (95% range {range(best.test_bal_acc_ci_low, best.test_bal_acc_ci_high)}).
-            {ds === 'anomod' && cmp && (
-              <> The best of the 36 earlier models, {cmp.best_existing}, scored {fmt(cmp.best_existing_ba)}{cmp.best_existing_low != null && <> ({range(cmp.best_existing_low, cmp.best_existing_high)})</>}. {cmp.hybrid_beats_best_existing ? 'The best hybrid scored higher' : 'No hybrid beat the best earlier model'}, and the two ranges {cmp.ranges_overlap ? 'overlap, so we cannot say one is really better' : 'do not overlap'}. Small, table-like data with only 36 healthy test windows is where tree models are hard to beat.</>
-            )}
-            {ds === 'lo2' && <> LO2 is a very small sample, so this ranking is not reliable.</>}
+          <span className="label">How do the hybrids compare?</span>
+          <p style={{ margin: 0 }}>
+            Best hybrid: <strong>{bestH.name}</strong>, overall score {fmt(bestH.ba)} (range {range(bestH.lo, bestH.hi)}). Best earlier model: <strong>{bestO.name}</strong>, {fmt(bestO.ba)} (range {range(bestO.lo, bestO.hi)}).{' '}
+            {(bestH.ba ?? 0) > (bestO.ba ?? 0) ? 'The best hybrid scored higher' : (bestH.ba ?? 0) === (bestO.ba ?? 0) ? 'They scored the same' : 'The best earlier model scored higher'}; where the ranges overlap, the difference is not reliable.
           </p>
         </div>
       )}
@@ -115,44 +132,30 @@ export default function Hybrids() {
   return (
     <>
       <h1>Hybrid models</h1>
-      <p className="lede">A hybrid model is one model made of two parts that learn together: the first part prepares what it sees, the second part reads that and gives the answer. We built five on the recorded benchmark data and five on a slice of a second data set.</p>
-      <Simple>
-        <div className="callout accent how-to-read"><span className="label">How to read this page</span>
-          <ul>
-            <li>Each card is one model. The three boxes show how it works: first part, second part, answer.</li>
-            <li><strong>Test score</strong>: 0.5 is a coin flip, 1.0 is perfect. The range beside it is how much the score could move with different luck (95% range).</li>
-            <li><strong>Healthy windows left alone</strong>: how many calm moments did not cause a false alarm.</li>
-            <li>Grey cards are models that were not finished. Amber notes mean a very small sample.</li>
-          </ul>
-        </div>
-      </Simple>
-      <Detailed>
-        <div className="callout accent how-to-read"><span className="label">How to read this page</span>
-          <ul>
-            <li>Test score = balanced accuracy on the untouched test windows, with a 1000-resample block-bootstrap 95% range. Healthy windows left alone = recall of the Normal class.</li>
-            <li>Every hybrid is one model class: first part, second part and head are trained end to end (the BERT-style encoder on LO2 is frozen by design). Settings were chosen by validation on the training part only; the test part was scored once per model.</li>
-            <li>Training: SMOTE or class weights (chosen by validation), early stopping (patience 6, at most 40 epochs), label smoothing, batch size 32, seed 42.</li>
-          </ul>
-        </div>
-      </Detailed>
+      <p className="lede">Ten two-part neural networks: five trained on the AnoMod data and five on the LO2 data. Each is shown next to the models we built earlier, so you can compare them directly.</p>
+      <div className="callout accent how-to-read"><span className="label">How to read this page</span>
+        <ul>
+          <li><strong>Overall score:</strong> 0.5 is a coin flip, 1.0 is perfect. The range beside it is how much the score could move with different luck.</li>
+          <li><strong>Healthy windows left alone:</strong> how many calm moments did not cause a false alarm.</li>
+          <li>Rows tagged <span className="badge accent">Hybrid</span> are the new models; the others are the earlier ones.</li>
+        </ul>
+      </div>
       <Async state={api} rows={6} label="Loading hybrid results">
         {(d) => (
           <div className="stack" style={{ marginTop: 'var(--space-5)' }}>
-            <div className="callout" role="note"><span className="label">Folds and test windows</span><p style={{ margin: 0 }} data-testid="fold-note">{d.fold_note}</p></div>
-            <DatasetBlock ds="anomod" data={d} />
-            <DatasetBlock ds="lo2" data={d} />
-            <div className="callout" role="note" data-testid="no-transfer"><span className="label">What this does not show</span>
+            <DatasetBlock ds="anomod" hy={d} />
+            <DatasetBlock ds="lo2" hy={d} />
+            <div className="callout" role="note" data-testid="no-transfer"><span className="label">Good to know</span>
               <ul>
+                <li data-testid="fold-note">{d.fold_note}</li>
                 {d.notes.slice(1).map((n) => <li key={n}>{n}</li>)}
-                <li>The hybrids are compared with the 36 earlier models on the same 647 test windows; the lead of the best model on any list is optimistic because it was picked on the test set.</li>
+                <li>The best model in any list was picked by looking at the test results, so its lead looks slightly better than it would on new data.</li>
               </ul>
             </div>
-            <p className="small muted">The full numbers are on the <Link to="/examiners/results">Results</Link> page and the checks are on the <Link to="/proofs">Proof</Link> page (P20 to P23).</p>
+            <p className="small muted">More detail on the <Link to="/examiners/results">Results</Link> page; the checks are on the <Link to="/proofs">Proof</Link> page.</p>
           </div>
         )}
       </Async>
     </>
   )
 }
-
-

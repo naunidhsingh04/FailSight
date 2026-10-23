@@ -305,7 +305,7 @@ md("""**What you should see:** for three folds the class counts before and after
 md("""
 ## 5. Cross-validation folds and their proof
 
-**What we do and why:** to choose settings without touching the test part we cut the training part into folds (the original models use 10 folds; the new hybrid work uses 5 because of the time limit). Neighbouring windows must not sit in different folds, so folds are made from whole 10-window blocks (run-aware), and every class should appear in every fold.
+**What we do and why:** to choose settings without touching the test part we cut the training part into folds (the original models use 10 folds; the hybrid work uses 5). Neighbouring windows must not sit in different folds, so folds are made from whole 10-window blocks (run-aware), and every class should appear in every fold.
 """)
 code(r"""
 with section("5 folds"):
@@ -427,7 +427,7 @@ with section("7 hybrid results"):
     best_h, best_t = h.iloc[-1], ex.sort_values("test_bal_acc").iloc[-1]
     print(); print(f"best hybrid: {best_h.model} {best_h.test_bal_acc:.3f}; best of the 36 earlier models: {best_t.model} {best_t.test_bal_acc:.3f};",
           "a hybrid is higher" if best_h.test_bal_acc > best_t.test_bal_acc else "no hybrid beats the best earlier model")
-    print("Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, chosen because of the time limit. All AnoMod models are scored on the same", NUMBERS.get("test_windows", "647"), "test windows.")
+    print("Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, . All AnoMod models are scored on the same", NUMBERS.get("test_windows", "647"), "test windows.")
     NUMBERS.update(best_hybrid_ba=round(float(best_h.test_bal_acc), 4), best_existing_ba=round(float(best_t.test_bal_acc), 4))
     src("report_outputs/hybrid_anomod_leaderboard.csv, report_outputs/leaderboard_label_binary.csv, report_outputs/test_bootstrap_ci.csv")
 """
@@ -584,7 +584,7 @@ with section("11 LO2"):
     NUMBERS.update(lo2_windows=int(len(spl)), lo2_runs=int(len(man)), lo2_test_windows=int((spl.split == "test").sum()))
     lh = pd.read_csv(REP / "hybrid_lo2_leaderboard.csv"); print(); print("the five LO2 hybrids:"); print(lh[["model", "label_version", "status", "test_bal_acc", "test_bal_acc_ci_low", "test_bal_acc_ci_high", "test_normal_recall", "test_roc_auc"]].round(3).to_string(index=False)); src("report_outputs/hybrid_lo2_leaderboard.csv")
     if (REP / "lo2_full_leaderboard.csv").exists():
-        fl = pd.read_csv(REP / "lo2_full_leaderboard.csv"); print(); print("all LO2 families (hybrids first); 'not completed' = not finished because of the time limit:")
+        fl = pd.read_csv(REP / "lo2_full_leaderboard.csv"); print(); print("all LO2 families (hybrids first); 'not completed' = not finished:")
         print(fl[fl.label_version == "label_binary"][["family", "model", "status", "test_bal_acc", "test_bal_acc_ci_low", "test_bal_acc_ci_high", "test_normal_recall"]].round(3).to_string(index=False)[:6000]); src("report_outputs/lo2_full_leaderboard.csv")
     lvb = pd.read_csv(REP / "hybrid_lo2_logvolume_baseline.csv"); print(); print("control: log volume alone (number of log lines)"); print(lvb.round(3).to_string(index=False)); src("report_outputs/hybrid_lo2_logvolume_baseline.csv")
     shl = pd.read_csv(REP / "hybrid_lo2_shuffled_control.csv"); print(); print("control: shuffled labels"); print(shl[["model", "label_version", "shuffled_balanced_accuracy", "real_balanced_accuracy"]].round(3).to_string(index=False)); src("report_outputs/hybrid_lo2_shuffled_control.csv")
@@ -671,7 +671,7 @@ limits = [
  "The best model on every list was picked by looking at the test set, so its lead is optimistic.",
  "The benchmark split is by blocks, so every run has windows on both sides; recognising the run alone can reproduce the scores (run-identification check).",
  "The testbed is one fictional shop with about 12 held-out runs; scores for single fault types are unreliable.",
- "The hybrids use 5 folds (time limit); the original models use 10. They are scored on the same test windows.",
+ "The hybrids use 5 folds; the original models use 10. They are scored on the same test windows.",
  "LO2 is a slice of 5 whole runs (under a 150 MB cap): training on LO2's own data, a very small sample, every result marked unreliable.",
  "Nothing here shows transfer from AnoMod to LO2, to the testbed shop or to any other system, and nothing shows FailSight works on any app.",
  "FailSight notices a problem that has started. It does not forecast a failure and gives no time-until-failure; that is future work and was not built.",

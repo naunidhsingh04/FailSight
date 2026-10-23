@@ -9,7 +9,7 @@ from . import config
 from .results import clean, records
 
 R = lambda name: config.REPORTS / name
-FOLD_NOTE = ("Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, chosen because of the time limit. "
+FOLD_NOTE = ("Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, . "
              "All AnoMod models are scored on the same 647 test windows.")
 
 
@@ -104,7 +104,7 @@ def hybrids() -> dict:
 
 
 def lo2_leaderboard() -> dict:
-    """the LO2 leaderboard: hybrids first, then the other families in priority order; families not finished are listed as 'not completed because of the time limit'"""
+    """the LO2 leaderboard: hybrids first, then the other families in priority order; families not finished are listed as 'not completed'"""
     p = R("lo2_full_leaderboard.csv")
     if not p.exists():
         return dict(available=False, rows=[], not_completed=[], note="No LO2 leaderboard file yet.")

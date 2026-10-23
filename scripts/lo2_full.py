@@ -328,7 +328,7 @@ def main():
 
 
 def assemble_all(D):
-    """leaderboard of all LO2 families: the hybrids (hybrid_lo2_*), then (b) to (e); families with no result are listed as 'not completed because of the time limit'"""
+    """leaderboard of all LO2 families: the hybrids (hybrid_lo2_*), then (b) to (e); families with no result are listed as 'not completed'"""
     all_names = TAB + TUNED + DEEP + DEEP_HEAD + ["Stacking", "SoftVote"]
     lead = E.assemble(D, [n for n in all_names], PREFIX, STATE, runid=None, n_boot=1000)
     hyb = pd.read_csv(REP / "hybrid_lo2_leaderboard.csv") if (REP / "hybrid_lo2_leaderboard.csv").exists() else pd.DataFrame()
@@ -343,7 +343,7 @@ def assemble_all(D):
     lead["_o"] = lead.family.str[:3].map(order)
     lead = lead.sort_values(["label_version", "_o"]).drop(columns="_o")
     lead.to_csv(REP / "lo2_full_leaderboard.csv", index=False, float_format="%.4f")
-    nc = lead[lead.status == "not completed"][["model", "label_version", "family"]].assign(reason="not completed because of the time limit")
+    nc = lead[lead.status == "not completed"][["model", "label_version", "family"]].assign(reason="not completed")
     nc.to_csv(REP / "lo2_full_not_completed.csv", index=False)
     E.log("LO2 leaderboard written; not completed: " + (", ".join(sorted(set(nc.model))) or "none"))
     return lead

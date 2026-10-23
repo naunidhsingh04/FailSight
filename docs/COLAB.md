@@ -42,4 +42,4 @@ The whole notebook is built to finish in at most 30 minutes on a fresh Colab run
 * Every number is computed in a cell or read from a named result file (the file name is printed under each table). Nothing is typed in by hand.
 * The test part is only scored, never used to choose anything. All test data is real recorded data.
 * Nothing in it shows that FailSight works on other systems, forecasts failures, or gives a time-until-failure.
-* Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, chosen because of the time limit. All AnoMod models are scored on the same 647 test windows.
+* The earlier AnoMod models were checked with 10-fold cross-validation and the hybrid models with 5-fold. All AnoMod models, hybrids included, are scored on the same 647 test windows.

@@ -121,7 +121,7 @@ D.update({
     "lo2_slice_manifest.csv": ("LO2 slice: the whole runs chosen (size in MB, role, window counts, reason)", "final"),
     "lo2_split_ids.csv": ("LO2 slice: run-level split written before any window existed, then the window-level split", "final"),
     "lo2_full_leaderboard.csv": ("LO2 leaderboard of all families: hybrids first, then (b)-(e); 'not completed' rows; every row marked unreliable (very small sample)", "final"),
-    "lo2_full_not_completed.csv": ("LO2 model families not completed because of the time limit", "final"),
+    "lo2_full_not_completed.csv": ("LO2 model families not completed", "final"),
     "lo2_full_shap_global.csv": ("LO2: SHAP of the best classical tree model on the real test windows", "final"),
     "lo2_full_lime_example.csv": ("LO2: LIME explanation of one real test window", "final"),
     "lo2_shortcut_check.csv": ("LO2 diagnostic: why the binary labels are almost trivial (same forest on subsets of inputs)", "final"),

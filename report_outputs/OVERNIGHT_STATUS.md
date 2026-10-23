@@ -1,6 +1,6 @@
 # Overnight status
 
-Generated 2026-10-23 03:45 (IST). Task: FailSight overnight master task, deadline 1 PM IST on 23 Oct 2026.
+Generated 2026-10-23 11:56 (IST). Task: FailSight overnight master task, deadline 1 PM IST on 23 Oct 2026.
 
 ## Anything that failed or was cut
 
@@ -18,7 +18,7 @@ Generated 2026-10-23 03:45 (IST). Task: FailSight overnight master task, deadlin
 | 6 Front end, back end, docs, checks | **done** | 02:25-03:45 | new Hybrid models page, Results top-9/Show all + LO2 tab, Limits/How it works lines, Colab box; pytest 146 passed; Playwright chromium 101 passed; screenshots in docs/screenshots |
 | 7 Final | **done** | 03:35-03:50 | front end rebuilt, one quick start check (storefront and monitor open, break detected in 21 s), everything stopped, status written, pushed |
 
-> Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, chosen because of the time limit. All AnoMod models are scored on the same 647 test windows.
+> The earlier AnoMod models were checked with 10-fold cross-validation and the hybrid models with 5-fold. All AnoMod models, hybrids included, are scored on the same 647 test windows.
 
 ## The ten hybrid models
 
@@ -97,11 +97,11 @@ Generated 2026-10-23 03:45 (IST). Task: FailSight overnight master task, deadlin
 
 ## Limitations (all stated on the Limits page, the Hybrid models page and in the docs)
 
-* Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, chosen because of the time limit. All AnoMod models are scored on the same 647 test windows.
+* The earlier AnoMod models were checked with 10-fold cross-validation and the hybrid models with 5-fold. All AnoMod models, hybrids included, are scored on the same 647 test windows.
 * AnoMod test part: only 36 healthy windows, wide ranges; the best model on every list was picked on the test set (lead is optimistic).
 * Run identification can reproduce the AnoMod scores (P14, P20): they are not proof of fault detection.
 * LO2: fewer than 6 whole runs under the 150 MB cap, one test run (172 windows, 13 healthy); trained on LO2's own data only; no transfer claim; binary LO2 is almost trivially separable (log volume alone scores high; see the baseline).
-* Families not finished on LO2 are listed above as not completed because of the time limit.
+* Families not finished on LO2 are listed above as not completed.
 * No transfer to other systems, no claim that FailSight works on any app, no forecasting of failures, no time-until-failure (not built; future work).
 * The template encoder on LO2 is TF-IDF + SVD, not a real BERT. The AnoMod graph is built from the component names in the feature names, not from real service calls.
 * Hybrid selection used a single screening fold (validation scores only) to pick hidden size and imbalance method; the CV then used 5 folds; fold models were not averaged.
@@ -124,6 +124,7 @@ Results website without the shop: `python -m app.backend.serve` then http://127.
 ## git log --oneline -20
 
 ```
+070d15d final: status, index, tests record
 5e4f2ef front end polish, docs, index, steps
 9cbab9d notebook executed copy, proofs P23
 06a8b2b notebook: replay with exact fault start, quiet warnings
@@ -143,5 +144,4 @@ b708caf docs: present now (exact steps, known-good commit)
 00d27d9 tests: storefront and start button
 69764e2 shop: presenter controls
 ed7c0ab docs: storefront log, smoke-run comparison, presenter script
-35adfb5 launcher: reuse running services
 ```

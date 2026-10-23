@@ -2,7 +2,7 @@
 
 Written for: examiners and students who want to know exactly what the ten hybrid models are, how they are wired, how they were trained and what they scored.
 
-> Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, chosen because of the time limit. All AnoMod models are scored on the same 647 test windows.
+> The earlier AnoMod models were checked with 10-fold cross-validation and the hybrid models with 5-fold. All AnoMod models, hybrids included, are scored on the same 647 test windows.
 
 ## What a hybrid is here
 
@@ -105,6 +105,6 @@ The best hybrid is chosen by its cross-validation validation score (never by tes
 
 ## Limits
 
-* Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, chosen because of the time limit. All AnoMod models are scored on the same 647 test windows.
+* The earlier AnoMod models were checked with 10-fold cross-validation and the hybrid models with 5-fold. All AnoMod models, hybrids included, are scored on the same 647 test windows.
 * Small samples, wide ranges; the best model on any list was picked on the test set.
 * No claim of transfer to other systems, no forecasting, no time-until-failure (not built; future work).

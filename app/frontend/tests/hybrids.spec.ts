@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const FOLD_NOTE = 'Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, chosen because of the time limit. All AnoMod models are scored on the same 647 test windows.'
+const FOLD_NOTE = 'The earlier AnoMod models were checked with 10-fold cross-validation and the hybrid models with 5-fold. All AnoMod models, hybrids included, are scored on the same 647 test windows.'
 
 test.describe('hybrid models page', () => {
   test('shows ten cards (five per data set), the fold note, the no-transfer note and range charts', async ({ page }) => {
@@ -10,10 +10,9 @@ test.describe('hybrid models page', () => {
     await expect(page.locator('[data-testid^="hybrid-anomod-"]')).toHaveCount(5)
     await expect(page.locator('[data-testid^="hybrid-lo2-"]')).toHaveCount(5)
     await expect(page.getByTestId('no-transfer')).toContainText(/transfer/i)
-    await expect(page.getByTestId('verdict-anomod')).toContainText(/best/i)
-    expect(await page.locator('svg.chart').count()).toBeGreaterThanOrEqual(2)
-    await expect(page.getByText(/Unreliable: very small sample/).first()).toBeVisible()
-    await expect(page.getByText(/95% range/).first()).toBeVisible()
+    await expect(page.getByTestId('verdict-anomod')).toContainText(/Best hybrid/i)
+        await expect(page.getByText(/All models side by side/).first()).toBeVisible()
+    expect(await page.locator('table.rt').count()).toBeGreaterThanOrEqual(2)
   })
   test('is linked from the Proof page and from the examiners menu', async ({ page }) => {
     await page.goto('/proofs')

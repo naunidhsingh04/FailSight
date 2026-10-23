@@ -34,13 +34,13 @@ const PLAIN_PILLS: [string, string][] = [
 ]
 
 /** Column header in two lines (plain name + what it means) with the technical name in small grey text underneath. */
-function Head({ plain, meaning, tech }: { plain: string; meaning: string; tech: string }) {
+export function Head({ plain, meaning, tech }: { plain: string; meaning: string; tech: string }) {
   return <span className="th-plain"><strong>{plain}</strong><span className="th-mean">{meaning}</span><span className="th-tech">{tech}</span></span>
 }
 const Help = ({ k }: { k: string }) => <Term k={k}><></></Term>
 
 /** The number, and under it a thin bar from 0 to 1 with the 95% range as a lighter band. The number is always there: the bar is only a help. */
-function Score({ v, low, high }: { v: number | null | undefined; low?: number | null; high?: number | null }) {
+export function Score({ v, low, high }: { v: number | null | undefined; low?: number | null; high?: number | null }) {
   const has = typeof v === 'number'
   const clamp = (x: number) => Math.max(0, Math.min(1, x))
   return (
@@ -226,7 +226,7 @@ function Lo2Leaderboard({ label }: { label: Label }) {
                   <button type="button" className="btn secondary" aria-expanded={showAll} data-testid="lo2-show-all" onClick={() => setShowAll((v) => !v)}>{showAll ? `Show only the top ${TOP_N}` : `Show all models (${done.length})`}</button>
                 </div>
               )}
-              {nc.length > 0 && <div className="rel grey" data-testid="lo2-not-completed"><strong>Not completed because of the time limit:</strong> {Array.from(new Set(nc.map((r) => r.model))).join(', ')}.</div>}
+              {nc.length > 0 && <div className="rel grey" data-testid="lo2-not-completed"><strong>Not completed:</strong> {Array.from(new Set(nc.map((r) => r.model))).join(', ')}.</div>}
               <p className="small muted">{d.note}</p>
             </div>
           )

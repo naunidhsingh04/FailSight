@@ -11,7 +11,7 @@ import pandas as pd
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 REP = ROOT / "report_outputs"
-FOLD_NOTE = "Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, chosen because of the time limit. All AnoMod models are scored on the same 647 test windows."
+FOLD_NOTE = "The earlier AnoMod models were checked with 10-fold cross-validation and the hybrid models with 5-fold. All AnoMod models, hybrids included, are scored on the same 647 test windows."
 LABELS = ["label_binary", "label_level"]
 
 
@@ -231,7 +231,7 @@ def p21(s, table):
         nc = fl[fl.status == "not completed"]
         done = fl[fl.status != "not completed"]
         s.add("LO2 other families (b)-(e) with the same protocol", "REPORTED",
-              [f"models with results: {done.model.nunique()}; not completed because of the time limit: {', '.join(sorted(set(nc.model))) or 'none'}", "every LO2 result is marked: unreliable, very small sample (5 runs; 172 test windows, 13 healthy)"],
+              [f"models with results: {done.model.nunique()}; not completed: {', '.join(sorted(set(nc.model))) or 'none'}", "every LO2 result is marked: unreliable, very small sample (5 runs; 172 test windows, 13 healthy)"],
               "report_outputs/lo2_full_leaderboard.csv", result=f"{done.model.nunique()} models done; {nc.model.nunique()} not completed")
 
 

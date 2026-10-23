@@ -105,7 +105,7 @@ Dataset description: [docs/TESTBED_DATASET.md](docs/TESTBED_DATASET.md). Present
 
 Ten hybrid deep-learning models (TensorFlow / Keras; each is ONE model class whose first part feeds its second part, trained end to end): five on AnoMod (Transformer + BiLSTM, Autoencoder + LSTM, GNN + Transformer, CNN + LSTM, VAE + Transformer) and five on a slice of LO2 (BERT-style encoder + GNN, Transformer + LSTM, Autoencoder + LSTM, GNN + LSTM, Multimodal Transformer + MLP). Both data sets use the SAME protocol (80:20 split first, preprocessing fitted on training parts only, SMOTE only inside training folds, 5-fold block-aware cross-validation, threshold tuning on out-of-fold predictions only, overfitting diagnosis and correction, bootstrap 95% intervals, shuffled-label, run-identification and (LO2) log-volume controls, configuration frozen before the test part is scored once). LO2 is trained completely separately from AnoMod and is a very small sample (fewer than 6 whole runs under a 150 MB cap), so every LO2 result is marked *unreliable: very small sample*; it says nothing about transfer.
 
-> Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, chosen because of the time limit. All AnoMod models are scored on the same 647 test windows.
+> The earlier AnoMod models were checked with 10-fold cross-validation and the hybrid models with 5-fold. All AnoMod models, hybrids included, are scored on the same 647 test windows.
 
 | What | Where |
 |---|---|

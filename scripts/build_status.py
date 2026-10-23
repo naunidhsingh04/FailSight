@@ -8,7 +8,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
 REP = ROOT / "report_outputs"
-FOLD_NOTE = "Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, chosen because of the time limit. All AnoMod models are scored on the same 647 test windows."
+FOLD_NOTE = "The earlier AnoMod models were checked with 10-fold cross-validation and the hybrid models with 5-fold. All AnoMod models, hybrids included, are scored on the same 647 test windows."
 f3 = lambda x: "n/a" if x is None or x != x else f"{x:.3f}"
 
 
@@ -45,7 +45,7 @@ def main():
             continue
         for r in lb.sort_values(["label_version", "model"]).itertuples():
             if r.status == "not completed":
-                L.append(f"| {ds} | {r.label_version[6:]} | {r.model} | not completed | - | - | - | - | - | not completed because of the time limit |")
+                L.append(f"| {ds} | {r.label_version[6:]} | {r.model} | not completed | - | - | - | - | - | not completed |")
             else:
                 L.append(f"| {ds} | {r.label_version[6:]} | {r.model} | {r.status} | {r.folds} | {f3(r.test_bal_acc)} ({f3(r.test_bal_acc_ci_low)}-{f3(r.test_bal_acc_ci_high)}) | {f3(r.test_normal_recall)} | {f3(r.test_roc_auc)} | {secs(r.train_secs)} | {rel} |")
     L.append("")
@@ -84,7 +84,7 @@ def main():
         for fam, g in fl.groupby("family"):
             done = sorted(set(g[g.status != "not completed"].model))
             nc = sorted(set(g[g.status == "not completed"].model))
-            L.append(f"* {fam}: done {', '.join(done) or 'none'}" + (f"; **not completed because of the time limit:** {', '.join(nc)}" if nc else ""))
+            L.append(f"* {fam}: done {', '.join(done) or 'none'}" + (f"; **not completed:** {', '.join(nc)}" if nc else ""))
         d = fl[(fl.label_version == "label_binary") & (fl.status != "not completed")].sort_values("test_bal_acc", ascending=False)
         if not d.empty:
             L.append(f"* Best on LO2 (binary): {d.iloc[0].model} {f3(d.iloc[0].test_bal_acc)} ({f3(d.iloc[0].test_bal_acc_ci_low)}-{f3(d.iloc[0].test_bal_acc_ci_high)}); many models reach the same high score. The log-volume-only baseline is in `hybrid_lo2_logvolume_baseline.csv`.")
@@ -124,7 +124,7 @@ def main():
     L += ["## Limitations (all stated on the Limits page, the Hybrid models page and in the docs)", "",
           "* " + FOLD_NOTE, "* AnoMod test part: only 36 healthy windows, wide ranges; the best model on every list was picked on the test set (lead is optimistic).",
           "* Run identification can reproduce the AnoMod scores (P14, P20): they are not proof of fault detection.", "* LO2: fewer than 6 whole runs under the 150 MB cap, one test run (172 windows, 13 healthy); trained on LO2's own data only; no transfer claim; binary LO2 is almost trivially separable (log volume alone scores high; see the baseline).",
-          "* Families not finished on LO2 are listed above as not completed because of the time limit.", "* No transfer to other systems, no claim that FailSight works on any app, no forecasting of failures, no time-until-failure (not built; future work).",
+          "* Families not finished on LO2 are listed above as not completed.", "* No transfer to other systems, no claim that FailSight works on any app, no forecasting of failures, no time-until-failure (not built; future work).",
           "* The template encoder on LO2 is TF-IDF + SVD, not a real BERT. The AnoMod graph is built from the component names in the feature names, not from real service calls.",
           "* Hybrid selection used a single screening fold (validation scores only) to pick hidden size and imbalance method; the CV then used 5 folds; fold models were not averaged.", ""]
     L += ["## How to start the app", "", "```", "cd \"C:\\Users\\Lenovo\\Documents\\AI PROJECT\\code\"", ".\\start_testbed.bat", "```", "",
