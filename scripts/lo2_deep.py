@@ -14,6 +14,7 @@ from xgboost import XGBClassifier
 
 STATE = E.ROOT / "outputs" / "hybrid_state" / "lo2_full"
 PREFIX = "lo2_full_"
+MDIR = E.ROOT / "models" / "hybrid" / "lo2"
 HEAD = dict(n_estimators=150, max_depth=3, learning_rate=0.1, subsample=0.7, colsample_bytree=0.6, min_child_weight=3, reg_lambda=5.0)
 
 
@@ -75,7 +76,7 @@ def head_record(D, name, label, rec):
 
 def run_all(D, deadline):
     reg = DL_MODELS
-    R = E.Runner(D, reg, STATE, E.ROOT / "models" / "hybrid" / "lo2", PREFIX, deadline=deadline)
+    R = E.Runner(D, reg, STATE, MDIR, PREFIX, deadline=deadline)
     R.hook_fold, R.hook_final = hook_fold, make_hook_final(D)
     for name in reg:
         for label in E.LABELS:

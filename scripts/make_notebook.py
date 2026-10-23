@@ -434,6 +434,29 @@ with section("7 hybrid results"):
      )
 md("""**What you should see:** five wiring diagrams (first part, second part, answer); a line saying SMOTE was used on the training part only and the test part kept its natural counts; one hybrid trained live for 3 epochs with a test score; a chart of the five hybrids and the strongest earlier models with their 95% ranges (the ranges overlap heavily); a table of the five hybrids; and one sentence saying whether any hybrid beats the best earlier model.""")
 
+md("""
+### 7b. All models trained and tested on BOTH data sets together
+
+**What we do and why:** to compare every kind of model fairly, each one is trained on the AnoMod and LO2 training windows together (inputs = the union of both data sets' inputs plus a data-set flag) and scored on the test windows of both. The question is healthy or not. Columns: **overall score** = balanced accuracy in % (average of the share of risky windows caught and the share of healthy windows left alone; 50% = coin flip), **95% range** from a block bootstrap, **healthy left alone** = recall of the healthy class, and the same score split into the AnoMod part and the LO2 part of the test windows.
+""")
+code(r"""
+with section("7b both data sets"):
+    bp = REP / "both_leaderboard.csv"
+    if not bp.exists():
+        print("missing files (this part is skipped): report_outputs/both_leaderboard.csv")
+    else:
+        bl = pd.read_csv(bp); bl = bl[bl.status != "not completed"].sort_values("test_bal_acc", ascending=False)
+        pc = lambda x: f"{100 * x:.1f}%"
+        out = pd.DataFrame({"model": bl.model, "kind": bl.family, "overall score": bl.test_bal_acc.map(pc), "95% range": [f"{pc(a)} to {pc(b)}" for a, b in zip(bl.test_bal_acc_ci_low, bl.test_bal_acc_ci_high)],
+                            "healthy left alone": bl.test_normal_recall.map(pc), "score on AnoMod": bl.ba_AnoMod.map(pc), "score on LO2": bl.ba_LO2.map(pc)})
+        print(out.to_string(index=False)); src("report_outputs/both_leaderboard.csv")
+        hy_ = bl[bl.family == "Hybrid model"]; ot_ = bl[bl.family != "Hybrid model"]
+        if len(hy_) and len(ot_):
+            print(f"
+best hybrid: {hy_.iloc[0].model} {pc(hy_.iloc[0].test_bal_acc)}; best other model: {ot_.iloc[0].model} {pc(ot_.iloc[0].test_bal_acc)}")
+""")
+md("""**What you should see:** one table with every model that finished, sorted by overall score in %, hybrids and the other kinds mixed together, with the score on each data set; then the best hybrid next to the best other model. Wide ranges mean differences are not reliable.""")
+
 # ------------------------------------------------------------------------------------------------ 8 honesty
 md("""
 ## 8. Overfitting and honesty checks

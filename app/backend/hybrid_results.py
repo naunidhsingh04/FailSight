@@ -110,3 +110,17 @@ def lo2_leaderboard() -> dict:
     d = pd.read_csv(p)
     nc = _read("lo2_full_not_completed.csv")
     return clean(dict(available=True, rows=records(d), not_completed=records(nc) if nc is not None else [], note=FOLD_NOTE))
+
+
+def both() -> dict:
+    """every model family trained on AnoMod + LO2 together and tested on both test parts (report_outputs/both_leaderboard.csv)"""
+    d = _read("both_leaderboard.csv")
+    if d is None:
+        return dict(available=False, rows=[], note="No combined results yet.")
+    sp = _read("split_ids.csv")
+    lo = _read("lo2_split_ids.csv")
+    facts = {}
+    if sp is not None and lo is not None and "window_id" in lo.columns:
+        facts = dict(train_anomod=int((sp.split == "train").sum()), test_anomod=int((sp.split == "test").sum()), train_lo2=int((lo.split == "train").sum()), test_lo2=int((lo.split == "test").sum()),
+                     healthy_test_anomod=36, healthy_test_lo2=int(((lo.split == "test") & (lo.label_level == "Normal")).sum()))
+    return clean(dict(available=True, rows=records(d), facts=facts, note="Every model is trained once on the training windows of AnoMod and LO2 together and scored on the test windows of both (healthy or not). The best model in the list was picked by looking at the test results."))

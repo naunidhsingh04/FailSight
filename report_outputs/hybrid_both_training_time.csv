@@ -1,0 +1,6 @@
+model,label_version,cv_total_seconds,final_model_seconds,final_epochs,total_seconds_incl_screening_and_controls,params
+Transformer_BiLSTM,label_binary,128.43,15.76,10,375.40,11250
+AE_LSTM,label_binary,60.19,8.15,7,193.53,47367
+GNN_Transformer,label_binary,209.18,31.45,8,586.06,20738
+CNN_LSTM,label_binary,85.30,14.29,7,249.32,37762
+VAE_Transformer,label_binary,134.00,38.35,18,370.36,21447

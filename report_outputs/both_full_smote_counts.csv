@@ -1,0 +1,41 @@
+model,label_version,stage,fold,before,after,held_out_fold
+LR,label_binary,corr,1,180/2408,2408/2408,42/607
+LR,label_binary,corr,2,182/2411,2411/2411,40/604
+LR,label_binary,corr,3,172/2412,2412/2412,50/603
+LR,label_binary,corr,4,172/2415,2415/2415,50/600
+LR,label_binary,corr,5,182/2414,2414/2414,40/601
+LR,label_binary,cv,1,180/2408,2408/2408,42/607
+LR,label_binary,cv,2,182/2411,2411/2411,40/604
+LR,label_binary,cv,3,172/2412,2412/2412,50/603
+LR,label_binary,cv,4,172/2415,2415/2415,50/600
+LR,label_binary,cv,5,182/2414,2414/2414,40/601
+LR,label_binary,final,final(80% train),222/3015,3015/3015,"49/770 (test, untouched)"
+RF,label_binary,corr,1,180/2408,2408/2408,42/607
+RF,label_binary,corr,2,182/2411,2411/2411,40/604
+RF,label_binary,corr,3,172/2412,2412/2412,50/603
+RF,label_binary,corr,4,172/2415,2415/2415,50/600
+RF,label_binary,corr,5,182/2414,2414/2414,40/601
+RF,label_binary,cv,1,180/2408,2408/2408,42/607
+RF,label_binary,cv,2,182/2411,2411/2411,40/604
+RF,label_binary,cv,3,172/2412,2412/2412,50/603
+RF,label_binary,cv,4,172/2415,2415/2415,50/600
+RF,label_binary,cv,5,182/2414,2414/2414,40/601
+RF,label_binary,final,final(80% train),222/3015,3015/3015,"49/770 (test, untouched)"
+ET,label_binary,cv,1,180/2408,2408/2408,42/607
+ET,label_binary,cv,2,182/2411,2411/2411,40/604
+ET,label_binary,cv,3,172/2412,2412/2412,50/603
+ET,label_binary,cv,4,172/2415,2415/2415,50/600
+ET,label_binary,cv,5,182/2414,2414/2414,40/601
+ET,label_binary,final,final(80% train),222/3015,3015/3015,"49/770 (test, untouched)"
+XGB,label_binary,cv,1,180/2408,180/2408,42/607
+XGB,label_binary,cv,2,182/2411,182/2411,40/604
+XGB,label_binary,cv,3,172/2412,172/2412,50/603
+XGB,label_binary,cv,4,172/2415,172/2415,50/600
+XGB,label_binary,cv,5,182/2414,182/2414,40/601
+XGB,label_binary,final,final(80% train),222/3015,222/3015,"49/770 (test, untouched)"
+LGBM,label_binary,cv,1,180/2408,180/2408,42/607
+LGBM,label_binary,cv,2,182/2411,182/2411,40/604
+LGBM,label_binary,cv,3,172/2412,172/2412,50/603
+LGBM,label_binary,cv,4,172/2415,172/2415,50/600
+LGBM,label_binary,cv,5,182/2414,182/2414,40/601
+LGBM,label_binary,final,final(80% train),222/3015,222/3015,"49/770 (test, untouched)"

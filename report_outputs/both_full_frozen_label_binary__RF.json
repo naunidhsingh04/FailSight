@@ -1,0 +1,23 @@
+{
+ "dataset": "lo2",
+ "label": "label_binary",
+ "model": "RF",
+ "seed": 42,
+ "params": {
+  "n_estimators": 100,
+  "max_depth": 6,
+  "min_samples_leaf": 3,
+  "max_features": "sqrt"
+ },
+ "method": "smote",
+ "thresholds": {
+  "type": "threshold",
+  "threshold": 0.5,
+  "oof_balanced_accuracy": 0.8264645242257183,
+  "oof_normal_recall": 0.6711711711711712,
+  "oof_balanced_accuracy_default_argmax": 0.8264645242257183
+ },
+ "chosen_stage": "corr",
+ "frozen_at": "2026-10-23 13:52:34",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

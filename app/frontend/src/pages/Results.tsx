@@ -10,7 +10,8 @@ import { FAMILY_LABEL, fmt, range } from '../format'
 import { Detailed, Simple } from '../mode'
 import Term from '../components/Term'
 import { usePageTitle } from '../usePageTitle'
-import type { CorrectionRow, HybridResponse, HybridRow, Label, Lo2LeaderboardResponse, ModelDetail, ModelInfo, ModelsResponse, OverfitRow, PairedRow, ResultsResponse, V1Row } from '../types'
+import { BothTable } from './Hybrids'
+import type { BothResponse, CorrectionRow, HybridResponse, HybridRow, Label, Lo2LeaderboardResponse, ModelDetail, ModelInfo, ModelsResponse, OverfitRow, PairedRow, ResultsResponse, V1Row } from '../types'
 
 type MetricKey = 'balanced_accuracy' | 'macro_f1' | 'normal_recall' | 'roc_auc'
 const METRICS: { key: MetricKey; label: string }[] = [
@@ -80,7 +81,7 @@ export default function Results() {
   const [metric, setMetric] = useState<MetricKey>('balanced_accuracy')
   const [selected, setSelected] = useState<string | null>(null)
   const hybrid = useApi<HybridResponse>('/api/hybrid')
-  const [dataset, setDataset] = useState<'anomod' | 'lo2'>('anomod')
+  const [dataset, setDataset] = useState<'both' | 'anomod' | 'lo2'>('both')
   const [showAll, setShowAll] = useState(false)
   const hybridModels = useMemo(() => (hybrid.data?.anomod.models ?? []).filter((r) => r.label_version === label && r.status !== 'not completed' && typeof r.test_bal_acc === 'number').map(hybridAsModel), [hybrid.data, label])
   const list = useMemo(() => [...(models.data?.models ?? []).filter((m) => m.label_version === label), ...hybridModels], [models.data, label, hybridModels])
@@ -118,11 +119,13 @@ export default function Results() {
       <div className="row" style={{ marginBottom: 'var(--space-5)' }}>
         <div className="field"><span className="label" id="ds-l">Data set</span>
           <div className="segmented" role="group" aria-labelledby="ds-l">
-            <button type="button" aria-pressed={dataset === 'anomod'} onClick={() => setDataset('anomod')}>Benchmark (AnoMod)</button>
+            <button type="button" aria-pressed={dataset === 'both'} onClick={() => setDataset('both')}>Both data sets (all models)</button>
+            <button type="button" aria-pressed={dataset === 'anomod'} onClick={() => setDataset('anomod')}>AnoMod only (earlier models)</button>
             <button type="button" aria-pressed={dataset === 'lo2'} onClick={() => setDataset('lo2')}>LO2 slice (own data)</button>
           </div></div>
         <LabelToggle value={label} onChange={(l) => { setLabel(l); setSelected(null) }} />
       </div>
+      {dataset === 'both' && <BothSection />}
       {dataset === 'lo2' && <Lo2Leaderboard label={label} />}
       {dataset === 'anomod' && <>
 
@@ -182,6 +185,17 @@ export default function Results() {
       </>}
       </Detailed>
     </>
+  )
+}
+
+function BothSection() {
+  const api = useApi<BothResponse>('/api/both')
+  return (
+    <section aria-labelledby="both-h">
+      <h2 id="both-h" style={{ marginTop: 0 }}>All models, trained and tested on both data sets</h2>
+      <p className="muted">Healthy-or-not question. Each model is trained on the AnoMod and LO2 training windows together and scored on the test windows of both; the last two columns split that test by data set.</p>
+      <Async state={api} rows={5} label="Loading results">{(d) => (d.available ? <BothTable rows={d.rows} /> : <div className="state"><h3>No combined results yet</h3><p>{d.note}</p></div>)}</Async>
+    </section>
   )
 }
 

@@ -1,0 +1,7 @@
+kind,model,accuracy,chance,n_runs,label_version,agreement,model_accuracy,rule_accuracy,rule_balanced_accuracy,model_balanced_accuracy,share_of_correct_also_correct_by_rule
+run_identification,(throw-away XGBoost),0.653236,0.032258,31.000000,,,,,,,
+hybrid_vs_rule,Transformer_BiLSTM,,,,label_binary,0.930403,0.927961,0.956044,0.699536,0.827922,0.977632
+hybrid_vs_rule,AE_LSTM,,,,label_binary,0.941392,0.936508,0.956044,0.699536,0.765584,0.979140
+hybrid_vs_rule,GNN_Transformer,,,,label_binary,0.942613,0.930403,0.956044,0.699536,0.724119,0.982940
+hybrid_vs_rule,CNN_LSTM,,,,label_binary,0.937729,0.925519,0.956044,0.699536,0.759740,0.982850
+hybrid_vs_rule,VAE_Transformer,,,,label_binary,0.951160,0.938950,0.956044,0.699536,0.766883,0.983095

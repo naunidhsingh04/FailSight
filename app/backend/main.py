@@ -288,6 +288,10 @@ def create_app(registry: Registry | None = None) -> FastAPI:
         """the ten hybrid deep-learning models (five on AnoMod, five on the LO2 slice), read from report_outputs/hybrid_*.csv"""
         return JSONResponse(content=hybrid_results.hybrids())
 
+    @app.get("/api/both")
+    async def get_both():
+        return JSONResponse(content=hybrid_results.both())
+
     @app.get("/api/lo2/leaderboard")
     async def get_lo2_leaderboard():
         return JSONResponse(content=hybrid_results.lo2_leaderboard())

@@ -1,0 +1,11 @@
+model,label_version,stage,cv_train_macro_f1,cv_val_macro_f1,cv_gap_macro_f1,cv_val_bal_acc,diagnosis,adopted,final_train_macro_f1,test_macro_f1,train_test_gap_macro_f1
+LR,label_binary,before_correction,0.947928,0.794101,0.153827,0.833891,overfit (train-validation macro-F1 gap > 0.10),False,,,
+LR,label_binary,after_correction,0.895442,0.778155,0.117287,0.828251,overfit (train-validation macro-F1 gap > 0.10),True,0.887850,0.726026,0.161825
+RF,label_binary,before_correction,1.000000,0.860771,0.139229,0.831390,overfit (train-validation macro-F1 gap > 0.10),False,,,
+RF,label_binary,after_correction,0.978819,0.832741,0.146078,0.825738,overfit (train-validation macro-F1 gap > 0.10),True,0.983351,0.790594,0.192757
+ET,label_binary,before_correction,1.000000,0.852227,0.147773,0.825512,overfit (train-validation macro-F1 gap > 0.10),True,1.000000,0.759723,0.240277
+ET,label_binary,after_correction,0.837664,0.732157,0.105507,0.800250,overfit (train-validation macro-F1 gap > 0.10),False,,,
+XGB,label_binary,before_correction,0.997921,0.894559,0.103362,0.872389,overfit (train-validation macro-F1 gap > 0.10),True,0.998793,0.884680,0.114114
+XGB,label_binary,after_correction,0.974514,0.845246,0.129268,0.847574,overfit (train-validation macro-F1 gap > 0.10),False,,,
+LGBM,label_binary,before_correction,0.999702,0.884898,0.114804,0.882074,overfit (train-validation macro-F1 gap > 0.10),True,1.000000,0.833754,0.166246
+LGBM,label_binary,after_correction,0.983899,0.860077,0.123822,0.846059,overfit (train-validation macro-F1 gap > 0.10),False,,,

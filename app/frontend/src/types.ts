@@ -122,3 +122,6 @@ export interface HybridResponse {
   }
 }
 export interface Lo2LeaderboardResponse { available: boolean; rows: HybridRow[]; not_completed: { model: string; label_version: Label; family: string; reason: string }[]; note: string }
+
+export interface BothRow { model: string; family: string; status: string; test_bal_acc?: number | null; test_bal_acc_ci_low?: number | null; test_bal_acc_ci_high?: number | null; test_normal_recall?: number | null; test_roc_auc?: number | null; ba_AnoMod?: number | null; ba_LO2?: number | null; healthy_recall_AnoMod?: number | null; healthy_recall_LO2?: number | null }
+export interface BothResponse { available: boolean; rows: BothRow[]; note: string; facts?: { train_anomod: number; test_anomod: number; train_lo2: number; test_lo2: number; healthy_test_anomod: number; healthy_test_lo2: number } }

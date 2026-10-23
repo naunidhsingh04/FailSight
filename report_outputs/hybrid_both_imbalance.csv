@@ -1,0 +1,2 @@
+label_version,original,smote_after,adasyn_after,class_weights,smote_total,original_total,skipped_classes,note
+label_binary,222/3015,3015/3015,2982/3015,7.29 / 0.54,6030,3237,[],ADASYN is a size comparison only; it is never used to train

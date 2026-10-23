@@ -1,0 +1,19 @@
+model,label_version,status,test_bal_acc,test_bal_acc_ci_low,test_bal_acc_ci_high,test_macro_f1,test_normal_recall,test_roc_auc,cv_val_bal_acc,train_secs,folds,hidden,method,stage
+XGB,label_binary,done,0.8443,0.6565,0.9994,0.8847,0.6939,0.9468,0.8724,0.8016,5.0000,0.0000,cw,cv
+LGBM,label_binary,done,0.7736,0.6226,0.9465,0.8338,0.5510,0.7437,0.8821,1.1258,5.0000,0.0000,cw,cv
+LR,label_binary,done,0.7699,0.6168,0.9311,0.7260,0.5918,0.9315,0.8283,0.1920,5.0000,0.0000,smote,corr
+RF,label_binary,done,0.7493,0.6150,0.9300,0.7906,0.5102,0.8538,0.8257,1.3152,5.0000,0.0000,smote,corr
+ET,label_binary,done,0.7180,0.5711,0.9462,0.7597,0.4490,0.8482,0.8255,1.4184,5.0000,0.0000,smote,cv
+RF_tuned,label_binary,not completed,,,,,,,,,,,,
+XGB_tuned,label_binary,not completed,,,,,,,,,,,,
+LGBM_tuned,label_binary,not completed,,,,,,,,,,,,
+CNN_BiGRU_Att,label_binary,not completed,,,,,,,,,,,,
+CNN_BiLSTM_Att,label_binary,not completed,,,,,,,,,,,,
+Fusion,label_binary,not completed,,,,,,,,,,,,
+Transformer,label_binary,not completed,,,,,,,,,,,,
+CNN_BiGRU_Att_XGBhead,label_binary,not completed,,,,,,,,,,,,
+CNN_BiLSTM_Att_XGBhead,label_binary,not completed,,,,,,,,,,,,
+Fusion_XGBhead,label_binary,not completed,,,,,,,,,,,,
+Transformer_XGBhead,label_binary,not completed,,,,,,,,,,,,
+Stacking,label_binary,not completed,,,,,,,,,,,,
+SoftVote,label_binary,not completed,,,,,,,,,,,,

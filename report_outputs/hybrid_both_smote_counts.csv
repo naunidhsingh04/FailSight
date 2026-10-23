@@ -1,0 +1,56 @@
+model,label_version,stage,fold,before,after,held_out_fold
+Transformer_BiLSTM,label_binary,corr,1,180/2408,180/2408,42/607
+Transformer_BiLSTM,label_binary,corr,2,182/2411,182/2411,40/604
+Transformer_BiLSTM,label_binary,corr,3,172/2412,172/2412,50/603
+Transformer_BiLSTM,label_binary,corr,4,172/2415,172/2415,50/600
+Transformer_BiLSTM,label_binary,corr,5,182/2414,182/2414,40/601
+Transformer_BiLSTM,label_binary,cv,1,180/2408,180/2408,42/607
+Transformer_BiLSTM,label_binary,cv,2,182/2411,182/2411,40/604
+Transformer_BiLSTM,label_binary,cv,3,172/2412,172/2412,50/603
+Transformer_BiLSTM,label_binary,cv,4,172/2415,172/2415,50/600
+Transformer_BiLSTM,label_binary,cv,5,182/2414,182/2414,40/601
+Transformer_BiLSTM,label_binary,final,final(80% train),222/3015,222/3015,"49/770 (test, untouched)"
+AE_LSTM,label_binary,corr,1,180/2408,180/2408,42/607
+AE_LSTM,label_binary,corr,2,182/2411,182/2411,40/604
+AE_LSTM,label_binary,corr,3,172/2412,172/2412,50/603
+AE_LSTM,label_binary,corr,4,172/2415,172/2415,50/600
+AE_LSTM,label_binary,corr,5,182/2414,182/2414,40/601
+AE_LSTM,label_binary,cv,1,180/2408,180/2408,42/607
+AE_LSTM,label_binary,cv,2,182/2411,182/2411,40/604
+AE_LSTM,label_binary,cv,3,172/2412,172/2412,50/603
+AE_LSTM,label_binary,cv,4,172/2415,172/2415,50/600
+AE_LSTM,label_binary,cv,5,182/2414,182/2414,40/601
+AE_LSTM,label_binary,final,final(80% train),222/3015,222/3015,"49/770 (test, untouched)"
+GNN_Transformer,label_binary,corr,1,180/2408,2408/2408,42/607
+GNN_Transformer,label_binary,corr,2,182/2411,2411/2411,40/604
+GNN_Transformer,label_binary,corr,3,172/2412,2412/2412,50/603
+GNN_Transformer,label_binary,corr,4,172/2415,2415/2415,50/600
+GNN_Transformer,label_binary,corr,5,182/2414,2414/2414,40/601
+GNN_Transformer,label_binary,cv,1,180/2408,2408/2408,42/607
+GNN_Transformer,label_binary,cv,2,182/2411,2411/2411,40/604
+GNN_Transformer,label_binary,cv,3,172/2412,2412/2412,50/603
+GNN_Transformer,label_binary,cv,4,172/2415,2415/2415,50/600
+GNN_Transformer,label_binary,cv,5,182/2414,2414/2414,40/601
+GNN_Transformer,label_binary,final,final(80% train),222/3015,3015/3015,"49/770 (test, untouched)"
+CNN_LSTM,label_binary,corr,1,180/2408,2408/2408,42/607
+CNN_LSTM,label_binary,corr,2,182/2411,2411/2411,40/604
+CNN_LSTM,label_binary,corr,3,172/2412,2412/2412,50/603
+CNN_LSTM,label_binary,corr,4,172/2415,2415/2415,50/600
+CNN_LSTM,label_binary,corr,5,182/2414,2414/2414,40/601
+CNN_LSTM,label_binary,cv,1,180/2408,2408/2408,42/607
+CNN_LSTM,label_binary,cv,2,182/2411,2411/2411,40/604
+CNN_LSTM,label_binary,cv,3,172/2412,2412/2412,50/603
+CNN_LSTM,label_binary,cv,4,172/2415,2415/2415,50/600
+CNN_LSTM,label_binary,cv,5,182/2414,2414/2414,40/601
+CNN_LSTM,label_binary,final,final(80% train),222/3015,3015/3015,"49/770 (test, untouched)"
+VAE_Transformer,label_binary,corr,1,180/2408,2408/2408,42/607
+VAE_Transformer,label_binary,corr,2,182/2411,2411/2411,40/604
+VAE_Transformer,label_binary,corr,3,172/2412,2412/2412,50/603
+VAE_Transformer,label_binary,corr,4,172/2415,2415/2415,50/600
+VAE_Transformer,label_binary,corr,5,182/2414,2414/2414,40/601
+VAE_Transformer,label_binary,cv,1,180/2408,2408/2408,42/607
+VAE_Transformer,label_binary,cv,2,182/2411,2411/2411,40/604
+VAE_Transformer,label_binary,cv,3,172/2412,2412/2412,50/603
+VAE_Transformer,label_binary,cv,4,172/2415,2415/2415,50/600
+VAE_Transformer,label_binary,cv,5,182/2414,2414/2414,40/601
+VAE_Transformer,label_binary,final,final(80% train),222/3015,3015/3015,"49/770 (test, untouched)"

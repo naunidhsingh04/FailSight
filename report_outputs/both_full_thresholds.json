@@ -1,0 +1,39 @@
+{
+ "label_binary": {
+  "LR": {
+   "type": "threshold",
+   "threshold": 0.12,
+   "oof_balanced_accuracy": 0.8404486576128367,
+   "oof_normal_recall": 0.6891891891891891,
+   "oof_balanced_accuracy_default_argmax": 0.8274707543364259
+  },
+  "RF": {
+   "type": "threshold",
+   "threshold": 0.5,
+   "oof_balanced_accuracy": 0.8264645242257183,
+   "oof_normal_recall": 0.6711711711711712,
+   "oof_balanced_accuracy_default_argmax": 0.8264645242257183
+  },
+  "ET": {
+   "type": "threshold",
+   "threshold": 0.59,
+   "oof_balanced_accuracy": 0.8371319080274304,
+   "oof_normal_recall": 0.6891891891891891,
+   "oof_balanced_accuracy_default_argmax": 0.8248487293263413
+  },
+  "XGB": {
+   "type": "threshold",
+   "threshold": 0.59,
+   "oof_balanced_accuracy": 0.880325848236296,
+   "oof_normal_recall": 0.7702702702702703,
+   "oof_balanced_accuracy_default_argmax": 0.877148043565954
+  },
+  "LGBM": {
+   "type": "threshold",
+   "threshold": 0.05,
+   "oof_balanced_accuracy": 0.8879117923894043,
+   "oof_normal_recall": 0.7837837837837838,
+   "oof_balanced_accuracy_default_argmax": 0.8855900676796199
+  }
+ }
+}

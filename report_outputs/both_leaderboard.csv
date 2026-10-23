@@ -1,0 +1,28 @@
+model,label_version,status,test_bal_acc,test_bal_acc_ci_low,test_bal_acc_ci_high,test_macro_f1,test_normal_recall,test_roc_auc,cv_val_bal_acc,train_secs,folds,hidden,method,stage,family,ba_AnoMod,healthy_recall_AnoMod,ba_LO2,healthy_recall_LO2
+XGB,label_binary,done,0.8443,0.6565,0.9994,0.8847,0.6939,0.9468,0.8724,0.8016,5.0000,0.0000,cw,cv,Decision-tree / linear model,0.7892,0.5833,0.9969,1.0000
+Transformer_BiLSTM,label_binary,done,0.8279,0.6456,0.9792,0.7518,0.7143,0.9170,0.8401,375.3966,5.0000,16.0000,cw,corr,Hybrid model,0.7687,0.6111,1.0000,1.0000
+LGBM,label_binary,done,0.7736,0.6226,0.9465,0.8338,0.5510,0.7437,0.8821,1.1258,5.0000,0.0000,cw,cv,Decision-tree / linear model,0.6920,0.3889,1.0000,1.0000
+LR,label_binary,done,0.7699,0.6168,0.9311,0.7260,0.5918,0.9315,0.8283,0.1920,5.0000,0.0000,smote,corr,Decision-tree / linear model,0.6903,0.4444,0.9969,1.0000
+VAE_Transformer,label_binary,done,0.7669,0.6089,0.9573,0.7478,0.5714,0.8308,0.8323,370.3607,5.0000,16.0000,smote,corr,Hybrid model,0.6846,0.4167,1.0000,1.0000
+AE_LSTM,label_binary,done,0.7656,0.6072,0.9571,0.7423,0.5714,0.8968,0.8341,193.5310,5.0000,32.0000,cw,corr,Hybrid model,0.6830,0.4167,1.0000,1.0000
+CNN_LSTM,label_binary,done,0.7597,0.5976,0.9471,0.7193,0.5714,0.8045,0.8447,249.3189,5.0000,32.0000,smote,corr,Hybrid model,0.6756,0.4167,1.0000,1.0000
+RF,label_binary,done,0.7493,0.6150,0.9300,0.7906,0.5102,0.8538,0.8257,1.3152,5.0000,0.0000,smote,corr,Decision-tree / linear model,0.6601,0.3333,0.9969,1.0000
+GNN_Transformer,label_binary,done,0.7241,0.5717,0.9533,0.7100,0.4898,0.8740,0.8287,586.0589,5.0000,32.0000,smote,corr,Hybrid model,0.6266,0.3056,1.0000,1.0000
+ET,label_binary,done,0.7180,0.5711,0.9462,0.7597,0.4490,0.8482,0.8255,1.4184,5.0000,0.0000,smote,cv,Decision-tree / linear model,0.6168,0.2500,1.0000,1.0000
+BERT_GNN,label_binary,not completed,,,,,,,,,,,,,Hybrid model,,,,
+Transformer_LSTM,label_binary,not completed,,,,,,,,,,,,,Hybrid model,,,,
+GNN_LSTM,label_binary,not completed,,,,,,,,,,,,,Hybrid model,,,,
+Multimodal_Transformer_MLP,label_binary,not completed,,,,,,,,,,,,,Hybrid model,,,,
+RF_tuned,label_binary,not completed,,,,,,,,,,,,,Decision-tree / linear model,,,,
+XGB_tuned,label_binary,not completed,,,,,,,,,,,,,Decision-tree / linear model,,,,
+LGBM_tuned,label_binary,not completed,,,,,,,,,,,,,Decision-tree / linear model,,,,
+CNN_BiGRU_Att,label_binary,not completed,,,,,,,,,,,,,Neural network,,,,
+CNN_BiLSTM_Att,label_binary,not completed,,,,,,,,,,,,,Neural network,,,,
+Fusion,label_binary,not completed,,,,,,,,,,,,,Neural network,,,,
+Transformer,label_binary,not completed,,,,,,,,,,,,,Neural network,,,,
+CNN_BiGRU_Att_XGBhead,label_binary,not completed,,,,,,,,,,,,,Neural network,,,,
+CNN_BiLSTM_Att_XGBhead,label_binary,not completed,,,,,,,,,,,,,Neural network,,,,
+Fusion_XGBhead,label_binary,not completed,,,,,,,,,,,,,Neural network,,,,
+Transformer_XGBhead,label_binary,not completed,,,,,,,,,,,,,Neural network,,,,
+Stacking,label_binary,not completed,,,,,,,,,,,,,Combination of models,,,,
+SoftVote,label_binary,not completed,,,,,,,,,,,,,Combination of models,,,,

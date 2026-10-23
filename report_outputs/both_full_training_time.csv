@@ -1,0 +1,6 @@
+model,label_version,cv_total_seconds,final_model_seconds,final_epochs,total_seconds_incl_screening_and_controls,params
+LR,label_binary,1.82,0.19,0,0.19,0
+RF,label_binary,5.36,1.32,0,1.32,0
+ET,label_binary,6.43,1.42,0,1.42,0
+XGB,label_binary,4.21,0.80,0,0.80,0
+LGBM,label_binary,5.54,1.13,0,1.13,0

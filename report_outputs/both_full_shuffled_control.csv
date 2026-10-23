@@ -1,0 +1,6 @@
+model,label_version,shuffled_balanced_accuracy,shuffled_macro_f1,shuffled_normal_recall,shuffled_roc_auc,real_balanced_accuracy,verdict
+LR,label_binary,0.570223,0.456750,0.489796,0.517890,0.769944,PASS (shuffled labels score near chance)
+RF,label_binary,0.597866,0.446236,0.591837,0.616393,0.749258,PASS (shuffled labels score near chance)
+ET,label_binary,0.507236,0.507639,0.061224,0.498290,0.717996,PASS (shuffled labels score near chance)
+XGB,label_binary,0.545455,0.546328,0.142857,0.622674,0.844341,PASS (shuffled labels score near chance)
+LGBM,label_binary,0.502412,0.497093,0.020408,0.565346,0.773562,PASS (shuffled labels score near chance)
