@@ -14,16 +14,16 @@ interface Info { plain: string; tech: string; line: string }
 
 /** Plain-language names and one-line ideas. Numbers never come from here. */
 export const HYBRID_INFO: Record<string, Info> = {
-  Transformer_BiLSTM: { plain: 'Look-around reader + two-way memory', tech: 'Transformer + BiLSTM', line: 'Compares the recent moments with each other, then reads them in order.' },
-  AE_LSTM: { plain: 'Squeeze-and-rebuild + memory', tech: 'Autoencoder + LSTM', line: 'Summarises each moment; unusual moments are hard to rebuild, which is a clue.' },
-  GNN_Transformer: { plain: 'Parts-map + look-around reader', tech: 'GNN + Transformer', line: 'Knows which readings belong together, then looks at how they change.' },
-  CNN_LSTM: { plain: 'Pattern spotter + memory', tech: 'CNN + LSTM', line: 'Spots sudden jumps and remembers what came before.' },
-  VAE_Transformer: { plain: 'Smooth squeezer + look-around reader', tech: 'VAE + Transformer', line: 'Squeezes each moment into a smooth summary, then compares the summaries.' },
-  BERT_GNN: { plain: 'Log-message meaning + pattern map', tech: 'BERT-style text encoder + GNN', line: 'Turns kinds of log messages into numbers and learns from which ones appear together.' },
-  Transformer_LSTM: { plain: 'Look-around reader + memory', tech: 'Transformer + LSTM', line: 'Compares the last few moments, then reads them in order.' },
-  GNN_LSTM: { plain: 'Parts-map + memory', tech: 'GNN + LSTM', line: 'Learns which log sources move together, then reads the map over time.' },
-  AE_LSTM_LO2: { plain: 'Squeeze-and-rebuild + memory', tech: 'Autoencoder + LSTM', line: 'Summarises each moment and reads the summaries in order.' },
-  Multimodal_Transformer_MLP: { plain: 'Two readers (logs, metrics) + a mixer', tech: 'Multimodal Transformer + MLP', line: 'Reads logs and machine readings separately, then combines them.' },
+  Transformer_BiLSTM: { plain: 'Transformer + BiLSTM', tech: 'Transformer + BiLSTM', line: 'Compares the recent moments with each other, then reads them in order.' },
+  AE_LSTM: { plain: 'Autoencoder + LSTM', tech: 'Autoencoder + LSTM', line: 'Summarises each moment; unusual moments are hard to rebuild, which is a clue.' },
+  GNN_Transformer: { plain: 'GNN + Transformer', tech: 'GNN + Transformer', line: 'Knows which readings belong together, then looks at how they change.' },
+  CNN_LSTM: { plain: 'CNN + LSTM', tech: 'CNN + LSTM', line: 'Spots sudden jumps and remembers what came before.' },
+  VAE_Transformer: { plain: 'VAE + Transformer', tech: 'VAE + Transformer', line: 'Squeezes each moment into a smooth summary, then compares the summaries.' },
+  BERT_GNN: { plain: 'BERT + GNN', tech: 'BERT + GNN', line: 'Turns kinds of log messages into numbers and learns from which ones appear together.' },
+  Transformer_LSTM: { plain: 'Transformer + LSTM', tech: 'Transformer + LSTM', line: 'Compares the last few moments, then reads them in order.' },
+  GNN_LSTM: { plain: 'GNN + LSTM', tech: 'GNN + LSTM', line: 'Learns which log sources move together, then reads the map over time.' },
+  AE_LSTM_LO2: { plain: 'Autoencoder + LSTM', tech: 'Autoencoder + LSTM', line: 'Summarises each moment and reads the summaries in order.' },
+  Multimodal_Transformer_MLP: { plain: 'Multimodal Transformer + MLP', tech: 'Multimodal Transformer + MLP', line: 'Reads logs and machine readings separately, then combines them.' },
 }
 const ANOMOD_ORDER = ['Transformer_BiLSTM', 'AE_LSTM', 'GNN_Transformer', 'CNN_LSTM', 'VAE_Transformer']
 const LO2_ORDER = ['BERT_GNN', 'Transformer_LSTM', 'AE_LSTM', 'GNN_LSTM', 'Multimodal_Transformer_MLP']
@@ -40,7 +40,7 @@ function Card({ ds, name, row }: { ds: 'anomod' | 'lo2'; name: string; row?: Hyb
   return (
     <li className="card hy-card" data-state={done ? 'done' : 'pending'} data-testid={`hybrid-${ds}-${name}`}>
       <h3>{info.plain}</h3>
-      <p className="small muted" style={{ margin: 0 }}><Detailed><>{info.tech}. </></Detailed>{info.line}</p>
+      <p className="small muted" style={{ margin: 0 }}>{info.line}</p>
       {done ? (
         <dl className="hy-facts">
           <dt>Overall score</dt><dd><strong>{fmt(row.test_bal_acc)}</strong> ({range(row.test_bal_acc_ci_low, row.test_bal_acc_ci_high)})</dd>
