@@ -452,8 +452,7 @@ with section("7b both data sets"):
         print(out.to_string(index=False)); src("report_outputs/both_leaderboard.csv")
         hy_ = bl[bl.family == "Hybrid model"]; ot_ = bl[bl.family != "Hybrid model"]
         if len(hy_) and len(ot_):
-            print(f"
-best hybrid: {hy_.iloc[0].model} {pc(hy_.iloc[0].test_bal_acc)}; best other model: {ot_.iloc[0].model} {pc(ot_.iloc[0].test_bal_acc)}")
+            print(f"best hybrid: {hy_.iloc[0].model} {pc(hy_.iloc[0].test_bal_acc)}; best other model: {ot_.iloc[0].model} {pc(ot_.iloc[0].test_bal_acc)}")
 """)
 md("""**What you should see:** one table with every model that finished, sorted by overall score in %, hybrids and the other kinds mixed together, with the score on each data set; then the best hybrid next to the best other model. Wide ranges mean differences are not reliable.""")
 

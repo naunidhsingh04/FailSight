@@ -4,3 +4,4 @@ AE_LSTM,label_binary,0.461596,0.392260,0.367347,0.496342,0.765584,PASS (shuffled
 GNN_Transformer,label_binary,0.580148,0.474796,0.469388,0.550861,0.724119,PASS (shuffled labels score near chance)
 CNN_LSTM,label_binary,0.575046,0.498913,0.387755,0.523218,0.759740,PASS (shuffled labels score near chance)
 VAE_Transformer,label_binary,0.601206,0.482044,0.510204,0.576968,0.766883,PASS (shuffled labels score near chance)
+BERT_GNN,label_binary,0.486920,0.416945,0.367347,0.508614,0.756308,PASS (shuffled labels score near chance)

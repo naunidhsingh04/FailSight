@@ -6,10 +6,10 @@ LR,label_binary,done,0.7699,0.6168,0.9311,0.7260,0.5918,0.9315,0.8283,0.1920,5.0
 VAE_Transformer,label_binary,done,0.7669,0.6089,0.9573,0.7478,0.5714,0.8308,0.8323,370.3607,5.0000,16.0000,smote,corr,Hybrid model,0.6846,0.4167,1.0000,1.0000
 AE_LSTM,label_binary,done,0.7656,0.6072,0.9571,0.7423,0.5714,0.8968,0.8341,193.5310,5.0000,32.0000,cw,corr,Hybrid model,0.6830,0.4167,1.0000,1.0000
 CNN_LSTM,label_binary,done,0.7597,0.5976,0.9471,0.7193,0.5714,0.8045,0.8447,249.3189,5.0000,32.0000,smote,corr,Hybrid model,0.6756,0.4167,1.0000,1.0000
+BERT_GNN,label_binary,done,0.7563,0.5835,0.9329,0.6816,0.5918,0.8989,0.8464,817.0957,5.0000,32.0000,cw,cv,Hybrid model,0.6731,0.4444,0.9969,1.0000
 RF,label_binary,done,0.7493,0.6150,0.9300,0.7906,0.5102,0.8538,0.8257,1.3152,5.0000,0.0000,smote,corr,Decision-tree / linear model,0.6601,0.3333,0.9969,1.0000
 GNN_Transformer,label_binary,done,0.7241,0.5717,0.9533,0.7100,0.4898,0.8740,0.8287,586.0589,5.0000,32.0000,smote,corr,Hybrid model,0.6266,0.3056,1.0000,1.0000
 ET,label_binary,done,0.7180,0.5711,0.9462,0.7597,0.4490,0.8482,0.8255,1.4184,5.0000,0.0000,smote,cv,Decision-tree / linear model,0.6168,0.2500,1.0000,1.0000
-BERT_GNN,label_binary,not completed,,,,,,,,,,,,,Hybrid model,,,,
 Transformer_LSTM,label_binary,not completed,,,,,,,,,,,,,Hybrid model,,,,
 GNN_LSTM,label_binary,not completed,,,,,,,,,,,,,Hybrid model,,,,
 Multimodal_Transformer_MLP,label_binary,not completed,,,,,,,,,,,,,Hybrid model,,,,

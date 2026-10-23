@@ -54,3 +54,9 @@ VAE_Transformer,label_binary,cv,3,172/2412,2412/2412,50/603
 VAE_Transformer,label_binary,cv,4,172/2415,2415/2415,50/600
 VAE_Transformer,label_binary,cv,5,182/2414,2414/2414,40/601
 VAE_Transformer,label_binary,final,final(80% train),222/3015,3015/3015,"49/770 (test, untouched)"
+BERT_GNN,label_binary,cv,1,180/2408,180/2408,42/607
+BERT_GNN,label_binary,cv,2,182/2411,182/2411,40/604
+BERT_GNN,label_binary,cv,3,172/2412,172/2412,50/603
+BERT_GNN,label_binary,cv,4,172/2415,172/2415,50/600
+BERT_GNN,label_binary,cv,5,182/2414,182/2414,40/601
+BERT_GNN,label_binary,final,final(80% train),222/3015,222/3015,"49/770 (test, untouched)"

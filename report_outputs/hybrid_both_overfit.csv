@@ -9,3 +9,5 @@ CNN_LSTM,label_binary,before_correction,0.973953,0.840331,0.133622,0.844674,over
 CNN_LSTM,label_binary,after_correction,0.966261,0.836179,0.130082,0.844744,overfit (train-validation macro-F1 gap > 0.10),True,0.951898,0.719264,0.232634
 VAE_Transformer,label_binary,before_correction,0.970278,0.835434,0.134844,0.828072,overfit (train-validation macro-F1 gap > 0.10),False,,,
 VAE_Transformer,label_binary,after_correction,0.951324,0.813006,0.138318,0.832282,overfit (train-validation macro-F1 gap > 0.10),True,0.979022,0.747832,0.231190
+BERT_GNN,label_binary,before_correction,0.943904,0.837375,0.106529,0.846410,overfit (train-validation macro-F1 gap > 0.10),True,0.906233,0.681615,0.224618
+BERT_GNN,label_binary,after_correction,0.936933,0.792677,0.144256,0.824802,overfit (train-validation macro-F1 gap > 0.10),False,,,

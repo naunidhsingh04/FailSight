@@ -7865,7 +7865,7 @@ Updating files:  99% (942/951)
 Updating files: 100% (951/951)
 Updating files: 100% (951/951), done.
 
-repository folder: C:\Users\Lenovo\AppData\Local\Temp\failsight_nb_tmcqvdxn\FailSight | exists: True
+repository folder: C:\Users\Lenovo\AppData\Local\Temp\failsight_nb_0deqvpnr\FailSight | exists: True
 </pre>
 </div>
 </div>
@@ -7963,7 +7963,7 @@ repository folder: C:\Users\Lenovo\AppData\Local\Temp\failsight_nb_tmcqvdxn\Fail
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>bundle read from C:\Users\Lenovo\AppData\Local\Temp\failsight_nb_tmcqvdxn\bundle: 512 files copied into the repository folder
+<pre>bundle read from C:\Users\Lenovo\AppData\Local\Temp\failsight_nb_0deqvpnr\bundle: 512 files copied into the repository folder
 </pre>
 </div>
 </div>
@@ -8310,7 +8310,13 @@ source file: scripts/preprocess.py (the same code every model uses); report_outp
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>train windows: 2549 | test windows: 647 | share in training: 0.798
-window ids in both parts: 0 | blocks in both parts: 0
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>window ids in both parts: 0 | blocks in both parts: 0
 
 split        test  train   All
 label_level                   
@@ -8528,20 +8534,8 @@ fold
 9              60        60      20           56       64
 10             57        60      20           60       64
 
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>new 5-fold file: windows 2549 | blocks shared across folds: 0 | classes in every fold: True
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>label_level  Code  Database  Normal  Performance  Service
+new 5-fold file: windows 2549 | blocks shared across folds: 0 | classes in every fold: True
+label_level  Code  Database  Normal  Performance  Service
 fold                                                     
 1             120       116      30          117      125
 2             119       117      30          122      120
@@ -8751,7 +8745,7 @@ source file: scripts/hybrid_anomod.py (data + 5 folds), report_outputs/leaderboa
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Transformer + BiLSTM trained live for 3 epochs in 68 s; test balanced accuracy 0.663; healthy-window recall 0.389  (3 epochs is a demonstration, not the saved model)
+<pre>Transformer + BiLSTM trained live for 3 epochs in 72 s; test balanced accuracy 0.663; healthy-window recall 0.389  (3 epochs is a demonstration, not the saved model)
 </pre>
 </div>
 </div>
@@ -8866,8 +8860,7 @@ source file: report_outputs/hybrid_anomod_leaderboard.csv, report_outputs/leader
         <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">));</span> <span class="n">src</span><span class="p">(</span><span class="s2">"report_outputs/both_leaderboard.csv"</span><span class="p">)</span>
         <span class="n">hy_</span> <span class="o">=</span> <span class="n">bl</span><span class="p">[</span><span class="n">bl</span><span class="o">.</span><span class="n">family</span> <span class="o">==</span> <span class="s2">"Hybrid model"</span><span class="p">];</span> <span class="n">ot_</span> <span class="o">=</span> <span class="n">bl</span><span class="p">[</span><span class="n">bl</span><span class="o">.</span><span class="n">family</span> <span class="o">!=</span> <span class="s2">"Hybrid model"</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hy_</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ot_</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span>
-<span class="n">best</span> <span class="n">hybrid</span><span class="p">:</span> <span class="p">{</span><span class="n">hy_</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">model</span><span class="p">}</span> <span class="p">{</span><span class="n">pc</span><span class="p">(</span><span class="n">hy_</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">test_bal_acc</span><span class="p">)};</span> <span class="n">best</span> <span class="n">other</span> <span class="n">model</span><span class="p">:</span> <span class="p">{</span><span class="n">ot_</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">model</span><span class="p">}</span> <span class="p">{</span><span class="n">pc</span><span class="p">(</span><span class="n">ot_</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">test_bal_acc</span><span class="p">)}</span><span class="s2">")</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"best hybrid: </span><span class="si">{</span><span class="n">hy_</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">pc</span><span class="p">(</span><span class="n">hy_</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">test_bal_acc</span><span class="p">)</span><span class="si">}</span><span class="s2">; best other model: </span><span class="si">{</span><span class="n">ot_</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">pc</span><span class="p">(</span><span class="n">ot_</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">test_bal_acc</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -8879,12 +8872,20 @@ source file: report_outputs/hybrid_anomod_leaderboard.csv, report_outputs/leader
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>
-  <span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[13]</span><span class="ansi-green-fg">, line 13</span>
-<span class="ansi-red-fg">    </span><span class="ansi-red-fg">print(f"</span>
-          ^
-<span class="ansi-red-fg">SyntaxError</span><span class="ansi-red-fg">:</span> unterminated string literal (detected at line 13)
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>             model                         kind overall score      95% range healthy left alone score on AnoMod score on LO2
+               XGB Decision-tree / linear model         84.4% 65.6% to 99.9%              69.4%           78.9%        99.7%
+Transformer_BiLSTM                 Hybrid model         82.8% 64.6% to 97.9%              71.4%           76.9%       100.0%
+              LGBM Decision-tree / linear model         77.4% 62.3% to 94.7%              55.1%           69.2%       100.0%
+                LR Decision-tree / linear model         77.0% 61.7% to 93.1%              59.2%           69.0%        99.7%
+   VAE_Transformer                 Hybrid model         76.7% 60.9% to 95.7%              57.1%           68.5%       100.0%
+           AE_LSTM                 Hybrid model         76.6% 60.7% to 95.7%              57.1%           68.3%       100.0%
+          CNN_LSTM                 Hybrid model         76.0% 59.8% to 94.7%              57.1%           67.6%       100.0%
+                RF Decision-tree / linear model         74.9% 61.5% to 93.0%              51.0%           66.0%        99.7%
+   GNN_Transformer                 Hybrid model         72.4% 57.2% to 95.3%              49.0%           62.7%       100.0%
+                ET Decision-tree / linear model         71.8% 57.1% to 94.6%              44.9%           61.7%       100.0%
+source file: report_outputs/both_leaderboard.csv
+best hybrid: Transformer_BiLSTM 82.8%; best other model: XGB 84.4%
 </pre>
 </div>
 </div>
@@ -9766,7 +9767,7 @@ In our own shop, with whole runs held out, the frozen detector noticed most inje
                                                               LO2 models were trained on LO2's own slice                           Any transfer from AnoMod to LO2 or to anything else
                                                                   A problem that has started is detected                            Forecasting a failure or the time until it happens
 
-Total run time of this notebook: 3.2 minutes
+Total run time of this notebook: 4.9 minutes
 </pre>
 </div>
 </div>

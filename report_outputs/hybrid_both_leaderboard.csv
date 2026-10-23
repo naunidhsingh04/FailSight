@@ -3,8 +3,8 @@ Transformer_BiLSTM,label_binary,done,0.8279,0.6456,0.9792,0.7518,0.7143,0.9170,0
 VAE_Transformer,label_binary,done,0.7669,0.6089,0.9573,0.7478,0.5714,0.8308,0.8323,370.3607,5.0000,16.0000,smote,corr
 AE_LSTM,label_binary,done,0.7656,0.6072,0.9571,0.7423,0.5714,0.8968,0.8341,193.5310,5.0000,32.0000,cw,corr
 CNN_LSTM,label_binary,done,0.7597,0.5976,0.9471,0.7193,0.5714,0.8045,0.8447,249.3189,5.0000,32.0000,smote,corr
+BERT_GNN,label_binary,done,0.7563,0.5835,0.9329,0.6816,0.5918,0.8989,0.8464,817.0957,5.0000,32.0000,cw,cv
 GNN_Transformer,label_binary,done,0.7241,0.5717,0.9533,0.7100,0.4898,0.8740,0.8287,586.0589,5.0000,32.0000,smote,corr
-BERT_GNN,label_binary,not completed,,,,,,,,,,,,
 Transformer_LSTM,label_binary,not completed,,,,,,,,,,,,
 GNN_LSTM,label_binary,not completed,,,,,,,,,,,,
 Multimodal_Transformer_MLP,label_binary,not completed,,,,,,,,,,,,

@@ -4,3 +4,4 @@ AE_LSTM,label_binary,60.19,8.15,7,193.53,47367
 GNN_Transformer,label_binary,209.18,31.45,8,586.06,20738
 CNN_LSTM,label_binary,85.30,14.29,7,249.32,37762
 VAE_Transformer,label_binary,134.00,38.35,18,370.36,21447
+BERT_GNN,label_binary,254.24,71.94,10,817.10,17923

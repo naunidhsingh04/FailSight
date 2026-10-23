@@ -34,6 +34,13 @@
    "oof_balanced_accuracy": 0.8361368831518086,
    "oof_normal_recall": 0.6891891891891891,
    "oof_balanced_accuracy_default_argmax": 0.8322531486710592
+  },
+  "BERT_GNN": {
+   "type": "threshold",
+   "threshold": 0.76,
+   "oof_balanced_accuracy": 0.8495652368786697,
+   "oof_normal_recall": 0.7432432432432432,
+   "oof_balanced_accuracy_default_argmax": 0.846499484559186
   }
  }
 }
