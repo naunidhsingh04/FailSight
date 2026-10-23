@@ -588,3 +588,6 @@
 13:54:23     both label_binary BERT_GNN/cv fold 3: 12 ep (best 6), 28s, val BA 0.709 F1 0.713, train F1 0.918  SMOTE b:172/2412 a:172/2412 hold:50/603
 13:54:52     both label_binary BERT_GNN/cv fold 4: 10 ep (best 4), 25s, val BA 0.991 F1 0.946, train F1 0.889  SMOTE b:172/2415 a:172/2415 hold:50/600
 13:54:54 both leaderboard written: 27 rows
+13:57:00     both label_binary BERT_GNN/cv fold 5: 37 ep (best 31), 117s, val BA 0.758 F1 0.803, train F1 0.976  SMOTE b:182/2414 a:182/2414 hold:40/601
+13:58:17     both label_binary BERT_GNN/corr fold 1: 14 ep (best 8), 62s, val BA 0.750 F1 0.768, train F1 0.950  SMOTE b:180/2408 a:180/2408 hold:42/607
+13:59:40     both label_binary BERT_GNN/corr fold 2: 15 ep (best 9), 69s, val BA 0.975 F1 0.851, train F1 0.926  SMOTE b:182/2411 a:182/2411 hold:40/604
