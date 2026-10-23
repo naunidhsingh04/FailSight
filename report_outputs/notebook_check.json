@@ -1,10 +1,10 @@
 {
  "executed_ok": true,
- "executed_at": "2026-10-23 12:01:17",
+ "executed_at": "2026-10-23 12:23:03",
  "n_cells": 52,
  "n_errors": 0,
  "soft_failures": [],
- "seconds": 178.89315128326416,
+ "seconds": 56.243889570236206,
  "environment": "fresh virtual environment (numpy, pandas, scikit-learn, matplotlib, tensorflow, xgboost, lightgbm + the notebook's own pip install of imbalanced-learn, shap, optuna, lime); clean clone of the committed repository; data bundle unzipped; no AnoMod raw folders, no models folder",
  "comparisons": [
   {

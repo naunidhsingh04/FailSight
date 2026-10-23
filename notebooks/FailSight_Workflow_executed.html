@@ -7865,7 +7865,7 @@ Updating files:  99% (906/915)
 Updating files: 100% (915/915)
 Updating files: 100% (915/915), done.
 
-repository folder: C:\Users\Lenovo\AppData\Local\Temp\failsight_nb_mtytu8ob\FailSight | exists: True
+repository folder: C:\Users\Lenovo\AppData\Local\Temp\failsight_nb_m3ifgdfp\FailSight | exists: True
 </pre>
 </div>
 </div>
@@ -7963,7 +7963,7 @@ repository folder: C:\Users\Lenovo\AppData\Local\Temp\failsight_nb_mtytu8ob\Fail
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>bundle read from C:\Users\Lenovo\AppData\Local\Temp\failsight_nb_mtytu8ob\bundle: 474 files copied into the repository folder
+<pre>bundle read from C:\Users\Lenovo\AppData\Local\Temp\failsight_nb_m3ifgdfp\bundle: 474 files copied into the repository folder
 </pre>
 </div>
 </div>
@@ -8409,13 +8409,7 @@ source file: report_outputs/split_ids.csv
   fold 1:  b: [160, 531, 553, 518, 538]   a: [553, 553, 553, 553, 553]   hold: [10, 60, 60, 60, 59]
   fold 2:  b: [160, 531, 553, 518, 536]   a: [553, 553, 553, 553, 553]   hold: [10, 60, 60, 60, 61]
   fold 3:  b: [150, 531, 553, 523, 537]   a: [553, 553, 553, 553, 553]   hold: [20, 60, 60, 55, 60]
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>ADASYN on the five-class labels is not possible here (No samples will be generated with the provided ratio setting); using the binary labels for the size comparison
+ADASYN on the five-class labels is not possible here (No samples will be generated with the provided ratio setting); using the binary labels for the size comparison
 binary labels: original [170, 2379] | ADASYN [2391, 2379]
 
 full training part: original [170, 591, 613, 578, 597] | SMOTE [613, 613, 613, 613, 613] | ADASYN (size comparison only) [2391, 2379]
@@ -8501,19 +8495,7 @@ class weights (balanced): {'Normal': np.float64(3.0), 'Performance': np.float64(
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>original folds: 10 | group type: block_id | windows: 2549
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>blocks shared between two folds:</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre> 0
+blocks shared between two folds: 0
 
 label_level  Code  Database  Normal  Performance  Service
 fold                                                     
@@ -8739,14 +8721,8 @@ source file: scripts/hybrid_anomod.py (data + 5 folds), report_outputs/leaderboa
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Transformer + BiLSTM trained live for 3 epochs in 50 s; test balanced accuracy 0.663; healthy-window recall 0.389  (3 epochs is a demonstration, not the saved model)
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>what the first part passes to the second part (shape): (2, 6, 32)
+<pre>Transformer + BiLSTM trained live for 3 epochs in 15 s; test balanced accuracy 0.663; healthy-window recall 0.389  (3 epochs is a demonstration, not the saved model)
+what the first part passes to the second part (shape): (2, 6, 32)
 </pre>
 </div>
 </div>
@@ -8776,7 +8752,7 @@ source file: scripts/hybrid_anomod.py (data + 5 folds), report_outputs/leaderboa
     <span class="n">best_h</span><span class="p">,</span> <span class="n">best_t</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">ex</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"test_bal_acc"</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">();</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"best hybrid: </span><span class="si">{</span><span class="n">best_h</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">best_h</span><span class="o">.</span><span class="n">test_bal_acc</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">; best of the 36 earlier models: </span><span class="si">{</span><span class="n">best_t</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">best_t</span><span class="o">.</span><span class="n">test_bal_acc</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">;"</span><span class="p">,</span>
           <span class="s2">"a hybrid is higher"</span> <span class="k">if</span> <span class="n">best_h</span><span class="o">.</span><span class="n">test_bal_acc</span> <span class="o">&gt;</span> <span class="n">best_t</span><span class="o">.</span><span class="n">test_bal_acc</span> <span class="k">else</span> <span class="s2">"no hybrid beats the best earlier model"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, . All AnoMod models are scored on the same"</span><span class="p">,</span> <span class="n">NUMBERS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"test_windows"</span><span class="p">,</span> <span class="s2">"647"</span><span class="p">),</span> <span class="s2">"test windows."</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"The earlier AnoMod models were checked with 10-fold and the hybrids with 5-fold. All AnoMod models, hybrids included, are scored on the same"</span><span class="p">,</span> <span class="n">NUMBERS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"test_windows"</span><span class="p">,</span> <span class="s2">"647"</span><span class="p">),</span> <span class="s2">"test windows."</span><span class="p">)</span>
     <span class="n">NUMBERS</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">best_hybrid_ba</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">best_h</span><span class="o">.</span><span class="n">test_bal_acc</span><span class="p">),</span> <span class="mi">4</span><span class="p">),</span> <span class="n">best_existing_ba</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">best_t</span><span class="o">.</span><span class="n">test_bal_acc</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
     <span class="n">src</span><span class="p">(</span><span class="s2">"report_outputs/hybrid_anomod_leaderboard.csv, report_outputs/leaderboard_label_binary.csv, report_outputs/test_bootstrap_ci.csv"</span><span class="p">)</span>
 </pre></div>
@@ -8805,7 +8781,7 @@ Transformer_BiLSTM   done         0.650                0.475                 0.9
           CNN_LSTM   done         0.609                0.452                 0.963               0.278         0.867     158.063      5
 
 best hybrid: GNN_Transformer 0.652; best of the 36 earlier models: XGB 0.774; no hybrid beats the best earlier model
-Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, . All AnoMod models are scored on the same 647 test windows.
+The earlier AnoMod models were checked with 10-fold and the hybrids with 5-fold. All AnoMod models, hybrids included, are scored on the same 647 test windows.
 source file: report_outputs/hybrid_anomod_leaderboard.csv, report_outputs/leaderboard_label_binary.csv, report_outputs/test_bootstrap_ci.csv
 </pre>
 </div>
@@ -9328,7 +9304,13 @@ first alert at the end of window 17: detection delay = alert time - fault start 
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>LO2 slice: 5 whole runs, 131.8 MB of the downloaded run files (cap 150 MB); roles: {'train': 4, 'test': 1}
+<pre>LO2 slice: 5 whole runs, 131.8 MB of the downloaded run files (cap 150 MB); roles:</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre> {'train': 4, 'test': 1}
 source file: report_outputs/lo2_slice_manifest.csv
 windows: 860 | train: 688 | test: 172 | classes: {'HTTP400': 450, 'HTTP404': 270, 'HTTP401': 75, 'Normal': 65}
 no window or run in both parts: True
@@ -9681,7 +9663,7 @@ In our own shop, with whole runs held out, the frozen detector noticed most inje
                                                               LO2 models were trained on LO2's own slice                           Any transfer from AnoMod to LO2 or to anything else
                                                                   A problem that has started is detected                            Forecasting a failure or the time until it happens
 
-Total run time of this notebook: 2.8 minutes
+Total run time of this notebook: 0.8 minutes
 </pre>
 </div>
 </div>

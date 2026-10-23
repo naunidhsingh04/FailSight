@@ -1,6 +1,6 @@
 # Overnight status
 
-Generated 2026-10-23 11:56 (IST). Task: FailSight overnight master task, deadline 1 PM IST on 23 Oct 2026.
+Generated 2026-10-23 12:23 (IST). Task: FailSight overnight master task, deadline 1 PM IST on 23 Oct 2026.
 
 ## Anything that failed or was cut
 
@@ -71,7 +71,7 @@ Generated 2026-10-23 11:56 (IST). Task: FailSight overnight master task, deadlin
 
 ## Proof totals
 
-* {'PASS': 78, 'WARN': 4, 'REPORTED ACCURATELY': 13} (generated 2026-10-23 03:26:27, partial: False); earlier baseline: 65 PASS / 4 WARN / 0 FAIL / 9 REPORTED ACCURATELY before the new sections.
+* {'PASS': 78, 'WARN': 4, 'REPORTED ACCURATELY': 13} (generated 2026-10-23 12:23:07, partial: False); earlier baseline: 65 PASS / 4 WARN / 0 FAIL / 9 REPORTED ACCURATELY before the new sections.
 * P1 PASS, P2 PASS, P3 PASS, P4 PASS, P5 WARN, P6 PASS, P7 WARN, P8 PASS, P9 REPORTED ACCURATELY, P10 PASS, P11 REPORTED ACCURATELY, P12 REPORTED ACCURATELY, P13 PASS, P14 WARN, P15 REPORTED ACCURATELY, P16 REPORTED ACCURATELY, P17 PASS, P18 REPORTED ACCURATELY, P19 REPORTED ACCURATELY, P20 REPORTED ACCURATELY, P21 REPORTED ACCURATELY, P22 PASS, P23 PASS
 
 ## Tests
@@ -85,7 +85,7 @@ Generated 2026-10-23 11:56 (IST). Task: FailSight overnight master task, deadlin
 
 ## Colab notebook
 
-* Executed in FAST mode in a fresh virtual environment (clean clone, bundle unzipped, no AnoMod raw folders, no models folder): executed_ok = True, cells 52, errors 0, soft failures 0, run time 0.7 min.
+* Executed in FAST mode in a fresh virtual environment (clean clone, bundle unzipped, no AnoMod raw folders, no models folder): executed_ok = True, cells 52, errors 0, soft failures 0, run time 0.9 min.
 * Numbers compared with the proofs / result files: 8; different: 0.
 * Files: `notebooks/FailSight_Workflow.ipynb`, `notebooks/FailSight_Workflow_executed.ipynb`, `notebooks/FailSight_Workflow_executed.html`, `docs/COLAB.md`, `failsight_bundle.zip` (git-ignored).
 
@@ -124,6 +124,8 @@ Results website without the shop: `python -m app.backend.serve` then http://127.
 ## git log --oneline -20
 
 ```
+730da75 wording
+b313433 plainer hybrid page with side-by-side comparison; wording
 070d15d final: status, index, tests record
 5e4f2ef front end polish, docs, index, steps
 9cbab9d notebook executed copy, proofs P23
@@ -142,6 +144,4 @@ ad3d3f4 chore: keep processed LO2 data out of git
 b708caf docs: present now (exact steps, known-good commit)
 3b79d35 shop: storefront (tests not completed)
 00d27d9 tests: storefront and start button
-69764e2 shop: presenter controls
-ed7c0ab docs: storefront log, smoke-run comparison, presenter script
 ```
