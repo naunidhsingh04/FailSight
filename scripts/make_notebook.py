@@ -427,7 +427,7 @@ with section("7 hybrid results"):
     best_h, best_t = h.iloc[-1], ex.sort_values("test_bal_acc").iloc[-1]
     print(); print(f"best hybrid: {best_h.model} {best_h.test_bal_acc:.3f}; best of the 36 earlier models: {best_t.model} {best_t.test_bal_acc:.3f};",
           "a hybrid is higher" if best_h.test_bal_acc > best_t.test_bal_acc else "no hybrid beats the best earlier model")
-    print("Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, . All AnoMod models are scored on the same", NUMBERS.get("test_windows", "647"), "test windows.")
+    print("The earlier AnoMod models were checked with 10-fold and the hybrids with 5-fold. All AnoMod models, hybrids included, are scored on the same", NUMBERS.get("test_windows", "647"), "test windows.")
     NUMBERS.update(best_hybrid_ba=round(float(best_h.test_bal_acc), 4), best_existing_ba=round(float(best_t.test_bal_acc), 4))
     src("report_outputs/hybrid_anomod_leaderboard.csv, report_outputs/leaderboard_label_binary.csv, report_outputs/test_bootstrap_ci.csv")
 """

@@ -9,8 +9,7 @@ from . import config
 from .results import clean, records
 
 R = lambda name: config.REPORTS / name
-FOLD_NOTE = ("Original AnoMod models: 10-fold. Hybrids and LO2 work: 5-fold, . "
-             "All AnoMod models are scored on the same 647 test windows.")
+FOLD_NOTE = "The earlier AnoMod models were checked with 10-fold cross-validation and the hybrid models with 5-fold. All AnoMod models, hybrids included, are scored on the same 647 test windows."
 
 
 def _read(name):

@@ -1,11 +1,12 @@
 # Results index
 
-Every result file in `report_outputs/` (205 files plus the sub-folders below). Nothing was moved or renamed. *final* = a result that is reported or shown; *intermediate* = needed to produce or check a final result; *log* = run log. 'Used by' lists the proof sections (`scripts/proofs.py`) and whether the web app reads the file; 'report only' means it is a stand-alone result file.
+Every result file in `report_outputs/` (206 files plus the sub-folders below). Nothing was moved or renamed. *final* = a result that is reported or shown; *intermediate* = needed to produce or check a final result; *log* = run log. 'Used by' lists the proof sections (`scripts/proofs.py`) and whether the web app reads the file; 'report only' means it is a stand-alone result file.
 
 | file | what it is | used by | status |
 |---|---|---|---|
 | `FINAL_STATUS.md` | Status of the final task list, key result files and every stated limitation | proofs P18 | final |
 | `INDEX.md` | This index | report only | final |
+| `OVERNIGHT_STATUS.md` | Status of the overnight run: every step, the ten hybrids, LO2, tests, limits | report only | final |
 | `baseline_cv.csv` | Cross-validation of the baseline AnoMod models | report only | intermediate |
 | `before_after_correction.csv` | Effect of the regularisation correction on overfit AnoMod models | proofs P6; app | final |
 | `best_params.json` | Optuna best hyper-parameters of the tuned AnoMod models | report only | intermediate |
@@ -116,7 +117,7 @@ Every result file in `report_outputs/` (205 files plus the sub-folders below). N
 | `lo2_full_frozen_label_level__XGB_tuned.json` | LO2 other families (b)-(e): frozen configuration of one model, written before its test scoring | report only | final |
 | `lo2_full_leaderboard.csv` | LO2 leaderboard of all families: hybrids first, then (b)-(e); 'not completed' rows; every row marked unreliable (very small sample) | app | final |
 | `lo2_full_lime_example.csv` | LO2: LIME explanation of one real test window | report only | final |
-| `lo2_full_not_completed.csv` | LO2 model families not completed because of the time limit | app | final |
+| `lo2_full_not_completed.csv` | LO2 model families not completed | app | final |
 | `lo2_full_optuna_trials_label_binary__LGBM_tuned.csv` | LO2 other families (b)-(e): Optuna trials of one tuned model | report only | intermediate |
 | `lo2_full_optuna_trials_label_binary__RF_tuned.csv` | LO2 other families (b)-(e): Optuna trials of one tuned model | report only | intermediate |
 | `lo2_full_optuna_trials_label_binary__XGB_tuned.csv` | LO2 other families (b)-(e): Optuna trials of one tuned model | report only | intermediate |
@@ -210,7 +211,7 @@ Every result file in `report_outputs/` (205 files plus the sub-folders below). N
 | `training_time.csv` | Training time of the AnoMod models | app | intermediate |
 | `underfit_overfit.csv` | Train / cross-validation / test macro-F1 and the overfitting diagnosis per AnoMod model | proofs P6; app | final |
 
-205 files: 164 final, 32 intermediate, 9 logs.
+206 files: 165 final, 32 intermediate, 9 logs.
 
 ## Sub-folders
 

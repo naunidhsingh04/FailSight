@@ -7,7 +7,7 @@ import { Async } from '../components/States'
 import { fmt, int, range } from '../format'
 import { Detailed } from '../mode'
 import { usePageTitle } from '../usePageTitle'
-import { Head, Score } from './Results'
+import { Score } from './Results'
 import type { HybridResponse, HybridRow, Label, Lo2LeaderboardResponse, ModelsResponse } from '../types'
 
 interface Info { plain: string; tech: string; line: string }
@@ -58,9 +58,9 @@ function Compare({ rows, caption }: { rows: Row[]; caption: string }) {
       caption={caption} rows={sorted} rowKey={(r) => r.key} initialSort={{ key: 'ba', dir: 'desc' }}
       columns={[
         { key: 'name', label: 'Model', nameCell: true, sortValue: (r) => r.name, render: (r) => <>{r.name} <span className="pills">{r.hybrid ? <span className="badge accent">Hybrid</span> : <span className="badge">{r.tag}</span>}</span></> },
-        { key: 'ba', label: 'Overall score', header: <Head plain="Overall score" meaning="0.5 = coin flip, 1.0 = perfect" tech="Balanced accuracy" />, numeric: true, sortValue: (r) => r.ba, render: (r) => <Score v={r.ba} low={r.lo} high={r.hi} /> },
-        { key: 'nr', label: 'Healthy windows left alone', header: <Head plain="Healthy windows left alone" meaning="higher = fewer false alarms" tech="Normal recall" />, numeric: true, sortValue: (r) => r.nr, render: (r) => <Score v={r.nr} /> },
-        { key: 'auc', label: 'Ranks risky above safe', header: <Head plain="Ranks risky above safe" meaning="1.0 = perfect" tech="ROC-AUC" />, numeric: true, sortValue: (r) => r.auc, render: (r) => <Score v={r.auc} /> },
+        { key: 'ba', label: 'Overall score', numeric: true, sortValue: (r) => r.ba, render: (r) => <Score v={r.ba} low={r.lo} high={r.hi} /> },
+        { key: 'nr', label: 'Healthy windows left alone', numeric: true, sortValue: (r) => r.nr, render: (r) => <Score v={r.nr} /> },
+        { key: 'auc', label: 'Ranks risky above safe', numeric: true, sortValue: (r) => r.auc, render: (r) => <Score v={r.auc} /> },
       ]}
     />
   )
