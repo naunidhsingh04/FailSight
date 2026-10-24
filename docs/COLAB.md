@@ -32,7 +32,7 @@ The notebook clones the code from GitHub, so the newest code must be on GitHub f
 
 | Problem | What to do |
 |---|---|
-| A cell says "missing files (this part is skipped)" | The bundle is not at `MyDrive/FailSight_bundle/` or was uploaded as a folder inside a folder. Move the four folders so they sit directly inside `FailSight_bundle`, then Runtime > Run all again. |
+| A cell says "missing files (this part is skipped)" | The bundle was not found in Drive. Section 0 looks for the folder that holds `inputs/SN_windows.parquet` anywhere up to three levels below My Drive (so `FailSight_bundle/failsight_bundle/inputs/...` also works). Check that file exists, then Runtime > Run all again. |
 | "Mounted at /content/drive" never appears | Allow the Drive pop-up (it can open in a second window) and run section 0 again. |
 | Old numbers appear (for example LO2 with 5 runs) | The old code is still on GitHub: run `git push origin main`, then in Colab Runtime > Disconnect and delete runtime, and run all again. |
 | Out of memory | Runtime > Restart session and run all; do not switch `FAST` to False. |

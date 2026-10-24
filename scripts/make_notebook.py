@@ -65,8 +65,10 @@ if IN_COLAB:
     try:
         from google.colab import drive
         drive.mount("/content/drive")
-        cand = Path("/content/drive/MyDrive/FailSight_bundle")
-        bundle = cand if cand.exists() else None
+        root = Path("/content/drive/MyDrive")
+        # the bundle folder is the one that holds inputs/SN_windows.parquet; found even if it was uploaded inside another folder (any capitalisation, up to three levels down)
+        hits = sorted((q.parent.parent for q in root.glob("*/inputs/SN_windows.parquet")), key=str) + sorted((q.parent.parent for q in root.glob("*/*/inputs/SN_windows.parquet")), key=str) + sorted((q.parent.parent for q in root.glob("*/*/*/inputs/SN_windows.parquet")), key=str)
+        bundle = hits[0] if hits else None
     except Exception as e:
         print("Google Drive could not be mounted:", e)
 elif BUNDLE_DIR:
