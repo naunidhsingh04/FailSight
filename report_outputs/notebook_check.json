@@ -1,10 +1,10 @@
 {
  "executed_ok": true,
- "executed_at": "2026-10-23 14:14:57",
+ "executed_at": "2026-10-24 06:06:32",
  "n_cells": 55,
  "n_errors": 0,
  "soft_failures": [],
- "seconds": 307.44776678085327,
+ "seconds": 76.85869216918945,
  "environment": "fresh virtual environment (numpy, pandas, scikit-learn, matplotlib, tensorflow, xgboost, lightgbm + the notebook's own pip install of imbalanced-learn, shap, optuna, lime); clean clone of the committed repository; data bundle unzipped; no AnoMod raw folders, no models folder",
  "comparisons": [
   {
@@ -39,8 +39,8 @@
   },
   {
    "name": "LO2 windows",
-   "notebook": 860,
-   "reference": 860,
+   "notebook": 5676,
+   "reference": 5676,
    "equal": true
   },
   {
