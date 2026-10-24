@@ -4,26 +4,26 @@
  "model": "XGB_tuned",
  "seed": 42,
  "params": {
-  "n_estimators": 141,
-  "max_depth": 2,
-  "learning_rate": 0.03461355122797162,
-  "subsample": 0.867707211098588,
-  "colsample_bytree": 0.9073623342326017,
-  "reg_lambda": 9.107540215690108
+  "n_estimators": 63,
+  "max_depth": 7,
+  "learning_rate": 0.031086530454918968,
+  "subsample": 0.6555499094879863,
+  "colsample_bytree": 0.42432278687227537,
+  "reg_lambda": 2.071753116955491
  },
- "method": "smote",
+ "method": "cw",
  "thresholds": {
   "type": "class_multipliers",
   "weights": [
-   0.1353352832366127,
-   0.6065306597126334,
+   0.2865047968601901,
    1.0,
+   1.2840254166877414,
    1.0
   ],
-  "oof_balanced_accuracy": 0.6331018518518519,
-  "oof_balanced_accuracy_default_argmax": 0.6201388888888889
+  "oof_balanced_accuracy": 0.7311609686609687,
+  "oof_balanced_accuracy_default_argmax": 0.7156339031339032
  },
  "chosen_stage": "cv",
- "frozen_at": "2026-10-23 01:46:56",
+ "frozen_at": "2026-10-24 04:04:35",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

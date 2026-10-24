@@ -2,38 +2,129 @@
  "label_binary": {
   "LR": {
    "type": "threshold",
-   "threshold": 0.12,
-   "oof_balanced_accuracy": 0.8404486576128367,
-   "oof_normal_recall": 0.6891891891891891,
-   "oof_balanced_accuracy_default_argmax": 0.8274707543364259
+   "threshold": 0.05,
+   "oof_balanced_accuracy": 0.9326732664289834,
+   "oof_normal_recall": 0.8681102362204725,
+   "oof_balanced_accuracy_default_argmax": 0.9268880470434055
   },
   "RF": {
    "type": "threshold",
-   "threshold": 0.5,
-   "oof_balanced_accuracy": 0.8264645242257183,
-   "oof_normal_recall": 0.6711711711711712,
-   "oof_balanced_accuracy_default_argmax": 0.8264645242257183
+   "threshold": 0.39,
+   "oof_balanced_accuracy": 0.9312421492569072,
+   "oof_normal_recall": 0.8641732283464567,
+   "oof_balanced_accuracy_default_argmax": 0.9307815320298228
   },
   "ET": {
    "type": "threshold",
-   "threshold": 0.59,
-   "oof_balanced_accuracy": 0.8371319080274304,
-   "oof_normal_recall": 0.6891891891891891,
-   "oof_balanced_accuracy_default_argmax": 0.8248487293263413
+   "threshold": 0.56,
+   "oof_balanced_accuracy": 0.9289528151449977,
+   "oof_normal_recall": 0.8622047244094488,
+   "oof_balanced_accuracy_default_argmax": 0.9252461158845241
   },
   "XGB": {
    "type": "threshold",
-   "threshold": 0.59,
-   "oof_balanced_accuracy": 0.880325848236296,
-   "oof_normal_recall": 0.7702702702702703,
-   "oof_balanced_accuracy_default_argmax": 0.877148043565954
+   "threshold": 0.42,
+   "oof_balanced_accuracy": 0.9469764287294581,
+   "oof_normal_recall": 0.8976377952755905,
+   "oof_balanced_accuracy_default_argmax": 0.9465925810402211
   },
   "LGBM": {
    "type": "threshold",
-   "threshold": 0.05,
-   "oof_balanced_accuracy": 0.8879117923894043,
-   "oof_normal_recall": 0.7837837837837838,
-   "oof_balanced_accuracy_default_argmax": 0.8855900676796199
+   "threshold": 0.62,
+   "oof_balanced_accuracy": 0.9465020594788618,
+   "oof_normal_recall": 0.8996062992125984,
+   "oof_balanced_accuracy_default_argmax": 0.9455178075103579
+  },
+  "RF_tuned": {
+   "type": "threshold",
+   "threshold": 0.48,
+   "oof_balanced_accuracy": 0.9484075459015342,
+   "oof_normal_recall": 0.9015748031496063,
+   "oof_balanced_accuracy_default_argmax": 0.9484075459015342
+  },
+  "XGB_tuned": {
+   "type": "threshold",
+   "threshold": 0.46,
+   "oof_balanced_accuracy": 0.9468228896537634,
+   "oof_normal_recall": 0.8976377952755905,
+   "oof_balanced_accuracy_default_argmax": 0.9468228896537634
+  },
+  "LGBM_tuned": {
+   "type": "threshold",
+   "threshold": 0.85,
+   "oof_balanced_accuracy": 0.9500632290839279,
+   "oof_normal_recall": 0.9173228346456693,
+   "oof_balanced_accuracy_default_argmax": 0.9485335809302049
+  },
+  "CNN_BiGRU_Att": {
+   "type": "threshold",
+   "threshold": 0.93,
+   "oof_balanced_accuracy": 0.9331911585671782,
+   "oof_normal_recall": 0.8818897637795275,
+   "oof_balanced_accuracy_default_argmax": 0.9316615104134554
+  },
+  "CNN_BiLSTM_Att": {
+   "type": "threshold",
+   "threshold": 0.92,
+   "oof_balanced_accuracy": 0.9399411352945231,
+   "oof_normal_recall": 0.8937007874015748,
+   "oof_balanced_accuracy_default_argmax": 0.9368898484073646
+  },
+  "Fusion": {
+   "type": "threshold",
+   "threshold": 0.76,
+   "oof_balanced_accuracy": 0.9419096392315309,
+   "oof_normal_recall": 0.8976377952755905,
+   "oof_balanced_accuracy_default_argmax": 0.940366239054296
+  },
+  "Transformer": {
+   "type": "threshold",
+   "threshold": 0.8,
+   "oof_balanced_accuracy": 0.9420906823542496,
+   "oof_normal_recall": 0.8937007874015748,
+   "oof_balanced_accuracy_default_argmax": 0.9383209655794407
+  },
+  "CNN_BiGRU_Att_XGBhead": {
+   "type": "threshold",
+   "threshold": 0.43,
+   "oof_balanced_accuracy": 0.9309213190820056,
+   "oof_normal_recall": 0.8661417322834646,
+   "oof_balanced_accuracy_default_argmax": 0.9307677800063108
+  },
+  "CNN_BiLSTM_Att_XGBhead": {
+   "type": "threshold",
+   "threshold": 0.91,
+   "oof_balanced_accuracy": 0.936366213665945,
+   "oof_normal_recall": 0.8779527559055118,
+   "oof_balanced_accuracy_default_argmax": 0.9317520319748147
+  },
+  "Fusion_XGBhead": {
+   "type": "threshold",
+   "threshold": 0.9,
+   "oof_balanced_accuracy": 0.9412599694614405,
+   "oof_normal_recall": 0.8917322834645669,
+   "oof_balanced_accuracy_default_argmax": 0.9355217487496237
+  },
+  "Transformer_XGBhead": {
+   "type": "threshold",
+   "threshold": 0.87,
+   "oof_balanced_accuracy": 0.9348170708854853,
+   "oof_normal_recall": 0.8799212598425197,
+   "oof_balanced_accuracy_default_argmax": 0.9321083756170276
+  },
+  "Stacking": {
+   "type": "threshold",
+   "threshold": 0.16,
+   "oof_balanced_accuracy": 0.9478839111601146,
+   "oof_normal_recall": 0.8996062992125984,
+   "oof_balanced_accuracy_default_argmax": 0.9451832253119442
+  },
+  "SoftVote": {
+   "type": "threshold",
+   "threshold": 0.59,
+   "oof_balanced_accuracy": 0.9476536025465725,
+   "oof_normal_recall": 0.8996062992125984,
+   "oof_balanced_accuracy_default_argmax": 0.9305512234162807
   }
  }
 }

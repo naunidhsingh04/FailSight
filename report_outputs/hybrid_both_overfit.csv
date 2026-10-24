@@ -1,13 +1,10 @@
-model,label_version,stage,cv_train_macro_f1,cv_val_macro_f1,cv_gap_macro_f1,cv_val_bal_acc,diagnosis,adopted,final_train_macro_f1,test_macro_f1,train_test_gap_macro_f1
-Transformer_BiLSTM,label_binary,before_correction,0.933218,0.818438,0.114780,0.842328,overfit (train-validation macro-F1 gap > 0.10),False,,,
-Transformer_BiLSTM,label_binary,after_correction,0.925521,0.834717,0.090804,0.840124,ok,True,0.862409,0.751768,0.110640
-AE_LSTM,label_binary,before_correction,0.970712,0.859623,0.111089,0.839382,overfit (train-validation macro-F1 gap > 0.10),False,,,
-AE_LSTM,label_binary,after_correction,0.953932,0.833484,0.120448,0.834087,overfit (train-validation macro-F1 gap > 0.10),True,0.927410,0.742266,0.185144
-GNN_Transformer,label_binary,before_correction,0.989498,0.852631,0.136867,0.825230,overfit (train-validation macro-F1 gap > 0.10),False,,,
-GNN_Transformer,label_binary,after_correction,0.988238,0.844470,0.143768,0.828744,overfit (train-validation macro-F1 gap > 0.10),True,0.965854,0.709980,0.255874
-CNN_LSTM,label_binary,before_correction,0.973953,0.840331,0.133622,0.844674,overfit (train-validation macro-F1 gap > 0.10),False,,,
-CNN_LSTM,label_binary,after_correction,0.966261,0.836179,0.130082,0.844744,overfit (train-validation macro-F1 gap > 0.10),True,0.951898,0.719264,0.232634
-VAE_Transformer,label_binary,before_correction,0.970278,0.835434,0.134844,0.828072,overfit (train-validation macro-F1 gap > 0.10),False,,,
-VAE_Transformer,label_binary,after_correction,0.951324,0.813006,0.138318,0.832282,overfit (train-validation macro-F1 gap > 0.10),True,0.979022,0.747832,0.231190
-BERT_GNN,label_binary,before_correction,0.943904,0.837375,0.106529,0.846410,overfit (train-validation macro-F1 gap > 0.10),True,0.906233,0.681615,0.224618
-BERT_GNN,label_binary,after_correction,0.936933,0.792677,0.144256,0.824802,overfit (train-validation macro-F1 gap > 0.10),False,,,
+model,label_version,stage,cv_train_macro_f1,cv_val_macro_f1,cv_gap_macro_f1,cv_val_bal_acc,diagnosis,final_train_macro_f1,test_macro_f1,train_test_gap_macro_f1,adopted
+Transformer_BiLSTM,label_binary,before_correction,0.972872,0.920247,0.052625,0.932227,ok,0.948154,0.885750,0.062404,True
+AE_LSTM,label_binary,before_correction,0.980197,0.930037,0.050160,0.929854,ok,0.983296,0.876153,0.107144,True
+GNN_Transformer,label_binary,before_correction,0.995389,0.940925,0.054464,0.929023,ok,0.984003,0.878487,0.105516,True
+CNN_LSTM,label_binary,before_correction,0.989920,0.946580,0.043340,0.939384,ok,0.978497,0.898551,0.079945,True
+VAE_Transformer,label_binary,before_correction,0.992044,0.939235,0.052809,0.933027,ok,0.981007,0.880036,0.100971,True
+BERT_GNN,label_binary,before_correction,0.996177,0.942125,0.054052,0.925631,ok,0.994743,0.879255,0.115488,True
+Transformer_LSTM,label_binary,before_correction,0.990832,0.945593,0.045239,0.935627,ok,0.977551,0.919686,0.057864,True
+GNN_LSTM,label_binary,before_correction,0.994110,0.937194,0.056916,0.928234,ok,0.992666,0.888391,0.104275,True
+Multimodal_Transformer_MLP,label_binary,before_correction,0.975537,0.921264,0.054273,0.929977,ok,0.963232,0.876889,0.086343,True

@@ -4,26 +4,26 @@
  "model": "Transformer",
  "seed": 42,
  "config": {
-  "hidden": 16,
-  "dropout": 0.5,
-  "wd": 0.002,
+  "hidden": 32,
+  "dropout": 0.3,
+  "wd": 0.0001,
   "lr": 0.001
  },
  "method": "smote",
- "final_epochs": 13,
+ "final_epochs": 5,
  "lr_scale": 1.0,
  "thresholds": {
   "type": "class_multipliers",
   "weights": [
    0.1353352832366127,
-   0.6065306597126334,
-   1.2840254166877414,
+   1.0,
+   1.6487212707001282,
    1.0
   ],
-  "oof_balanced_accuracy": 0.6486111111111111,
-  "oof_balanced_accuracy_default_argmax": 0.6039351851851852
+  "oof_balanced_accuracy": 0.7298433048433048,
+  "oof_balanced_accuracy_default_argmax": 0.7177350427350427
  },
- "chosen_stage": "corr",
- "frozen_at": "2026-10-23 02:11:10",
+ "chosen_stage": "cv",
+ "frozen_at": "2026-10-24 05:23:52",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

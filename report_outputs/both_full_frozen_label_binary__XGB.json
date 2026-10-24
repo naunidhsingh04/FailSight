@@ -11,12 +11,12 @@
  "method": "cw",
  "thresholds": {
   "type": "threshold",
-  "threshold": 0.59,
-  "oof_balanced_accuracy": 0.880325848236296,
-  "oof_normal_recall": 0.7702702702702703,
-  "oof_balanced_accuracy_default_argmax": 0.877148043565954
+  "threshold": 0.42,
+  "oof_balanced_accuracy": 0.9469764287294581,
+  "oof_normal_recall": 0.8976377952755905,
+  "oof_balanced_accuracy_default_argmax": 0.9465925810402211
  },
  "chosen_stage": "cv",
- "frozen_at": "2026-10-23 13:53:10",
+ "frozen_at": "2026-10-24 03:09:53",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

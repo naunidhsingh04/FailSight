@@ -13,15 +13,15 @@
  "thresholds": {
   "type": "class_multipliers",
   "weights": [
-   0.7788007830714049,
    1.0,
-   1.2840254166877414,
+   1.0,
+   1.0,
    1.0
   ],
-  "oof_balanced_accuracy": 0.6101851851851853,
-  "oof_balanced_accuracy_default_argmax": 0.5921296296296297
+  "oof_balanced_accuracy": 0.673397435897436,
+  "oof_balanced_accuracy_default_argmax": 0.673397435897436
  },
  "chosen_stage": "corr",
- "frozen_at": "2026-10-23 01:36:44",
+ "frozen_at": "2026-10-24 02:36:31",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

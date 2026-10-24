@@ -6,19 +6,47 @@ LO2 (Zenodo 10.5281/zenodo.14265858) is a set of 33 runs of an OAuth2 service (`
 
 ## Which files, and why
 
-* Cap: at most 150 MB of the downloaded run files (about 17% of the 887 MB). Each run file is about 26 MB, so the cap allows **5 whole runs (131.8 MB, 14.9% of the download)**. Six runs would need 157 MB, so the aim of at least 6 runs cannot be met under the cap; the cap wins, and every LO2 result is marked *unreliable: very small sample* (fewer than 6 runs).
-* Whole runs only (no run is ever cut), evenly spread over the 33 collection dates (positions 0, 8, 16, 24 and 32 of the sorted run list) so that the slice covers drift over time, each with all 54 scenarios (normal and anomalous).
-* The split was made first, by whole runs: one run (chosen with seed 42) is the 20% test part, the other four are the training part. No run and no window is in both parts (proof P21, check 1).
+* Every downloaded run is used: **33 whole runs (887.4 MB, 100.0% of the download)**. An earlier version used only 5 runs under a 150 MB cap; that left 13 healthy test windows and unreliable results, so the cap was lifted.
+* Whole runs only (no run is ever cut), each with all 54 scenarios (normal and anomalous), covering the 33 collection dates.
+* The split was made first, by whole runs: 7 runs (20%, chosen with seed 42) are the test part, the other 26 are the training part. No run and no window is in both parts (proof P21, check 1). The training part is balanced with SMOTE (inside every training fold and for the final model); the test part is never resampled (proof P24).
 
 | run | file size (MB) | role | scrape rows (windows) | normal | anomalous |
 |---|---|---|---|---|---|
 | 1719592986 | 26.61 | train | 172 | 13 | 159 |
-| 1721157245 | 26.15 | train | 172 | 13 | 159 |
+| 1719785649 | 26.88 | train | 172 | 13 | 159 |
+| 1719983645 | 27.21 | train | 172 | 13 | 159 |
+| 1720178048 | 26.47 | train | 172 | 13 | 159 |
+| 1720372448 | 26.78 | train | 172 | 13 | 159 |
+| 1720570451 | 26.42 | train | 172 | 13 | 159 |
+| 1720764845 | 27.35 | train | 172 | 13 | 159 |
+| 1720959241 | 27.12 | train | 172 | 13 | 159 |
+| 1721157245 | 26.15 | test | 172 | 13 | 159 |
+| 1721351650 | 26.44 | test | 172 | 13 | 159 |
+| 1721546043 | 26.97 | train | 172 | 13 | 159 |
+| 1721744041 | 27.21 | train | 172 | 13 | 159 |
+| 1721938441 | 27.27 | train | 172 | 13 | 159 |
+| 1722132848 | 26.71 | train | 172 | 13 | 159 |
+| 1722330847 | 27.53 | train | 172 | 13 | 159 |
+| 1722543242 | 27.14 | test | 172 | 13 | 159 |
 | 1722741254 | 27.15 | train | 172 | 13 | 159 |
-| 1724303680 | 26.58 | test | 172 | 13 | 159 |
+| 1722935656 | 27.14 | test | 172 | 13 | 159 |
+| 1723130055 | 27.38 | train | 172 | 13 | 159 |
+| 1723328076 | 26.11 | test | 172 | 13 | 159 |
+| 1723522475 | 26.94 | train | 172 | 13 | 159 |
+| 1723716877 | 27.94 | train | 172 | 13 | 159 |
+| 1723914878 | 26.51 | train | 172 | 13 | 159 |
+| 1724109283 | 27.39 | train | 172 | 13 | 159 |
+| 1724303680 | 26.58 | train | 172 | 13 | 159 |
+| 1724501678 | 27.10 | train | 172 | 13 | 159 |
+| 1724696081 | 26.47 | test | 172 | 13 | 159 |
+| 1724890485 | 26.54 | train | 172 | 13 | 159 |
+| 1725088482 | 27.19 | train | 172 | 13 | 159 |
+| 1725282876 | 27.33 | train | 172 | 13 | 159 |
+| 1725477283 | 27.26 | train | 172 | 13 | 159 |
+| 1725675301 | 26.75 | test | 172 | 13 | 159 |
 | 1725869703 | 25.33 | train | 172 | 13 | 159 |
 
-Total: 5 runs, 131.8 MB, 860 windows (65 normal, 795 anomalous). The list of files with the reasons is `report_outputs/lo2_slice_manifest.csv`.
+Total: 33 runs, 887.4 MB, 5676 windows (429 normal, 5247 anomalous). The list of files with the reasons is `report_outputs/lo2_slice_manifest.csv`.
 
 ## Windows and class counts
 
@@ -26,30 +54,38 @@ A window is one 5-second scrape row of the LO2 data set (the finest window LO2 o
 
 | class | train | test |
 |---|---|---|
-| Normal | 52 | 13 |
-| HTTP400 | 360 | 90 |
-| HTTP401 | 60 | 15 |
-| HTTP404 | 216 | 54 |
+| Normal | 338 | 91 |
+| HTTP400 | 2340 | 630 |
+| HTTP401 | 390 | 105 |
+| HTTP404 | 1404 | 378 |
 
-Total 860 windows: 688 train, 172 test. Binary label: Normal (the `correct` scenario) versus Anomaly; the multi-class label is Normal / HTTP 400 / 401 / 404 (from the scenario name).
+Total 5676 windows: 4472 train, 1204 test. Binary label: Normal (the `correct` scenario) versus Anomaly; the multi-class label is Normal / HTTP 400 / 401 / 404 (from the scenario name).
 
 ## Folds
 
-Four training runs cannot give five whole-run folds. The 5 folds are therefore block-aware inside the training runs: a group is a run + scenario + 3-window block; no group is shared across folds; every class is in every validation fold; the overlap of context windows is measured and reported in proof P22. The test part is a whole run that no fold has seen, so it has no overlap with the training data.
+The training runs give 5 folds of WHOLE runs: no run is in two folds, every class is in every validation fold, and no context window crosses a fold border (proof P22). The test part is whole runs that no fold has seen.
 
-## Why the binary labels are almost trivial here
+## Is the binary task easy because of a shortcut?
 
-In every LO2 run the normal (`correct`) scenario is the first of the 54 scenarios and lasts 60 s instead of 10 s. The same random forest (100 trees) was scored on subsets of the inputs (trained on the training runs, scored on the test run; `report_outputs/lo2_shortcut_check.csv`; a diagnostic that changed nothing):
+In every LO2 run the normal (`correct`) scenario is the first of the 54 scenarios and lasts 60 s instead of 10 s. That could be a warm-up or run-length shortcut. The same random forest (trained on the training runs, scored on the untouched test runs; `report_outputs/lo2_shortcut_check.csv`; a diagnostic that changed nothing) shows it is not:
 
-| inputs | features | balanced accuracy | ROC-AUC |
-|---|---|---|---|
-| all inputs | 132 | 1.000 | 1.000 |
-| log counts and rates only | 48 | 0.994 | 1.000 |
-| log-template counts only | 49 | 0.962 | 1.000 |
-| metric components only | 32 | 0.997 | 1.000 |
-| log volume only | 1 | 0.713 | 0.843 |
+| inputs / subset | features | balanced accuracy (or share correct) | ROC-AUC | test windows |
+|---|---|---|---|---|
+| all inputs | 134 | 1.000 | 1.000 | 1204 |
+| log counts and rates only | 50 | 0.992 | 0.993 | 1204 |
+| log-template counts only | 49 | 0.959 | 0.994 | 1204 |
+| metric components only | 32 | 0.998 | 1.000 | 1204 |
+| log volume only | 1 | 0.663 | 0.787 | 1204 |
+| WARN / ERROR log counts and rates only | 20 | 0.956 | 0.986 | 1204 |
+| normal windows from the first 30 s of the normal scenario (recall) | 134 | 1.000 | - | 42 |
+| normal windows from the late part of the normal scenario (recall) | 134 | 1.000 | - | 49 |
+| anomalies of scenarios 2-3 (recall) | 134 | 1.000 | - | 42 |
+| anomalies of scenarios 4-10 (recall) | 134 | 1.000 | - | 147 |
+| anomalies of scenarios 11-54 (recall) | 134 | 1.000 | - | 924 |
+| matched subset (late normal windows vs anomalies of scenarios 2-4), all inputs | 134 | 1.000 | 1.000 | 112 |
+| matched subset, metric components only | 35 | 0.984 | 1.000 | 112 |
 
-Log counts, template counts or metric components alone each separate the normal scenario almost perfectly, so the binary LO2 task is nearly trivial and a perfect score is **not** strong evidence of fault detection. The multi-class (HTTP 400 / 401 / 404) task is much harder and is the more informative LO2 result; with 13 healthy windows and one test run it is still a very small sample.
+Normal windows from the late part of the scenario are recognised as well as the first ones, anomalies from scenarios 2-3 as well as from scenario 54, and a matched subset (late normal windows against anomalies of scenarios 2-4, same warm-up state) is still separated. The error scenarios leave clear traces: WARN / ERROR log lines alone give about 96%, metric changes about 99%. The high binary score therefore reflects a real, easy-to-see fault signature, within one service with injected HTTP errors. The HTTP 400 / 401 / 404 task is harder and is the more informative LO2 result.
 
 ## Separation from AnoMod
 
@@ -58,5 +94,5 @@ LO2 is trained completely separately: its own windows (`scripts/lo2_hybrid_data.
 ## What this says and does not say
 
 * These results are about training on LO2's own data. They say nothing about transfer from AnoMod to LO2.
-* Controls: shuffled labels, a log-volume-only baseline and a run-identification check (the test run is never in the training data, so run identity cannot help).
+* Controls: shuffled labels, a log-volume-only baseline and a run-identification check (the test runs are never in the training data, so run identity cannot help).
 * The earlier external test (`lo2_results_summary.md`: saved AnoMod models applied unchanged to one LO2 run) is separate and unchanged.

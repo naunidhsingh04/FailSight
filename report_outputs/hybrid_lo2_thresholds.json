@@ -2,7 +2,7 @@
  "label_binary": {
   "BERT_GNN": {
    "type": "threshold",
-   "threshold": 0.07,
+   "threshold": 0.06,
    "oof_balanced_accuracy": 1.0,
    "oof_normal_recall": 1.0,
    "oof_balanced_accuracy_default_argmax": 1.0
@@ -16,14 +16,14 @@
   },
   "AE_LSTM": {
    "type": "threshold",
-   "threshold": 0.07,
+   "threshold": 0.05,
    "oof_balanced_accuracy": 1.0,
    "oof_normal_recall": 1.0,
    "oof_balanced_accuracy_default_argmax": 1.0
   },
   "GNN_LSTM": {
    "type": "threshold",
-   "threshold": 0.4,
+   "threshold": 0.09,
    "oof_balanced_accuracy": 1.0,
    "oof_normal_recall": 1.0,
    "oof_balanced_accuracy_default_argmax": 1.0
@@ -33,64 +33,64 @@
    "threshold": 0.05,
    "oof_balanced_accuracy": 1.0,
    "oof_normal_recall": 1.0,
-   "oof_balanced_accuracy_default_argmax": 0.9992138364779874
+   "oof_balanced_accuracy_default_argmax": 1.0
   }
  },
  "label_level": {
   "BERT_GNN": {
    "type": "class_multipliers",
    "weights": [
+    0.1353352832366127,
     1.0,
-    1.0,
-    1.0,
+    4.4816890703380645,
     0.7788007830714049
    ],
-   "oof_balanced_accuracy": 0.6287037037037037,
-   "oof_balanced_accuracy_default_argmax": 0.6240740740740741
+   "oof_balanced_accuracy": 0.7012464387464387,
+   "oof_balanced_accuracy_default_argmax": 0.6833689458689458
   },
   "Transformer_LSTM": {
    "type": "class_multipliers",
    "weights": [
     0.1353352832366127,
-    1.0,
-    2.718281828459045,
-    1.0
+    0.4723665527410147,
+    1.6487212707001282,
+    0.7788007830714049
    ],
-   "oof_balanced_accuracy": 0.6078703703703704,
-   "oof_balanced_accuracy_default_argmax": 0.6013888888888889
+   "oof_balanced_accuracy": 0.7288105413105413,
+   "oof_balanced_accuracy_default_argmax": 0.7116096866096866
   },
   "AE_LSTM": {
    "type": "class_multipliers",
    "weights": [
     0.1353352832366127,
-    1.0,
-    2.117000016612675,
-    1.0
+    0.6065306597126334,
+    4.4816890703380645,
+    0.7788007830714049
    ],
-   "oof_balanced_accuracy": 0.6324074074074074,
-   "oof_balanced_accuracy_default_argmax": 0.6081018518518518
+   "oof_balanced_accuracy": 0.7299145299145299,
+   "oof_balanced_accuracy_default_argmax": 0.7091880341880343
   },
   "GNN_LSTM": {
    "type": "class_multipliers",
    "weights": [
-    1.0,
-    1.0,
+    0.1353352832366127,
     0.7788007830714049,
+    2.718281828459045,
     1.0
    ],
-   "oof_balanced_accuracy": 0.5650462962962963,
-   "oof_balanced_accuracy_default_argmax": 0.5599537037037038
+   "oof_balanced_accuracy": 0.7082977207977208,
+   "oof_balanced_accuracy_default_argmax": 0.6996438746438746
   },
   "Multimodal_Transformer_MLP": {
    "type": "class_multipliers",
    "weights": [
-    0.2865047968601901,
-    0.6065306597126334,
-    4.4816890703380645,
+    0.1353352832366127,
+    0.7788007830714049,
+    5.754602676005731,
     1.0
    ],
-   "oof_balanced_accuracy": 0.6141203703703704,
-   "oof_balanced_accuracy_default_argmax": 0.5777777777777777
+   "oof_balanced_accuracy": 0.7385327635327636,
+   "oof_balanced_accuracy_default_argmax": 0.7202991452991452
   }
  }
 }

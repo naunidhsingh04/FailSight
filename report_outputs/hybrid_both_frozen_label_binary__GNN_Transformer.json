@@ -5,21 +5,21 @@
  "seed": 42,
  "config": {
   "hidden": 32,
-  "dropout": 0.5,
-  "wd": 0.002,
+  "dropout": 0.3,
+  "wd": 0.0001,
   "lr": 0.001
  },
  "method": "smote",
- "final_epochs": 8,
+ "final_epochs": 10,
  "lr_scale": 1.0,
  "thresholds": {
   "type": "threshold",
-  "threshold": 0.89,
-  "oof_balanced_accuracy": 0.8318945811483125,
-  "oof_normal_recall": 0.6846846846846847,
-  "oof_balanced_accuracy_default_argmax": 0.8279570615391512
+  "threshold": 0.06,
+  "oof_balanced_accuracy": 0.930027588674861,
+  "oof_normal_recall": 0.8622047244094488,
+  "oof_balanced_accuracy_default_argmax": 0.9283386588422187
  },
- "chosen_stage": "corr",
- "frozen_at": "2026-10-23 13:36:08",
+ "chosen_stage": "cv",
+ "frozen_at": "2026-10-24 04:56:13",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

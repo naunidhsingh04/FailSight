@@ -1,6 +1,14 @@
 inputs,n_inputs,balanced_accuracy,roc_auc,n_test,note
-all inputs,132,1.0000,1.0000,172,"diagnostic only; test part scored, nothing chosen from it"
-log counts and rates only,48,0.9937,0.9995,172,"diagnostic only; test part scored, nothing chosen from it"
-log-template counts only,49,0.9615,0.9995,172,"diagnostic only; test part scored, nothing chosen from it"
-metric components only,32,0.9969,1.0000,172,"diagnostic only; test part scored, nothing chosen from it"
-log volume only,1,0.7126,0.8428,172,"diagnostic only; test part scored, nothing chosen from it"
+all inputs,134,1.0000,1.0000,1204,"diagnostic only; test part scored, nothing chosen from it"
+log counts and rates only,50,0.9918,0.9925,1204,"diagnostic only; test part scored, nothing chosen from it"
+log-template counts only,49,0.9593,0.9937,1204,"diagnostic only; test part scored, nothing chosen from it"
+metric components only,32,0.9982,0.9997,1204,"diagnostic only; test part scored, nothing chosen from it"
+log volume only,1,0.6631,0.7872,1204,"diagnostic only; test part scored, nothing chosen from it"
+WARN / ERROR log counts and rates only,20,0.9559,0.9857,1204,diagnostic only
+normal windows from the first 30 s of the normal scenario (recall),134,1.0000,,42,share of these test windows called correctly (not a balanced accuracy)
+normal windows from the late part of the normal scenario (recall),134,1.0000,,49,share of these test windows called correctly (not a balanced accuracy)
+anomalies of scenarios 2-3 (recall),134,1.0000,,42,share of these test windows called correctly (not a balanced accuracy)
+anomalies of scenarios 4-10 (recall),134,1.0000,,147,share of these test windows called correctly (not a balanced accuracy)
+anomalies of scenarios 11-54 (recall),134,1.0000,,924,share of these test windows called correctly (not a balanced accuracy)
+"matched subset (late normal windows vs anomalies of scenarios 2-4), all inputs",134,1.0000,1.0000,112,diagnostic only; same warm-up state on both sides
+"matched subset, metric components only",35,0.9841,1.0000,112,diagnostic only; same warm-up state on both sides

@@ -10,16 +10,16 @@
   "lr": 0.001
  },
  "method": "smote",
- "final_epochs": 20,
+ "final_epochs": 11,
  "lr_scale": 1.0,
  "thresholds": {
   "type": "threshold",
-  "threshold": 0.4,
+  "threshold": 0.09,
   "oof_balanced_accuracy": 1.0,
   "oof_normal_recall": 1.0,
   "oof_balanced_accuracy_default_argmax": 1.0
  },
  "chosen_stage": "cv",
- "frozen_at": "2026-10-23 01:22:20",
+ "frozen_at": "2026-10-24 03:40:34",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

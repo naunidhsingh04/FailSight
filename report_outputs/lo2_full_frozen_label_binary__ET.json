@@ -10,12 +10,12 @@
  "method": "smote",
  "thresholds": {
   "type": "threshold",
-  "threshold": 0.51,
+  "threshold": 0.52,
   "oof_balanced_accuracy": 1.0,
   "oof_normal_recall": 1.0,
-  "oof_balanced_accuracy_default_argmax": 0.9903846153846154
+  "oof_balanced_accuracy_default_argmax": 0.9985207100591715
  },
  "chosen_stage": "cv",
- "frozen_at": "2026-10-23 01:36:40",
+ "frozen_at": "2026-10-24 02:36:10",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

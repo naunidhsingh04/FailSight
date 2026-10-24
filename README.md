@@ -114,7 +114,7 @@ Ten hybrid deep-learning models (TensorFlow / Keras; each is ONE model class who
 | Every key number with its source file | [docs/NUMBERS_FOR_VIVA.md](docs/NUMBERS_FOR_VIVA.md) |
 | Run the whole workflow step by step in Google Colab | [docs/COLAB.md](docs/COLAB.md) and `notebooks/FailSight_Workflow.ipynb` (pre-executed copy: `notebooks/FailSight_Workflow_executed.html`) |
 | Present now (exact start steps, fallback) | [docs/PRESENT_NOW.md](docs/PRESENT_NOW.md) |
-| The website | **Hybrid models** page under *For examiners*; the **Results** page has hybrid tags and a LO2 tab; proofs **P20 to P23** |
+| The website | **Hybrid models** page under *For examiners*; the **Results** page has hybrid tags and a LO2 tab; proofs **P20 to P24** |
 | Status of the overnight run | [report_outputs/OVERNIGHT_STATUS.md](report_outputs/OVERNIGHT_STATUS.md) |
 
 ```powershell
@@ -124,7 +124,7 @@ python scripts\lo2_hybrid_data.py parse      # windows from LO2's own logs and m
 python scripts\hybrid_lo2.py                 # five LO2 hybrids
 python scripts\lo2_full.py                   # LO2 families (b) classical, (c) Optuna, (d) deep + XGBoost head, (e) stacking, soft voting
 python scripts\hybrid_explain.py anomod      # explanations of the best hybrid (and: ... lo2)
-python scripts\proofs.py --only P20,P21,P22,P23
+python scripts\proofs.py --only P20,P21,P22,P23,P24
 python scripts\make_colab_bundle.py          # failsight_bundle.zip for Google Drive (docs\COLAB.md)
 python -m pytest tests\test_hybrid_models.py app\backend\tests\test_hybrid_api.py
 ```

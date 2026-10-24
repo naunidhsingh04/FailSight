@@ -1,10 +1,10 @@
 model,label_version,status,test_bal_acc,test_bal_acc_ci_low,test_bal_acc_ci_high,test_macro_f1,test_normal_recall,test_roc_auc,cv_val_bal_acc,train_secs,folds,hidden,method,stage
-Transformer_BiLSTM,label_binary,done,0.8279,0.6456,0.9792,0.7518,0.7143,0.9170,0.8401,375.3966,5.0000,16.0000,cw,corr
-VAE_Transformer,label_binary,done,0.7669,0.6089,0.9573,0.7478,0.5714,0.8308,0.8323,370.3607,5.0000,16.0000,smote,corr
-AE_LSTM,label_binary,done,0.7656,0.6072,0.9571,0.7423,0.5714,0.8968,0.8341,193.5310,5.0000,32.0000,cw,corr
-CNN_LSTM,label_binary,done,0.7597,0.5976,0.9471,0.7193,0.5714,0.8045,0.8447,249.3189,5.0000,32.0000,smote,corr
-BERT_GNN,label_binary,done,0.7563,0.5835,0.9329,0.6816,0.5918,0.8989,0.8464,817.0957,5.0000,32.0000,cw,cv
-GNN_Transformer,label_binary,done,0.7241,0.5717,0.9533,0.7100,0.4898,0.8740,0.8287,586.0589,5.0000,32.0000,smote,corr
-Transformer_LSTM,label_binary,not completed,,,,,,,,,,,,
-GNN_LSTM,label_binary,not completed,,,,,,,,,,,,
-Multimodal_Transformer_MLP,label_binary,not completed,,,,,,,,,,,,
+Transformer_LSTM,label_binary,done,0.9197,0.8359,0.9883,0.9197,0.8504,0.9345,0.9356,351.5255,5,32,smote,cv
+Transformer_BiLSTM,label_binary,done,0.9069,0.8324,0.9791,0.8858,0.8346,0.9763,0.9322,448.2966,5,32,cw,cv
+CNN_LSTM,label_binary,done,0.8986,0.8129,0.9879,0.8986,0.8110,0.9381,0.9394,400.3772,5,32,smote,cv
+AE_LSTM,label_binary,done,0.8981,0.8160,0.9805,0.8762,0.8189,0.9761,0.9299,261.6556,5,32,cw,cv
+GNN_Transformer,label_binary,done,0.8951,0.8099,0.9849,0.8785,0.8110,0.9655,0.9290,975.9664,5,32,smote,cv
+Multimodal_Transformer_MLP,label_binary,done,0.8948,0.8105,0.9828,0.8769,0.8110,0.9406,0.9300,502.2227,5,64,cw,cv
+BERT_GNN,label_binary,done,0.8917,0.8033,0.9838,0.8793,0.8031,0.8948,0.9256,787.5129,5,32,smote,cv
+GNN_LSTM,label_binary,done,0.8898,0.7897,0.9909,0.8884,0.7953,0.8990,0.9282,492.1279,5,32,smote,cv
+VAE_Transformer,label_binary,done,0.8884,0.7958,0.9835,0.8800,0.7953,0.9676,0.9330,486.0663,5,32,smote,cv

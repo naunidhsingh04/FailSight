@@ -1,19 +1,19 @@
 model,label_version,status,test_bal_acc,test_bal_acc_ci_low,test_bal_acc_ci_high,test_macro_f1,test_normal_recall,test_roc_auc,cv_val_bal_acc,train_secs,folds,hidden,method,stage
-XGB,label_binary,done,0.8443,0.6565,0.9994,0.8847,0.6939,0.9468,0.8724,0.8016,5.0000,0.0000,cw,cv
-LGBM,label_binary,done,0.7736,0.6226,0.9465,0.8338,0.5510,0.7437,0.8821,1.1258,5.0000,0.0000,cw,cv
-LR,label_binary,done,0.7699,0.6168,0.9311,0.7260,0.5918,0.9315,0.8283,0.1920,5.0000,0.0000,smote,corr
-RF,label_binary,done,0.7493,0.6150,0.9300,0.7906,0.5102,0.8538,0.8257,1.3152,5.0000,0.0000,smote,corr
-ET,label_binary,done,0.7180,0.5711,0.9462,0.7597,0.4490,0.8482,0.8255,1.4184,5.0000,0.0000,smote,cv
-RF_tuned,label_binary,not completed,,,,,,,,,,,,
-XGB_tuned,label_binary,not completed,,,,,,,,,,,,
-LGBM_tuned,label_binary,not completed,,,,,,,,,,,,
-CNN_BiGRU_Att,label_binary,not completed,,,,,,,,,,,,
-CNN_BiLSTM_Att,label_binary,not completed,,,,,,,,,,,,
-Fusion,label_binary,not completed,,,,,,,,,,,,
-Transformer,label_binary,not completed,,,,,,,,,,,,
-CNN_BiGRU_Att_XGBhead,label_binary,not completed,,,,,,,,,,,,
-CNN_BiLSTM_Att_XGBhead,label_binary,not completed,,,,,,,,,,,,
-Fusion_XGBhead,label_binary,not completed,,,,,,,,,,,,
-Transformer_XGBhead,label_binary,not completed,,,,,,,,,,,,
-Stacking,label_binary,not completed,,,,,,,,,,,,
-SoftVote,label_binary,not completed,,,,,,,,,,,,
+XGB,label_binary,done,0.9401,0.8547,1.0000,0.9602,0.8819,0.9840,0.9469,1.1832,5,0,cw,cv
+XGB_tuned,label_binary,done,0.9401,0.8547,1.0000,0.9602,0.8819,0.9877,0.9471,2.5623,5,0,smote,cv
+Stacking,label_binary,done,0.9392,0.8518,1.0000,0.9541,0.8819,0.9536,0.9455,0.0000,5,0,combination,cv
+RF_tuned,label_binary,done,0.9262,0.8359,0.9967,0.9390,0.8583,0.9636,0.9487,35.9337,5,0,smote,cv
+SoftVote,label_binary,done,0.9235,0.8374,0.9925,0.9445,0.8504,0.9747,0.9313,0.0000,5,0,combination,cv
+LR,label_binary,done,0.9213,0.8433,0.9870,0.9079,0.8583,0.9888,0.9275,0.3504,5,0,smote,cv
+Fusion,label_binary,done,0.9158,0.8305,0.9851,0.8772,0.8583,0.9224,0.9407,325.7737,5,64,cw,cv
+LGBM_tuned,label_binary,done,0.9138,0.8337,0.9861,0.9279,0.8346,0.9831,0.9489,0.4787,5,0,cw,cv
+Transformer,label_binary,done,0.9130,0.8331,0.9907,0.9222,0.8346,0.9593,0.9387,440.3773,5,64,smote,cv
+LGBM,label_binary,done,0.9116,0.8316,0.9850,0.9371,0.8268,0.8783,0.9461,1.3249,5,0,cw,cv
+Transformer_XGBhead,label_binary,done,0.9096,0.8299,0.9911,0.9235,0.8268,0.9725,0.9326,44.7277,5,64,smote,cv
+CNN_BiLSTM_Att,label_binary,done,0.9072,0.8242,0.9837,0.8874,0.8346,0.9151,0.9373,504.8553,5,32,smote,cv
+CNN_BiGRU_Att,label_binary,done,0.9041,0.8210,0.9834,0.8899,0.8268,0.9293,0.9323,655.2405,5,32,smote,cv
+CNN_BiGRU_Att_XGBhead,label_binary,done,0.8986,0.8136,0.9862,0.8986,0.8110,0.9485,0.9314,75.0035,5,32,smote,cv
+Fusion_XGBhead,label_binary,done,0.8968,0.8121,0.9857,0.8883,0.8110,0.9606,0.9360,39.4207,5,64,cw,cv
+RF,label_binary,done,0.8965,0.8070,0.9872,0.9310,0.7953,0.9509,0.9316,1.1744,5,0,cw,cv
+CNN_BiLSTM_Att_XGBhead,label_binary,done,0.8943,0.8049,0.9855,0.8943,0.8031,0.9769,0.9325,57.6136,5,32,smote,cv
+ET,label_binary,done,0.8911,0.7976,0.9858,0.9185,0.7874,0.9601,0.9259,2.6368,5,0,smote,cv

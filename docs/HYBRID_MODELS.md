@@ -66,29 +66,29 @@ The metric feature names do not carry per-service names (they are resource readi
 
 Why the hybrids are not expected to beat the tree models here: the data are small and table-like (2,549 training windows, about 128 numbers each), and the test part has only 36 healthy windows, so every range is wide. Tree models are strong on small tabular data; neural networks need more data. If the hybrids end up below the tree models, that is what is reported.
 
-## Results: LO2 hybrids (very small sample)
+## Results: LO2 hybrids (all 33 runs, 7 untouched test runs)
 
 **Binary (Normal / Anomaly) labels**
 
 | model | status | test balanced accuracy (95% range) | healthy-window recall | ROC-AUC | CV validation BA | training time | folds |
 |---|---|---|---|---|---|---|---|
-| BERT_GNN | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 1.8 min | 5 |
-| Transformer_LSTM | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 1.7 min | 5 |
-| AE_LSTM | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 70 s | 5 |
-| GNN_LSTM | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 2.1 min | 5 |
-| Multimodal_Transformer_MLP | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 0.999 | 2.6 min | 5 |
+| BERT_GNN | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 10.3 min | 5 |
+| Transformer_LSTM | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 5.0 min | 5 |
+| AE_LSTM | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 5.1 min | 5 |
+| GNN_LSTM | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 6.9 min | 5 |
+| Multimodal_Transformer_MLP | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 11.3 min | 5 |
 
 **Multi-class labels**
 
 | model | status | test balanced accuracy (95% range) | healthy-window recall | ROC-AUC | CV validation BA | training time | folds |
 |---|---|---|---|---|---|---|---|
-| BERT_GNN | done | 0.663 (0.534-0.793) | 1.000 | 0.792 | 0.624 | 2.2 min | 5 |
-| AE_LSTM | done | 0.588 (0.464-0.694) | 1.000 | 0.746 | 0.608 | 90 s | 5 |
-| GNN_LSTM | done | 0.583 (0.443-0.723) | 1.000 | 0.754 | 0.560 | 1.6 min | 5 |
-| Transformer_LSTM | done | 0.577 (0.505-0.642) | 1.000 | 0.728 | 0.602 | 2.2 min | 5 |
-| Multimodal_Transformer_MLP | done | 0.573 (0.461-0.701) | 1.000 | 0.735 | 0.578 | 3.3 min | 5 |
+| Multimodal_Transformer_MLP | done | 0.720 (0.680-0.759) | 1.000 | 0.877 | 0.720 | 14.8 min | 5 |
+| AE_LSTM | done | 0.709 (0.668-0.748) | 1.000 | 0.883 | 0.710 | 6.6 min | 5 |
+| Transformer_LSTM | done | 0.706 (0.671-0.740) | 1.000 | 0.859 | 0.712 | 9.3 min | 5 |
+| GNN_LSTM | done | 0.681 (0.643-0.718) | 1.000 | 0.860 | 0.700 | 5.8 min | 5 |
+| BERT_GNN | done | 0.674 (0.632-0.717) | 1.000 | 0.850 | 0.683 | 17.2 min | 5 |
 
-LO2 results are about training on LO2's own data (5 whole runs, 172 test windows of one run, 13 healthy) and are marked *unreliable: very small sample*. They say nothing about transfer from AnoMod. On the binary labels LO2 is almost trivially separable (every hybrid ties at the top); compare the log-volume-only baseline in `hybrid_lo2_logvolume_baseline.csv`.
+LO2 results are about training on LO2's own data (33 whole runs, 1204 test windows from 7 untouched runs, 91 healthy) and the 80% training part is balanced with SMOTE while the 20% test part is untouched. They say nothing about transfer from AnoMod. The binary labels score high because LO2's injected HTTP errors leave clear error lines and metric changes; the controls below show it is not a warm-up or run-length shortcut. Compare the log-volume-only baseline in `hybrid_lo2_logvolume_baseline.csv`.
 
 The template encoder is TF-IDF + truncated SVD of the template text, because a downloadable BERT-style encoder (and the `transformers` library) was not available here; this is stated on every page that shows BERT + GNN.
 

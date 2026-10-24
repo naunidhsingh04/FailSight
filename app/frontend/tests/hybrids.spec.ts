@@ -41,7 +41,7 @@ test.describe('results page', () => {
     expect(await rows.count()).toBeGreaterThan(9)
     await expect(page.getByText('Hybrid neural network (two learning parts)').first()).toBeVisible()
     await page.getByRole('button', { name: /LO2 slice/ }).click()
-    await expect(page.getByText(/Unreliable: very small sample/).first()).toBeVisible()
+    await expect(page.getByText(/downloaded LO2 runs/).first()).toBeVisible()
     await expect(page.getByText(/nothing about transfer|say nothing about transfer/i).first()).toBeVisible()
   })
   test('plain column headers with the technical name underneath', async ({ page }) => {

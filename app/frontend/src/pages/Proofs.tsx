@@ -33,6 +33,7 @@ const PLAIN: Record<string, string> = {
   P21: 'The second data set (LO2) is kept completely apart from the first: no window or run in both practice and test parts, the test part is untouched, and no file of one is used by the other.',
   P22: 'The new 5-part checking folds never put neighbouring windows in two different parts, and every kind of window appears in every part where that is possible.',
   P23: 'The Google Colab notebook runs from top to bottom on a clean computer, and the numbers it prints are the same as the numbers here.',
+  P24: 'The second data set (LO2) is split 80% practice and 20% test by whole runs; the practice part is balanced with SMOTE and the test part is left exactly as recorded. The same is checked for training on both data sets together.',
   P13: 'Do the models lean on patterns of missing data instead of real signals? We hide parts of the data, train small look-alike models on the missing-data patterns alone, and remove those columns, then compare.',
 }
 const QUICK = ['P1', 'P2', 'P3', 'P4', 'P10']
@@ -133,11 +134,11 @@ export default function Proofs() {
     <>
       <h1>Proof</h1>
       <Headline />
-      <p className="small" style={{ marginTop: 'var(--space-4)' }}>New: the <Link to="/examiners/hybrids">Hybrid models</Link> page shows ten two-part models (five on the benchmark data, five on a slice of a second data set); sections P20 to P23 below check them.</p>
+      <p className="small" style={{ marginTop: 'var(--space-4)' }}>New: the <Link to="/examiners/hybrids">Hybrid models</Link> page shows ten two-part models (five on the benchmark data, five on a slice of a second data set); sections P20 to P24 below check them.</p>
 
       <details className="acc all-checks" style={{ marginTop: 'var(--space-6)' }}>
         <summary>Show all the checks behind these numbers (technical)</summary>
-      <p className="lede"><Simple>Every number in this app can be checked. We recompute them from the saved data and models. You can run the checks again here, or in a terminal with <code>python scripts/proofs.py</code>.</Simple><Detailed>Numbered proof report P1–P23 produced by <code>scripts/proofs.py</code>; this page renders <code>report_outputs/proofs.json</code> and shows the same text the terminal prints.</Detailed></p>
+      <p className="lede"><Simple>Every number in this app can be checked. We recompute them from the saved data and models. You can run the checks again here, or in a terminal with <code>python scripts/proofs.py</code>.</Simple><Detailed>Numbered proof report P1–P24 produced by <code>scripts/proofs.py</code>; this page renders <code>report_outputs/proofs.json</code> and shows the same text the terminal prints.</Detailed></p>
 
       <Async state={rep} rows={6} label="Loading the proof report" level={2}>
         {(r) => (

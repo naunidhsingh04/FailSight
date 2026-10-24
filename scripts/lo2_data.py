@@ -150,6 +150,9 @@ class LO2Data:
     def make_folds5(self):
         tr = self.train_pos
         blocks = self.block_ids()[tr]
+        runs = self.df.run_id.to_numpy()[tr]
+        whole = len(set(runs)) >= 5            # enough training runs: folds are WHOLE RUNS (no context overlap at all); otherwise block-aware inside the runs
+        groups = runs if whole else blocks
         yl = self.y["label_level"][tr]
         p = REP / "hybrid_lo2_folds5.csv"
         if p.exists():
@@ -159,13 +162,13 @@ class LO2Data:
             fold = None
             for seed in range(42, 142):
                 f = np.zeros(len(tr), int)
-                for k, (_, va) in enumerate(StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=seed).split(np.zeros(len(tr)), yl, blocks)):
+                for k, (_, va) in enumerate(StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=seed).split(np.zeros(len(tr)), yl, groups)):
                     f[va] = k + 1
                 if all(set(np.unique(yl[f == k])) == set(range(4)) for k in range(1, 6)):
                     fold = f
                     break
             fold = f if fold is None else fold
-            pd.DataFrame(dict(window_id=self.df.window_id.to_numpy()[tr], fold=fold, group_type="run|scenario|3-window block", run_id=self.df.run_id.to_numpy()[tr], block_id=blocks)).to_csv(p, index=False)
+            pd.DataFrame(dict(window_id=self.df.window_id.to_numpy()[tr], fold=fold, group_type="whole run" if whole else "run|scenario|3-window block", run_id=self.df.run_id.to_numpy()[tr], block_id=blocks)).to_csv(p, index=False)
         self.fold5 = fold
         self.folds = [(tr[fold != k], tr[fold == k]) for k in range(1, 6)]
         # overlap measured: validation windows whose context windows (the 2 before them) lie in the training rows of the same fold

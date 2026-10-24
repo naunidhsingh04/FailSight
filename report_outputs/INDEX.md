@@ -1,6 +1,6 @@
 # Results index
 
-Every result file in `report_outputs/` (206 files plus the sub-folders below). Nothing was moved or renamed. *final* = a result that is reported or shown; *intermediate* = needed to produce or check a final result; *log* = run log. 'Used by' lists the proof sections (`scripts/proofs.py`) and whether the web app reads the file; 'report only' means it is a stand-alone result file.
+Every result file in `report_outputs/` (254 files plus the sub-folders below). Nothing was moved or renamed. *final* = a result that is reported or shown; *intermediate* = needed to produce or check a final result; *log* = run log. 'Used by' lists the proof sections (`scripts/proofs.py`) and whether the web app reads the file; 'report only' means it is a stand-alone result file.
 
 | file | what it is | used by | status |
 |---|---|---|---|
@@ -10,6 +10,33 @@ Every result file in `report_outputs/` (206 files plus the sub-folders below). N
 | `baseline_cv.csv` | Cross-validation of the baseline AnoMod models | report only | intermediate |
 | `before_after_correction.csv` | Effect of the regularisation correction on overfit AnoMod models | proofs P6; app | final |
 | `best_params.json` | Optuna best hyper-parameters of the tuned AnoMod models | report only | intermediate |
+| `both_full_cv_results.csv` | (undocumented) | report only | intermediate |
+| `both_full_frozen_label_binary__CNN_BiGRU_Att.json` | (undocumented) | report only | intermediate |
+| `both_full_frozen_label_binary__CNN_BiLSTM_Att.json` | (undocumented) | report only | intermediate |
+| `both_full_frozen_label_binary__ET.json` | (undocumented) | report only | intermediate |
+| `both_full_frozen_label_binary__Fusion.json` | (undocumented) | report only | intermediate |
+| `both_full_frozen_label_binary__LGBM.json` | (undocumented) | report only | intermediate |
+| `both_full_frozen_label_binary__LGBM_tuned.json` | (undocumented) | report only | intermediate |
+| `both_full_frozen_label_binary__LR.json` | (undocumented) | report only | intermediate |
+| `both_full_frozen_label_binary__RF.json` | (undocumented) | report only | intermediate |
+| `both_full_frozen_label_binary__RF_tuned.json` | (undocumented) | report only | intermediate |
+| `both_full_frozen_label_binary__Transformer.json` | (undocumented) | report only | intermediate |
+| `both_full_frozen_label_binary__XGB.json` | (undocumented) | report only | intermediate |
+| `both_full_frozen_label_binary__XGB_tuned.json` | (undocumented) | report only | intermediate |
+| `both_full_leaderboard.csv` | (undocumented) | report only | intermediate |
+| `both_full_optuna_trials_label_binary__LGBM_tuned.csv` | (undocumented) | report only | intermediate |
+| `both_full_optuna_trials_label_binary__RF_tuned.csv` | (undocumented) | report only | intermediate |
+| `both_full_optuna_trials_label_binary__XGB_tuned.csv` | (undocumented) | report only | intermediate |
+| `both_full_overfit.csv` | (undocumented) | report only | intermediate |
+| `both_full_run_identification.csv` | (undocumented) | report only | intermediate |
+| `both_full_screening.csv` | (undocumented) | report only | intermediate |
+| `both_full_shuffled_control.csv` | (undocumented) | report only | intermediate |
+| `both_full_smote_counts.csv` | (undocumented) | report only | intermediate |
+| `both_full_test_bootstrap_ci.csv` | (undocumented) | report only | intermediate |
+| `both_full_test_metrics.csv` | (undocumented) | report only | intermediate |
+| `both_full_thresholds.json` | (undocumented) | report only | intermediate |
+| `both_full_training_time.csv` | (undocumented) | report only | intermediate |
+| `both_leaderboard.csv` | (undocumented) | app | intermediate |
 | `calibration.csv` | Calibration (reliability) statistics of the AnoMod models | report only | intermediate |
 | `cross_system_results.csv` | Cross-system generalisation test (train on one system, test on the other): all feature sets, models, controls (proofs P11) | proofs P11 | final |
 | `cv_scores.csv` | Per-fold cross-validation scores of the AnoMod models | report only | intermediate |
@@ -53,6 +80,27 @@ Every result file in `report_outputs/` (206 files plus the sub-folders below). N
 | `hybrid_anomod_test_metrics.csv` | AnoMod hybrids: test metrics (official argmax and tuned-threshold decisions) on the test part | report only | final |
 | `hybrid_anomod_thresholds.json` | AnoMod hybrids: decision thresholds / class multipliers chosen on out-of-fold predictions only | report only | final |
 | `hybrid_anomod_training_time.csv` | AnoMod hybrids: training times and parameter counts | report only | final |
+| `hybrid_both_cv_results.csv` | (undocumented) | report only | intermediate |
+| `hybrid_both_frozen_label_binary__AE_LSTM.json` | (undocumented) | report only | intermediate |
+| `hybrid_both_frozen_label_binary__BERT_GNN.json` | (undocumented) | report only | intermediate |
+| `hybrid_both_frozen_label_binary__CNN_LSTM.json` | (undocumented) | report only | intermediate |
+| `hybrid_both_frozen_label_binary__GNN_LSTM.json` | (undocumented) | report only | intermediate |
+| `hybrid_both_frozen_label_binary__GNN_Transformer.json` | (undocumented) | report only | intermediate |
+| `hybrid_both_frozen_label_binary__Multimodal_Transformer_MLP.json` | (undocumented) | report only | intermediate |
+| `hybrid_both_frozen_label_binary__Transformer_BiLSTM.json` | (undocumented) | report only | intermediate |
+| `hybrid_both_frozen_label_binary__Transformer_LSTM.json` | (undocumented) | report only | intermediate |
+| `hybrid_both_frozen_label_binary__VAE_Transformer.json` | (undocumented) | report only | intermediate |
+| `hybrid_both_imbalance.csv` | (undocumented) | report only | intermediate |
+| `hybrid_both_leaderboard.csv` | (undocumented) | report only | intermediate |
+| `hybrid_both_overfit.csv` | (undocumented) | report only | intermediate |
+| `hybrid_both_run_identification.csv` | (undocumented) | report only | intermediate |
+| `hybrid_both_screening.csv` | (undocumented) | report only | intermediate |
+| `hybrid_both_shuffled_control.csv` | (undocumented) | report only | intermediate |
+| `hybrid_both_smote_counts.csv` | (undocumented) | report only | intermediate |
+| `hybrid_both_test_bootstrap_ci.csv` | (undocumented) | report only | intermediate |
+| `hybrid_both_test_metrics.csv` | (undocumented) | report only | intermediate |
+| `hybrid_both_thresholds.json` | (undocumented) | report only | intermediate |
+| `hybrid_both_training_time.csv` | (undocumented) | report only | intermediate |
 | `hybrid_engine_log.txt` | Log of the hybrid training engine (AnoMod and LO2) | report only | log |
 | `hybrid_lo2_cv_results.csv` | LO2 hybrids: 5-fold cross-validation results per fold (train / validation scores, epochs, SMOTE b: / a: / hold: counts) | report only | final |
 | `hybrid_lo2_explain_attention_label_binary.csv` | LO2 hybrids: explanation of the best model (gradient x input / attention / SHAP) | report only | final |
@@ -158,7 +206,7 @@ Every result file in `report_outputs/` (206 files plus the sub-folders below). N
 | `overnight_tests.json` | (undocumented) | report only | intermediate |
 | `paired_bootstrap.csv` | Paired bootstrap comparison of each AnoMod model with the best one (Holm-adjusted) | app | final |
 | `preprocess_log.txt` | Log of preprocessing | report only | log |
-| `proofs.json` | The proof report P1-P23 (statuses, evidence, terminal text); shown on the Proofs page | proofs P8, P9, P10; app | final |
+| `proofs.json` | The proof report P1-P24 (statuses, evidence, terminal text); shown on the Proofs page | proofs P8, P9, P10; app | final |
 | `rcaeval_case_results.csv` | RCAEval external test: per-case results | proofs P18 | intermediate |
 | `rcaeval_external_results.csv` | RCAEval external test: detection, delay, false alarms, placebo per system and fault type (proofs P18) | proofs P18; app | final |
 | `rcaeval_feature_mapping.csv` | RCAEval: which generic aggregates exist per system | proofs P18 | final |
@@ -211,7 +259,7 @@ Every result file in `report_outputs/` (206 files plus the sub-folders below). N
 | `training_time.csv` | Training time of the AnoMod models | app | intermediate |
 | `underfit_overfit.csv` | Train / cross-validation / test macro-F1 and the overfitting diagnosis per AnoMod model | proofs P6; app | final |
 
-206 files: 165 final, 32 intermediate, 9 logs.
+254 files: 165 final, 80 intermediate, 9 logs.
 
 ## Sub-folders
 
@@ -230,7 +278,7 @@ Every result file in `report_outputs/` (206 files plus the sub-folders below). N
 | `scripts/lo2_hybrid_data.py`, `scripts/lo2_data.py` | build the LO2 slice windows from the raw logs (Drain-style templates) and prepare model inputs |
 | `scripts/lo2_full.py`, `scripts/lo2_deep.py` | LO2 families (b) classical, (c) Optuna-tuned, (d) deep + XGBoost head, (e) stacking and soft voting |
 | `scripts/hybrid_explain.py` | explanations of the best hybrid and of the best LO2 tree model |
-| `scripts/proofs_hybrid.py` | proof sections P20 to P23 (called by `scripts/proofs.py`) |
+| `scripts/proofs_hybrid.py` | proof sections P20 to P24 (called by `scripts/proofs.py`) |
 | `scripts/make_notebook.py`, `scripts/make_colab_bundle.py`, `scripts/run_notebook_check.py` | build the Colab notebook, zip the data bundle, execute the notebook in a fresh environment |
 | `scripts/build_docs.py` | writes `docs/HYBRID_MODELS.md`, `docs/LO2_SLICE.md`, `docs/NUMBERS_FOR_VIVA.md` from the result files |
 | `notebooks/FailSight_Workflow.ipynb` (+ `_executed.ipynb` / `.html`) | the Colab workflow notebook and its executed copy |

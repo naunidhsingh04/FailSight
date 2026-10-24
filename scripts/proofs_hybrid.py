@@ -1,4 +1,4 @@
-"""New proof sections P20 (AnoMod hybrids), P21 (LO2), P22 (fold integrity of the new 5-fold work) and P23 (Colab notebook). Called from scripts/proofs.py; only ADDS sections.
+"""New proof sections P20 (AnoMod hybrids), P21 (LO2), P22 (fold integrity of the new 5-fold work), P23 (Colab notebook) and P24 (LO2 80% SMOTE-balanced / 20% untouched; AnoMod + LO2 combined training). Called from scripts/proofs.py; only ADDS sections.
 Everything is recomputed from the saved models / split / fold files or read from named result files."""
 import json
 import re
@@ -24,12 +24,12 @@ def _rebuild(registry, name, spec, frozen, weights):
     return m
 
 
-def _reload_scores(D, registry, prefix, mdir, names, tag):
+def _reload_scores(D, registry, prefix, mdir, names, tag, labels=LABELS):
     import hybrid_engine as E
     W = D.W("final")
     out, maxd, n = [], 0.0, 0
     saved = pd.read_csv(REP / f"{prefix}test_metrics.csv")
-    for label in LABELS:
+    for label in labels:
         yte = D.y[label][D.test_pos]
         Xte = D.seq(W, D.test_pos)
         for name in names:
@@ -140,11 +140,12 @@ def p22(s, table):
           "report_outputs/hybrid_anomod_folds5.csv", dict(blocks_per_fold=ng))
     L = LO2Data()
     fl = L.fold5
-    og, ac, ng = _folds_check(None, fl, L.group_of(L.train_pos), L.y["label_level"][L.train_pos], 4)
-    s.add("LO2 5-fold: block-aware (run + scenario + 3-window block), every class in every validation fold", "PASS" if (og and ac) else "FAIL",
-          [f"4 training runs cannot give 5 whole-run folds, so folds are block-aware inside the training runs; blocks per validation fold {ng}; no block shared across folds: {og}; all 4 classes in every validation fold: {ac}",
-           f"overlap measured: validation windows whose earlier context windows (2 before) lie in the training rows of the same fold: {L.context_overlap} of {[int((fl == k).sum()) for k in range(1, 6)]}",
-           "the 20% test part is a whole run that no fold has seen (no overlap with the test part)", FOLD_NOTE], "report_outputs/hybrid_lo2_folds5.csv", dict(blocks_per_fold=ng, context_overlap=L.context_overlap))
+    runs_tr = L.df.run_id.to_numpy()[L.train_pos]
+    og, ac, ng = _folds_check(None, fl, runs_tr, L.y["label_level"][L.train_pos], 4)
+    s.add("LO2 5-fold: whole runs (no run in two folds), every class in every validation fold", "PASS" if (og and ac) else "FAIL",
+          [f"{len(set(runs_tr))} training runs give 5 folds of whole runs; runs per validation fold {ng}; no run shared across folds: {og}; all 4 classes in every validation fold: {ac}",
+           f"overlap measured: validation windows whose earlier context windows (2 before) lie in the training rows of the same fold: {L.context_overlap} of {[int((fl == k).sum()) for k in range(1, 6)]} (whole-run folds, so none)",
+           "the 20% test part is whole runs that no fold has seen (no overlap with the test part)", FOLD_NOTE], "report_outputs/hybrid_lo2_folds5.csv", dict(runs_per_fold=ng, context_overlap=L.context_overlap))
 
 
 def p21(s, table):
@@ -219,19 +220,22 @@ def p21(s, table):
     lines_sc = []
     if sc_p.exists():
         sc_ = pd.read_csv(sc_p)
-        lines_sc = ["", "why the binary labels are so easy (diagnostic, scripts/lo2_shortcut_check.py): the same random forest scored on subsets of the LO2 inputs (test = one whole run):"] + table([[r.inputs, int(r.n_inputs), f"{r.balanced_accuracy:.3f}", f"{r.roc_auc:.3f}"] for r in sc_.itertuples()], ["inputs", "features", "balanced accuracy", "ROC-AUC"]) +                    ["reading: log counts, log-template counts or metric components alone each separate the normal scenario almost perfectly, while log volume alone does not; the normal scenario ('correct') is always the first scenario of a run and runs 60 s instead of 10 s, so LO2's binary task is nearly trivial and a perfect score is NOT strong evidence of fault detection."]
+        lines_sc = ["", "is the binary task easy because of a shortcut? (diagnostic, scripts/lo2_shortcut_check.py: the same random forest, trained on the training runs and scored on the untouched test runs):"] + table(
+            [[r.inputs, int(r.n_inputs), f"{r.balanced_accuracy:.3f}", "-" if r.roc_auc != r.roc_auc else f"{r.roc_auc:.3f}", int(r.n_test)] for r in sc_.itertuples()], ["inputs / subset", "features", "balanced accuracy (or share correct)", "ROC-AUC", "test windows"]) +             ["reading: the normal scenario ('correct') is the first of a run and lasts 60 s instead of 10 s, which could be a warm-up or run-length shortcut. It is not the explanation: normal windows from the late part of the scenario are recognised as well as the first ones, "
+             "anomalies from scenarios 2-3 are recognised as well as those from scenario 54, and a matched subset (late normal windows against anomalies of scenarios 2-4, same warm-up state) is still separated. Error scenarios leave clear traces (WARN / ERROR log lines alone give about 96%; metric changes give about 99%), so the high binary score reflects a real, easy-to-see fault signature in LO2's own logs and metrics. "
+             "It is still one OAuth2 service with injected HTTP errors, so it says nothing about other systems."]
     ri = pd.read_csv(REP / "hybrid_lo2_run_identification.csv")
     rid = ri[ri.kind == "run_identification"].iloc[0]
-    lines += ["", f"run identification: the test part is a whole run that is not in the training data, so no model can recognise it (identification accuracy {rid.accuracy:.3f} by construction); the 'predict the run' rule gets balanced accuracy 0.5 (it can only output the label of a training run)."]
-    s.add("LO2 controls: log-volume-only baseline, shuffled labels, run identification", "REPORTED", lines + lines_sc + ["LO2 results are about training on LO2's own data and say nothing about transfer from AnoMod.", f"sample: {len(sp)} windows from {sp.run_id.nunique()} runs (fewer than 6 runs, so every LO2 result is marked: unreliable, very small sample)"],
-          "report_outputs/hybrid_lo2_logvolume_baseline.csv, hybrid_lo2_shuffled_control.csv, hybrid_lo2_run_identification.csv", result="reported as it is; very small sample")
+    lines += ["", f"run identification: the test part is whole runs that are not in the training data, so no model can recognise them (identification accuracy {rid.accuracy:.3f} by construction); the 'predict the run' rule gets balanced accuracy 0.5 (it can only output the label of a training run)."]
+    s.add("LO2 controls: log-volume-only baseline, shuffled labels, run identification", "REPORTED", lines + lines_sc + ["LO2 results are about training on LO2's own data and say nothing about transfer from AnoMod.", f"sample: {len(sp)} windows from {sp.run_id.nunique()} runs and {sp[sp.split == 'test'].run_id.nunique()} of them are the untouched test runs ({int(((sp.split == 'test') & (sp.label_level == 'Normal')).sum())} healthy test windows); the 95% ranges are bootstrapped over blocks of windows"],
+          "report_outputs/hybrid_lo2_logvolume_baseline.csv, hybrid_lo2_shuffled_control.csv, hybrid_lo2_run_identification.csv", result="reported as it is; high binary score is a real fault signature (controls above), not a warm-up shortcut")
     full = REP / "lo2_full_leaderboard.csv"
     if full.exists():
         fl = pd.read_csv(full)
         nc = fl[fl.status == "not completed"]
         done = fl[fl.status != "not completed"]
         s.add("LO2 other families (b)-(e) with the same protocol", "REPORTED",
-              [f"models with results: {done.model.nunique()}; not completed: {', '.join(sorted(set(nc.model))) or 'none'}", "every LO2 result is marked: unreliable, very small sample (5 runs; 172 test windows, 13 healthy)"],
+              [f"models with results: {done.model.nunique()}; not completed: {', '.join(sorted(set(nc.model))) or 'none'}", f"all {sp.run_id.nunique()} downloaded LO2 runs; test = {sp[sp.split == 'test'].run_id.nunique()} untouched whole runs"],
               "report_outputs/lo2_full_leaderboard.csv", result=f"{done.model.nunique()} models done; {nc.model.nunique()} not completed")
 
 
@@ -250,3 +254,62 @@ def p23(s, table):
     s.add("The numbers printed by the notebook equal the numbers in the proofs report and the result files", "PASS" if (rows and not bad) else "FAIL",
           [f"{len(rows)} numbers compared; {len(bad)} differ"] + table([[r["name"], r["notebook"], r["reference"], "equal" if r["equal"] else "DIFFERENT"] for r in rows[:25]], ["number", "notebook", "proofs / file", "result"]),
           "notebooks/FailSight_Workflow_executed.ipynb, report_outputs/proofs.json", dict(compared=len(rows), different=len(bad)))
+
+
+def p24(s, table):
+    """LO2: the 80% training part is SMOTE-balanced in every model, the 20% test runs are untouched; AnoMod + LO2 combined run: split, SMOTE and reload checks"""
+    import json as _json
+    lo_c = REP / "hybrid_lo2_smote_counts.csv"
+    if not lo_c.exists():
+        s.add("LO2 80% / 20%", "SKIP", ["report_outputs/hybrid_lo2_smote_counts.csv missing; run python scripts/hybrid_lo2.py"], "-")
+        return
+    sp = pd.read_csv(REP / "lo2_split_ids.csv", dtype={"run_id": str})
+    ntr, nte = int((sp.split == "train").sum()), int((sp.split == "test").sum())
+    nat_tr = sp[sp.split == "train"].label_level.value_counts().to_dict()
+    nat_te = sp[sp.split == "test"].label_level.value_counts().to_dict()
+    sc = pd.read_csv(lo_c)
+    fin = sc[sc.stage == "final"]
+    ints = lambda v: np.array([int(x) for x in str(v).split("/")])
+    bal = [bool((ints(r.after) == ints(r.after)[0]).all()) for r in fin.itertuples()]
+    grew = [bool((ints(r.after) >= ints(r.before)).all()) for r in fin.itertuples()]
+    tot_te = [int(ints(r.held_out_fold.split(" ")[0]).sum()) for r in fin.itertuples()]
+    frozen = [_json.load(open(f)) for f in sorted(REP.glob("hybrid_lo2_frozen_*.json"))]
+    methods = sorted({f["method"] for f in frozen})
+    ok = len(fin) > 0 and all(bal) and all(grew) and all(t == nte for t in tot_te) and methods == ["smote"] and ntr + nte == len(sp)
+    ex = fin[fin.label_version == "label_level"].head(1)
+    s.add("LO2: the 80% training part is balanced with SMOTE in every model, the 20% test runs are left as they are", "PASS" if ok else "FAIL",
+          [f"split by whole runs: {ntr} training windows ({ntr / (ntr + nte):.0%}) and {nte} test windows ({nte / (ntr + nte):.0%}); natural training counts {nat_tr}; natural test counts {nat_te}",
+           f"final models checked: {len(fin)}; SMOTE method in every frozen configuration file: {methods}; classes equal after SMOTE in all {len(fin)}: {all(bal)}; no class shrank: {all(grew)}; test windows scored equal {nte} in all: {all(t == nte for t in tot_te)}",
+           "format  b: training counts before SMOTE / a: after SMOTE / test: counts of the untouched test runs (classes in the order of the labels)"] +
+          [f"  {r.model} {r.label_version[6:]}:  b: {r.before}  a: {r.after}  test: {r.held_out_fold}" for r in ex.itertuples()] + ["SMOTE is fitted on the training part only; synthetic windows never enter a validation fold or the test part."],
+          "report_outputs/hybrid_lo2_smote_counts.csv, hybrid_lo2_frozen_*.json, lo2_split_ids.csv", dict(train=ntr, test=nte, methods=methods))
+    bp = REP / "hybrid_both_test_metrics.csv"
+    if not bp.exists():
+        s.add("AnoMod + LO2 combined training", "SKIP", ["report_outputs/hybrid_both_test_metrics.csv missing; run python scripts/run_both.py"], "-")
+        return
+    from both_data import BothData
+    from models_src.hybrid import ANOMOD_HYBRIDS, LO2_HYBRIDS
+    import run_both as RB
+    D = BothData()
+    tr, te = set(D.df.window_id[D.train_pos]), set(D.df.window_id[D.test_pos])
+    ok = len(D.train_pos) == len(D.A.train_pos) + len(D.L.train_pos) and len(D.test_pos) == len(D.A.test_pos) + len(D.L.test_pos) and not (tr & te)
+    s.add("Combined AnoMod + LO2 training: the pooled test part is the two untouched test parts, nothing is in both parts", "PASS" if ok else "FAIL",
+          [f"training {len(D.train_pos)} windows (AnoMod {len(D.A.train_pos)} + LO2 {len(D.L.train_pos)}), test {len(D.test_pos)} windows (AnoMod {len(D.A.test_pos)} + LO2 {len(D.L.test_pos)}); windows in both: {len(tr & te)}",
+           "each data set keeps its own preprocessing, split and folds; the model input is the union of both inputs plus a data-set flag"], "scripts/both_data.py, report_outputs/hybrid_both_smote_counts.csv", dict(train=len(D.train_pos), test=len(D.test_pos)))
+    bs = pd.read_csv(REP / "hybrid_both_smote_counts.csv")
+    bf = bs[bs.stage == "final"]
+    hold = np.bincount(D.y["label_binary"][D.test_pos], minlength=2)
+    hold_ok = all(ints(r.held_out_fold.split(" ")[0]).tolist() == hold.tolist() for r in bf.itertuples())
+    bad = 0
+    for r in bs[bs.stage != "final"].itertuples():
+        b, a, h = ints(r.before), ints(r.after), ints(r.held_out_fold)
+        tr_rows, va_rows = D.folds[int(r.fold) - 1]
+        bad += not (np.array_equal(h, np.bincount(D.y["label_binary"][va_rows], minlength=2)) and np.array_equal(b, np.bincount(D.y["label_binary"][tr_rows], minlength=2)) and (a >= b).all())
+    s.add("Combined training: SMOTE only in training folds; the pooled test part keeps its natural counts", "PASS" if (bad == 0 and hold_ok and len(bf) > 0) else "FAIL",
+          [f"{len(bs[bs.stage != 'final'])} fold rows checked against the real fold contents (bad: {bad}); {len(bf)} final models; test counts recorded next to each final model equal the real test counts {hold.tolist()} (Normal / Anomaly): {hold_ok}"],
+          "report_outputs/hybrid_both_smote_counts.csv", dict(rows_bad=int(bad)))
+    names = [n for n in {**ANOMOD_HYBRIDS, **LO2_HYBRIDS} if (REP / f"hybrid_both_frozen_label_binary__{n}.json").exists() and (RB.MODELS / f"label_binary__{n}.weights.h5").exists()]
+    rows, maxd, n = _reload_scores(D, RB.REG, "hybrid_both_", RB.MODELS, names, "both", labels=["label_binary"])
+    s.add("Each saved combined-training hybrid reloads and reproduces its test scores", "PASS" if (n > 0 and maxd <= 1e-4) else "FAIL",
+          [f"{n} saved models rebuilt from the frozen configuration files and re-scored on the {len(D.test_pos)} pooled test windows; largest difference {maxd:.1e}"] + table(rows, ["model", "labels", "recomputed BA", "saved BA", "difference"]),
+          "models/hybrid/both/, report_outputs/hybrid_both_frozen_*.json, hybrid_both_test_metrics.csv", dict(max_difference=maxd))

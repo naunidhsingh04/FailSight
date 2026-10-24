@@ -90,7 +90,7 @@ def hybrids() -> dict:
         if sp is not None and "window_id" in sp.columns:
             facts.update(windows=int(len(sp)), train=int((sp.split == "train").sum()), test=int((sp.split == "test").sum()),
                          class_counts=clean(sp.label_level.value_counts().to_dict()), test_class_counts=clean(sp[sp.split == "test"].label_level.value_counts().to_dict()),
-                         healthy_test_windows=int(((sp.split == "test") & (sp.label_level == "Normal")).sum()))
+                         healthy_test_windows=int(((sp.split == "test") & (sp.label_level == "Normal")).sum()), test_runs=int(sp[sp.split == "test"].run_id.nunique()), train_runs=int(sp[sp.split == "train"].run_id.nunique()))
         facts["unreliable"] = bool(facts["runs"] < 6 or facts.get("windows", 0) < 150)
         facts["embedding"] = "TF-IDF + truncated SVD (a downloadable BERT-style encoder was not available)"
         out["lo2"]["facts"] = facts

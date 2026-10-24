@@ -199,7 +199,7 @@ function BothSection() {
   )
 }
 
-/** The LO2 leaderboard: hybrids first, then the other families in priority order; unfinished ones are listed as not completed. Every LO2 row is marked unreliable (very small sample). */
+/** The LO2 leaderboard: hybrids first, then the other families in priority order; unfinished ones are listed as not completed. Rows carry the number of runs and test windows behind them. */
 function Lo2Leaderboard({ label }: { label: Label }) {
   const api = useApi<Lo2LeaderboardResponse>('/api/lo2/leaderboard')
   const hy = useApi<HybridResponse>('/api/hybrid')
@@ -210,7 +210,8 @@ function Lo2Leaderboard({ label }: { label: Label }) {
       <h2 id="lo2-lb" style={{ marginTop: 0 }}>LO2 slice leaderboard</h2>
       <div className="callout" role="note"><span className="label">Read this first</span>
         <ul>
-          <li><strong>Unreliable: very small sample.</strong> {f ? `${f.runs} whole runs, a test part of one run (${f.test} windows, only ${f.healthy_test_windows} healthy).` : 'A handful of whole runs and a test part of one run.'}</li>
+          <li><strong>Sample.</strong> {f ? `All ${f.runs} downloaded LO2 runs: ${f.train_runs} for training (balanced with SMOTE) and ${f.test_runs} whole runs left untouched for testing (${f.test} windows, ${f.healthy_test_windows} healthy).` : 'All downloaded LO2 runs, 80% for training and 20% untouched for testing.'}</li>
+          <li><strong>The binary score is high for a real reason.</strong> Faults in LO2 leave clear error lines and metric changes. Checks show it is not a warm-up or run-length shortcut (see the Proof page, P21). It is still one service with injected HTTP errors.</li>
           <li>These models were trained on LO2&rsquo;s own data. The results say nothing about transfer from AnoMod.</li>
           <li>The ranking uses the test set, so the lead is optimistic.</li>
         </ul>
@@ -228,7 +229,7 @@ function Lo2Leaderboard({ label }: { label: Label }) {
                 caption={`LO2 test results, ${label === 'label_binary' ? 'binary' : 'four-class (Normal, HTTP 400, 401, 404)'} labels, test part = one whole run`}
                 rows={shown} rowKey={(r) => r.model} initialSort={{ key: 'ba', dir: 'desc' }} highlightKey={done[0]?.model ?? null}
                 columns={[
-                  { key: 'name', label: 'Model', nameCell: true, sortValue: (r) => r.model, render: (r) => <><strong>{r.model}</strong> <span className="pills"><span className="badge">{(r.family ?? '').replace(/^\([a-e]\) /, '')}</span> <span className="badge" style={{ background: 'var(--watch-bg)', color: 'var(--watch)' }}>unreliable: very small sample</span></span></> },
+                  { key: 'name', label: 'Model', nameCell: true, sortValue: (r) => r.model, render: (r) => <><strong>{r.model}</strong> <span className="pills"><span className="badge">{(r.family ?? '').replace(/^\([a-e]\) /, '')}</span></span></> },
                   { key: 'ba', label: 'Overall score', header: <Head plain="Overall score" meaning="0.5 = coin flip, 1.0 = perfect" tech="Balanced accuracy" />, numeric: true, sortValue: (r) => r.test_bal_acc ?? null, render: (r) => <Score v={r.test_bal_acc} low={r.test_bal_acc_ci_low} high={r.test_bal_acc_ci_high} /> },
                   { key: 'f1', label: 'Fairness across both classes', header: <Head plain="Fairness across classes" meaning="higher is better" tech="Macro-F1" />, numeric: true, sortValue: (r) => r.test_macro_f1 ?? null, render: (r) => <Score v={r.test_macro_f1} /> },
                   { key: 'nr', label: 'Healthy windows left alone', header: <Head plain="Healthy windows left alone" meaning={f ? `out of ${f.healthy_test_windows} healthy windows` : 'share of healthy windows'} tech="Normal recall" />, numeric: true, sortValue: (r) => r.test_normal_recall ?? null, render: (r) => <Score v={r.test_normal_recall} /> },

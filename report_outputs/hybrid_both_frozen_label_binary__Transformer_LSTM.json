@@ -1,0 +1,25 @@
+{
+ "dataset": "both",
+ "label": "label_binary",
+ "model": "Transformer_LSTM",
+ "seed": 42,
+ "config": {
+  "hidden": 32,
+  "dropout": 0.3,
+  "wd": 0.0001,
+  "lr": 0.001
+ },
+ "method": "smote",
+ "final_epochs": 7,
+ "lr_scale": 1.0,
+ "thresholds": {
+  "type": "threshold",
+  "threshold": 0.95,
+  "oof_balanced_accuracy": 0.9381891879475452,
+  "oof_normal_recall": 0.8917322834645669,
+  "oof_balanced_accuracy_default_argmax": 0.9352284226217462
+ },
+ "chosen_stage": "cv",
+ "frozen_at": "2026-10-24 05:37:56",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

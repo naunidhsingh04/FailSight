@@ -1,0 +1,25 @@
+{
+ "dataset": "both",
+ "label": "label_binary",
+ "model": "Fusion",
+ "seed": 42,
+ "config": {
+  "hidden": 64,
+  "dropout": 0.3,
+  "wd": 0.0001,
+  "lr": 0.001
+ },
+ "method": "cw",
+ "final_epochs": 17,
+ "lr_scale": 1.0,
+ "thresholds": {
+  "type": "threshold",
+  "threshold": 0.76,
+  "oof_balanced_accuracy": 0.9419096392315309,
+  "oof_normal_recall": 0.8976377952755905,
+  "oof_balanced_accuracy_default_argmax": 0.940366239054296
+ },
+ "chosen_stage": "cv",
+ "frozen_at": "2026-10-24 04:50:15",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

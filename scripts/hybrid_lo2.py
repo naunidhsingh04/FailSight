@@ -1,4 +1,4 @@
-"""Five hybrid deep-learning models on the LO2 slice (5 whole runs, 860 five-second windows), the SAME protocol as the AnoMod hybrids (hybrid_engine.py).
+"""Five hybrid deep-learning models on the LO2 slice (all 33 whole runs, 5,676 five-second windows), the SAME protocol as the AnoMod hybrids (hybrid_engine.py).
 LO2 is trained completely separately: its own windows (lo2_data.py), its own preprocessing fitted on LO2's training part, its own models in models/hybrid/lo2/.
 Nothing of AnoMod (weights, scalers, thresholds, features) is read here (checked by grep in proof P21).
 
@@ -65,7 +65,7 @@ def main():
         dead = (t + dt.timedelta(days=1) if t < now - dt.timedelta(hours=1) else t).timestamp()
     if not a.assemble_only:
         E.imbalance_report(D, PREFIX)
-        R = E.Runner(D, LO2_HYBRIDS, STATE, MODELS, PREFIX, deadline=dead)
+        R = E.Runner(D, LO2_HYBRIDS, STATE, MODELS, PREFIX, deadline=dead, methods=("smote",))   # 80% training part always SMOTE-balanced, 20% test run untouched
         for name in a.models.split(","):
             for label in a.labels.split(","):
                 R.run(name, label)

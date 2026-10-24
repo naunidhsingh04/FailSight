@@ -34,6 +34,29 @@ def main():
         pred = (P >= 0.5).astype(int)
         rows.append(dict(inputs=k, n_inputs=len(idx), balanced_accuracy=balanced_accuracy_score(y[D.test_pos], pred), roc_auc=roc_auc_score(y[D.test_pos], P), n_test=len(D.test_pos),
                          note="diagnostic only; test part scored, nothing chosen from it"))
+    # controls for the warm-up / run-length confound: the normal scenario is first in a run and lasts 60 s. If that alone made the task easy, (1) normal windows from the late part of the scenario
+    # would be missed, (2) anomalies from early scenarios would be missed, (3) a matched subset (late normal windows vs anomalies of scenarios 2-4) would be hard.
+    tr, te = D.train_pos, D.test_pos
+    wi, od = D.df.window_index.to_numpy(), D.df.scenario_order_in_run.to_numpy()
+    allx = list(range(len(names)))
+    warn = [i for i, n in enumerate(names) if n.endswith(("_WARN", "_ERROR", "_error_rate", "_warn_rate"))]
+    nolog = [i for i, n in enumerate(names) if not n.startswith(("log_", "tmpl_"))]
+    def rf(idx, a, b):
+        m = RandomForestClassifier(200, n_jobs=2, random_state=42, class_weight="balanced").fit(W[a][:, idx], y[a])
+        P = m.predict_proba(W[b][:, idx])[:, 1]
+        return P, (P >= 0.5).astype(int)
+    P, pr = rf(warn, tr, te)
+    rows.append(dict(inputs="WARN / ERROR log counts and rates only", n_inputs=len(warn), balanced_accuracy=balanced_accuracy_score(y[te], pr), roc_auc=roc_auc_score(y[te], P), n_test=len(te), note="diagnostic only"))
+    P, pr = rf(allx, tr, te)
+    yt = y[te]
+    for lab, sel in (("normal windows from the first 30 s of the normal scenario (recall)", (yt == 0) & (wi[te] < 6)), ("normal windows from the late part of the normal scenario (recall)", (yt == 0) & (wi[te] >= 6)),
+                     ("anomalies of scenarios 2-3 (recall)", (yt == 1) & (od[te] <= 3)), ("anomalies of scenarios 4-10 (recall)", (yt == 1) & (od[te] >= 4) & (od[te] <= 10)), ("anomalies of scenarios 11-54 (recall)", (yt == 1) & (od[te] >= 11))):
+        rows.append(dict(inputs=lab, n_inputs=len(allx), balanced_accuracy=float((pr[sel] == yt[sel]).mean()), roc_auc=np.nan, n_test=int(sel.sum()), note="share of these test windows called correctly (not a balanced accuracy)"))
+    mt = ((y[tr] == 0) & (wi[tr] >= 6)) | ((y[tr] == 1) & (od[tr] <= 4))
+    ms = ((yt == 0) & (wi[te] >= 6)) | ((yt == 1) & (od[te] <= 4))
+    for lab, idx in (("matched subset (late normal windows vs anomalies of scenarios 2-4), all inputs", allx), ("matched subset, metric components only", nolog)):
+        P, pr = rf(idx, tr[mt], te[ms])
+        rows.append(dict(inputs=lab, n_inputs=len(idx), balanced_accuracy=balanced_accuracy_score(yt[ms], pr), roc_auc=roc_auc_score(yt[ms], P), n_test=int(ms.sum()), note="diagnostic only; same warm-up state on both sides"))
     pd.DataFrame(rows).to_csv(REP / "lo2_shortcut_check.csv", index=False, float_format="%.4f")
     print(pd.DataFrame(rows).round(3).to_string(index=False))
 

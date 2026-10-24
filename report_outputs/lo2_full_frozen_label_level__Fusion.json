@@ -4,26 +4,26 @@
  "model": "Fusion",
  "seed": 42,
  "config": {
-  "hidden": 16,
-  "dropout": 0.5,
-  "wd": 0.002,
+  "hidden": 64,
+  "dropout": 0.3,
+  "wd": 0.0001,
   "lr": 0.001
  },
- "method": "smote",
+ "method": "cw",
  "final_epochs": 10,
  "lr_scale": 1.0,
  "thresholds": {
   "type": "class_multipliers",
   "weights": [
+   0.1353352832366127,
    1.0,
-   1.0,
-   1.0,
+   1.6487212707001282,
    1.0
   ],
-  "oof_balanced_accuracy": 0.6164351851851851,
-  "oof_balanced_accuracy_default_argmax": 0.6164351851851851
+  "oof_balanced_accuracy": 0.7381766381766381,
+  "oof_balanced_accuracy_default_argmax": 0.7205128205128206
  },
- "chosen_stage": "corr",
- "frozen_at": "2026-10-23 02:03:45",
+ "chosen_stage": "cv",
+ "frozen_at": "2026-10-24 05:12:53",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

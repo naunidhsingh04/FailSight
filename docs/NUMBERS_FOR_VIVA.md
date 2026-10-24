@@ -19,11 +19,11 @@ Written for: the person answering questions after the presentation. Every number
 | AnoMod best hybrid binary: GNN_Transformer | balanced accuracy 0.652 (95% range 0.467-0.968), healthy-window recall 0.361, 5-fold | `hybrid_anomod_leaderboard.csv` |
 | AnoMod best hybrid level: CNN_LSTM | balanced accuracy 0.775 (95% range 0.659-0.886), healthy-window recall 0.500, 5-fold | `hybrid_anomod_leaderboard.csv` |
 | LO2 best hybrid binary: BERT_GNN (tied with 4 other hybrids) | balanced accuracy 1.000 (95% range 1.000-1.000); unreliable: very small sample | `hybrid_lo2_leaderboard.csv` |
-| LO2 best hybrid level: BERT_GNN | balanced accuracy 0.663 (95% range 0.534-0.793); unreliable: very small sample | `hybrid_lo2_leaderboard.csv` |
-| LO2 slice | 5 whole runs, 131.8 MB (cap 150 MB), 860 windows | `lo2_slice_manifest.csv` |
+| LO2 best hybrid level: Multimodal_Transformer_MLP | balanced accuracy 0.720 (95% range 0.680-0.759); unreliable: very small sample | `hybrid_lo2_leaderboard.csv` |
+| LO2 slice | 33 whole runs, 887.4 MB (cap 150 MB), 5676 windows | `lo2_slice_manifest.csv` |
 | LO2 best model of all families (binary) | BERT_GNN: 1.000 (95% range 1.000-1.000) | `lo2_full_leaderboard.csv` |
 | LO2 families not completed  | none | `lo2_full_not_completed.csv` |
-| Proof report totals | {"PASS": 78, "WARN": 4, "REPORTED ACCURATELY": 13} | `proofs.json` |
+| Proof report totals | {"PASS": 82, "WARN": 4, "REPORTED ACCURATELY": 13} | `proofs.json` |
 
 ## Things to say if asked
 

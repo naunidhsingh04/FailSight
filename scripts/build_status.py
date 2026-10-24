@@ -38,7 +38,7 @@ def main():
     L += ["", "> " + FOLD_NOTE, ""]
     # ---- ten hybrids
     L += ["## The ten hybrid models", "", "| dataset | labels | hybrid | status | folds | test balanced accuracy (95% range) | healthy-window recall | ROC-AUC | training time | reliability |", "|---|---|---|---|---|---|---|---|---|---|"]
-    for ds, pre, rel in (("AnoMod", "hybrid_anomod_", "36 healthy test windows (small)"), ("LO2", "hybrid_lo2_", "unreliable: very small sample (5 runs)")):
+    for ds, pre, rel in (("AnoMod", "hybrid_anomod_", "36 healthy test windows (small)"), ("LO2", "hybrid_lo2_", "33 whole runs, 7 untouched test runs")):
         lb = rd(f"{pre}leaderboard.csv")
         if lb is None:
             L.append(f"| {ds} | - | - | not completed | - | - | - | - | - | result file missing |")
@@ -72,11 +72,11 @@ def main():
     sp = rd("lo2_split_ids.csv", dtype={"run_id": str})
     L += ["## LO2 slice", ""]
     if man is not None:
-        L += [f"* {len(man)} whole runs, **{man.size_mb.sum():.1f} MB** of the downloaded run files (cap 150 MB; six runs would need about 157 MB, so fewer than 6 runs was forced by the cap; every LO2 result is marked unreliable: very small sample).",
+        L += [f"* {len(man)} whole runs, **{man.size_mb.sum():.1f} MB** of the downloaded run files (every downloaded run is used; an earlier 5-run slice under a 150 MB cap was too small).",
               f"* Scrape-row windows (5 s): {int(man.scrape_rows.sum())} ({int(man.normal_rows.sum())} normal, {int(man.anomalous_rows.sum())} anomalous)."]
     if sp is not None and "window_id" in sp.columns:
-        L += [f"* Class counts: {sp.label_level.value_counts().to_dict()}; split by WHOLE RUNS (written before any window existed): {int((sp.split == 'train').sum())} training windows from {sp[sp.split == 'train'].run_id.nunique()} runs, {int((sp.split == 'test').sum())} test windows from {sp[sp.split == 'test'].run_id.nunique()} run (test class counts {sp[sp.split == 'test'].label_level.value_counts().to_dict()}).",
-              "* Folds: 5, block-aware inside the training runs (4 training runs cannot give 5 whole-run folds); the test part is a run no fold has seen.", "* Template embedding: TF-IDF + truncated SVD (a downloadable BERT-style encoder was not available)."]
+        L += [f"* Class counts: {sp.label_level.value_counts().to_dict()}; split by WHOLE RUNS (written before any window existed): {int((sp.split == 'train').sum())} training windows from {sp[sp.split == 'train'].run_id.nunique()} runs, {int((sp.split == 'test').sum())} test windows from {sp[sp.split == 'test'].run_id.nunique()} untouched runs (test class counts {sp[sp.split == 'test'].label_level.value_counts().to_dict()}).",
+              "* Folds: 5, whole runs (no run in two folds); the test part is runs no fold has seen; the training part is SMOTE-balanced, the test part untouched.", "* Template embedding: TF-IDF + truncated SVD (a downloadable BERT-style encoder was not available)."]
     L.append("")
     fl = rd("lo2_full_leaderboard.csv")
     L += ["## LO2 model families", ""]

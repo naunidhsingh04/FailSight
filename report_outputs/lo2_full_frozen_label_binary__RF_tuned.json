@@ -4,20 +4,20 @@
  "model": "RF_tuned",
  "seed": 42,
  "params": {
-  "n_estimators": 58,
-  "max_depth": 13,
-  "min_samples_leaf": 5,
-  "max_features": 0.5
+  "n_estimators": 106,
+  "max_depth": 14,
+  "min_samples_leaf": 6,
+  "max_features": "sqrt"
  },
  "method": "smote",
  "thresholds": {
   "type": "threshold",
-  "threshold": 0.23,
-  "oof_balanced_accuracy": 0.9984276729559749,
+  "threshold": 0.4,
+  "oof_balanced_accuracy": 1.0,
   "oof_normal_recall": 1.0,
-  "oof_balanced_accuracy_default_argmax": 0.9976415094339622
+  "oof_balanced_accuracy_default_argmax": 1.0
  },
  "chosen_stage": "cv",
- "frozen_at": "2026-10-23 01:39:16",
+ "frozen_at": "2026-10-24 02:50:01",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

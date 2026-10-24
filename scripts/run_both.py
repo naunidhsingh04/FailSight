@@ -65,11 +65,19 @@ def assemble(D):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--stage", default="all")
+    ap.add_argument("--until", default="", help="HH:MM: models not started by then are listed as not completed")
     a = ap.parse_args()
+    dead = None
+    if a.until:
+        import datetime as dt
+        h, m = map(int, a.until.split(":"))
+        now = dt.datetime.now()
+        t = now.replace(hour=h, minute=m, second=0, microsecond=0)
+        dead = (t + dt.timedelta(days=1) if t < now - dt.timedelta(hours=1) else t).timestamp()
     D = BothData()
     E.log(f"BOTH: train {len(D.train_pos)} (AnoMod {len(D.A.train_pos)} + LO2 {len(D.L.train_pos)}), test {len(D.test_pos)} (AnoMod {len(D.A.test_pos)} + LO2 {len(D.L.test_pos)}), inputs {D.F}")
     if a.stage in ("all", "hybrids"):
-        R = E.Runner(D, REG, STATE_H, MODELS, "hybrid_both_")
+        R = E.Runner(D, REG, STATE_H, MODELS, "hybrid_both_", deadline=dead)
         E.imbalance_report(D, "hybrid_both_")
         for n in REG:
             R.run(n, LABEL)
@@ -80,7 +88,7 @@ def main():
         for n in F.TUNED:
             info = T.tune(n, LABEL, 40)
             T.run(n, LABEL, params=info["best_params"], tuned_info=info)
-        DP.run_all(D, None)
+        DP.run_all(D, dead)
         if all((STATE_F / f"result__{LABEL}__{n}.json").exists() for n in F.TAB):
             F.record_derived(D, LABEL, "Stacking", F.TAB)
             F.record_derived(D, LABEL, "SoftVote", F.TAB)

@@ -155,7 +155,8 @@ def normal_recall(y, P):
 
 # ----------------------------------------------------------------------------------------------- the per-model procedure
 class Runner:
-    def __init__(self, D, registry, state_dir, model_dir, prefix, deadline=None, model_budget_s=45 * 60):
+    def __init__(self, D, registry, state_dir, model_dir, prefix, deadline=None, model_budget_s=45 * 60, methods=("smote", "cw")):
+        self.methods = tuple(methods)          # imbalance methods tried in screening; LO2 passes ("smote",) so its 80% training part is always SMOTE-balanced
         self.D, self.reg, self.state, self.mdir, self.prefix = D, registry, Path(state_dir), Path(model_dir), prefix
         self.state.mkdir(parents=True, exist_ok=True)
         self.mdir.mkdir(parents=True, exist_ok=True)
@@ -244,7 +245,7 @@ class Runner:
         # 1. screening on fold 1, validation scores only, at most 10 epochs
         scr = []
         for hid in (32, 64):
-            for method in ("smote", "cw"):
+            for method in self.methods:
                 cfg = dict(hidden=hid, dropout=0.3, wd=1e-4, lr=1e-3)
                 r = self.fold(name, label, cfg, method, 1, SCREEN_EPOCHS, f"screen_h{hid}_{method}")
                 yv = D.y[label][r["val_rows"]]

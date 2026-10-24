@@ -4,24 +4,24 @@
  "model": "LGBM_tuned",
  "seed": 42,
  "params": {
-  "n_estimators": 106,
-  "num_leaves": 39,
-  "learning_rate": 0.1618509290001068,
-  "min_child_samples": 19,
-  "reg_lambda": 0.20513382630874505,
-  "subsample": 0.5779972601681014,
-  "colsample_bytree": 0.4348501673009197,
+  "n_estimators": 100,
+  "num_leaves": 27,
+  "learning_rate": 0.21361575549579379,
+  "min_child_samples": 11,
+  "reg_lambda": 0.22600072539187832,
+  "subsample": 0.6957093676520436,
+  "colsample_bytree": 0.5579570148355626,
   "subsample_freq": 1
  },
- "method": "cw",
+ "method": "smote",
  "thresholds": {
   "type": "threshold",
-  "threshold": 0.06,
-  "oof_balanced_accuracy": 0.9992138364779874,
+  "threshold": 0.05,
+  "oof_balanced_accuracy": 1.0,
   "oof_normal_recall": 1.0,
-  "oof_balanced_accuracy_default_argmax": 0.9992138364779874
+  "oof_balanced_accuracy_default_argmax": 1.0
  },
  "chosen_stage": "cv",
- "frozen_at": "2026-10-23 01:47:13",
+ "frozen_at": "2026-10-24 04:06:07",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

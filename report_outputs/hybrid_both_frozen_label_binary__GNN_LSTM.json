@@ -1,0 +1,25 @@
+{
+ "dataset": "both",
+ "label": "label_binary",
+ "model": "GNN_LSTM",
+ "seed": 42,
+ "config": {
+  "hidden": 32,
+  "dropout": 0.3,
+  "wd": 0.0001,
+  "lr": 0.001
+ },
+ "method": "smote",
+ "final_epochs": 9,
+ "lr_scale": 1.0,
+ "thresholds": {
+  "type": "threshold",
+  "threshold": 0.19,
+  "oof_balanced_accuracy": 0.9281083502286764,
+  "oof_normal_recall": 0.8622047244094488,
+  "oof_balanced_accuracy_default_argmax": 0.9275709634637448
+ },
+ "chosen_stage": "cv",
+ "frozen_at": "2026-10-24 05:46:57",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

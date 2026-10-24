@@ -29,11 +29,12 @@ def test_hybrid_endpoint_serves_the_csv_numbers(client):
 
 
 @needs
-def test_lo2_part_is_marked_unreliable_when_the_slice_is_small(client):
+def test_lo2_part_uses_whole_runs_with_an_untouched_test_part(client):
     d = client.get("/api/hybrid").json()
-    if d["lo2"].get("facts"):
-        assert d["lo2"]["facts"]["unreliable"] is True
-        assert d["lo2"]["facts"]["megabytes"] <= 150
+    f = d["lo2"].get("facts")
+    if f and f.get("windows"):
+        assert f["unreliable"] is (f["runs"] < 6 or f["windows"] < 150)
+        assert f["test_runs"] >= 1 and f["train_runs"] >= 1 and f["train"] + f["test"] == f["windows"]
 
 
 def test_leaderboard_endpoint_never_fails(client):

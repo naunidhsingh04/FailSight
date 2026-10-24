@@ -22,3 +22,41 @@
 - 01:36 Step 3 done (five LO2 hybrids x 2 label versions; binary labels are almost trivially separable: every hybrid scores 1.000 on the 172-window test run, the four-class labels score 0.57-0.66). Step 4 started: scripts/lo2_full.py (families b-e).
 - 02:16 Step 4 done: all LO2 families (b)-(e) completed, none cut. Running proofs P20-P22.
 - 02:17 Step 5 started: bundle made (5.7 MB), notebook generated; running scripts/run_notebook_check.py in the fresh venv.
+- 02:10:09 LO2 folder found: C:\Users\Lenovo\Documents\AI PROJECT\LO2 (33 runs, 887.4 MB of downloaded run files)
+- 02:10:11 slice: 33 whole runs, 887.4 MB (cap 1000 MB, 100.0% of the downloaded run files); 7 test runs ['1721157245', '1721351650', '1722543242', '1722935656', '1723328076', '1724696081', '1725675301']
+- 02:10:20 metric series read: 1352 stable series x 5676 scrape rows of the 33 chosen runs
+- 02:10:42 parsed run 1719592986 (train): 172 windows in 23 s; templates so far 194
+- 02:11:05 parsed run 1719785649 (train): 172 windows in 23 s; templates so far 195
+- 02:11:29 parsed run 1719983645 (train): 172 windows in 23 s; templates so far 202
+- 02:11:52 parsed run 1720178048 (train): 172 windows in 23 s; templates so far 206
+- 02:12:15 parsed run 1720372448 (train): 172 windows in 24 s; templates so far 208
+- 02:12:38 parsed run 1720570451 (train): 172 windows in 22 s; templates so far 213
+- 02:13:16 parsed run 1720764845 (train): 172 windows in 38 s; templates so far 214
+- 02:14:43 parsed run 1720959241 (train): 172 windows in 87 s; templates so far 216
+- 02:16:09 parsed run 1721546043 (train): 172 windows in 86 s; templates so far 218
+- 02:17:36 parsed run 1721744041 (train): 172 windows in 87 s; templates so far 218
+- 02:19:03 parsed run 1721938441 (train): 172 windows in 87 s; templates so far 220
+- 02:20:31 parsed run 1722132848 (train): 172 windows in 88 s; templates so far 220
+- 02:21:10 parsed run 1722330847 (train): 172 windows in 39 s; templates so far 220
+- 02:21:34 parsed run 1722741254 (train): 172 windows in 23 s; templates so far 222
+- 02:21:57 parsed run 1723130055 (train): 172 windows in 24 s; templates so far 223
+- 02:22:20 parsed run 1723522475 (train): 172 windows in 23 s; templates so far 223
+- 02:22:44 parsed run 1723716877 (train): 172 windows in 23 s; templates so far 228
+- 02:23:07 parsed run 1723914878 (train): 172 windows in 23 s; templates so far 230
+- 02:23:31 parsed run 1724109283 (train): 172 windows in 25 s; templates so far 230
+- 02:23:55 parsed run 1724303680 (train): 172 windows in 23 s; templates so far 230
+- 02:24:18 parsed run 1724501678 (train): 172 windows in 24 s; templates so far 231
+- 02:24:41 parsed run 1724890485 (train): 172 windows in 23 s; templates so far 231
+- 02:25:05 parsed run 1725088482 (train): 172 windows in 24 s; templates so far 231
+- 02:25:30 parsed run 1725282876 (train): 172 windows in 24 s; templates so far 232
+- 02:25:54 parsed run 1725477283 (train): 172 windows in 24 s; templates so far 232
+- 02:26:33 parsed run 1725869703 (train): 172 windows in 39 s; templates so far 233
+- 02:26:56 parsed run 1721157245 (test): 172 windows in 23 s; templates so far 233
+- 02:27:19 parsed run 1721351650 (test): 172 windows in 23 s; templates so far 233
+- 02:27:42 parsed run 1722543242 (test): 172 windows in 24 s; templates so far 233
+- 02:28:06 parsed run 1722935656 (test): 172 windows in 24 s; templates so far 233
+- 02:28:28 parsed run 1723328076 (test): 172 windows in 22 s; templates so far 233
+- 02:28:52 parsed run 1724696081 (test): 172 windows in 23 s; templates so far 233
+- 02:29:14 parsed run 1725675301 (test): 172 windows in 23 s; templates so far 233
+- 02:29:18 windows 5676 (33 runs), metric families 478, templates 233; class counts {'HTTP400': 2970, 'HTTP404': 1782, 'HTTP401': 495, 'Normal': 429}
+- 02:29:19 LO2 raw files unchanged (SHA-256 before == after): True

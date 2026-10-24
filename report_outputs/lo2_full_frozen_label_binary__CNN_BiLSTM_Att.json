@@ -10,7 +10,7 @@
   "lr": 0.001
  },
  "method": "smote",
- "final_epochs": 16,
+ "final_epochs": 15,
  "lr_scale": 1.0,
  "thresholds": {
   "type": "threshold",
@@ -20,6 +20,6 @@
   "oof_balanced_accuracy_default_argmax": 1.0
  },
  "chosen_stage": "cv",
- "frozen_at": "2026-10-23 01:55:40",
+ "frozen_at": "2026-10-24 04:50:31",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

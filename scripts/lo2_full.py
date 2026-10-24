@@ -338,7 +338,7 @@ def assemble_all(D):
     if not hyb.empty:
         hyb = hyb.assign(family="(a) hybrid deep-learning model")
         lead = pd.concat([hyb, lead], ignore_index=True)
-    lead["reliability"] = "unreliable: very small sample (5 runs, 172 test windows, 13 healthy)"
+    lead["reliability"] = f"{D.df.run_id.nunique()} whole runs; {len(D.test_pos)} test windows from {D.df.run_id[D.test_pos].nunique()} untouched runs ({int((D.y['label_binary'][D.test_pos] == 0).sum())} healthy)"
     order = {"(a)": 0, "(b)": 1, "(c)": 2, "(d)": 3, "(e)": 4}
     lead["_o"] = lead.family.str[:3].map(order)
     lead = lead.sort_values(["label_version", "_o"]).drop(columns="_o")

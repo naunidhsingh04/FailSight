@@ -117,7 +117,7 @@ export interface HybridResponse {
   lo2: {
     available: boolean
     models: HybridRow[]
-    facts?: { runs: number; megabytes: number; cap_megabytes: number; share_of_download_percent: number; folds: number; windows?: number; train?: number; test?: number; class_counts?: Record<string, number>; test_class_counts?: Record<string, number>; healthy_test_windows?: number; unreliable: boolean; embedding: string }
+    facts?: { test_runs?: number; train_runs?: number; runs: number; megabytes: number; cap_megabytes: number; share_of_download_percent: number; folds: number; windows?: number; train?: number; test?: number; class_counts?: Record<string, number>; test_class_counts?: Record<string, number>; healthy_test_windows?: number; unreliable: boolean; embedding: string }
     logvolume_baseline?: { label_version: Label; balanced_accuracy: number; ba_ci_low: number; ba_ci_high: number; roc_auc: number }[]
   }
 }

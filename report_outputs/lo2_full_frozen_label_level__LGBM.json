@@ -13,19 +13,19 @@
   "subsample_freq": 1,
   "colsample_bytree": 0.6
  },
- "method": "smote",
+ "method": "cw",
  "thresholds": {
   "type": "class_multipliers",
   "weights": [
-   1.0,
-   0.17377394345044514,
+   0.1353352832366127,
+   0.6065306597126334,
    1.2840254166877414,
-   1.0
+   0.6065306597126334
   ],
-  "oof_balanced_accuracy": 0.6337962962962963,
-  "oof_balanced_accuracy_default_argmax": 0.5662037037037038
+  "oof_balanced_accuracy": 0.7368233618233617,
+  "oof_balanced_accuracy_default_argmax": 0.7212962962962963
  },
  "chosen_stage": "corr",
- "frozen_at": "2026-10-23 01:37:37",
+ "frozen_at": "2026-10-24 02:39:12",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

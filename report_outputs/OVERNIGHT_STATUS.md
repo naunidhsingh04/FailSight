@@ -1,6 +1,6 @@
 # Overnight status
 
-Generated 2026-10-23 12:23 (IST). Task: FailSight overnight master task, deadline 1 PM IST on 23 Oct 2026.
+Generated 2026-10-24 06:04 (IST). Task: FailSight overnight master task, deadline 1 PM IST on 23 Oct 2026.
 
 ## Anything that failed or was cut
 
@@ -34,16 +34,16 @@ Generated 2026-10-23 12:23 (IST). Task: FailSight overnight master task, deadlin
 | AnoMod | level | GNN_Transformer | done | 5 | 0.767 (0.644-0.882) | 0.583 | 0.936 | 6.7 min | 36 healthy test windows (small) |
 | AnoMod | level | Transformer_BiLSTM | done | 5 | 0.717 (0.624-0.816) | 0.389 | 0.954 | 5.4 min | 36 healthy test windows (small) |
 | AnoMod | level | VAE_Transformer | done | 5 | 0.703 (0.598-0.806) | 0.361 | 0.939 | 5.2 min | 36 healthy test windows (small) |
-| LO2 | binary | AE_LSTM | done | 5 | 1.000 (1.000-1.000) | 1.000 | 1.000 | 70 s | unreliable: very small sample (5 runs) |
-| LO2 | binary | BERT_GNN | done | 5 | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.8 min | unreliable: very small sample (5 runs) |
-| LO2 | binary | GNN_LSTM | done | 5 | 1.000 (1.000-1.000) | 1.000 | 1.000 | 2.1 min | unreliable: very small sample (5 runs) |
-| LO2 | binary | Multimodal_Transformer_MLP | done | 5 | 1.000 (1.000-1.000) | 1.000 | 1.000 | 2.6 min | unreliable: very small sample (5 runs) |
-| LO2 | binary | Transformer_LSTM | done | 5 | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.7 min | unreliable: very small sample (5 runs) |
-| LO2 | level | AE_LSTM | done | 5 | 0.588 (0.464-0.694) | 1.000 | 0.746 | 90 s | unreliable: very small sample (5 runs) |
-| LO2 | level | BERT_GNN | done | 5 | 0.663 (0.534-0.793) | 1.000 | 0.792 | 2.2 min | unreliable: very small sample (5 runs) |
-| LO2 | level | GNN_LSTM | done | 5 | 0.583 (0.443-0.723) | 1.000 | 0.754 | 1.6 min | unreliable: very small sample (5 runs) |
-| LO2 | level | Multimodal_Transformer_MLP | done | 5 | 0.573 (0.461-0.701) | 1.000 | 0.735 | 3.3 min | unreliable: very small sample (5 runs) |
-| LO2 | level | Transformer_LSTM | done | 5 | 0.577 (0.505-0.642) | 1.000 | 0.728 | 2.2 min | unreliable: very small sample (5 runs) |
+| LO2 | binary | AE_LSTM | done | 5 | 1.000 (1.000-1.000) | 1.000 | 1.000 | 5.1 min | 33 whole runs, 7 untouched test runs |
+| LO2 | binary | BERT_GNN | done | 5 | 1.000 (1.000-1.000) | 1.000 | 1.000 | 10.3 min | 33 whole runs, 7 untouched test runs |
+| LO2 | binary | GNN_LSTM | done | 5 | 1.000 (1.000-1.000) | 1.000 | 1.000 | 6.9 min | 33 whole runs, 7 untouched test runs |
+| LO2 | binary | Multimodal_Transformer_MLP | done | 5 | 1.000 (1.000-1.000) | 1.000 | 1.000 | 11.3 min | 33 whole runs, 7 untouched test runs |
+| LO2 | binary | Transformer_LSTM | done | 5 | 1.000 (1.000-1.000) | 1.000 | 1.000 | 5.0 min | 33 whole runs, 7 untouched test runs |
+| LO2 | level | AE_LSTM | done | 5 | 0.709 (0.668-0.748) | 1.000 | 0.883 | 6.6 min | 33 whole runs, 7 untouched test runs |
+| LO2 | level | BERT_GNN | done | 5 | 0.674 (0.632-0.717) | 1.000 | 0.850 | 17.2 min | 33 whole runs, 7 untouched test runs |
+| LO2 | level | GNN_LSTM | done | 5 | 0.681 (0.643-0.718) | 1.000 | 0.860 | 5.8 min | 33 whole runs, 7 untouched test runs |
+| LO2 | level | Multimodal_Transformer_MLP | done | 5 | 0.720 (0.680-0.759) | 1.000 | 0.877 | 14.8 min | 33 whole runs, 7 untouched test runs |
+| LO2 | level | Transformer_LSTM | done | 5 | 0.706 (0.671-0.740) | 1.000 | 0.859 | 9.3 min | 33 whole runs, 7 untouched test runs |
 
 ## Comparison with the best earlier models (AnoMod, same 647 test windows)
 
@@ -52,10 +52,10 @@ Generated 2026-10-23 12:23 (IST). Task: FailSight overnight master task, deadlin
 
 ## LO2 slice
 
-* 5 whole runs, **131.8 MB** of the downloaded run files (cap 150 MB; six runs would need about 157 MB, so fewer than 6 runs was forced by the cap; every LO2 result is marked unreliable: very small sample).
-* Scrape-row windows (5 s): 860 (65 normal, 795 anomalous).
-* Class counts: {'HTTP400': 450, 'HTTP404': 270, 'HTTP401': 75, 'Normal': 65}; split by WHOLE RUNS (written before any window existed): 688 training windows from 4 runs, 172 test windows from 1 run (test class counts {'HTTP400': 90, 'HTTP404': 54, 'HTTP401': 15, 'Normal': 13}).
-* Folds: 5, block-aware inside the training runs (4 training runs cannot give 5 whole-run folds); the test part is a run no fold has seen.
+* 33 whole runs, **887.4 MB** of the downloaded run files (every downloaded run is used; an earlier 5-run slice under a 150 MB cap was too small).
+* Scrape-row windows (5 s): 5676 (429 normal, 5247 anomalous).
+* Class counts: {'HTTP400': 2970, 'HTTP404': 1782, 'HTTP401': 495, 'Normal': 429}; split by WHOLE RUNS (written before any window existed): 4472 training windows from 26 runs, 1204 test windows from 7 untouched runs (test class counts {'HTTP400': 630, 'HTTP404': 378, 'HTTP401': 105, 'Normal': 91}).
+* Folds: 5, whole runs (no run in two folds); the test part is runs no fold has seen; the training part is SMOTE-balanced, the test part untouched.
 * Template embedding: TF-IDF + truncated SVD (a downloadable BERT-style encoder was not available).
 
 ## LO2 model families
@@ -71,8 +71,8 @@ Generated 2026-10-23 12:23 (IST). Task: FailSight overnight master task, deadlin
 
 ## Proof totals
 
-* {'PASS': 78, 'WARN': 4, 'REPORTED ACCURATELY': 13} (generated 2026-10-23 12:23:07, partial: False); earlier baseline: 65 PASS / 4 WARN / 0 FAIL / 9 REPORTED ACCURATELY before the new sections.
-* P1 PASS, P2 PASS, P3 PASS, P4 PASS, P5 WARN, P6 PASS, P7 WARN, P8 PASS, P9 REPORTED ACCURATELY, P10 PASS, P11 REPORTED ACCURATELY, P12 REPORTED ACCURATELY, P13 PASS, P14 WARN, P15 REPORTED ACCURATELY, P16 REPORTED ACCURATELY, P17 PASS, P18 REPORTED ACCURATELY, P19 REPORTED ACCURATELY, P20 REPORTED ACCURATELY, P21 REPORTED ACCURATELY, P22 PASS, P23 PASS
+* {'PASS': 82, 'WARN': 4, 'REPORTED ACCURATELY': 13} (generated 2026-10-24 06:04:35, partial: False); earlier baseline: 65 PASS / 4 WARN / 0 FAIL / 9 REPORTED ACCURATELY before the new sections.
+* P1 PASS, P2 PASS, P3 PASS, P4 PASS, P5 WARN, P6 PASS, P7 WARN, P8 PASS, P9 REPORTED ACCURATELY, P10 PASS, P11 REPORTED ACCURATELY, P12 REPORTED ACCURATELY, P13 PASS, P14 WARN, P15 REPORTED ACCURATELY, P16 REPORTED ACCURATELY, P17 PASS, P18 REPORTED ACCURATELY, P19 REPORTED ACCURATELY, P20 REPORTED ACCURATELY, P21 REPORTED ACCURATELY, P22 PASS, P23 PASS, P24 PASS
 
 ## Tests
 
@@ -85,7 +85,7 @@ Generated 2026-10-23 12:23 (IST). Task: FailSight overnight master task, deadlin
 
 ## Colab notebook
 
-* Executed in FAST mode in a fresh virtual environment (clean clone, bundle unzipped, no AnoMod raw folders, no models folder): executed_ok = True, cells 52, errors 0, soft failures 0, run time 0.9 min.
+* Executed in FAST mode in a fresh virtual environment (clean clone, bundle unzipped, no AnoMod raw folders, no models folder): executed_ok = True, cells 55, errors 0, soft failures 0, run time 5.1 min.
 * Numbers compared with the proofs / result files: 8; different: 0.
 * Files: `notebooks/FailSight_Workflow.ipynb`, `notebooks/FailSight_Workflow_executed.ipynb`, `notebooks/FailSight_Workflow_executed.html`, `docs/COLAB.md`, `failsight_bundle.zip` (git-ignored).
 
@@ -124,6 +124,12 @@ Results website without the shop: `python -m app.backend.serve` then http://127.
 ## git log --oneline -20
 
 ```
+b9e7519 both-data-sets results, notebook fixed and executed
+7bf6484 notebook executed
+bff7ee4 combined both-data-sets training, percent display, glossary, notebook 7b
+cb91e93 fix unused import
+4727bdf hybrid pages: use the models' proper names
+317f6c9 plain hybrid comparison page, screenshots
 730da75 wording
 b313433 plainer hybrid page with side-by-side comparison; wording
 070d15d final: status, index, tests record
@@ -138,10 +144,4 @@ ca6468a frontend: hybrid models page, results top-9 + LO2 tab, limits; docs and 
 ad3d3f4 chore: keep processed LO2 data out of git
 2c07e70 hybrid: LO2 slice parser, LO2 data layer, LO2 hybrids, deep/tabular families, proofs P20-P23, API endpoints
 1feca8e hybrid: five AnoMod hybrid models, generic engine, AnoMod runner, unit tests
-82ecff2 docs: cold-start re-check and limits in PRESENT_NOW
-6ac6d59 chore: add LO2 sample manifest
-418a130 ui: readable results table
-b708caf docs: present now (exact steps, known-good commit)
-3b79d35 shop: storefront (tests not completed)
-00d27d9 tests: storefront and start button
 ```

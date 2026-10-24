@@ -1,0 +1,25 @@
+{
+ "dataset": "both",
+ "label": "label_binary",
+ "model": "CNN_BiGRU_Att",
+ "seed": 42,
+ "config": {
+  "hidden": 32,
+  "dropout": 0.3,
+  "wd": 0.0001,
+  "lr": 0.001
+ },
+ "method": "smote",
+ "final_epochs": 16,
+ "lr_scale": 1.0,
+ "thresholds": {
+  "type": "threshold",
+  "threshold": 0.93,
+  "oof_balanced_accuracy": 0.9331911585671782,
+  "oof_normal_recall": 0.8818897637795275,
+  "oof_balanced_accuracy_default_argmax": 0.9316615104134554
+ },
+ "chosen_stage": "cv",
+ "frozen_at": "2026-10-24 04:30:52",
+ "note": "written before the test windows were scored; every choice was made on training folds only"
+}

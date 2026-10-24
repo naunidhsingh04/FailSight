@@ -28,7 +28,7 @@ ROOT = HERE.parent
 REP = ROOT / "report_outputs"
 OUT = ROOT / "processed" / "lo2_hybrid"
 LO2 = ROOT.parent / "LO2"
-CAP_MB = 150.0
+CAP_MB = 1000.0                       # was 150 MB (5 runs): too few runs gave 13 healthy test windows and unreliable results; now every downloaded run (848 MB) is used
 SEED = 42
 SERVICES = ["client", "code", "key", "refresh-token", "service", "token", "user"]
 SOURCES = SERVICES + ["mysql", "locust"]
@@ -74,22 +74,22 @@ def select():
             break
     chosen = pick
     rng = np.random.RandomState(SEED)
-    test_run = chosen[int(rng.randint(len(chosen)))][0]            # 20% of whole runs = 1 of 5 runs
+    n_test = max(1, int(round(0.2 * len(chosen))))                 # 20% of the whole runs are the test part (33 runs -> 7)
+    test_runs = {chosen[i][0] for i in rng.choice(len(chosen), n_test, replace=False)}
     sub = pd.read_csv(LO2 / "lo2_subset.csv", usecols=["run_id", "scenario", "is_error", "scenario_http_code_from_name"], dtype={"run_id": str})
     rows = []
     for rid, mb in chosen:
         s = sub[sub.run_id == rid]
         rows.append(dict(run_id=rid, raw_file=f"lo2_raw/light-oauth2-data-{rid}.tar.deflate", size_mb=round(mb, 2), tar_read_from=f"lo2_tar/light-oauth2-data-{rid}.tar",
                          scenarios=s.scenario.nunique(), scrape_rows=len(s), normal_rows=int((s.is_error == 0).sum()), anomalous_rows=int((s.is_error == 1).sum()),
-                         role="test" if rid == test_run else "train",
+                         role="test" if rid in test_runs else "train",
                          reason=f"whole run; one of {len(chosen)} evenly spread over the 33 runs; both normal ('correct') and error scenarios; "
-                                f"{'held out as the 20% test part (whole run, chosen by seed 42)' if rid == test_run else 'training part'}"))
+                                f"{'held out as part of the 20% test part (whole run, chosen by seed 42)' if rid in test_runs else 'training part (SMOTE-balanced inside the training folds)'}"))
     man = pd.DataFrame(rows)
     man.to_csv(REP / "lo2_slice_manifest.csv", index=False)
     man[["run_id", "role"]].assign(level="run", note="split made before any window existed; whole runs, no run in both parts").to_csv(REP / "lo2_split_ids.csv", index=False)
     tot = man.size_mb.sum()
-    log(f"slice: {len(chosen)} whole runs, {tot:.1f} MB (cap {CAP_MB:.0f} MB, {100 * tot / sum(s for _, s in runs):.1f}% of the downloaded run files); test run {test_run}; "
-        f"6 runs would need {sorted(s for _, s in runs)[:6] and sum(sorted(s for _, s in runs)[:6]):.1f} MB, over the cap, so fewer than 6 runs is forced")
+    log(f"slice: {len(chosen)} whole runs, {tot:.1f} MB (cap {CAP_MB:.0f} MB, {100 * tot / sum(s for _, s in runs):.1f}% of the downloaded run files); {len(test_runs)} test runs {sorted(test_runs)}")
     return man
 
 

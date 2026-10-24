@@ -4,7 +4,7 @@ import ResponsiveTable from '../components/ResponsiveTable'
 import { Async } from '../components/States'
 import { int } from '../format'
 import { usePageTitle } from '../usePageTitle'
-import type { BothResponse, BothRow } from '../types'
+import type { BothResponse, BothRow, HybridResponse, HybridRow } from '../types'
 
 interface Info { plain: string; tech: string; line: string }
 
@@ -54,6 +54,47 @@ export function BothTable({ rows }: { rows: BothRow[] }) {
   )
 }
 
+
+interface TwoLabels { model: string; bin?: HybridRow; lvl?: HybridRow }
+const done = (r?: HybridRow) => (r && r.status !== 'not completed' && typeof r.test_bal_acc === 'number' ? r : undefined)
+
+/** the ten hybrids, one table per data set, with BOTH label versions side by side (numbers are the saved ones) */
+function TenHybrids({ models, levelName, caption }: { models: HybridRow[]; levelName: string; caption: string }) {
+  const names = Array.from(new Set(models.map((m) => m.model)))
+  const rows: TwoLabels[] = names.map((n) => ({ model: n, bin: done(models.find((m) => m.model === n && m.label_version === 'label_binary')), lvl: done(models.find((m) => m.model === n && m.label_version === 'label_level')) }))
+  const nm = (n: string) => HYBRID_INFO[n]?.tech ?? n
+  return (
+    <ResponsiveTable<TwoLabels>
+      caption={caption} rows={rows} rowKey={(r) => r.model} initialSort={{ key: 'b', dir: 'desc' }}
+      columns={[
+        { key: 'n', label: 'Hybrid model', nameCell: true, sortValue: (r) => nm(r.model), render: (r) => <>{nm(r.model)}</> },
+        { key: 'b', label: 'Healthy or not: overall score', numeric: true, sortValue: (r) => r.bin?.test_bal_acc ?? null, render: (r) => <Pct v={r.bin?.test_bal_acc} low={r.bin?.test_bal_acc_ci_low} high={r.bin?.test_bal_acc_ci_high} /> },
+        { key: 'bn', label: 'Healthy or not: healthy windows left alone', numeric: true, sortValue: (r) => r.bin?.test_normal_recall ?? null, render: (r) => <Pct v={r.bin?.test_normal_recall} /> },
+        { key: 'l', label: `${levelName}: overall score`, numeric: true, sortValue: (r) => r.lvl?.test_bal_acc ?? null, render: (r) => <Pct v={r.lvl?.test_bal_acc} low={r.lvl?.test_bal_acc_ci_low} high={r.lvl?.test_bal_acc_ci_high} /> },
+        { key: 'ln', label: `${levelName}: healthy windows left alone`, numeric: true, sortValue: (r) => r.lvl?.test_normal_recall ?? null, render: (r) => <Pct v={r.lvl?.test_normal_recall} /> },
+      ]}
+    />
+  )
+}
+
+function TenHybridsSection() {
+  const api = useApi<HybridResponse>('/api/hybrid')
+  return (
+    <>
+      <h2>The ten hybrid models, each with both label versions</h2>
+      <p className="muted small">Five hybrids were trained on AnoMod and five on the LO2 slice, each data set on its own. Every one has two results: <em>healthy or not</em> (two labels) and <em>kind of problem</em> (AnoMod: five kinds; LO2: Normal and HTTP 400 / 401 / 404). In LO2 all 33 downloaded runs are used: the 80% training part is balanced with SMOTE and the 20% test part (7 whole runs) is left exactly as recorded.</p>
+      <Async state={api} rows={4} label="Loading the ten hybrid models">
+        {(h) => (
+          <div className="stack">
+            {h.anomod.available && <TenHybrids models={h.anomod.models} levelName="Five kinds of problem" caption="AnoMod: five hybrid models, both label versions, scored on the same 647 test windows (36 healthy)." />}
+            {h.lo2.available && <TenHybrids models={h.lo2.models} levelName="HTTP kind" caption="LO2: five hybrid models, both label versions, scored on the untouched 20% of the runs (7 whole runs). Training part balanced with SMOTE." />}
+          </div>
+        )}
+      </Async>
+    </>
+  )
+}
+
 export default function Hybrids() {
   usePageTitle('Hybrid models')
   const api = useApi<BothResponse>('/api/both')
@@ -88,6 +129,7 @@ export default function Hybrids() {
                 </>
               )
             })()}
+            <TenHybridsSection />
             <h2>What every number and setting means</h2>
             <dl className="hy-facts" style={{ gridTemplateColumns: 'minmax(10rem, 16rem) 1fr', rowGap: '0.6rem' }} data-testid="glossary">
               <dt>Overall score</dt><dd>Balanced accuracy: the average of two shares, how many risky windows were caught and how many healthy windows were left alone. 50% is a coin flip, 100% is perfect. It is fairer than plain accuracy because healthy windows are rare.</dd>
@@ -96,7 +138,7 @@ export default function Hybrids() {
               <dt>Score on AnoMod / LO2 windows</dt><dd>The same overall score, computed only on the AnoMod part or only on the LO2 part of the pooled test windows.</dd>
               <dt>Training and test windows</dt><dd>A window is a short slice of recorded system activity (30 seconds for AnoMod, 5 seconds for LO2). 80% of each data set is used to train, 20% to test; the test windows are never used to choose anything and are scored once.</dd>
               <dt>Cross-validation (folds)</dt><dd>The training windows are cut into parts; the model is trained on all but one part and checked on the held-out part, in turn. Used to choose settings. The earlier models used 10 parts, the hybrids 5.</dd>
-              <dt>SMOTE / class weights</dt><dd>Two ways to cope with healthy windows being rare: make extra look-alike healthy examples (training windows only) or count mistakes on healthy windows more. Chosen per model by validation.</dd>
+              <dt>SMOTE / class weights</dt><dd>Two ways to cope with healthy windows being rare: make extra look-alike healthy examples (training windows only) or count mistakes on healthy windows more. Chosen per model by validation for AnoMod; for LO2 the 80% training part is always balanced with SMOTE and the 20% test run is left exactly as recorded.</dd>
               <dt>Overfitting</dt><dd>A model that memorises its training windows scores much higher on them than on new ones. We flag it (gap above 0.10) and retrain more gently.</dd>
               <dt>Hybrid model</dt><dd>One neural network with two parts trained together: the first part prepares the numbers, the second reads them and answers.</dd>
               <dt>Tag next to a model</dt><dd>Decision-tree / linear model, Neural network, Combination of models, or Hybrid: the kind of model it is.</dd>
@@ -108,7 +150,7 @@ export default function Hybrids() {
             <p className="small muted">Ten hybrids were built: five for AnoMod and five for LO2 (Autoencoder + LSTM is in both lists), so nine different kinds appear here. {d.note}</p>
             <div className="callout" role="note" data-testid="no-transfer"><span className="label">Good to know</span>
               <ul>
-                <li>The healthy-or-not question is the only one both data sets share, so only that is compared here. The five-kinds-of-problem results are on the Results page for AnoMod.</li>
+                <li>In the combined table above only the healthy-or-not question is compared, because it is the only one both data sets share. The ten-hybrid tables show both label versions for each data set on its own.</li>
                 <li>Nothing here forecasts failures or the time until a failure; that is future work.</li>
               </ul>
             </div>

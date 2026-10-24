@@ -4,21 +4,21 @@
  "model": "LR",
  "seed": 42,
  "params": {
-  "C": 0.1
+  "C": 1.0
  },
- "method": "cw",
+ "method": "smote",
  "thresholds": {
   "type": "class_multipliers",
   "weights": [
-   0.22313016014842982,
    1.0,
-   2.718281828459045,
-   1.0
+   0.7788007830714049,
+   3.4903429574618414,
+   1.6487212707001282
   ],
-  "oof_balanced_accuracy": 0.6796296296296297,
-  "oof_balanced_accuracy_default_argmax": 0.6782407407407407
+  "oof_balanced_accuracy": 0.7147792022792022,
+  "oof_balanced_accuracy_default_argmax": 0.7006054131054131
  },
- "chosen_stage": "corr",
- "frozen_at": "2026-10-23 01:36:27",
+ "chosen_stage": "cv",
+ "frozen_at": "2026-10-24 02:34:40",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }
