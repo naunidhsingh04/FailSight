@@ -4,27 +4,27 @@
  "model": "CNN_LSTM",
  "seed": 42,
  "config": {
-  "hidden": 32,
+  "hidden": 64,
   "dropout": 0.3,
   "wd": 0.0001,
   "lr": 0.001
  },
  "method": "smote",
- "final_epochs": 9,
+ "final_epochs": 8,
  "lr_scale": 1.0,
  "thresholds": {
   "type": "class_multipliers",
   "weights": [
+   3.4903429574618414,
    1.0,
-   1.0,
-   0.7788007830714049,
-   4.4816890703380645,
+   0.1353352832366127,
+   1.6487212707001282,
    1.0
   ],
-  "oof_balanced_accuracy": 0.8029528049579582,
-  "oof_balanced_accuracy_default_argmax": 0.796064728646847
+  "oof_balanced_accuracy": 0.807204678299074,
+  "oof_balanced_accuracy_default_argmax": 0.7924557970148675
  },
  "chosen_stage": "cv",
- "frozen_at": "2026-10-23 00:46:58",
+ "frozen_at": "2026-10-25 19:52:46",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

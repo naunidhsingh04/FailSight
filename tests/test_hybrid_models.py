@@ -24,7 +24,8 @@ def build(name):
 
 
 @pytest.mark.parametrize("name", list(REGISTRY))
-def test_shape_and_gradients_reach_both_parts(name):
+def test_shape_and_gradients_reach_second_part(name):
+    """the first part is trained on its own and then frozen; the second part is trained on top of its values, so gradients reach the second part only"""
     keras.utils.set_random_seed(42)
     m = build(name)
     x = np.random.RandomState(0).randn(8, T, F).astype("float32")
@@ -34,19 +35,35 @@ def test_shape_and_gradients_reach_both_parts(name):
     assert np.allclose(np.asarray(p).sum(1), 1, atol=1e-4)
     with tf.GradientTape() as tape:
         out = m(x, training=True)
-        loss = keras.losses.categorical_crossentropy(y, out)
-        loss = tf.reduce_mean(loss) + tf.add_n(m.losses) if m.losses else tf.reduce_mean(loss)
+        loss = tf.reduce_mean(keras.losses.categorical_crossentropy(y, out))
     parts = m.parts()
-    allw = [w for part in parts.values() for w in part.trainable_weights]
-    grads_all = dict(zip([id(w) for w in allw], tape.gradient(loss, allw)))
-    for part_name, part in parts.items():
-        ws = part.trainable_weights
-        if name == "BERT_GNN" and part_name == "first":
-            assert not ws, "the BERT-style template encoder is frozen by design"
-            continue
-        assert ws, part_name
-        grads = [grads_all[id(w)] for w in ws]
-        assert any(g is not None and float(tf.reduce_max(tf.abs(g))) > 0 for g in grads), f"no gradient reaches the {part_name} part of {name}"
+    assert not parts["first"].trainable_weights, "the first part is frozen once it has been trained"
+    ws = parts["second"].trainable_weights
+    assert ws
+    grads = tape.gradient(loss, ws)
+    assert any(g is not None and float(tf.reduce_max(tf.abs(g))) > 0 for g in grads), f"no gradient reaches the second part of {name}"
+
+
+@pytest.mark.parametrize("name", list(REGISTRY))
+def test_two_stage_training_hands_first_values_to_second(name):
+    """the first algorithm is trained (its weights move) and its values are then used, unchanged, by the second algorithm"""
+    keras.utils.set_random_seed(0)
+    X = np.random.RandomState(0).randn(24, T, F).astype("float32")
+    y = np.random.RandomState(1).randint(0, C, 24)
+    calls = []
+
+    def fit(model, X_, y_, Xv_, yv_):
+        model.compile(optimizer="adam", loss="categorical_crossentropy")
+        model.fit(X_, keras.utils.to_categorical(y_, C), epochs=1, verbose=0)
+        calls.append(model.name)
+        return {"loss": [0.0]}
+
+    m = REGISTRY[name](SPEC, CFG, data=dict(X=X, y=y, Xv=None, yv=None, fit=fit))
+    assert len(calls) == (1 if name == "BERT_GNN" else 2), calls         # the frozen BERT stage has nothing to train
+    first = [np.array(w) for w in m.first.weights]
+    m.compile(optimizer="adam", loss="categorical_crossentropy")
+    m.fit(X, keras.utils.to_categorical(y, C), epochs=1, verbose=0)
+    assert all(np.array_equal(a, np.array(b)) for a, b in zip(first, m.first.weights)), "training the second part must not change the first part"
 
 
 @pytest.mark.parametrize("name", ["AE_LSTM", "VAE_Transformer"])

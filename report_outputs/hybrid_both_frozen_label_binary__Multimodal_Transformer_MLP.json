@@ -4,22 +4,22 @@
  "model": "Multimodal_Transformer_MLP",
  "seed": 42,
  "config": {
-  "hidden": 64,
+  "hidden": 32,
   "dropout": 0.3,
   "wd": 0.0001,
   "lr": 0.001
  },
- "method": "cw",
- "final_epochs": 11,
+ "method": "smote",
+ "final_epochs": 15,
  "lr_scale": 1.0,
  "thresholds": {
   "type": "threshold",
-  "threshold": 0.9,
-  "oof_balanced_accuracy": 0.9356007851045335,
-  "oof_normal_recall": 0.8996062992125984,
-  "oof_balanced_accuracy_default_argmax": 0.9294214417923692
+  "threshold": 0.93,
+  "oof_balanced_accuracy": 0.9319410845178209,
+  "oof_normal_recall": 0.8740157480314961,
+  "oof_balanced_accuracy_default_argmax": 0.9308170454971341
  },
  "chosen_stage": "cv",
- "frozen_at": "2026-10-24 05:57:08",
+ "frozen_at": "2026-10-25 21:35:31",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

@@ -4,9 +4,9 @@
  "model": "AE_LSTM",
  "seed": 42,
  "config": {
-  "hidden": 64,
-  "dropout": 0.3,
-  "wd": 0.0001,
+  "hidden": 32,
+  "dropout": 0.5,
+  "wd": 0.002,
   "lr": 0.001
  },
  "method": "smote",
@@ -16,14 +16,14 @@
   "type": "class_multipliers",
   "weights": [
    0.1353352832366127,
-   0.6065306597126334,
-   4.4816890703380645,
+   1.0,
+   7.38905609893065,
    0.7788007830714049
   ],
-  "oof_balanced_accuracy": 0.7299145299145299,
-  "oof_balanced_accuracy_default_argmax": 0.7091880341880343
+  "oof_balanced_accuracy": 0.7209045584045584,
+  "oof_balanced_accuracy_default_argmax": 0.6842948717948718
  },
- "chosen_stage": "cv",
- "frozen_at": "2026-10-24 03:32:41",
+ "chosen_stage": "corr",
+ "frozen_at": "2026-10-25 19:21:53",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

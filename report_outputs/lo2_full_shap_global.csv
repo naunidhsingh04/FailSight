@@ -1,133 +1,135 @@
 model,feature,group,mean_abs_shap,rank
-RF,m_pc1,metric,0.106241,1
-RF,m_pc4,metric,0.088522,2
-RF,m_pc2,metric,0.0551154,3
-RF,log_token_INFO,log,0.0220698,4
-RF,log_token_DEBUG,log,0.0152798,5
-RF,log_token_n,log,0.0135905,6
-RF,tmpl_other,log template,0.011045,7
-RF,m_pc3,metric,0.0105662,8
-RF,log_user_cont,log,0.00932039,9
-RF,log_locust_ERROR,log,0.00810254,10
-RF,log_user_ERROR,log,0.00790178,11
-RF,log_refresh-token_cont,log,0.00751961,12
-RF,log_key_cont,log,0.00737396,13
-RF,tmpl_locust_13,log template,0.00722481,14
-RF,log_code_n,log,0.00703472,15
-RF,log_client_cont,log,0.00564835,16
-RF,tmpl_client_2,log template,0.00559505,17
-RF,log_service_cont,log,0.00539602,18
-RF,log_locust_error_rate,log,0.00532228,19
-RF,log_key_DEBUG,log,0.00519236,20
-RF,log_client_n,log,0.00489195,21
-RF,log_locust_n,log,0.00484981,22
-RF,tmpl_service_2,log template,0.00475223,23
-RF,m_pc6,metric,0.00451156,24
-RF,tmpl_client_4,log template,0.0044103,25
-RF,tmpl_client_0,log template,0.00440567,26
-RF,log_client_ERROR,log,0.00426876,27
-RF,log_total_volume,log,0.00420799,28
-RF,tmpl_locust_5,log template,0.00416948,29
-RF,m_pc18,metric,0.00408876,30
-RF,tmpl_client_3,log template,0.00396243,31
-RF,tmpl_locust_1,log template,0.0038797,32
-RF,tmpl_service_3,log template,0.00367049,33
-RF,m_pc11,metric,0.00360197,34
-RF,log_key_error_rate,log,0.00353311,35
-RF,tmpl_service_1,log template,0.00348772,36
-RF,log_code_cont,log,0.00346728,37
-RF,log_client_DEBUG,log,0.00338879,38
-RF,tmpl_client_1,log template,0.00336939,39
-RF,log_token_cont,log,0.00333276,40
-RF,tmpl_client_6,log template,0.0033113,41
-RF,tmpl_client_7,log template,0.00303722,42
-RF,m_pc19,metric,0.00301443,43
-RF,log_token_ERROR,log,0.00293782,44
-RF,log_service_n,log,0.00289472,45
-RF,log_user_n,log,0.00285759,46
-RF,tmpl_client_16,log template,0.00282416,47
-RF,log_locust_INFO,log,0.0027182,48
-RF,log_code_error_rate,log,0.00271077,49
-RF,log_user_DEBUG,log,0.00267442,50
-RF,log_user_error_rate,log,0.00262097,51
-RF,log_code_ERROR,log,0.00256912,52
-RF,m_pc29,metric,0.00253948,53
-RF,log_key_ERROR,log,0.00246815,54
-RF,m_pc8,metric,0.00246289,55
-RF,tmpl_client_5,log template,0.00245166,56
-RF,tmpl_client_8,log template,0.00238998,57
-RF,tmpl_user_5,log template,0.0023884,58
-RF,m_pc31,metric,0.00238436,59
-RF,log_client_error_rate,log,0.00223501,60
-RF,tmpl_client_15,log template,0.00216847,61
-RF,log_service_error_rate,log,0.00201274,62
-RF,tmpl_locust_8,log template,0.00197021,63
-RF,log_code_DEBUG,log,0.0019605,64
-RF,tmpl_locust_10,log template,0.00195001,65
-RF,m_pc21,metric,0.0018542,66
-RF,tmpl_user_3,log template,0.00183783,67
-RF,tmpl_service_10,log template,0.00179733,68
-RF,tmpl_service_6,log template,0.00174201,69
-RF,tmpl_user_1,log template,0.00172536,70
-RF,log_key_n,log,0.00169412,71
-RF,m_pc7,metric,0.00166757,72
-RF,tmpl_locust_4,log template,0.00164319,73
-RF,log_service_DEBUG,log,0.00156951,74
-RF,tmpl_service_7,log template,0.00153835,75
-RF,tmpl_service_8,log template,0.00153768,76
-RF,tmpl_service_4,log template,0.00148913,77
-RF,m_pc23,metric,0.00139804,78
-RF,m_pc14,metric,0.00137825,79
-RF,tmpl_locust_9,log template,0.00135106,80
-RF,tmpl_client_17,log template,0.00134973,81
-RF,tmpl_locust_6,log template,0.00125576,82
-RF,m_pc20,metric,0.00118708,83
-RF,log_locust_WARN,log,0.00110747,84
-RF,tmpl_user_9,log template,0.00110039,85
-RF,log_refresh-token_error_rate,log,0.00108171,86
-RF,m_pc24,metric,0.00104867,87
-RF,m_pc28,metric,0.00103716,88
-RF,tmpl_locust_16,log template,0.00101819,89
-RF,log_locust_warn_rate,log,0.00099476,90
-RF,tmpl_user_2,log template,0.000993399,91
-RF,m_pc12,metric,0.000940472,92
-RF,tmpl_user_10,log template,0.000875918,93
-RF,tmpl_user_0,log template,0.000864217,94
-RF,tmpl_client_12,log template,0.000838589,95
-RF,log_refresh-token_n,log,0.000813655,96
-RF,tmpl_locust_3,log template,0.000784516,97
-RF,tmpl_service_5,log template,0.000683819,98
-RF,tmpl_locust_7,log template,0.000670395,99
-RF,m_pc30,metric,0.000625056,100
-RF,m_pc17,metric,0.000599888,101
-RF,tmpl_locust_2,log template,0.000550644,102
-RF,tmpl_locust_0,log template,0.000498273,103
-RF,tmpl_locust_15,log template,0.000492316,104
-RF,m_pc15,metric,0.000491995,105
-RF,m_pc5,metric,0.000465488,106
-RF,m_pc16,metric,0.000386764,107
-RF,tmpl_locust_17,log template,0.000356945,108
-RF,tmpl_client_14,log template,0.000354334,109
-RF,m_pc26,metric,0.000313166,110
-RF,log_token_error_rate,log,0.00030611,111
-RF,tmpl_service_9,log template,0.000299672,112
-RF,m_pc25,metric,0.000291061,113
-RF,m_pc27,metric,0.000269525,114
-RF,log_refresh-token_ERROR,log,0.000258713,115
-RF,m_pc9,metric,0.0002476,116
-RF,m_pc0,metric,0.000224455,117
-RF,m_pc10,metric,0.00020981,118
-RF,tmpl_locust_14,log template,0.000191589,119
-RF,tmpl_service_0,log template,0.000182376,120
-RF,log_refresh-token_DEBUG,log,0.00017175,121
-RF,m_pc22,metric,0.000166209,122
-RF,log_service_ERROR,log,0.000165629,123
-RF,m_pc13,metric,8.35068e-05,124
+RF,m_pc3,metric,0.115116,1
+RF,m_pc1,metric,0.0837616,2
+RF,m_pc2,metric,0.0705593,3
+RF,log_locust_ERROR,log,0.0170124,4
+RF,log_locust_error_rate,log,0.0136604,5
+RF,m_pc0,metric,0.0125845,6
+RF,log_token_DEBUG,log,0.0108952,7
+RF,log_user_cont,log,0.0102769,8
+RF,log_code_DEBUG,log,0.00937667,9
+RF,log_token_n,log,0.00937209,10
+RF,log_token_INFO,log,0.00849906,11
+RF,log_code_cont,log,0.00823164,12
+RF,log_key_cont,log,0.00808187,13
+RF,log_code_n,log,0.00774992,14
+RF,log_client_n,log,0.00697315,15
+RF,log_total_volume,log,0.0069497,16
+RF,tmpl_client_1,log template,0.00613757,17
+RF,log_client_ERROR,log,0.00517445,18
+RF,tmpl_locust_5,log template,0.00485656,19
+RF,log_service_cont,log,0.00472421,20
+RF,log_token_cont,log,0.00470951,21
+RF,log_client_DEBUG,log,0.00469978,22
+RF,tmpl_locust_1,log template,0.00467249,23
+RF,log_token_error_rate,log,0.00464044,24
+RF,log_service_error_rate,log,0.00456897,25
+RF,tmpl_client_6,log template,0.00451765,26
+RF,tmpl_locust_13,log template,0.00433236,27
+RF,tmpl_client_5,log template,0.00430291,28
+RF,log_client_cont,log,0.0040076,29
+RF,log_token_ERROR,log,0.0038694,30
+RF,tmpl_client_4,log template,0.00345117,31
+RF,tmpl_other,log template,0.00335632,32
+RF,tmpl_client_2,log template,0.00322025,33
+RF,log_code_ERROR,log,0.003133,34
+RF,tmpl_client_7,log template,0.00310064,35
+RF,log_key_ERROR,log,0.00307753,36
+RF,m_pc8,metric,0.00290411,37
+RF,tmpl_client_3,log template,0.00285848,38
+RF,tmpl_service_3,log template,0.00269073,39
+RF,tmpl_client_0,log template,0.00266046,40
+RF,log_service_DEBUG,log,0.00265539,41
+RF,m_pc6,metric,0.00264757,42
+RF,log_service_n,log,0.00249308,43
+RF,log_client_error_rate,log,0.00248225,44
+RF,tmpl_client_15,log template,0.0024737,45
+RF,tmpl_client_16,log template,0.00239963,46
+RF,tmpl_service_4,log template,0.00238909,47
+RF,tmpl_service_2,log template,0.00236825,48
+RF,log_refresh-token_cont,log,0.00236388,49
+RF,m_pc30,metric,0.00233743,50
+RF,m_pc5,metric,0.00228367,51
+RF,tmpl_user_2,log template,0.0021712,52
+RF,log_service_ERROR,log,0.00213126,53
+RF,tmpl_client_14,log template,0.00212821,54
+RF,tmpl_locust_6,log template,0.00207434,55
+RF,tmpl_client_17,log template,0.00206434,56
+RF,tmpl_client_12,log template,0.00205281,57
+RF,tmpl_locust_9,log template,0.00197048,58
+RF,tmpl_user_1,log template,0.00194996,59
+RF,tmpl_service_1,log template,0.00182235,60
+RF,log_user_n,log,0.0017106,61
+RF,tmpl_user_3,log template,0.00166909,62
+RF,m_pc26,metric,0.00163842,63
+RF,m_pc4,metric,0.00163293,64
+RF,m_pc10,metric,0.00161233,65
+RF,m_pc17,metric,0.00160296,66
+RF,log_locust_warn_rate,log,0.00154723,67
+RF,tmpl_locust_3,log template,0.00149003,68
+RF,tmpl_service_6,log template,0.00146254,69
+RF,log_user_DEBUG,log,0.0014179,70
+RF,tmpl_locust_4,log template,0.0014025,71
+RF,tmpl_service_9,log template,0.00127384,72
+RF,log_locust_INFO,log,0.00126944,73
+RF,log_code_error_rate,log,0.00126798,74
+RF,log_key_error_rate,log,0.0012677,75
+RF,tmpl_user_11,log template,0.00119072,76
+RF,tmpl_user_5,log template,0.001152,77
+RF,tmpl_locust_8,log template,0.00111952,78
+RF,tmpl_user_9,log template,0.00108079,79
+RF,log_refresh-token_error_rate,log,0.00103604,80
+RF,m_pc15,metric,0.00102501,81
+RF,tmpl_user_10,log template,0.00101611,82
+RF,log_refresh-token_n,log,0.000994912,83
+RF,m_pc9,metric,0.000912024,84
+RF,log_locust_WARN,log,0.000876692,85
+RF,tmpl_service_5,log template,0.000876105,86
+RF,tmpl_locust_2,log template,0.000823357,87
+RF,m_pc28,metric,0.000799686,88
+RF,tmpl_locust_10,log template,0.000770992,89
+RF,log_refresh-token_DEBUG,log,0.000725759,90
+RF,tmpl_service_8,log template,0.000695357,91
+RF,log_locust_n,log,0.000671933,92
+RF,tmpl_user_0,log template,0.000670419,93
+RF,log_refresh-token_ERROR,log,0.000636967,94
+RF,tmpl_service_7,log template,0.000602771,95
+RF,tmpl_locust_7,log template,0.000550249,96
+RF,tmpl_locust_17,log template,0.000485258,97
+RF,tmpl_service_10,log template,0.000477073,98
+RF,log_user_error_rate,log,0.000446641,99
+RF,m_pc13,metric,0.000409482,100
+RF,m_pc19,metric,0.000406821,101
+RF,m_pc16,metric,0.000402256,102
+RF,log_key_n,log,0.000385846,103
+RF,m_pc18,metric,0.00036399,104
+RF,tmpl_locust_16,log template,0.000361494,105
+RF,m_pc21,metric,0.000361304,106
+RF,m_pc23,metric,0.000360738,107
+RF,m_pc12,metric,0.000349179,108
+RF,log_user_ERROR,log,0.000345609,109
+RF,tmpl_locust_15,log template,0.000338097,110
+RF,tmpl_locust_14,log template,0.000328734,111
+RF,m_pc29,metric,0.000257571,112
+RF,m_pc27,metric,0.000228233,113
+RF,m_pc24,metric,0.00022196,114
+RF,m_pc7,metric,0.000221102,115
+RF,m_pc22,metric,0.000215527,116
+RF,m_pc25,metric,0.000172107,117
+RF,tmpl_locust_0,log template,0.000164448,118
+RF,m_pc20,metric,0.000153295,119
+RF,m_pc31,metric,0.00013567,120
+RF,tmpl_service_0,log template,0.000127438,121
+RF,log_key_DEBUG,log,0.000102572,122
+RF,m_pc14,metric,9.91114e-05,123
+RF,m_pc11,metric,7.86456e-05,124
 RF,log_client_INFO,log,0,125
-RF,log_code_INFO,log,0,126
-RF,log_service_INFO,log,0,127
+RF,log_refresh-token_warn_rate,log,0,126
+RF,log_user_INFO,log,0,127
 RF,log_refresh-token_INFO,log,0,128
-RF,log_user_INFO,log,0,129
-RF,was_missing_logs,flag,0,130
-RF,was_missing_templates,flag,0,131
-RF,was_missing_metrics,flag,0,132
+RF,log_service_INFO,log,0,129
+RF,log_code_INFO,log,0,130
+RF,log_refresh-token_WARN,log,0,131
+RF,was_missing_logs,flag,0,132
+RF,was_missing_templates,flag,0,133
+RF,was_missing_metrics,flag,0,134

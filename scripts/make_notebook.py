@@ -377,7 +377,7 @@ md("""**What you should see:** one row per algorithm with its 5-fold validation 
 md("""
 ## 7. Hybrid deep-learning models
 
-**What we do and why:** a hybrid is one neural network made of two parts that learn together: the first part prepares what it sees, the second reads that and answers. We built five on AnoMod (Transformer + BiLSTM, Autoencoder + LSTM, GNN + Transformer, CNN + LSTM, VAE + Transformer). Below: wiring diagrams, one hybrid trained live for 3 epochs, and the saved results of all five with their 95% ranges next to the tree models. We deliberately do not load saved deep models (TensorFlow versions differ); we retrain a small one and read the saved result files.
+**What we do and why:** a hybrid is two separate algorithms used one after the other. The first one (for example the CNN function) is trained and returns variables; the second one (for example the LSTM function) is called with those variables, uses their values, and gives the answer. They are two functions, not one merged model. We built five on AnoMod (Transformer + BiLSTM, Autoencoder + LSTM, GNN + Transformer, CNN + LSTM, VAE + Transformer). Below: wiring diagrams, one hybrid trained live in its two stages (3 epochs each), and the saved results of all five with their 95% ranges next to the tree models. We deliberately do not load saved deep models (TensorFlow versions differ); we retrain a small one and read the saved result files.
 """)
 code(r"""
 with section("7 hybrids diagrams"):
@@ -407,8 +407,9 @@ with section("7 hybrids live"):
     print("SMOTE on the training part only: b:", b_.tolist(), "a:", a_.tolist(), "| test part untouched:", np.bincount(D5.y[label][D5.test_pos]).tolist())
     t0 = time.time(); live_model, info = E.fit_hybrid(ANOMOD_HYBRIDS["Transformer_BiLSTM"], spec, cfg, Xs, ys, None, None, "smote", 0, SEED, fixed_epochs=3)
     P_ = E.predict(live_model, Xte); yte_ = D5.y[label][D5.test_pos]
-    print(f"Transformer + BiLSTM trained live for 3 epochs in {time.time() - t0:.0f} s; test balanced accuracy {E.bal_f1(yte_, P_)[0]:.3f}; healthy-window recall {E.normal_recall(yte_, P_):.3f}  (3 epochs is a demonstration, not the saved model)")
+    print(f"Transformer + BiLSTM trained live in two stages (transformer_stage, then bilstm_stage fed with its values; 3 epochs each) in {time.time() - t0:.0f} s; test balanced accuracy {E.bal_f1(yte_, P_)[0]:.3f}; healthy-window recall {E.normal_recall(yte_, P_):.3f}  (3 epochs is a demonstration, not the saved model)")
     first_out = live_model.first(Xte[:2].astype('float32')); print("what the first part passes to the second part (shape):", tuple(first_out.shape))
+    print("the first algorithm was trained first and then frozen (trainable weights left in it:", len(live_model.first.trainable_weights), "); the second algorithm trained on its values (trainable weights:", len(live_model.second.trainable_weights), ")")
     NUMBERS.update(live_hybrid_test_ba=round(float(E.bal_f1(yte_, P_)[0]), 4))
 """
      )
@@ -432,6 +433,19 @@ with section("7 hybrid results"):
     print("The earlier AnoMod models were checked with 10-fold and the hybrids with 5-fold. All AnoMod models, hybrids included, are scored on the same", NUMBERS.get("test_windows", "647"), "test windows.")
     NUMBERS.update(best_hybrid_ba=round(float(best_h.test_bal_acc), 4), best_existing_ba=round(float(best_t.test_bal_acc), 4))
     src("report_outputs/hybrid_anomod_leaderboard.csv, report_outputs/leaderboard_label_binary.csv, report_outputs/test_bootstrap_ci.csv")
+"""
+     )
+code(r"""
+with section("7 hybrids by data set"):
+    t = pd.read_csv(REP / "hybrid_accuracy_by_dataset.csv") if (REP / "hybrid_accuracy_by_dataset.csv").exists() else None
+    if t is None:
+        print("missing files (this part is skipped)")
+    else:
+        t = t.rename(columns={"AnoMod_alone_binary": "AnoMod alone", "LO2_alone_binary": "LO2 alone", "both_trained_together_binary": "trained on both (pooled test)",
+                              "both_tested_on_AnoMod_part": "  of which AnoMod test windows", "both_tested_on_LO2_part": "  of which LO2 test windows"})
+        print("Balanced accuracy (healthy or not) on the untouched 20% test part. Each model was trained on the SMOTE-balanced 80% only.")
+        print(t[["model", "AnoMod alone", "LO2 alone", "trained on both (pooled test)", "  of which AnoMod test windows", "  of which LO2 test windows"]].round(3).to_string(index=False))
+        src("report_outputs/hybrid_accuracy_by_dataset.csv")
 """
      )
 md("""**What you should see:** five wiring diagrams (first part, second part, answer); a line saying SMOTE was used on the training part only and the test part kept its natural counts; one hybrid trained live for 3 epochs with a test score; a chart of the five hybrids and the strongest earlier models with their 95% ranges (the ranges overlap heavily); a table of the five hybrids; and one sentence saying whether any hybrid beats the best earlier model.""")

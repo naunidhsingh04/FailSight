@@ -4,13 +4,13 @@
  "model": "Multimodal_Transformer_MLP",
  "seed": 42,
  "config": {
-  "hidden": 64,
+  "hidden": 32,
   "dropout": 0.3,
   "wd": 0.0001,
   "lr": 0.001
  },
  "method": "smote",
- "final_epochs": 13,
+ "final_epochs": 16,
  "lr_scale": 1.0,
  "thresholds": {
   "type": "threshold",
@@ -20,6 +20,6 @@
   "oof_balanced_accuracy_default_argmax": 1.0
  },
  "chosen_stage": "cv",
- "frozen_at": "2026-10-24 04:01:18",
+ "frozen_at": "2026-10-25 20:47:47",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

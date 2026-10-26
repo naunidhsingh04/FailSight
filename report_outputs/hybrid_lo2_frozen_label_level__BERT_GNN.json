@@ -24,6 +24,6 @@
   "oof_balanced_accuracy_default_argmax": 0.6833689458689458
  },
  "chosen_stage": "corr",
- "frozen_at": "2026-10-24 03:01:05",
+ "frozen_at": "2026-10-25 18:30:37",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

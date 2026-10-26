@@ -77,7 +77,7 @@ def main():
     D = BothData()
     E.log(f"BOTH: train {len(D.train_pos)} (AnoMod {len(D.A.train_pos)} + LO2 {len(D.L.train_pos)}), test {len(D.test_pos)} (AnoMod {len(D.A.test_pos)} + LO2 {len(D.L.test_pos)}), inputs {D.F}")
     if a.stage in ("all", "hybrids"):
-        R = E.Runner(D, REG, STATE_H, MODELS, "hybrid_both_", deadline=dead)
+        R = E.Runner(D, REG, STATE_H, MODELS, "hybrid_both_", deadline=dead, methods=("smote",))   # 80% training part SMOTE-balanced, 20% test part untouched
         E.imbalance_report(D, "hybrid_both_")
         for n in REG:
             R.run(n, LABEL)

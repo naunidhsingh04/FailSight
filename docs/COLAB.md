@@ -49,7 +49,7 @@ The notebook clones the code from GitHub, so the newest code must be on GitHub f
 | 4 Imbalance | SMOTE before / after per fold (`b:` / `a:` / `hold:`), class weights, ADASYN size comparison, charts | 1 min |
 | 5 Folds | no block shared across folds, every class in every fold | under 1 min |
 | 6 Classical algorithms | five algorithms trained live, test scores with 95% ranges next to the saved full results | 2 to 4 min |
-| 7 Hybrids | wiring diagrams, one hybrid trained live for 3 epochs, saved results of all of them with ranges and the comparison with the tree models, and the combined AnoMod + LO2 table | 2 to 4 min |
+| 7 Hybrids | wiring diagrams, one hybrid trained live in its two stages (3 epochs each: the first algorithm, then the second one using its values), saved results of all of them with ranges and the comparison with the tree models, and the combined AnoMod + LO2 table | 2 to 4 min |
 | 8 Honesty checks | overfitting gaps, shuffled-label control, leakage, missingness, run identification, each with its badge | under 1 min |
 | 9 Explainability | SHAP for XGBoost on real test windows, LIME for one window, attention of the live hybrid | 2 to 4 min |
 | 10 Our testbed | data, fault types, whole-run split, held-out results with ranges, controls, three live demos, one run drawn, a replay | 1 min |

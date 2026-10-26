@@ -1,11 +1,11 @@
 feature_rule,weight,model,window_id,true_class
--12.09 < m_pc1 <= -8.81,-0.14582376152993534,RF,LO2|1724303680|correct|0,Normal
--4.08 < m_pc4 <= 1.28,0.13149361737128437,RF,LO2|1724303680|correct|0,Normal
-m_pc2 <= -4.09,-0.05729022238739805,RF,LO2|1724303680|correct|0,Normal
-log_locust_ERROR <= -0.70,-0.04595577736832715,RF,LO2|1724303680|correct|0,Normal
-tmpl_service_8 <= -0.70,-0.026659391698555156,RF,LO2|1724303680|correct|0,Normal
-log_token_INFO <= -0.67,0.02645576956688722,RF,LO2|1724303680|correct|0,Normal
-tmpl_client_3 <= -0.77,-0.024920856432758137,RF,LO2|1724303680|correct|0,Normal
-log_locust_error_rate <= -0.52,-0.024063612868205166,RF,LO2|1724303680|correct|0,Normal
--1.94 < m_pc3 <= 1.58,0.023402400757753686,RF,LO2|1724303680|correct|0,Normal
-log_service_ERROR <= -0.54,0.020574249800413485,RF,LO2|1724303680|correct|0,Normal
+-6.39 < m_pc3 <= -4.10,-0.11846177904102904,RF,LO2|1721157245|correct|0,Normal
+m_pc2 <= -5.83,-0.10166308856420204,RF,LO2|1721157245|correct|0,Normal
+-10.16 < m_pc1 <= -6.19,-0.07684416749704967,RF,LO2|1721157245|correct|0,Normal
+log_locust_ERROR <= -0.70,-0.035377277389101194,RF,LO2|1721157245|correct|0,Normal
+log_client_ERROR <= -0.92,0.02977601719698067,RF,LO2|1721157245|correct|0,Normal
+m_pc28 > 0.59,-0.028511831049597567,RF,LO2|1721157245|correct|0,Normal
+tmpl_locust_5 <= -0.78,-0.025643521285604452,RF,LO2|1721157245|correct|0,Normal
+tmpl_locust_0 <= -0.75,-0.023544747030991728,RF,LO2|1721157245|correct|0,Normal
+tmpl_user_5 <= -0.81,0.02074758752480836,RF,LO2|1721157245|correct|0,Normal
+tmpl_locust_3 <= -0.80,-0.016643358330717492,RF,LO2|1721157245|correct|0,Normal

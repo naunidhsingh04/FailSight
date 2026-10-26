@@ -159,7 +159,7 @@ def main():
         dead = (t + dt.timedelta(days=1) if t < now - dt.timedelta(hours=1) else t).timestamp()
     if not a.assemble_only:
         E.imbalance_report(D, PREFIX)
-        R = E.Runner(D, ANOMOD_HYBRIDS, STATE, MODELS, PREFIX, deadline=dead)
+        R = E.Runner(D, ANOMOD_HYBRIDS, STATE, MODELS, PREFIX, deadline=dead, methods=("smote",))   # 80% training part SMOTE-balanced, 20% test part untouched
         for name in a.models.split(","):
             for label in a.labels.split(","):
                 R.run(name, label)

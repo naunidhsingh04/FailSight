@@ -1,11 +1,11 @@
 kind,model,accuracy,chance,n_runs,label_version,agreement,model_accuracy,rule_accuracy,rule_balanced_accuracy,model_balanced_accuracy,share_of_correct_also_correct_by_rule
 run_identification,(throw-away XGBoost),0.287952,0.016949,59.000000,,,,,,,
-hybrid_vs_rule,Transformer_BiLSTM,,,,label_binary,0.930308,0.969206,0.939492,0.569996,0.906882,0.948718
-hybrid_vs_rule,AE_LSTM,,,,label_binary,0.927607,0.966505,0.939492,0.569996,0.898138,0.948575
-hybrid_vs_rule,GNN_Transformer,,,,label_binary,0.927607,0.967585,0.939492,0.569996,0.895071,0.948074
-hybrid_vs_rule,CNN_LSTM,,,,label_binary,0.935170,0.974068,0.939492,0.569996,0.898551,0.948974
-hybrid_vs_rule,VAE_Transformer,,,,label_binary,0.929768,0.968666,0.939492,0.569996,0.888357,0.948689
+hybrid_vs_rule,Transformer_BiLSTM,,,,label_binary,0.937871,0.975689,0.939492,0.569996,0.910362,0.949612
+hybrid_vs_rule,AE_LSTM,,,,label_binary,0.936251,0.975149,0.939492,0.569996,0.891837,0.949030
+hybrid_vs_rule,GNN_Transformer,,,,label_binary,0.933009,0.976229,0.939492,0.569996,0.907005,0.946873
+hybrid_vs_rule,CNN_LSTM,,,,label_binary,0.934630,0.973528,0.939492,0.569996,0.894614,0.948946
+hybrid_vs_rule,VAE_Transformer,,,,label_binary,0.933549,0.973528,0.939492,0.569996,0.898261,0.948391
 hybrid_vs_rule,BERT_GNN,,,,label_binary,0.929227,0.968125,0.939492,0.569996,0.891714,0.948661
-hybrid_vs_rule,Transformer_LSTM,,,,label_binary,0.940573,0.979471,0.939492,0.569996,0.919686,0.949255
-hybrid_vs_rule,GNN_LSTM,,,,label_binary,0.931388,0.971367,0.939492,0.569996,0.889807,0.948276
-hybrid_vs_rule,Multimodal_Transformer_MLP,,,,label_binary,0.928147,0.967045,0.939492,0.569996,0.894781,0.948603
+hybrid_vs_rule,Transformer_LSTM,,,,label_binary,0.937871,0.975689,0.939492,0.569996,0.910362,0.949612
+hybrid_vs_rule,GNN_LSTM,,,,label_binary,0.933009,0.976229,0.939492,0.569996,0.910652,0.946873
+hybrid_vs_rule,Multimodal_Transformer_MLP,,,,label_binary,0.928687,0.966505,0.939492,0.569996,0.887197,0.949134

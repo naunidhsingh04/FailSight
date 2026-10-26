@@ -1,9 +1,9 @@
 model,label_version,group,share_of_total
-Transformer_BiLSTM,label_binary,api,0.210891
-Transformer_BiLSTM,label_binary,flag,0.158321
-Transformer_BiLSTM,label_binary,log,0.0403168
-Transformer_BiLSTM,label_binary,metric,0.590471
-GNN_Transformer,label_level,api,0.0447257
-GNN_Transformer,label_level,flag,0.017933
-GNN_Transformer,label_level,log,0.0333423
-GNN_Transformer,label_level,metric,0.903999
+Transformer_BiLSTM,label_binary,api,0.0872991
+Transformer_BiLSTM,label_binary,flag,0.0369217
+Transformer_BiLSTM,label_binary,log,0.0201108
+Transformer_BiLSTM,label_binary,metric,0.855668
+GNN_Transformer,label_level,api,0.0710607
+GNN_Transformer,label_level,flag,0.00733811
+GNN_Transformer,label_level,log,0.0234317
+GNN_Transformer,label_level,metric,0.89817

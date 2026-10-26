@@ -1,5 +1,4 @@
-from .base import HybridBase
-from .anomod_hybrids import ANOMOD_HYBRIDS, TransformerBiLSTM, CNNLSTM, AELSTM, VAETransformer, GNNTransformer
+from .anomod_hybrids import ANOMOD_HYBRIDS, transformer_bilstm, cnn_lstm, ae_lstm, vae_transformer, gnn_transformer
 
 REGISTRY = dict(ANOMOD_HYBRIDS)
 try:                                    # the LO2 hybrids are added in step 3

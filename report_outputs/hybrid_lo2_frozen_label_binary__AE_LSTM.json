@@ -4,22 +4,22 @@
  "model": "AE_LSTM",
  "seed": 42,
  "config": {
-  "hidden": 64,
+  "hidden": 32,
   "dropout": 0.3,
   "wd": 0.0001,
   "lr": 0.001
  },
  "method": "smote",
- "final_epochs": 15,
+ "final_epochs": 10,
  "lr_scale": 1.0,
  "thresholds": {
   "type": "threshold",
-  "threshold": 0.05,
+  "threshold": 0.06,
   "oof_balanced_accuracy": 1.0,
   "oof_normal_recall": 1.0,
   "oof_balanced_accuracy_default_argmax": 1.0
  },
  "chosen_stage": "cv",
- "frozen_at": "2026-10-24 03:23:58",
+ "frozen_at": "2026-10-25 19:09:50",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

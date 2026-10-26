@@ -30,7 +30,7 @@ def main():
     bundle = work / "bundle"
     with zipfile.ZipFile(ROOT / "failsight_bundle.zip") as z:
         z.extractall(bundle)
-    env = dict(os.environ, FAILSIGHT_CLONE_SOURCE=str(ROOT), FAILSIGHT_BUNDLE=str(bundle), FAILSIGHT_WORK=str(work), PYTHONIOENCODING="utf-8", TF_CPP_MIN_LOG_LEVEL="3")
+    env = dict(os.environ, FAILSIGHT_CLONE_SOURCE=os.environ.get("FAILSIGHT_CHECK_SOURCE", str(ROOT)), FAILSIGHT_BUNDLE=str(bundle), FAILSIGHT_WORK=str(work), PYTHONIOENCODING="utf-8", TF_CPP_MIN_LOG_LEVEL="3")
     for k in list(env):
         if k.startswith("PYTHON") and k not in ("PYTHONIOENCODING",):
             env.pop(k)

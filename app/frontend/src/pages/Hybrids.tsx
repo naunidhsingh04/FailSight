@@ -140,7 +140,7 @@ export default function Hybrids() {
               <dt>Cross-validation (folds)</dt><dd>The training windows are cut into parts; the model is trained on all but one part and checked on the held-out part, in turn. Used to choose settings. The earlier models used 10 parts, the hybrids 5.</dd>
               <dt>SMOTE / class weights</dt><dd>Two ways to cope with healthy windows being rare: make extra look-alike healthy examples (training windows only) or count mistakes on healthy windows more. Chosen per model by validation for AnoMod; for LO2 the 80% training part is always balanced with SMOTE and the 20% test run is left exactly as recorded.</dd>
               <dt>Overfitting</dt><dd>A model that memorises its training windows scores much higher on them than on new ones. We flag it (gap above 0.10) and retrain more gently.</dd>
-              <dt>Hybrid model</dt><dd>One neural network with two parts trained together: the first part prepares the numbers, the second reads them and answers.</dd>
+              <dt>Hybrid model</dt><dd>Two algorithms used one after the other: the first is trained and hands the values it produced to the second, which learns from them and gives the answer. The two are separate programs, not one merged model.</dd>
               <dt>Tag next to a model</dt><dd>Decision-tree / linear model, Neural network, Combination of models, or Hybrid: the kind of model it is.</dd>
             </dl>
             <h2>The hybrid models in one line each</h2>

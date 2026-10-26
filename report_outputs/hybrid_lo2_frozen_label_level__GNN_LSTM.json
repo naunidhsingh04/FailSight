@@ -4,9 +4,9 @@
  "model": "GNN_LSTM",
  "seed": 42,
  "config": {
-  "hidden": 64,
-  "dropout": 0.3,
-  "wd": 0.0001,
+  "hidden": 32,
+  "dropout": 0.5,
+  "wd": 0.002,
   "lr": 0.001
  },
  "method": "smote",
@@ -15,15 +15,15 @@
  "thresholds": {
   "type": "class_multipliers",
   "weights": [
-   0.1353352832366127,
-   0.7788007830714049,
-   2.718281828459045,
+   0.22313016014842982,
+   0.6065306597126334,
+   4.4816890703380645,
    1.0
   ],
-  "oof_balanced_accuracy": 0.7082977207977208,
-  "oof_balanced_accuracy_default_argmax": 0.6996438746438746
+  "oof_balanced_accuracy": 0.7063390313390313,
+  "oof_balanced_accuracy_default_argmax": 0.6756766381766383
  },
- "chosen_stage": "cv",
- "frozen_at": "2026-10-24 03:48:42",
+ "chosen_stage": "corr",
+ "frozen_at": "2026-10-25 19:59:49",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

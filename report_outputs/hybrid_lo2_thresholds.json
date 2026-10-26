@@ -16,14 +16,14 @@
   },
   "AE_LSTM": {
    "type": "threshold",
-   "threshold": 0.05,
+   "threshold": 0.06,
    "oof_balanced_accuracy": 1.0,
    "oof_normal_recall": 1.0,
    "oof_balanced_accuracy_default_argmax": 1.0
   },
   "GNN_LSTM": {
    "type": "threshold",
-   "threshold": 0.09,
+   "threshold": 0.07,
    "oof_balanced_accuracy": 1.0,
    "oof_normal_recall": 1.0,
    "oof_balanced_accuracy_default_argmax": 1.0
@@ -51,46 +51,46 @@
   "Transformer_LSTM": {
    "type": "class_multipliers",
    "weights": [
-    0.1353352832366127,
-    0.4723665527410147,
+    1.0,
+    0.36787944117144233,
     1.6487212707001282,
-    0.7788007830714049
+    0.4723665527410147
    ],
-   "oof_balanced_accuracy": 0.7288105413105413,
-   "oof_balanced_accuracy_default_argmax": 0.7116096866096866
+   "oof_balanced_accuracy": 0.7292022792022792,
+   "oof_balanced_accuracy_default_argmax": 0.7103276353276354
   },
   "AE_LSTM": {
    "type": "class_multipliers",
    "weights": [
     0.1353352832366127,
-    0.6065306597126334,
-    4.4816890703380645,
+    1.0,
+    7.38905609893065,
     0.7788007830714049
    ],
-   "oof_balanced_accuracy": 0.7299145299145299,
-   "oof_balanced_accuracy_default_argmax": 0.7091880341880343
+   "oof_balanced_accuracy": 0.7209045584045584,
+   "oof_balanced_accuracy_default_argmax": 0.6842948717948718
   },
   "GNN_LSTM": {
    "type": "class_multipliers",
    "weights": [
-    0.1353352832366127,
-    0.7788007830714049,
-    2.718281828459045,
+    0.22313016014842982,
+    0.6065306597126334,
+    4.4816890703380645,
     1.0
    ],
-   "oof_balanced_accuracy": 0.7082977207977208,
-   "oof_balanced_accuracy_default_argmax": 0.6996438746438746
+   "oof_balanced_accuracy": 0.7063390313390313,
+   "oof_balanced_accuracy_default_argmax": 0.6756766381766383
   },
   "Multimodal_Transformer_MLP": {
    "type": "class_multipliers",
    "weights": [
     0.1353352832366127,
-    0.7788007830714049,
+    1.2840254166877414,
     5.754602676005731,
     1.0
    ],
-   "oof_balanced_accuracy": 0.7385327635327636,
-   "oof_balanced_accuracy_default_argmax": 0.7202991452991452
+   "oof_balanced_accuracy": 0.7402421652421651,
+   "oof_balanced_accuracy_default_argmax": 0.7174145299145299
   }
  }
 }

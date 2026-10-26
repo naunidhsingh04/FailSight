@@ -1,16 +1,16 @@
 template_source,template,mean_attention
-service,c.n.openapi.ApiNormalisedPath path = <*> base path is set to: null,0.0338546
-service,c.n.openapi.ApiNormalisedPath normalised = <*>,0.0338546
-service,"com.networknt.schema.TypeValidator validate( <S>, <*> <*>",0.0338546
-service,c.n.openapi.ApiNormalisedPath path <*>,0.0338546
-client,"com.networknt.schema.TypeValidator validate( <J>, requestBody)",0.0227455
-user,"com.networknt.schema.FormatValidator validate( <S>, <*> <*>",0.0223841
-user,c.n.openapi.ApiNormalisedPath path = <*> base path is set to: null,0.0223841
-user,c.n.openapi.ApiNormalisedPath normalised = <*>,0.0223841
-client,"c.n.schema.PropertiesValidator validate( <J>, requestBody)",0.0223048
-client,c.n.openapi.ApiNormalisedPath path <*>,0.0220617
-client,c.n.openapi.ApiNormalisedPath normalised = <*>,0.0213858
-client,"com.networknt.schema.EnumValidator validate( <S>, <J>, <*>",0.0210005
-client,"c.networknt.schema.RequiredValidator validate( <J>, requestBody)",0.0209173
-user,c.n.openapi.ApiNormalisedPath path <*>,0.0203894
-user,"com.networknt.schema.TypeValidator validate( <S>, <*> <*>",0.0203894
+locust,"register_user_<N> - Registered user: User(userId=<S>, userType=<S>)",0.0391755
+locust,get_user_page_<N> - Got user page with status_code <N>.,0.0391755
+service,"c.networknt.schema.RequiredValidator validate( <J>, requestBody)",0.0371911
+service,c.n.openapi.ApiNormalisedPath normalised = <*>,0.0371911
+locust,"get_user_<N> - Got user: User(userId=<S>, userType=<S>)",0.03461
+locust,"update_user_<N> - Updated user: User(userId=<S>, userType=<S>)",0.03461
+locust,get_client_page_<N> - Got client page with status_code <N>,0.0311277
+locust,"get_service_<N> - Got service: Service(serviceId=<S>, serviceType=<S>, scope=<S>)",0.0297972
+client,"com.networknt.schema.TypeValidator validate( <J>, requestBody)",0.0289722
+client,c.n.openapi.ApiNormalisedPath path = <*> base path is set to: null,0.0282057
+locust,"delete_user_<N> - Deleted user: User(userId=<S>, userType=<S>)",0.0280525
+locust,"update_password_<N> - Updated user password: User(userId=<S>, userType=<S>)",0.0280119
+client,"c.networknt.schema.RequiredValidator validate( <J>, requestBody)",0.0243464
+client,"com.networknt.schema.EnumValidator validate( <S>, <J>, <*>",0.0224233
+client,"c.n.schema.PropertiesValidator validate( <J>, requestBody)",0.0224233

@@ -4,22 +4,22 @@
  "model": "VAE_Transformer",
  "seed": 42,
  "config": {
-  "hidden": 32,
+  "hidden": 64,
   "dropout": 0.3,
   "wd": 0.0001,
   "lr": 0.001
  },
  "method": "smote",
- "final_epochs": 12,
+ "final_epochs": 5,
  "lr_scale": 1.0,
  "thresholds": {
   "type": "threshold",
-  "threshold": 0.09,
-  "oof_balanced_accuracy": 0.934411461752449,
-  "oof_normal_recall": 0.8720472440944882,
-  "oof_balanced_accuracy_default_argmax": 0.9324154537684171
+  "threshold": 0.24,
+  "oof_balanced_accuracy": 0.9318288015126621,
+  "oof_normal_recall": 0.8681102362204725,
+  "oof_balanced_accuracy_default_argmax": 0.9316752624369673
  },
  "chosen_stage": "cv",
- "frozen_at": "2026-10-24 05:14:53",
+ "frozen_at": "2026-10-25 19:15:08",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

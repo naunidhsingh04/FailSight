@@ -6,10 +6,11 @@ GNN_LSTM,label_binary,before_correction,1.000000,1.000000,0.000000,1.000000,ok,1
 Multimodal_Transformer_MLP,label_binary,before_correction,1.000000,1.000000,0.000000,1.000000,ok,1.000000,1.000000,0.000000,True
 BERT_GNN,label_level,before_correction,0.817487,0.664220,0.153268,0.682969,overfit (train-validation macro-F1 gap > 0.10),,,,False
 BERT_GNN,label_level,after_correction,0.724745,0.626113,0.098632,0.683272,ok,0.756658,0.651802,0.104856,True
-Transformer_LSTM,label_level,before_correction,0.770042,0.666479,0.103563,0.715309,overfit (train-validation macro-F1 gap > 0.10),,,,False
-Transformer_LSTM,label_level,after_correction,0.732103,0.660397,0.071706,0.712093,ok,0.698670,0.640111,0.058559,True
-AE_LSTM,label_level,before_correction,0.783761,0.673155,0.110606,0.709741,overfit (train-validation macro-F1 gap > 0.10),0.806420,0.677239,0.129181,True
-AE_LSTM,label_level,after_correction,0.761602,0.647055,0.114548,0.694420,overfit (train-validation macro-F1 gap > 0.10),,,,False
-GNN_LSTM,label_level,before_correction,0.764929,0.668655,0.096273,0.699648,ok,0.803283,0.664190,0.139093,True
-Multimodal_Transformer_MLP,label_level,before_correction,0.816001,0.694304,0.121697,0.719642,overfit (train-validation macro-F1 gap > 0.10),0.780694,0.677470,0.103224,True
-Multimodal_Transformer_MLP,label_level,after_correction,0.645069,0.577519,0.067550,0.662451,ok,,,,False
+Transformer_LSTM,label_level,before_correction,0.769477,0.668360,0.101117,0.710457,overfit (train-validation macro-F1 gap > 0.10),0.750807,0.664005,0.086802,True
+Transformer_LSTM,label_level,after_correction,0.650394,0.602786,0.047607,0.691235,ok,,,,False
+AE_LSTM,label_level,before_correction,0.867409,0.671408,0.196000,0.685728,overfit (train-validation macro-F1 gap > 0.10),,,,False
+AE_LSTM,label_level,after_correction,0.801769,0.652641,0.149128,0.684765,overfit (train-validation macro-F1 gap > 0.10),0.680303,0.628115,0.052188,True
+GNN_LSTM,label_level,before_correction,0.868219,0.669726,0.198493,0.685074,overfit (train-validation macro-F1 gap > 0.10),,,,False
+GNN_LSTM,label_level,after_correction,0.786482,0.654548,0.131934,0.675648,overfit (train-validation macro-F1 gap > 0.10),0.713926,0.616282,0.097644,True
+Multimodal_Transformer_MLP,label_level,before_correction,0.809945,0.686061,0.123884,0.717469,overfit (train-validation macro-F1 gap > 0.10),0.816848,0.684012,0.132836,True
+Multimodal_Transformer_MLP,label_level,after_correction,0.664547,0.593811,0.070736,0.678574,ok,,,,False

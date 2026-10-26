@@ -10,16 +10,16 @@
   "lr": 0.001
  },
  "method": "smote",
- "final_epochs": 8,
+ "final_epochs": 5,
  "lr_scale": 1.0,
  "thresholds": {
   "type": "threshold",
-  "threshold": 0.42,
-  "oof_balanced_accuracy": 0.939165430495762,
-  "oof_normal_recall": 0.8838582677165354,
-  "oof_balanced_accuracy_default_argmax": 0.9389351218822197
+  "threshold": 0.85,
+  "oof_balanced_accuracy": 0.9366595397938224,
+  "oof_normal_recall": 0.8799212598425197,
+  "oof_balanced_accuracy_default_argmax": 0.9326595144054712
  },
  "chosen_stage": "cv",
- "frozen_at": "2026-10-24 05:06:13",
+ "frozen_at": "2026-10-25 19:01:47",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

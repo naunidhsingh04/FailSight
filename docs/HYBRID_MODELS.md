@@ -6,7 +6,7 @@ Written for: examiners and students who want to know exactly what the ten hybrid
 
 ## What a hybrid is here
 
-Each hybrid is **one model class** (one `keras.Model`). Its code builds a first component and a second component as sub-models; its forward pass calls the first, feeds its output into the second, and a small classification head gives the answer. Both parts are trained together end to end with one loss and one optimiser. It is **not** an ensemble and **not** an average of two separately trained models. Exception: BERT + GNN, where the text encoder is frozen by design (it turns each log template into a fixed vector once, before training) and the graph part consumes those vectors. Each class has a docstring with the first part, the second part and what is passed between them (`models_src/hybrid/anomod_hybrids.py`, `models_src/hybrid/lo2_hybrids.py`; the shared layers are in `models_src/hybrid/base.py`). Graph layers are written by hand with an adjacency-matrix multiplication (`GraphLayer`); no extra libraries. Unit tests (`tests/test_hybrid_models.py`) check output shapes, that probabilities sum to one, that the auxiliary reconstruction losses exist and that gradients reach both parts.
+Each hybrid is built in **two stages from two separate algorithm functions** (`models_src/hybrid/stages.py`); the layers themselves are separate functions in `models_src/hybrid/components.py` (`cnn`, `lstm`, `bilstm`, `transformer`, `autoencoder`, `vae`, `gnn`, `bert`, `template_gnn`, `multimodal_transformer`, `mlp`). Nothing combines two algorithms into one function. The **first algorithm** (for example `cnn_stage`) turns the raw windows into a representation; it is trained on its own with a small classification head of its own, then frozen, and it returns a set of variables (its input, its trained layer, an `encode` function that gives its values, its training history). The **second algorithm** (for example `lstm_stage`) is called with those variables, uses the values the first one produced as its input, adds its own layers and does the final classification and the validation (early stopping on the validation fold). A hybrid is only that hand-over, for example `cnn_vars = cnn_stage(spec, cfg, data)` then `lstm_vars = lstm_stage(cnn_vars, spec, cfg, data)` (`models_src/hybrid/anomod_hybrids.py`, `models_src/hybrid/lo2_hybrids.py`). It is **not** an ensemble and **not** an average of two models; it is **not** trained end to end either (the second stage does not change the first). BERT + GNN: the text encoder is frozen by design, so its stage trains nothing and the graph stage consumes its vectors. Graph layers are written by hand with an adjacency-matrix multiplication (`GraphLayer`); no extra libraries. Unit tests (`tests/test_hybrid_models.py`) check output shapes, that probabilities sum to one, that the auxiliary reconstruction losses exist, that the first stage is trained and then left unchanged, and that gradients reach the second part.
 
 | # | data set | hybrid | first part -> passed on -> second part |
 |---|---|---|---|
@@ -45,24 +45,24 @@ The metric feature names do not carry per-service names (they are resource readi
 
 | model | status | test balanced accuracy (95% range) | healthy-window recall | ROC-AUC | CV validation BA | training time | folds |
 |---|---|---|---|---|---|---|---|
-| GNN_Transformer | done | 0.652 (0.467-0.968) | 0.361 | 0.797 | 0.779 | 6.4 min | 5 |
-| Transformer_BiLSTM | done | 0.650 (0.475-0.938) | 0.333 | 0.801 | 0.842 | 4.8 min | 5 |
-| VAE_Transformer | done | 0.649 (0.488-0.978) | 0.333 | 0.899 | 0.812 | 4.3 min | 5 |
-| AE_LSTM | done | 0.631 (0.458-0.959) | 0.333 | 0.822 | 0.809 | 2.8 min | 5 |
-| CNN_LSTM | done | 0.609 (0.452-0.963) | 0.278 | 0.867 | 0.815 | 2.6 min | 5 |
+| Transformer_BiLSTM | done | 0.691 (0.479-0.937) | 0.417 | 0.685 | 0.817 | 11.5 min | 5 |
+| CNN_LSTM | done | 0.661 (0.492-0.976) | 0.361 | 0.913 | 0.806 | 7.3 min | 5 |
+| GNN_Transformer | done | 0.627 (0.482-0.941) | 0.278 | 0.763 | 0.798 | 13.0 min | 5 |
+| VAE_Transformer | done | 0.618 (0.451-0.963) | 0.306 | 0.846 | 0.787 | 21.9 min | 5 |
+| AE_LSTM | done | 0.605 (0.462-0.935) | 0.250 | 0.792 | 0.788 | 6.3 min | 5 |
 
 **Multi-class labels**
 
 | model | status | test balanced accuracy (95% range) | healthy-window recall | ROC-AUC | CV validation BA | training time | folds |
 |---|---|---|---|---|---|---|---|
-| CNN_LSTM | done | 0.775 (0.659-0.886) | 0.500 | 0.958 | 0.795 | 3.3 min | 5 |
-| AE_LSTM | done | 0.772 (0.648-0.877) | 0.583 | 0.957 | 0.784 | 3.7 min | 5 |
-| GNN_Transformer | done | 0.767 (0.644-0.882) | 0.583 | 0.936 | 0.810 | 6.7 min | 5 |
-| Transformer_BiLSTM | done | 0.717 (0.624-0.816) | 0.389 | 0.954 | 0.766 | 5.4 min | 5 |
-| VAE_Transformer | done | 0.703 (0.598-0.806) | 0.361 | 0.939 | 0.773 | 5.2 min | 5 |
+| GNN_Transformer | done | 0.779 (0.649-0.879) | 0.694 | 0.926 | 0.837 | 12.6 min | 5 |
+| Transformer_BiLSTM | done | 0.760 (0.658-0.857) | 0.500 | 0.936 | 0.800 | 6.3 min | 5 |
+| VAE_Transformer | done | 0.758 (0.637-0.870) | 0.500 | 0.913 | 0.812 | 24.0 min | 5 |
+| CNN_LSTM | done | 0.757 (0.641-0.864) | 0.528 | 0.934 | 0.791 | 6.1 min | 5 |
+| AE_LSTM | done | 0.742 (0.633-0.854) | 0.417 | 0.915 | 0.811 | 6.2 min | 5 |
 
-* **binary labels:** best hybrid GNN_Transformer 0.652 (95% range 0.467-0.968) versus the best of the 36 earlier models, XGB, 0.774 (95% range 0.496-0.996): **no hybrid beats the best earlier model**; the ranges overlap.
-* **level labels:** best hybrid CNN_LSTM 0.775 (95% range 0.659-0.886) versus the best of the 36 earlier models, Stacking, 0.890 (95% range 0.838-0.941): **no hybrid beats the best earlier model**; the ranges overlap.
+* **binary labels:** best hybrid Transformer_BiLSTM 0.691 (95% range 0.479-0.937) versus the best of the 36 earlier models, XGB, 0.774 (95% range 0.496-0.996): **no hybrid beats the best earlier model**; the ranges overlap.
+* **level labels:** best hybrid GNN_Transformer 0.779 (95% range 0.649-0.879) versus the best of the 36 earlier models, Stacking, 0.890 (95% range 0.838-0.941): **no hybrid beats the best earlier model**; the ranges overlap.
 
 Why the hybrids are not expected to beat the tree models here: the data are small and table-like (2,549 training windows, about 128 numbers each), and the test part has only 36 healthy windows, so every range is wide. Tree models are strong on small tabular data; neural networks need more data. If the hybrids end up below the tree models, that is what is reported.
 
@@ -72,21 +72,21 @@ Why the hybrids are not expected to beat the tree models here: the data are smal
 
 | model | status | test balanced accuracy (95% range) | healthy-window recall | ROC-AUC | CV validation BA | training time | folds |
 |---|---|---|---|---|---|---|---|
-| BERT_GNN | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 10.3 min | 5 |
-| Transformer_LSTM | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 5.0 min | 5 |
-| AE_LSTM | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 5.1 min | 5 |
-| GNN_LSTM | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 6.9 min | 5 |
-| Multimodal_Transformer_MLP | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 11.3 min | 5 |
+| BERT_GNN | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 7.5 min | 5 |
+| Transformer_LSTM | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 6.1 min | 5 |
+| AE_LSTM | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 6.1 min | 5 |
+| GNN_LSTM | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 12.7 min | 5 |
+| Multimodal_Transformer_MLP | done | 1.000 (1.000-1.000) | 1.000 | 1.000 | 1.000 | 34.3 min | 5 |
 
 **Multi-class labels**
 
 | model | status | test balanced accuracy (95% range) | healthy-window recall | ROC-AUC | CV validation BA | training time | folds |
 |---|---|---|---|---|---|---|---|
-| Multimodal_Transformer_MLP | done | 0.720 (0.680-0.759) | 1.000 | 0.877 | 0.720 | 14.8 min | 5 |
-| AE_LSTM | done | 0.709 (0.668-0.748) | 1.000 | 0.883 | 0.710 | 6.6 min | 5 |
-| Transformer_LSTM | done | 0.706 (0.671-0.740) | 1.000 | 0.859 | 0.712 | 9.3 min | 5 |
-| GNN_LSTM | done | 0.681 (0.643-0.718) | 1.000 | 0.860 | 0.700 | 5.8 min | 5 |
-| BERT_GNN | done | 0.674 (0.632-0.717) | 1.000 | 0.850 | 0.683 | 17.2 min | 5 |
+| Transformer_LSTM | done | 0.714 (0.673-0.755) | 1.000 | 0.857 | 0.711 | 11.7 min | 5 |
+| Multimodal_Transformer_MLP | done | 0.710 (0.669-0.751) | 1.000 | 0.878 | 0.718 | 36.3 min | 5 |
+| AE_LSTM | done | 0.684 (0.637-0.728) | 1.000 | 0.837 | 0.685 | 9.5 min | 5 |
+| BERT_GNN | done | 0.674 (0.632-0.717) | 1.000 | 0.850 | 0.683 | 9.6 min | 5 |
+| GNN_LSTM | done | 0.648 (0.612-0.687) | 1.000 | 0.820 | 0.676 | 16.5 min | 5 |
 
 LO2 results are about training on LO2's own data (33 whole runs, 1204 test windows from 7 untouched runs, 91 healthy) and the 80% training part is balanced with SMOTE while the 20% test part is untouched. They say nothing about transfer from AnoMod. The binary labels score high because LO2's injected HTTP errors leave clear error lines and metric changes; the controls below show it is not a warm-up or run-length shortcut. Compare the log-volume-only baseline in `hybrid_lo2_logvolume_baseline.csv`.
 
@@ -96,12 +96,12 @@ The template encoder is TF-IDF + truncated SVD of the template text, because a d
 
 The best hybrid is chosen by its cross-validation validation score (never by test scores). Method: gradient x input attribution on real test windows (`scripts/hybrid_explain.py`; `hybrid_*_explain_*.csv`); BERT + GNN also reports its attention over log templates when it is the best. These explain the model, not the real cause of a fault.
 
-* AnoMod, binary labels, best hybrid by cross-validation score = **Transformer_BiLSTM**: top inputs by gradient x input: `was_missing_api`, `m_system_disk_usage_percent__mean`, `api_latency_mean_ms`, `api_latency_p99_ms`, `api_latency_p95_ms`; share by group: api 21%, flag 16%, log 4%, metric 59%
-* AnoMod, level labels, best hybrid by cross-validation score = **GNN_Transformer**: top inputs by gradient x input: `m_system_disk_usage_percent__max`, `m_system_disk_usage_percent__mean`, `m_system_cpu_usage__max`, `m_system_load1__max`, `m_system_disk_usage_percent__std`; share by group: api 4%, flag 2%, log 3%, metric 90%
-* LO2, binary labels, best hybrid by cross-validation score = **BERT_GNN**: top inputs by gradient x input: `m_pc1`, `m_pc0`, `m_pc4`, `m_pc2`, `m_pc6`; share by group: flag 0%, log 41%, log template 5%, metric 55%
-* LO2, level labels, best hybrid by cross-validation score = **BERT_GNN**: top inputs by gradient x input: `m_pc8`, `m_pc1`, `m_pc4`, `m_pc2`, `m_pc0`; share by group: flag 0%, log 40%, log template 2%, metric 58%
+* AnoMod, binary labels, best hybrid by cross-validation score = **Transformer_BiLSTM**: top inputs by gradient x input: `m_system_disk_usage_percent__mean`, `m_system_disk_usage_percent__max`, `m_system_cpu_usage__std`, `m_system_cpu_usage__mean`, `m_system_load1__mean`; share by group: api 9%, flag 4%, log 2%, metric 86%
+* AnoMod, level labels, best hybrid by cross-validation score = **GNN_Transformer**: top inputs by gradient x input: `m_system_disk_usage_percent__mean`, `m_system_disk_usage_percent__max`, `m_system_load1__max`, `m_system_load1__mean`, `m_system_network_transmit_bytes__mean`; share by group: api 7%, flag 1%, log 2%, metric 90%
+* LO2, binary labels, best hybrid by cross-validation score = **BERT_GNN**: top inputs by gradient x input: `m_pc0`, `m_pc2`, `m_pc1`, `m_pc3`, `m_pc4`; share by group: flag 0%, log 42%, log template 6%, metric 52%
+* LO2, level labels, best hybrid by cross-validation score = **Multimodal_Transformer_MLP**: top inputs by gradient x input: `m_pc2`, `m_pc3`, `m_pc1`, `m_pc0`, `tmpl_locust_0`; share by group: flag 0%, log 25%, log template 38%, metric 38%
 
-* LO2, best classical tree model by cross-validation (**RF**): SHAP (TreeExplainer) on the real test windows, top inputs `m_pc1`, `m_pc4`, `m_pc2`, `log_token_INFO`, `log_token_DEBUG`; LIME for one window in `lo2_full_lime_example.csv`.
+* LO2, best classical tree model by cross-validation (**RF**): SHAP (TreeExplainer) on the real test windows, top inputs `m_pc3`, `m_pc1`, `m_pc2`, `log_locust_ERROR`, `log_locust_error_rate`; LIME for one window in `lo2_full_lime_example.csv`.
 
 ## Limits
 

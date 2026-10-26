@@ -2,38 +2,38 @@
  "label_binary": {
   "Transformer_BiLSTM": {
    "type": "threshold",
-   "threshold": 0.88,
-   "oof_balanced_accuracy": 0.9375005289239813,
-   "oof_normal_recall": 0.9133858267716536,
-   "oof_balanced_accuracy_default_argmax": 0.9317600413951019
+   "threshold": 0.9,
+   "oof_balanced_accuracy": 0.9377698267909971,
+   "oof_normal_recall": 0.8858267716535433,
+   "oof_balanced_accuracy_default_argmax": 0.9366595397938224
   },
   "AE_LSTM": {
    "type": "threshold",
-   "threshold": 0.8,
-   "oof_balanced_accuracy": 0.9298900684397408,
-   "oof_normal_recall": 0.8818897637795275,
-   "oof_balanced_accuracy_default_argmax": 0.9292186372258511
+   "threshold": 0.55,
+   "oof_balanced_accuracy": 0.9296299889621121,
+   "oof_normal_recall": 0.8641732283464567,
+   "oof_balanced_accuracy_default_argmax": 0.9286457369936082
   },
   "GNN_Transformer": {
    "type": "threshold",
-   "threshold": 0.06,
-   "oof_balanced_accuracy": 0.930027588674861,
-   "oof_normal_recall": 0.8622047244094488,
-   "oof_balanced_accuracy_default_argmax": 0.9283386588422187
+   "threshold": 0.85,
+   "oof_balanced_accuracy": 0.9295532194242647,
+   "oof_normal_recall": 0.8641732283464567,
+   "oof_balanced_accuracy_default_argmax": 0.9269075416701424
   },
   "CNN_LSTM": {
    "type": "threshold",
-   "threshold": 0.42,
-   "oof_balanced_accuracy": 0.939165430495762,
-   "oof_normal_recall": 0.8838582677165354,
-   "oof_balanced_accuracy_default_argmax": 0.9389351218822197
+   "threshold": 0.85,
+   "oof_balanced_accuracy": 0.9366595397938224,
+   "oof_normal_recall": 0.8799212598425197,
+   "oof_balanced_accuracy_default_argmax": 0.9326595144054712
   },
   "VAE_Transformer": {
    "type": "threshold",
-   "threshold": 0.09,
-   "oof_balanced_accuracy": 0.934411461752449,
-   "oof_normal_recall": 0.8720472440944882,
-   "oof_balanced_accuracy_default_argmax": 0.9324154537684171
+   "threshold": 0.24,
+   "oof_balanced_accuracy": 0.9318288015126621,
+   "oof_normal_recall": 0.8681102362204725,
+   "oof_balanced_accuracy_default_argmax": 0.9316752624369673
   },
   "BERT_GNN": {
    "type": "threshold",
@@ -45,23 +45,23 @@
   "Transformer_LSTM": {
    "type": "threshold",
    "threshold": 0.95,
-   "oof_balanced_accuracy": 0.9381891879475452,
-   "oof_normal_recall": 0.8917322834645669,
-   "oof_balanced_accuracy_default_argmax": 0.9352284226217462
+   "oof_balanced_accuracy": 0.9381261704332099,
+   "oof_normal_recall": 0.889763779527559,
+   "oof_balanced_accuracy_default_argmax": 0.9343071881675776
   },
   "GNN_LSTM": {
    "type": "threshold",
-   "threshold": 0.19,
-   "oof_balanced_accuracy": 0.9281083502286764,
-   "oof_normal_recall": 0.8622047244094488,
-   "oof_balanced_accuracy_default_argmax": 0.9275709634637448
+   "threshold": 0.95,
+   "oof_balanced_accuracy": 0.9293171682074978,
+   "oof_normal_recall": 0.8759842519685039,
+   "oof_balanced_accuracy_default_argmax": 0.9262933853673634
   },
   "Multimodal_Transformer_MLP": {
    "type": "threshold",
-   "threshold": 0.9,
-   "oof_balanced_accuracy": 0.9356007851045335,
-   "oof_normal_recall": 0.8996062992125984,
-   "oof_balanced_accuracy_default_argmax": 0.9294214417923692
+   "threshold": 0.93,
+   "oof_balanced_accuracy": 0.9319410845178209,
+   "oof_normal_recall": 0.8740157480314961,
+   "oof_balanced_accuracy_default_argmax": 0.9308170454971341
   }
  }
 }

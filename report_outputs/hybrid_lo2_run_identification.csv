@@ -6,7 +6,7 @@ hybrid_vs_rule,AE_LSTM,,,,label_binary,0.924419,1.000000,0.924419,0.500000,1.000
 hybrid_vs_rule,GNN_LSTM,,,,label_binary,0.924419,1.000000,0.924419,0.500000,1.000000,0.924419
 hybrid_vs_rule,Multimodal_Transformer_MLP,,,,label_binary,0.924419,1.000000,0.924419,0.500000,1.000000,0.924419
 hybrid_vs_rule,BERT_GNN,,,,label_level,0.450997,0.634551,0.523256,0.250000,0.674339,0.519634
-hybrid_vs_rule,Transformer_LSTM,,,,label_level,0.271595,0.598007,0.523256,0.250000,0.705820,0.377778
-hybrid_vs_rule,AE_LSTM,,,,label_level,0.397841,0.656977,0.523256,0.250000,0.708995,0.479140
-hybrid_vs_rule,GNN_LSTM,,,,label_level,0.394518,0.659468,0.523256,0.250000,0.680688,0.482368
-hybrid_vs_rule,Multimodal_Transformer_MLP,,,,label_level,0.340532,0.660299,0.523256,0.250000,0.719974,0.445283
+hybrid_vs_rule,Transformer_LSTM,,,,label_level,0.339701,0.632060,0.523256,0.250000,0.714153,0.433640
+hybrid_vs_rule,AE_LSTM,,,,label_level,0.294850,0.578073,0.523256,0.250000,0.683598,0.387931
+hybrid_vs_rule,GNN_LSTM,,,,label_level,0.365449,0.571429,0.523256,0.250000,0.648545,0.452035
+hybrid_vs_rule,Multimodal_Transformer_MLP,,,,label_level,0.418605,0.678571,0.523256,0.250000,0.709524,0.493268

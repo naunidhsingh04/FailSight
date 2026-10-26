@@ -1,0 +1,10 @@
+model,AnoMod_alone_binary,AnoMod_alone_level,LO2_alone_binary,LO2_alone_level,both_trained_together_binary,both_tested_on_AnoMod_part,both_tested_on_LO2_part
+Transformer_BiLSTM,0.6911,0.7602,,,0.9104,0.6887,1.0000
+CNN_LSTM,0.6609,0.7566,,,0.8946,0.6331,1.0000
+GNN_Transformer,0.6266,0.7786,,,0.9070,0.6764,1.0000
+VAE_Transformer,0.6184,0.7583,,,0.8983,0.6462,1.0000
+AE_LSTM,0.6054,0.7417,1.0000,0.6836,0.8918,0.6225,1.0000
+BERT_GNN,,,1.0000,0.6743,0.8917,0.6250,1.0000
+Transformer_LSTM,,,1.0000,0.7142,0.9104,0.6887,1.0000
+GNN_LSTM,,,1.0000,0.6485,0.9107,0.6895,1.0000
+Multimodal_Transformer_MLP,,,1.0000,0.7095,0.8872,0.6094,1.0000

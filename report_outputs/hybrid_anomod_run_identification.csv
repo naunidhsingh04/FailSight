@@ -1,12 +1,12 @@
 kind,model,accuracy,chance,n_runs,label_version,agreement,model_accuracy,rule_accuracy,rule_balanced_accuracy,model_balanced_accuracy,share_of_correct_also_correct_by_rule
 run_identification,(throw-away XGBoost),0.842349,0.038462,26.000000,,,,,,,
-hybrid_vs_rule,Transformer_BiLSTM,,,,label_binary,0.952087,0.931994,0.970634,0.775323,0.650300,0.995025
-hybrid_vs_rule,AE_LSTM,,,,label_binary,0.922720,0.896445,0.970634,0.775323,0.631478,0.998276
-hybrid_vs_rule,GNN_Transformer,,,,label_binary,0.939722,0.910355,0.970634,0.775323,0.651914,1.000000
-hybrid_vs_rule,CNN_LSTM,,,,label_binary,0.928903,0.902628,0.970634,0.775323,0.608611,0.998288
-hybrid_vs_rule,VAE_Transformer,,,,label_binary,0.948995,0.928903,0.970634,0.775323,0.648663,0.995008
-hybrid_vs_rule,Transformer_BiLSTM,,,,label_level,0.771252,0.782071,0.913447,0.860631,0.717016,0.962451
-hybrid_vs_rule,AE_LSTM,,,,label_level,0.789799,0.814529,0.913447,0.860631,0.771555,0.958254
-hybrid_vs_rule,GNN_Transformer,,,,label_level,0.805255,0.808346,0.913447,0.860631,0.767105,0.973231
-hybrid_vs_rule,CNN_LSTM,,,,label_level,0.817620,0.828439,0.913447,0.860631,0.774590,0.964552
-hybrid_vs_rule,VAE_Transformer,,,,label_level,0.766615,0.774343,0.913447,0.860631,0.702595,0.960080
+hybrid_vs_rule,Transformer_BiLSTM,,,,label_binary,0.964451,0.935085,0.970634,0.775323,0.691148,1.000000
+hybrid_vs_rule,AE_LSTM,,,,label_binary,0.950541,0.921175,0.970634,0.775323,0.605360,1.000000
+hybrid_vs_rule,GNN_Transformer,,,,label_binary,0.959815,0.936631,0.970634,0.775323,0.626614,0.996700
+hybrid_vs_rule,CNN_LSTM,,,,label_binary,0.950541,0.927357,0.970634,0.775323,0.660916,0.996667
+hybrid_vs_rule,VAE_Transformer,,,,label_binary,0.922720,0.896445,0.970634,0.775323,0.618408,0.998276
+hybrid_vs_rule,Transformer_BiLSTM,,,,label_level,0.788253,0.816074,0.913447,0.860631,0.760192,0.950758
+hybrid_vs_rule,AE_LSTM,,,,label_level,0.800618,0.805255,0.913447,0.860631,0.741702,0.963532
+hybrid_vs_rule,GNN_Transformer,,,,label_level,0.795981,0.803709,0.913447,0.860631,0.778573,0.961538
+hybrid_vs_rule,CNN_LSTM,,,,label_level,0.778980,0.806801,0.913447,0.860631,0.756641,0.950192
+hybrid_vs_rule,VAE_Transformer,,,,label_level,0.794436,0.814529,0.913447,0.860631,0.758252,0.954459

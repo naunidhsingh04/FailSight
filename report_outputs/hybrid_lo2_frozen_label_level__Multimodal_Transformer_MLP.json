@@ -10,20 +10,20 @@
   "lr": 0.001
  },
  "method": "smote",
- "final_epochs": 7,
+ "final_epochs": 5,
  "lr_scale": 1.0,
  "thresholds": {
   "type": "class_multipliers",
   "weights": [
    0.1353352832366127,
-   0.7788007830714049,
+   1.2840254166877414,
    5.754602676005731,
    1.0
   ],
-  "oof_balanced_accuracy": 0.7385327635327636,
-  "oof_balanced_accuracy_default_argmax": 0.7202991452991452
+  "oof_balanced_accuracy": 0.7402421652421651,
+  "oof_balanced_accuracy_default_argmax": 0.7174145299145299
  },
  "chosen_stage": "cv",
- "frozen_at": "2026-10-24 04:19:57",
+ "frozen_at": "2026-10-25 21:44:09",
  "note": "written before the test windows were scored; every choice was made on training folds only"
 }

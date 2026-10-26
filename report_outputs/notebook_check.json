@@ -1,10 +1,10 @@
 {
  "executed_ok": true,
- "executed_at": "2026-10-24 06:06:32",
- "n_cells": 55,
+ "executed_at": "2026-10-25 22:00:45",
+ "n_cells": 56,
  "n_errors": 0,
  "soft_failures": [],
- "seconds": 76.85869216918945,
+ "seconds": 185.52392578125,
  "environment": "fresh virtual environment (numpy, pandas, scikit-learn, matplotlib, tensorflow, xgboost, lightgbm + the notebook's own pip install of imbalanced-learn, shap, optuna, lime); clean clone of the committed repository; data bundle unzipped; no AnoMod raw folders, no models folder",
  "comparisons": [
   {
@@ -33,8 +33,8 @@
   },
   {
    "name": "best hybrid test balanced accuracy (binary)",
-   "notebook": 0.6519,
-   "reference": 0.6519,
+   "notebook": 0.6911,
+   "reference": 0.6911,
    "equal": true
   },
   {

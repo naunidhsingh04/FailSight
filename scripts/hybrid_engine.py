@@ -113,17 +113,13 @@ def cnt_str(c):
 
 
 # ----------------------------------------------------------------------------------------------- training
-def fit_hybrid(builder, spec, cfg, Xs, ys, Xv, yv, method, max_epochs, seed, sample_weight=None, fixed_epochs=None, lr_scale=1.0):
-    """train one hybrid. Early stopping on the validation fold (patience 6, at most 40 epochs) unless fixed_epochs is given (final model, no validation data)."""
-    keras.backend.clear_session()
-    keras.utils.set_random_seed(seed)
-    C = spec["C"]
-    m = builder(spec, cfg)
+def train_model(m, Xs, ys, Xv, yv, C, cfg, method, max_epochs, sample_weight=None, fixed_epochs=None, lr_scale=1.0):
+    """compile and train one keras model with the protocol shared by every hybrid. Early stopping on the validation fold (patience 6, at most 40 epochs) unless fixed_epochs
+    is given (final model, no validation data). Returns the loss history."""
     m.compile(optimizer=keras.optimizers.AdamW(learning_rate=cfg["lr"] * lr_scale, weight_decay=cfg["wd"], clipnorm=1.0),
               loss=keras.losses.CategoricalCrossentropy(label_smoothing=0.05))
     Y = keras.utils.to_categorical(ys, C).astype("float32")
     sw = sample_weight if sample_weight is not None else (balanced_sample_weight(ys) if method == "cw" else None)
-    t0 = time.time()
     if fixed_epochs is None:
         cb = [keras.callbacks.ReduceLROnPlateau("val_loss", factor=0.5, patience=3, min_lr=1e-5),
               keras.callbacks.EarlyStopping("val_loss", patience=PATIENCE, restore_best_weights=True)]
@@ -132,9 +128,27 @@ def fit_hybrid(builder, spec, cfg, Xs, ys, Xv, yv, method, max_epochs, seed, sam
     else:
         cb = [keras.callbacks.ReduceLROnPlateau("loss", factor=0.5, patience=3, min_lr=1e-5)]
         h = m.fit(Xs, Y, batch_size=BATCH, epochs=fixed_epochs, sample_weight=sw, callbacks=cb, verbose=0, shuffle=True)
-    hist = {k: [float(x) for x in v] for k, v in h.history.items() if k in ("loss", "val_loss")}
-    n = len(hist["loss"])
-    best = int(np.argmin(hist["val_loss"])) + 1 if "val_loss" in hist else n
+    return {k: [float(x) for x in v] for k, v in h.history.items() if k in ("loss", "val_loss")}
+
+
+def fit_hybrid(builder, spec, cfg, Xs, ys, Xv, yv, method, max_epochs, seed, sample_weight=None, fixed_epochs=None, lr_scale=1.0):
+    """train one hybrid. A two-stage hybrid (builder.two_stage) trains its first algorithm's function, then hands the variables it produced to the second algorithm's function,
+    which trains on them; both stages use train_model. Otherwise the builder returns one model that is trained end to end."""
+    keras.backend.clear_session()
+    keras.utils.set_random_seed(seed)
+    C = spec["C"]
+    t0 = time.time()
+    stages = []
+    if getattr(builder, "two_stage", False):
+        def fit(model, X, y, Xv_, yv_):
+            stages.append(train_model(model, X, y, Xv_, yv_, C, cfg, method, max_epochs, sample_weight, fixed_epochs, lr_scale))
+        m = builder(spec, cfg, data=dict(X=Xs, y=ys, Xv=Xv, yv=yv, fit=fit))
+    else:
+        m = builder(spec, cfg)
+        stages.append(train_model(m, Xs, ys, Xv, yv, C, cfg, method, max_epochs, sample_weight, fixed_epochs, lr_scale))
+    hist = stages[-1]                                  # the final classifier (the second stage) is the one that is validated
+    n = sum(len(h["loss"]) for h in stages)
+    best = int(np.argmin(hist["val_loss"])) + 1 if "val_loss" in hist else len(hist["loss"])
     return m, dict(epochs=n, best_epoch=best, secs=time.time() - t0, loss_first=hist["loss"][0], loss_last=hist["loss"][-1], params=int(m.count_params()),
                    val_loss_best=float(min(hist["val_loss"])) if "val_loss" in hist else None)
 

@@ -28,7 +28,7 @@ const PLAIN_PILLS: [string, string][] = [
   ['Decision-tree model', 'many yes/no questions in a row (Tree)'],
   ['Linear model', 'a weighted sum of the readings (Linear)'],
   ['Neural network', 'layers of small calculators (Deep)'],
-  ['Hybrid neural network (two learning parts)', 'two parts trained together, checked with 5 folds (Hybrid)'],
+  ['Hybrid neural network (two learning parts)', 'two algorithms in a row, the second using the first one&rsquo;s values, checked with 5 folds (Hybrid)'],
   ['Combination of models', 'several models vote together (Ensemble)'],
   ['Retrained to reduce overfitting', 'the first version memorised its practice data, so it was retrained more gently (corrected)'],
   ['Scored for comparison; cannot run live', 'it needs 40 fold models, so it is only in the table (report only)'],
